@@ -123,12 +123,12 @@ ease-glide
 
 頁面外殼採 4 corner 架構，由 `Header` + `Footer` 兩個元件共同組成：
 
-| 位置 | 元件                      | 內容                                       |
-| ---- | ------------------------- | ------------------------------------------ |
-| 左上 | `Header` 內的 `<Link>`    | `ZYX` — logo / home link                   |
-| 右上 | `<Menu>` (in Header)      | `MENU` 點擊展開導覽（目前只有 `MAP`）      |
-| 左下 | `<DaysAlive>` (in Footer) | `Day NNN` — 從 `NEXT_PUBLIC_BIRTHDAY` 算起 |
-| 右下 | `Footer` 內的 `<span>`    | `© 2026` — 寫死，不依年份變動              |
+| 位置 | 元件                      | 內容                                          |
+| ---- | ------------------------- | --------------------------------------------- |
+| 左上 | `Header` 內的 `<Link>`    | `ZYX` — logo / home link                      |
+| 右上 | `<Menu>` (in Header)      | `MENU` 點擊展開導覽（目前只有 `MAP`）         |
+| 左下 | `<DaysAlive>` (in Footer) | 純數字 — 從 `NEXT_PUBLIC_BIRTHDAY` 算起的天數 |
+| 右下 | `Footer` 內的 `<span>`    | `© 2026` — 寫死，不依年份變動                 |
 
 四個 corner 全部 `fixed inset-{n}-4 z-50`，font-mono text-sm，hover 由 muted → foreground。
 
