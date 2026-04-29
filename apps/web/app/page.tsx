@@ -1,19 +1,18 @@
-import { Button } from "@workspace/ui/components/button"
+import { Background } from "@workspace/ui/components/background"
+import { Contact } from "@workspace/ui/components/contact"
+import { Intro } from "@workspace/ui/components/intro"
+import { MapPreview } from "@workspace/ui/components/map-preview"
+import { Stack } from "@workspace/ui/components/stack"
 
-export default function Page() {
+export default function Home() {
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-        </div>
-        <div className="text-muted-foreground font-mono text-xs">
-          (Press <kbd>d</kbd> to toggle dark mode)
-        </div>
-      </div>
-    </div>
+    <main className="flex flex-col items-center">
+      <Background />
+      <div className="h-dvh w-dvw" />
+      <Intro />
+      <Stack />
+      <MapPreview />
+      <Contact />
+    </main>
   )
 }

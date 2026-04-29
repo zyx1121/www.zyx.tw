@@ -1,15 +1,29 @@
+import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 
 import "@workspace/ui/globals.css"
+import { Footer } from "@workspace/ui/components/footer"
+import { Header } from "@workspace/ui/components/header"
+import { cn } from "@workspace/ui/lib/utils"
+
 import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@workspace/ui/lib/utils";
 
 const fontSans = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
 })
 
-const geistMono = Geist_Mono({subsets:['latin'],variable:'--font-mono'})
+const fontMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+})
+
+const BIRTHDAY = process.env.NEXT_PUBLIC_BIRTHDAY ?? "2002-01-01"
+
+export const metadata: Metadata = {
+  title: "ZYX",
+  description: "Loki — software, ML, and the occasional photo trail.",
+}
 
 export default function RootLayout({
   children,
@@ -20,10 +34,14 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontSans.variable, "font-mono", geistMono.variable)}
+      className={cn("antialiased", fontSans.variable, fontMono.variable)}
     >
-      <body>
-        <ThemeProvider>{children}</ThemeProvider>
+      <body className="font-mono">
+        <ThemeProvider>
+          <Header />
+          {children}
+          <Footer birthday={BIRTHDAY} />
+        </ThemeProvider>
       </body>
     </html>
   )
