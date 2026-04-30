@@ -2,7 +2,7 @@ import { Background } from "@workspace/ui/components/background"
 import { Contact } from "@workspace/ui/components/contact"
 import { Intro } from "@workspace/ui/components/intro"
 import { MapPreview } from "@workspace/ui/components/map-preview"
-import { Stack } from "@workspace/ui/components/stack"
+import { Projects } from "@workspace/ui/components/projects"
 
 export default function Home() {
   return (
@@ -10,7 +10,7 @@ export default function Home() {
       <Background />
       <div className="h-dvh w-dvw" />
       <Intro />
-      <Stack />
+      <Projects />
       <MapPreview />
       <Contact />
     </main>

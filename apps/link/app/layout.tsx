@@ -5,6 +5,7 @@ import "@workspace/ui/globals.css"
 import { Footer } from "@workspace/ui/components/footer"
 import { Header } from "@workspace/ui/components/header"
 import { cn } from "@workspace/ui/lib/utils"
+
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 
 const fontSans = Geist({
@@ -20,8 +21,8 @@ const fontMono = Geist_Mono({
 const BIRTHDAY = process.env.NEXT_PUBLIC_BIRTHDAY ?? "2002-01-01"
 
 export const metadata: Metadata = {
-  title: "ZYX",
-  description: "Loki — software, ML, and the occasional photo trail.",
+  title: "Link",
+  description: "Shorten your links.",
 }
 
 export default function RootLayout({

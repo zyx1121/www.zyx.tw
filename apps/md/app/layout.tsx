@@ -20,8 +20,8 @@ const fontMono = Geist_Mono({
 const BIRTHDAY = process.env.NEXT_PUBLIC_BIRTHDAY ?? "2002-01-01"
 
 export const metadata: Metadata = {
-  title: "ZYX",
-  description: "Loki — software, ML, and the occasional photo trail.",
+  title: "MD",
+  description: "Personal markdown hosting.",
 }
 
 export default function RootLayout({

@@ -20,8 +20,8 @@ const fontMono = Geist_Mono({
 const BIRTHDAY = process.env.NEXT_PUBLIC_BIRTHDAY ?? "2002-01-01"
 
 export const metadata: Metadata = {
-  title: "ZYX",
-  description: "Loki — software, ML, and the occasional photo trail.",
+  title: "Temp",
+  description: "A temporary shared notepad.",
 }
 
 export default function RootLayout({
@@ -35,7 +35,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn("antialiased", fontSans.variable, fontMono.variable)}
     >
-      <body className="font-mono">
+      <body className="font-mono select-none">
         <ThemeProvider>
           <Header />
           {children}
