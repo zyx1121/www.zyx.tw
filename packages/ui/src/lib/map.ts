@@ -7,16 +7,19 @@ export type MapImage = {
 }
 
 const POPUP_ANIMATION_MS = 80
-const THUMB_SIZE = 128
 
-export function thumbUrl(src: string) {
-  return `/_next/image?url=${encodeURIComponent(src)}&w=${THUMB_SIZE}&q=75`
+// 256 covers 2x Retina for a 4rem (64px) marker; Next.js image rounds up to nearest size step
+const THUMB_SIZE = 256
+
+export function thumbUrl(src: string, basePath = "") {
+  return `${basePath}/_next/image?url=${encodeURIComponent(src)}&w=${THUMB_SIZE}&q=75`
 }
 
 export function createMarkerWithPopup(
   map: mapboxgl.Map,
   imageUrl: string,
-  lngLat: [number, number]
+  lngLat: [number, number],
+  buildThumbUrl: (src: string) => string = thumbUrl
 ) {
   const el = document.createElement("div")
   el.className = "map-image-marker"
@@ -28,7 +31,7 @@ export function createMarkerWithPopup(
   el.style.cursor = "pointer"
 
   const img = document.createElement("img")
-  img.src = thumbUrl(imageUrl)
+  img.src = buildThumbUrl(imageUrl)
   img.alt = "Photo"
   img.loading = "lazy"
   img.style.width = "100%"
@@ -51,14 +54,13 @@ export function createMarkerWithPopup(
 
   const onBackdropClick = (e: MouseEvent) => {
     if (e.target !== popupContent) return
-    const popupEl = document.querySelector(".map-fullscreen-popup")
-    popupEl?.classList.remove("map-fullscreen-popup-visible")
+    popup.getElement()?.classList.remove("map-fullscreen-popup-visible")
     setTimeout(() => popup.remove(), POPUP_ANIMATION_MS)
   }
 
   popup.on("open", () => {
     if (!popupImg.src) popupImg.src = imageUrl
-    const popupEl = document.querySelector(".map-fullscreen-popup")
+    const popupEl = popup.getElement()
     if (popupEl?.parentElement) document.body.appendChild(popupEl)
     popupEl?.classList.remove("map-fullscreen-popup-visible")
     popupContent.addEventListener("click", onBackdropClick)
@@ -71,9 +73,7 @@ export function createMarkerWithPopup(
 
   popup.on("close", () => {
     popupContent.removeEventListener("click", onBackdropClick)
-    document
-      .querySelector(".map-fullscreen-popup")
-      ?.classList.remove("map-fullscreen-popup-visible")
+    popup.getElement()?.classList.remove("map-fullscreen-popup-visible")
   })
 
   return new mapboxgl.Marker({ element: el })

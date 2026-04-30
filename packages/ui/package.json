@@ -42,8 +42,17 @@
   "exports": {
     "./globals.css": "./src/styles/globals.css",
     "./postcss.config": "./postcss.config.mjs",
-    "./lib/*": "./src/lib/*.ts",
-    "./components/*": "./src/components/*.tsx",
-    "./hooks/*": "./src/hooks/*.ts"
+    "./lib/*": {
+      "source": "./src/lib/*.ts",
+      "default": "./src/lib/*.ts"
+    },
+    "./components/*": {
+      "source": "./src/components/*.tsx",
+      "default": "./src/components/*.tsx"
+    },
+    "./hooks/*": {
+      "source": "./src/hooks/*.ts",
+      "default": "./src/hooks/*.ts"
+    }
   }
 }

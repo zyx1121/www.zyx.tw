@@ -5,12 +5,10 @@ import { motion, useScroll, useTransform } from "motion/react"
 
 export function Background() {
   const { scrollY } = useScroll()
-  const opacity = useTransform(scrollY, (y) => {
-    if (typeof window === "undefined") return 1
-    return Math.max(0.1, 1 - y / window.innerHeight)
-  })
+  const opacity = useTransform(scrollY, (y) =>
+    Math.max(0.1, 1 - y / window.innerHeight)
+  )
   const blur = useTransform(scrollY, (y) => {
-    if (typeof window === "undefined") return "blur(0px)"
     const t = Math.min(1, y / window.innerHeight)
     return `blur(${t * 16}px)`
   })

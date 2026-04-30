@@ -48,6 +48,7 @@ export function MapboxMap({
       let images: MapImage[] = []
       try {
         const res = await fetch(imagesEndpoint)
+        if (!res.ok) throw new Error(`map-images API ${res.status}`)
         const data = (await res.json()) as { images?: MapImage[] }
         images = data.images ?? []
       } catch {

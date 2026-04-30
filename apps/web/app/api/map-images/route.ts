@@ -42,7 +42,8 @@ export async function GET() {
       { images },
       { headers: { "Cache-Control": "public, max-age=3600" } }
     )
-  } catch {
-    return Response.json({ images: [] })
+  } catch (err) {
+    console.error("[map-images] failed to read map directory:", err)
+    return Response.json({ images: [] }, { status: 500 })
   }
 }
