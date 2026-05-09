@@ -38,7 +38,13 @@ function vimeoId(url: string) {
 
 function TextBlock({ content }: { content: string }) {
   return (
-    <p className="text-sm leading-relaxed whitespace-pre-wrap">{content}</p>
+    <div className="relative max-h-72 overflow-hidden">
+      <p className="text-sm leading-relaxed whitespace-pre-wrap">{content}</p>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute right-0 bottom-0 left-0 h-12 bg-gradient-to-t from-card to-transparent"
+      />
+    </div>
   )
 }
 
@@ -100,7 +106,7 @@ function ImageBlock({
       src={content}
       alt={title ?? "image"}
       loading="lazy"
-      className="w-full rounded-lg border border-border"
+      className="max-h-[480px] w-full rounded-lg border border-border object-cover"
     />
   )
 }
