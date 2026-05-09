@@ -18,61 +18,72 @@ const PROJECTS: Project[] = [
   {
     name: "things.zyx.tw",
     description:
-      "An Are.na-style scrapbook for texts, links, images, and videos worth keeping",
+      "A scrapbook for texts, links, images, and videos worth keeping.",
     href: "https://things.zyx.tw",
     web: true,
   },
   {
     name: "good.winlab.tw",
     description:
-      "Digital 乖乖 — the green-bag snack engineers tape onto servers so they behave",
+      "Digital 乖乖 — the snack engineers tape onto servers for luck.",
     href: "https://good.winlab.tw",
     web: true,
   },
   {
     name: "ai.winlab.tw",
-    description: "NYCU Office of AI Affairs — institutional website",
+    description: "NYCU's Office of AI Affairs — the official site.",
     href: "https://ai.winlab.tw",
     web: true,
   },
   {
     name: "winlab.tw",
-    description: "WinLab — Wireless Internet Laboratory",
+    description: "WinLab — Chien-Chao Tseng's lab at NYCU CS.",
     href: "https://winlab.tw",
     web: true,
   },
   {
     name: "gallery.winlab.tw",
-    description: "Art from NYCU WinLab",
+    description: "Art from NYCU WinLab — sketches, prints, the whole wall.",
     href: "https://gallery.winlab.tw",
     web: true,
   },
   {
     name: "scriptorium",
     description:
-      "Self-hosted LLM wiki for teams — Karpathy's pattern over Postgres + MCP",
+      "Self-hosted LLM wiki for teams — Karpathy's pattern over Postgres + MCP.",
     href: "https://github.com/zyx1121/scriptorium",
     web: false,
   },
   {
     name: "temp.zyx.tw",
-    description: "Anonymous shared notepad — one URL, one pad, no account",
+    description: "Anonymous shared notepad — one URL, one pad, no account.",
     href: "https://temp.zyx.tw",
     web: true,
   },
   {
     name: "link.zyx.tw",
-    description: "URL shortener — type a URL, get a short one back",
+    description: "URL shortener — paste a long one, get a short one back.",
     href: "https://link.zyx.tw",
     web: true,
   },
   {
     name: "time.zyx.tw",
-    description: "What time is it? A clock, that's all",
+    description: "What time is it? A clock, that's all.",
     href: "https://time.zyx.tw",
     web: true,
   },
 ] as const
+
+function shuffle<T>(input: readonly T[]): T[] {
+  const out = input.slice()
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const tmp = out[i] as T
+    out[i] = out[j] as T
+    out[j] = tmp
+  }
+  return out
+}
 
 const spring = { type: "spring" as const, stiffness: 200, damping: 20 }
 
@@ -85,6 +96,13 @@ export function Projects() {
   const sectionRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const { ref: headingRef, inView } = useInView()
+
+  // Server renders the static list; client shuffles after hydration so
+  // every reload surfaces a different opener without an SSR mismatch.
+  const [order, setOrder] = useState<Project[]>(() => PROJECTS.slice())
+  useEffect(() => {
+    setOrder(shuffle(PROJECTS))
+  }, [])
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -127,7 +145,7 @@ export function Projects() {
           style={{ x }}
           className="flex shrink-0 items-stretch gap-6 px-8 will-change-transform sm:gap-8 sm:px-12"
         >
-          {PROJECTS.map((project) => (
+          {order.map((project) => (
             <ProjectCard key={project.name} project={project} />
           ))}
         </motion.div>
