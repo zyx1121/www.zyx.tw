@@ -89,6 +89,29 @@
         "typescript": "^5.9.3",
       },
     },
+    "apps/things": {
+      "name": "things",
+      "version": "0.0.1",
+      "dependencies": {
+        "@supabase/ssr": "^0.6.1",
+        "@supabase/supabase-js": "^2.105.1",
+        "@workspace/ui": "workspace:*",
+        "next": "16.1.6",
+        "next-themes": "^0.4.6",
+        "react": "^19.2.4",
+        "react-dom": "^19.2.4",
+      },
+      "devDependencies": {
+        "@tailwindcss/postcss": "^4.1.18",
+        "@types/node": "^25.1.0",
+        "@types/react": "^19.2.10",
+        "@types/react-dom": "^19.2.3",
+        "@workspace/eslint-config": "workspace:^",
+        "@workspace/typescript-config": "workspace:*",
+        "eslint": "^9.39.2",
+        "typescript": "^5.9.3",
+      },
+    },
     "apps/time": {
       "name": "time",
       "version": "0.0.1",
@@ -1774,6 +1797,8 @@
     "tapable": ["tapable@2.3.3", "", {}, "sha512-uxc/zpqFg6x7C8vOE7lh6Lbda8eEL9zmVm/PLeTPBRhh1xCgdWaQ+J1CUieGpIfm2HdtsUpRv+HshiasBMcc6A=="],
 
     "temp": ["temp@workspace:apps/temp"],
+
+    "things": ["things@workspace:apps/things"],
 
     "three": ["three@0.169.0", "", {}, "sha512-Ed906MA3dR4TS5riErd4QBsRGPcx+HBDX2O5yYE5GqJeFQTPU+M56Va/f/Oph9X7uZo3W3o4l2ZhBZ6f6qUv0w=="],
 
