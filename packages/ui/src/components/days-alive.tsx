@@ -10,10 +10,7 @@ import {
 } from "@workspace/ui/components/ui/tooltip"
 
 const MS_PER_DAY = 86_400_000
-
-type DaysAliveProps = {
-  birthday: string
-}
+const BIRTHDAY = "2002-11-21"
 
 // Anniversary-based breakdown — leap-year safe.
 function formatBreakdown(birthday: Date, now: Date) {
@@ -33,7 +30,7 @@ function formatBreakdown(birthday: Date, now: Date) {
   return `${years}y ${days}d ${h}h ${m}m ${s}s`
 }
 
-export function DaysAlive({ birthday }: DaysAliveProps) {
+export function DaysAlive() {
   const [now, setNow] = useState<number | null>(null)
 
   useEffect(() => {
@@ -43,7 +40,7 @@ export function DaysAlive({ birthday }: DaysAliveProps) {
     return () => clearInterval(id)
   }, [])
 
-  const birthDate = new Date(birthday)
+  const birthDate = new Date(BIRTHDAY)
   const elapsedMs = now === null ? null : now - birthDate.getTime()
   const days =
     elapsedMs === null ? null : Math.max(0, Math.floor(elapsedMs / MS_PER_DAY))
@@ -61,7 +58,7 @@ export function DaysAlive({ birthday }: DaysAliveProps) {
             {now === null ? "—" : formatBreakdown(birthDate, new Date(now))}
           </span>
           <br />
-          <span className="text-background/60">since {birthday}</span>
+          <span className="text-background/60">since {BIRTHDAY}</span>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

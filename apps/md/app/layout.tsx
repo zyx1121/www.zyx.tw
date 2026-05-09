@@ -19,8 +19,6 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
-const BIRTHDAY = process.env.NEXT_PUBLIC_BIRTHDAY ?? "2002-01-01"
-
 export const metadata: Metadata = {
   title: "MD",
   description: "Personal markdown hosting.",
@@ -42,7 +40,7 @@ export default function RootLayout({
           <Brand />
           <ThemeToggle />
           {children}
-          <DaysAlive birthday={BIRTHDAY} />
+          <DaysAlive />
           <Copyright />
         </ThemeProvider>
       </body>
