@@ -41,8 +41,32 @@ function detectKind(value: string): BlockKind {
   return URL_RE.test(value.trim()) ? "link" : "text"
 }
 
-async function uploadImage(file: File): Promise<string> {
+function readImageDims(
+  file: File
+): Promise<{ width: number; height: number } | null> {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file)
+    const img = new Image()
+    img.onload = () => {
+      const dims = { width: img.naturalWidth, height: img.naturalHeight }
+      URL.revokeObjectURL(url)
+      resolve(dims)
+    }
+    img.onerror = () => {
+      URL.revokeObjectURL(url)
+      resolve(null)
+    }
+    img.src = url
+  })
+}
+
+async function uploadImage(file: File): Promise<{
+  url: string
+  width: number | null
+  height: number | null
+}> {
   const supabase = createClient()
+  const dims = await readImageDims(file)
   const ext = file.name.split(".").pop() ?? "png"
   const path = `${crypto.randomUUID()}.${ext}`
   const { error } = await supabase.storage
@@ -50,7 +74,11 @@ async function uploadImage(file: File): Promise<string> {
     .upload(path, file, { contentType: file.type, upsert: false })
   if (error) throw error
   const { data } = supabase.storage.from("things").getPublicUrl(path)
-  return data.publicUrl
+  return {
+    url: data.publicUrl,
+    width: dims?.width ?? null,
+    height: dims?.height ?? null,
+  }
 }
 
 export function NewBlockShell() {
@@ -83,12 +111,18 @@ export function NewBlockShell() {
         setBusy(true)
         setError(null)
         try {
-          const url = await uploadImage(file)
+          const { url, width, height } = await uploadImage(file)
+          const metadata: Record<string, unknown> = {
+            size: file.size,
+            type: file.type,
+          }
+          if (width) metadata.width = width
+          if (height) metadata.height = height
           openWithDraft({
             kind: "image",
             title: file.name,
             content: url,
-            metadata: { size: file.size, type: file.type },
+            metadata,
           })
         } catch (e) {
           setError(e instanceof Error ? e.message : "upload failed")

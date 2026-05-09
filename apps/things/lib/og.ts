@@ -2,6 +2,8 @@ export type OgMetadata = {
   title?: string
   description?: string
   image?: string
+  image_width?: number
+  image_height?: number
   site_name?: string
 }
 
@@ -106,6 +108,10 @@ export async function fetchOgMetadata(url: string): Promise<OgMetadata> {
     if (description) result.description = description
     if (image) result.image = absolutize(image, target.toString())
     if (siteName) result.site_name = siteName
+    const w = Number(metas["og:image:width"])
+    const h = Number(metas["og:image:height"])
+    if (Number.isFinite(w) && w > 0) result.image_width = w
+    if (Number.isFinite(h) && h > 0) result.image_height = h
     return result
   } catch {
     return {}

@@ -6,6 +6,17 @@ import { createClient } from "@/utils/supabase/server"
 
 export const dynamic = "force-dynamic"
 
+function shuffle<T>(input: readonly T[]): T[] {
+  const out = input.slice()
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const tmp = out[i] as T
+    out[i] = out[j] as T
+    out[j] = tmp
+  }
+  return out
+}
+
 async function fetchPage() {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
     return { blocks: [] as Block[], authed: false }
@@ -17,13 +28,12 @@ async function fetchPage() {
     supabase
       .from("things_blocks")
       .select("id, kind, title, content, metadata, tags, created_at")
-      .order("created_at", { ascending: false })
       .limit(120),
     supabase.auth.getUser(),
   ])
 
   return {
-    blocks: (blocks ?? []) as Block[],
+    blocks: shuffle((blocks ?? []) as Block[]),
     authed: userResult.data.user !== null,
   }
 }

@@ -16,7 +16,14 @@ type LinkMetadata = {
   title?: string
   description?: string
   image?: string
+  image_width?: number
+  image_height?: number
   site_name?: string
+}
+
+type ImageMetadata = {
+  width?: number
+  height?: number
 }
 
 type VideoMetadata = {
@@ -34,6 +41,14 @@ function youtubeId(url: string) {
 function vimeoId(url: string) {
   const match = url.match(/vimeo\.com\/(\d+)/)
   return match?.[1] ?? null
+}
+
+function aspectRatioFrom(
+  width: number | undefined,
+  height: number | undefined
+): string | undefined {
+  if (!width || !height) return undefined
+  return `${width} / ${height}`
 }
 
 function TextBlock({ content }: { content: string }) {
@@ -64,48 +79,49 @@ function LinkBlock({
   } catch {
     // leave host as raw URL if it doesn't parse
   }
+  const aspect = aspectRatioFrom(metadata.image_width, metadata.image_height)
   return (
-    <Link
-      href={content}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group block space-y-3"
-    >
+    <div className="space-y-3">
       {metadata.image ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={metadata.image}
           alt={heading}
           loading="lazy"
-          className="aspect-[16/9] w-full rounded-lg border border-border object-cover"
+          style={{ aspectRatio: aspect ?? "16 / 9" }}
+          className="w-full rounded-lg border border-border object-cover"
         />
       ) : null}
       <div className="space-y-1">
         <p className="text-xs text-muted-foreground">{host}</p>
-        <p className="text-sm group-hover:text-brand">{heading}</p>
+        <p className="text-sm">{heading}</p>
         {metadata.description ? (
           <p className="line-clamp-3 text-xs text-muted-foreground">
             {metadata.description}
           </p>
         ) : null}
       </div>
-    </Link>
+    </div>
   )
 }
 
 function ImageBlock({
   content,
   title,
+  metadata,
 }: {
   content: string
   title: string | null
+  metadata: ImageMetadata
 }) {
+  const aspect = aspectRatioFrom(metadata.width, metadata.height)
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={content}
       alt={title ?? "image"}
       loading="lazy"
+      style={{ aspectRatio: aspect }}
       className="block max-h-[480px] w-full object-cover"
     />
   )
@@ -161,10 +177,17 @@ export function BlockCard({ block }: { block: Block }) {
   const hasTags = block.tags.length > 0
 
   return (
-    <article className="break-inside-avoid overflow-hidden rounded-2xl border border-border bg-card">
+    <Link
+      href={`/${block.id}`}
+      className="group block break-inside-avoid overflow-hidden rounded-2xl border border-border bg-card transition-colors hover:border-foreground/30"
+    >
       {flush ? (
         block.kind === "image" ? (
-          <ImageBlock content={block.content} title={block.title} />
+          <ImageBlock
+            content={block.content}
+            title={block.title}
+            metadata={block.metadata as ImageMetadata}
+          />
         ) : (
           <VideoBlock
             content={block.content}
@@ -201,6 +224,6 @@ export function BlockCard({ block }: { block: Block }) {
           ))}
         </ul>
       ) : null}
-    </article>
+    </Link>
   )
 }
