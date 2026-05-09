@@ -10,12 +10,20 @@ type Note = {
 
 export const revalidate = 60
 
-export default async function Page() {
+async function fetchNotes(): Promise<Note[] | null> {
+  // CI prerender runs without Supabase secrets — render an empty list
+  // instead of throwing. Real env is present on Vercel.
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return []
   const supabase = createClient()
-  const { data: notes } = await supabase
+  const { data } = await supabase
     .from("notes")
     .select("slug, title, updated_at")
     .order("updated_at", { ascending: false })
+  return data
+}
+
+export default async function Page() {
+  const notes = await fetchNotes()
 
   return (
     <main className="mx-auto max-w-2xl space-y-4 px-8 py-32">
