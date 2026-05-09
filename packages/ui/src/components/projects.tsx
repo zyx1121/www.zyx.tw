@@ -16,15 +16,29 @@ type Project = {
 
 const PROJECTS: Project[] = [
   {
-    name: "winlab.tw",
-    description: "WinLab — Wireless Internet Laboratory",
-    href: "https://winlab.tw",
+    name: "things.zyx.tw",
+    description:
+      "An Are.na-style scrapbook for texts, links, images, and videos worth keeping",
+    href: "https://things.zyx.tw",
+    web: true,
+  },
+  {
+    name: "good.winlab.tw",
+    description:
+      "Digital 乖乖 — the green-bag snack engineers tape onto servers so they behave",
+    href: "https://good.winlab.tw",
     web: true,
   },
   {
     name: "ai.winlab.tw",
     description: "NYCU Office of AI Affairs — institutional website",
     href: "https://ai.winlab.tw",
+    web: true,
+  },
+  {
+    name: "winlab.tw",
+    description: "WinLab — Wireless Internet Laboratory",
+    href: "https://winlab.tw",
     web: true,
   },
   {
@@ -41,9 +55,21 @@ const PROJECTS: Project[] = [
     web: false,
   },
   {
+    name: "temp.zyx.tw",
+    description: "Anonymous shared notepad — one URL, one pad, no account",
+    href: "https://temp.zyx.tw",
+    web: true,
+  },
+  {
     name: "link.zyx.tw",
-    description: "URL shortener",
+    description: "URL shortener — type a URL, get a short one back",
     href: "https://link.zyx.tw",
+    web: true,
+  },
+  {
+    name: "time.zyx.tw",
+    description: "What time is it? A clock, that's all",
+    href: "https://time.zyx.tw",
     web: true,
   },
 ] as const
@@ -75,7 +101,7 @@ export function Projects() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-[300dvh] w-dvw"
+      className="relative h-[500dvh] w-dvw"
       aria-label="Projects"
     >
       <div className="sticky top-0 flex h-dvh flex-col justify-center overflow-hidden">
