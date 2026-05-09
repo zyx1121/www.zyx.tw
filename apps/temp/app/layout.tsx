@@ -4,10 +4,8 @@ import { Geist, Geist_Mono } from "next/font/google"
 import "@workspace/ui/globals.css"
 import { Brand } from "@workspace/ui/components/brand"
 import { Copyright } from "@workspace/ui/components/copyright"
-import { DaysAlive } from "@workspace/ui/components/days-alive"
 import { cn } from "@workspace/ui/lib/utils"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
-import { ThemeToggle } from "@workspace/ui/components/theme-toggle"
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -38,9 +36,7 @@ export default function RootLayout({
       <body className="font-mono select-none">
         <ThemeProvider>
           <Brand />
-          <ThemeToggle />
           {children}
-          <DaysAlive />
           <Copyright />
         </ThemeProvider>
       </body>
