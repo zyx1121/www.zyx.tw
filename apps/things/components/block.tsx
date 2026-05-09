@@ -106,7 +106,7 @@ function ImageBlock({
       src={content}
       alt={title ?? "image"}
       loading="lazy"
-      className="max-h-[480px] w-full rounded-lg border border-border object-cover"
+      className="block max-h-[480px] w-full object-cover"
     />
   )
 }
@@ -121,7 +121,7 @@ function VideoBlock({
   const yt = youtubeId(content)
   if (yt) {
     return (
-      <div className="aspect-video w-full overflow-hidden rounded-lg border border-border">
+      <div className="aspect-video w-full overflow-hidden">
         <iframe
           src={`https://www.youtube.com/embed/${yt}`}
           title="YouTube video"
@@ -135,7 +135,7 @@ function VideoBlock({
   const vimeo = vimeoId(content)
   if (vimeo) {
     return (
-      <div className="aspect-video w-full overflow-hidden rounded-lg border border-border">
+      <div className="aspect-video w-full overflow-hidden">
         <iframe
           src={`https://player.vimeo.com/video/${vimeo}`}
           title="Vimeo video"
@@ -151,33 +151,46 @@ function VideoBlock({
       src={content}
       controls
       poster={metadata.thumbnail}
-      className="w-full rounded-lg border border-border"
+      className="block w-full"
     />
   )
 }
 
 export function BlockCard({ block }: { block: Block }) {
+  const flush = block.kind === "image" || block.kind === "video"
+  const hasTags = block.tags.length > 0
+
   return (
-    <article className="break-inside-avoid space-y-3 rounded-2xl border border-border bg-card p-5">
-      {block.kind === "text" ? <TextBlock content={block.content} /> : null}
-      {block.kind === "link" ? (
-        <LinkBlock
-          content={block.content}
-          title={block.title}
-          metadata={block.metadata as LinkMetadata}
-        />
-      ) : null}
-      {block.kind === "image" ? (
-        <ImageBlock content={block.content} title={block.title} />
-      ) : null}
-      {block.kind === "video" ? (
-        <VideoBlock
-          content={block.content}
-          metadata={block.metadata as VideoMetadata}
-        />
-      ) : null}
-      {block.tags.length > 0 ? (
-        <ul className="flex flex-wrap gap-1.5">
+    <article className="break-inside-avoid overflow-hidden rounded-2xl border border-border bg-card">
+      {flush ? (
+        block.kind === "image" ? (
+          <ImageBlock content={block.content} title={block.title} />
+        ) : (
+          <VideoBlock
+            content={block.content}
+            metadata={block.metadata as VideoMetadata}
+          />
+        )
+      ) : (
+        <div className="space-y-3 p-5">
+          {block.kind === "text" ? <TextBlock content={block.content} /> : null}
+          {block.kind === "link" ? (
+            <LinkBlock
+              content={block.content}
+              title={block.title}
+              metadata={block.metadata as LinkMetadata}
+            />
+          ) : null}
+        </div>
+      )}
+      {hasTags ? (
+        <ul
+          className={
+            flush
+              ? "flex flex-wrap gap-1.5 border-t border-border px-5 py-3"
+              : "flex flex-wrap gap-1.5 px-5 pb-5"
+          }
+        >
           {block.tags.map((tag) => (
             <li
               key={tag}
