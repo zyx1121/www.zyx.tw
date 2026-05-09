@@ -17,9 +17,32 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
+const SITE_NAME = "Link"
+const SITE_DESC = "URL shortener — paste a long one, get a short one back."
+
 export const metadata: Metadata = {
-  title: "Link",
-  description: "Shorten your links.",
+  metadataBase: new URL("https://link.zyx.tw"),
+  title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
+  description: SITE_DESC,
+  applicationName: SITE_NAME,
+  authors: [{ name: "Loki", url: "https://zyx.tw" }],
+  creator: "Loki",
+  keywords: ["url shortener", "short link", "ZYX"],
+  robots: { index: true, follow: true },
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESC,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESC,
+  },
 }
 
 export default function RootLayout({

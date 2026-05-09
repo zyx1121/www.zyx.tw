@@ -17,9 +17,32 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
+const SITE_NAME = "Time"
+const SITE_DESC = "What time is it? A clock, that's all."
+
 export const metadata: Metadata = {
-  title: "Time",
-  description: "What time is it?",
+  metadataBase: new URL("https://time.zyx.tw"),
+  title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
+  description: SITE_DESC,
+  applicationName: SITE_NAME,
+  authors: [{ name: "Loki", url: "https://zyx.tw" }],
+  creator: "Loki",
+  keywords: ["time", "clock", "ZYX"],
+  robots: { index: true, follow: true },
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESC,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESC,
+  },
 }
 
 export default function RootLayout({

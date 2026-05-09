@@ -11,10 +11,33 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
+const SITE_NAME = "乖乖"
+const SITE_DESC =
+  "Digital 乖乖 — the snack engineers tape onto servers for luck."
+
 export const metadata: Metadata = {
-  title: "乖乖",
-  description:
-    "A digital 乖乖 — the green-bag snack engineers tape onto servers so they behave.",
+  metadataBase: new URL("https://good.zyx.tw"),
+  title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
+  description: SITE_DESC,
+  applicationName: SITE_NAME,
+  authors: [{ name: "Loki", url: "https://zyx.tw" }],
+  creator: "Loki",
+  keywords: ["乖乖", "digital amulet", "電子護符", "ZYX"],
+  robots: { index: true, follow: true },
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "zh_TW",
+    url: "/",
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESC,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESC,
+  },
 }
 
 export default function RootLayout({
