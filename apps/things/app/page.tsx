@@ -27,7 +27,7 @@ async function fetchPage() {
   const [{ data: blocks }, userResult] = await Promise.all([
     supabase
       .from("things_blocks")
-      .select("id, kind, title, content, metadata, tags, created_at")
+      .select("id, kind, title, content, metadata, tags, is_public, created_at")
       .limit(120),
     supabase.auth.getUser(),
   ])

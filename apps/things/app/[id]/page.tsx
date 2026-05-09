@@ -20,13 +20,31 @@ export default async function Page({ params }: Props) {
 
   const cookieStore = await cookies()
   const supabase = createClient(cookieStore)
-  const { data } = await supabase
-    .from("things_blocks")
-    .select("id, kind, title, content, metadata, tags, created_at")
-    .eq("id", id)
-    .single()
+
+  const [{ data }, userResult] = await Promise.all([
+    supabase
+      .from("things_blocks")
+      .select(
+        "id, kind, title, content, metadata, tags, is_public, owner_id, created_at"
+      )
+      .eq("id", id)
+      .single(),
+    supabase.auth.getUser(),
+  ])
 
   if (!data) notFound()
 
-  return <BlockDetail block={data as Block} />
+  const isOwner = userResult.data.user?.id === data.owner_id
+  const block: Block = {
+    id: data.id,
+    kind: data.kind,
+    title: data.title,
+    content: data.content,
+    metadata: data.metadata,
+    tags: data.tags,
+    is_public: data.is_public,
+    created_at: data.created_at,
+  }
+
+  return <BlockDetail block={block} isOwner={isOwner} />
 }

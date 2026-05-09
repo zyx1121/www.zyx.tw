@@ -1,5 +1,6 @@
 import Link from "next/link"
 
+import { BlockActions } from "@/components/block-actions"
 import type { Block } from "@/components/block"
 
 type LinkMetadata = {
@@ -46,7 +47,13 @@ function aspectRatioFrom(w: number | undefined, h: number | undefined) {
   return `${w} / ${h}`
 }
 
-export function BlockDetail({ block }: { block: Block }) {
+export function BlockDetail({
+  block,
+  isOwner,
+}: {
+  block: Block
+  isOwner: boolean
+}) {
   return (
     <main className="mx-auto min-h-dvh max-w-3xl space-y-8 px-6 pt-24 pb-32">
       <Body block={block} />
@@ -54,6 +61,8 @@ export function BlockDetail({ block }: { block: Block }) {
       {block.title ? (
         <h1 className="text-xl font-medium sm:text-2xl">{block.title}</h1>
       ) : null}
+
+      {isOwner ? <BlockActions block={block} /> : null}
 
       {block.kind === "link" ? (
         <Link

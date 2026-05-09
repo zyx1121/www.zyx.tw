@@ -9,6 +9,7 @@ export type Block = {
   content: string
   metadata: Record<string, unknown>
   tags: string[]
+  is_public: boolean
   created_at: string
 }
 
