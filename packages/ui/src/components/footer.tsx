@@ -3,9 +3,9 @@
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@workspace/ui/components/ui/tooltip"
-
 import { DaysAlive } from "@workspace/ui/components/days-alive"
 
 type FooterProps = {
@@ -15,7 +15,7 @@ type FooterProps = {
 export function Footer({ birthday }: FooterProps) {
   const year = new Date().getFullYear()
   return (
-    <>
+    <TooltipProvider>
       <DaysAlive birthday={birthday} />
       <Tooltip>
         <TooltipTrigger asChild>
@@ -27,6 +27,6 @@ export function Footer({ birthday }: FooterProps) {
           still under construction
         </TooltipContent>
       </Tooltip>
-    </>
+    </TooltipProvider>
   )
 }

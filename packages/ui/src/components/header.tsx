@@ -3,14 +3,14 @@ import Link from "next/link"
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@workspace/ui/components/ui/tooltip"
-
 import { ThemeToggle } from "@workspace/ui/components/theme-toggle"
 
 export function Header() {
   return (
-    <>
+    <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
           <Link
@@ -25,6 +25,6 @@ export function Header() {
         </TooltipContent>
       </Tooltip>
       <ThemeToggle />
-    </>
+    </TooltipProvider>
   )
 }

@@ -5,7 +5,6 @@ import "@workspace/ui/globals.css"
 import { Footer } from "@workspace/ui/components/footer"
 import { Header } from "@workspace/ui/components/header"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
-import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -32,11 +31,9 @@ export default function RootLayout({
     >
       <body>
         <ThemeProvider>
-          <TooltipProvider>
-            <Header />
-            {children}
-            <Footer birthday={BIRTHDAY} />
-          </TooltipProvider>
+          <Header />
+          {children}
+          <Footer birthday={BIRTHDAY} />
         </ThemeProvider>
       </body>
     </html>
