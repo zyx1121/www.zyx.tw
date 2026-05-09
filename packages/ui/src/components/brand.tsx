@@ -16,7 +16,7 @@ export function Brand() {
             href="https://zyx.tw"
             className="fixed top-4 left-4 z-50 font-mono text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
-            ZYX
+            zyx
           </Link>
         </TooltipTrigger>
         <TooltipContent side="bottom" align="start">

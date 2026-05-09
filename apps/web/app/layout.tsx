@@ -15,7 +15,7 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
-const SITE_NAME = "ZYX"
+const SITE_NAME = "zyx"
 const SITE_DESC = "Loki — software, ML, and the occasional photo trail."
 
 export const metadata: Metadata = {
