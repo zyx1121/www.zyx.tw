@@ -1,27 +1,35 @@
 import { cookies } from "next/headers"
 
 import { BlockCard, type Block } from "@/components/block"
+import { NewBlockShell } from "@/components/new-block"
 import { createClient } from "@/utils/supabase/server"
 
-export const revalidate = 60
+export const dynamic = "force-dynamic"
 
-async function fetchBlocks(): Promise<Block[]> {
-  // Build-time / CI prerender without supabase env — render an empty grid
-  // instead of crashing. Vercel runtime has the real env.
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return []
+async function fetchPage() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    return { blocks: [] as Block[], authed: false }
+  }
   const cookieStore = await cookies()
   const supabase = createClient(cookieStore)
-  const { data } = await supabase
-    .from("things_blocks")
-    .select("id, kind, title, content, metadata, tags, created_at")
-    .eq("is_public", true)
-    .order("created_at", { ascending: false })
-    .limit(120)
-  return (data ?? []) as Block[]
+
+  const [{ data: blocks }, userResult] = await Promise.all([
+    supabase
+      .from("things_blocks")
+      .select("id, kind, title, content, metadata, tags, created_at")
+      .order("created_at", { ascending: false })
+      .limit(120),
+    supabase.auth.getUser(),
+  ])
+
+  return {
+    blocks: (blocks ?? []) as Block[],
+    authed: userResult.data.user !== null,
+  }
 }
 
 export default async function Page() {
-  const blocks = await fetchBlocks()
+  const { blocks, authed } = await fetchPage()
 
   return (
     <main className="min-h-dvh px-6 pt-24 pb-32 sm:px-10">
@@ -45,6 +53,8 @@ export default async function Page() {
           ))}
         </div>
       )}
+
+      {authed ? <NewBlockShell /> : null}
     </main>
   )
 }
