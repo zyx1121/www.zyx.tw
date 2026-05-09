@@ -1,6 +1,7 @@
 import { cookies } from "next/headers"
 import { NextResponse, type NextRequest } from "next/server"
 
+import { fetchOgMetadata } from "@/lib/og"
 import { createClient } from "@/utils/supabase/server"
 
 const ALLOWED_KINDS = new Set(["text", "link", "image", "video"])
@@ -34,13 +35,21 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "content required" }, { status: 400 })
   }
 
+  // Hydrate link blocks with OG metadata at write time so the read path
+  // stays cheap. User-supplied metadata wins on conflict.
+  let metadata = body.metadata ?? {}
+  if (body.kind === "link") {
+    const og = await fetchOgMetadata(body.content.trim())
+    metadata = { ...og, ...metadata }
+  }
+
   const { data, error } = await supabase
     .from("things_blocks")
     .insert({
       kind: body.kind,
       title: body.title ?? null,
       content: body.content.trim(),
-      metadata: body.metadata ?? {},
+      metadata,
       tags: body.tags ?? [],
       is_public: body.is_public ?? false,
       owner_id: user.id,
