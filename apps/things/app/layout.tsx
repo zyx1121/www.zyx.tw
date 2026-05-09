@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   authors: [{ name: "Loki", url: "https://zyx.tw" }],
   creator: "Loki",
-  keywords: ["scrapbook", "are.na", "moodboard", "blocks", "ZYX", "things"],
+  keywords: ["scrapbook", "are.na", "moodboard", "blocks", "zyx", "things"],
   robots: { index: true, follow: true },
   alternates: { canonical: "/" },
   openGraph: {

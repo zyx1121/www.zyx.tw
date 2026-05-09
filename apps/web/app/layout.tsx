@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     "Loki",
     "Zhan Yong Xiang",
     "詹詠翔",
-    "ZYX",
+    "zyx",
     "NYCU",
     "WinLab",
     "software engineer",

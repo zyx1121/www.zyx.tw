@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   authors: [{ name: "Loki", url: "https://zyx.tw" }],
   creator: "Loki",
-  keywords: ["乖乖", "digital amulet", "電子護符", "ZYX"],
+  keywords: ["乖乖", "digital amulet", "電子護符", "zyx"],
   robots: { index: true, follow: true },
   alternates: { canonical: "/" },
   openGraph: {

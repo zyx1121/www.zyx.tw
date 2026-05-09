@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   authors: [{ name: "Loki", url: "https://zyx.tw" }],
   creator: "Loki",
-  keywords: ["time", "clock", "ZYX"],
+  keywords: ["time", "clock", "zyx"],
   robots: { index: true, follow: true },
   alternates: { canonical: "/" },
   openGraph: {
