@@ -23,10 +23,10 @@ const PROJECTS: Project[] = [
     web: true,
   },
   {
-    name: "good.winlab.tw",
+    name: "good.zyx.tw",
     description:
       "Digital 乖乖 — the snack engineers tape onto servers for luck.",
-    href: "https://good.winlab.tw",
+    href: "https://good.zyx.tw",
     web: true,
   },
   {

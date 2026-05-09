@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "private": true,
-  "description": "good.winlab.tw — a digital 乖乖, the snack engineers tape onto servers so they behave",
+  "description": "good.zyx.tw — a digital 乖乖, the snack engineers tape onto servers so they behave",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
