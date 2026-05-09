@@ -1,7 +1,8 @@
 "use server"
 
-import { headers } from "next/headers"
-import { createClient } from "@/lib/supabase/server"
+import { cookies, headers } from "next/headers"
+
+import { createClient } from "@/utils/supabase/server"
 
 type ActionState =
   | { ok: true; shortCode: string; shortUrl: string }
@@ -41,7 +42,8 @@ export async function createShortLink(
     return { ok: false, error: "Only http/https URLs, please." }
   }
 
-  const supabase = await createClient()
+  const cookieStore = await cookies()
+  const supabase = createClient(cookieStore)
 
   const { data: existing } = await supabase
     .from("link")

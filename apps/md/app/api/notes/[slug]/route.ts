@@ -1,7 +1,8 @@
+import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 
-import { createClient } from "@/lib/supabase/client"
-import { createAdminClient } from "@/lib/supabase/admin"
+import { createClient as createAdminClient } from "@/utils/supabase/admin"
+import { createClient } from "@/utils/supabase/server"
 
 function isAuthorized(request: NextRequest): boolean {
   return (
@@ -13,7 +14,8 @@ type Params = { params: Promise<{ slug: string }> }
 
 export async function GET(_: NextRequest, { params }: Params) {
   const { slug } = await params
-  const supabase = createClient()
+  const cookieStore = await cookies()
+  const supabase = createClient(cookieStore)
   const { data, error } = await supabase
     .from("notes")
     .select("slug, title, content, created_at, updated_at")

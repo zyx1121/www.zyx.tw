@@ -1,14 +1,13 @@
 import { createServerClient, type CookieMethodsServer } from "@supabase/ssr"
 import type { SupabaseClient } from "@supabase/supabase-js"
-import { cookies } from "next/headers"
+import type { cookies } from "next/headers"
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey =
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-export async function createClient(): Promise<SupabaseClient> {
-  const cookieStore = await cookies()
+export const createClient = (
+  cookieStore: Awaited<ReturnType<typeof cookies>>
+): SupabaseClient => {
   const cookieMethods: CookieMethodsServer = {
     getAll() {
       return cookieStore.getAll()
@@ -18,10 +17,12 @@ export async function createClient(): Promise<SupabaseClient> {
         cookiesToSet.forEach(({ name, value, options }) =>
           cookieStore.set(name, value, options)
         )
-      } catch {}
+      } catch {
+        // Server Component — middleware refreshes user sessions instead.
+      }
     },
   }
-  return createServerClient(supabaseUrl, supabaseKey, {
+  return createServerClient(supabaseUrl!, supabaseKey!, {
     cookies: cookieMethods,
   })
 }

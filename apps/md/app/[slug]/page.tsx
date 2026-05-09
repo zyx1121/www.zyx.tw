@@ -1,10 +1,11 @@
+import { cookies } from "next/headers"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import Markdown from "react-markdown"
 import rehypeHighlight from "rehype-highlight"
 
 import "highlight.js/styles/github-dark.css"
-import { createClient } from "@/lib/supabase/client"
+import { createClient } from "@/utils/supabase/server"
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -12,7 +13,8 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const supabase = createClient()
+  const cookieStore = await cookies()
+  const supabase = createClient(cookieStore)
   const { data } = await supabase
     .from("notes")
     .select("title")
@@ -26,7 +28,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const { slug } = await params
-  const supabase = createClient()
+  const cookieStore = await cookies()
+  const supabase = createClient(cookieStore)
   const { data: note } = await supabase
     .from("notes")
     .select("slug, title, content, created_at, updated_at")

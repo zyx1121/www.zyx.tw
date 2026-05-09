@@ -70,6 +70,7 @@
       "name": "md",
       "version": "0.0.1",
       "dependencies": {
+        "@supabase/ssr": "^0.6.1",
         "@supabase/supabase-js": "^2.105.1",
         "@tailwindcss/typography": "^0.5.19",
         "@workspace/ui": "workspace:*",

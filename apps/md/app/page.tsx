@@ -1,6 +1,7 @@
+import { cookies } from "next/headers"
 import Link from "next/link"
 
-import { createClient } from "@/lib/supabase/client"
+import { createClient } from "@/utils/supabase/server"
 
 type Note = {
   slug: string
@@ -14,7 +15,8 @@ async function fetchNotes(): Promise<Note[] | null> {
   // CI prerender runs without Supabase secrets — render an empty list
   // instead of throwing. Real env is present on Vercel.
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return []
-  const supabase = createClient()
+  const cookieStore = await cookies()
+  const supabase = createClient(cookieStore)
   const { data } = await supabase
     .from("notes")
     .select("slug, title, updated_at")
