@@ -46,7 +46,7 @@ export async function createShortLink(
   const supabase = createClient(cookieStore)
 
   const { data: existing } = await supabase
-    .from("link")
+    .from("link_redirects")
     .select("short_code")
     .eq("url", url)
     .single()
@@ -60,7 +60,7 @@ export async function createShortLink(
   const shortCode = generateShortCode()
 
   const { error } = await supabase
-    .from("link")
+    .from("link_redirects")
     .insert({ short_code: shortCode, url })
 
   if (error) {

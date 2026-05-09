@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const cookieStore = await cookies()
   const supabase = createClient(cookieStore)
   const { data } = await supabase
-    .from("notes")
+    .from("md_notes")
     .select("title")
     .eq("slug", slug)
     .single()
@@ -31,7 +31,7 @@ export default async function Page({ params }: Props) {
   const cookieStore = await cookies()
   const supabase = createClient(cookieStore)
   const { data: note } = await supabase
-    .from("notes")
+    .from("md_notes")
     .select("slug, title, content, created_at, updated_at")
     .eq("slug", slug)
     .single()

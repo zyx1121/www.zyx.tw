@@ -18,7 +18,7 @@ async function fetchNotes(): Promise<Note[] | null> {
   const cookieStore = await cookies()
   const supabase = createClient(cookieStore)
   const { data } = await supabase
-    .from("notes")
+    .from("md_notes")
     .select("slug, title, updated_at")
     .order("updated_at", { ascending: false })
   return data

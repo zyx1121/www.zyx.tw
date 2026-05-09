@@ -17,7 +17,7 @@ export async function GET(_: NextRequest, { params }: Params) {
   const cookieStore = await cookies()
   const supabase = createClient(cookieStore)
   const { data, error } = await supabase
-    .from("notes")
+    .from("md_notes")
     .select("slug, title, content, created_at, updated_at")
     .eq("slug", slug)
     .single()
@@ -46,7 +46,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
 
   const supabase = createAdminClient()
   const { data, error } = await supabase
-    .from("notes")
+    .from("md_notes")
     .update(updates)
     .eq("slug", slug)
     .select()
@@ -69,7 +69,7 @@ export async function DELETE(request: NextRequest, { params }: Params) {
 
   const { slug } = await params
   const supabase = createAdminClient()
-  const { error } = await supabase.from("notes").delete().eq("slug", slug)
+  const { error } = await supabase.from("md_notes").delete().eq("slug", slug)
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })

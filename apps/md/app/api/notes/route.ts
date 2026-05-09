@@ -14,7 +14,7 @@ export async function GET() {
   const cookieStore = await cookies()
   const supabase = createClient(cookieStore)
   const { data, error } = await supabase
-    .from("notes")
+    .from("md_notes")
     .select("slug, title, updated_at")
     .order("updated_at", { ascending: false })
 
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 
   const supabase = createAdminClient()
   const { data, error } = await supabase
-    .from("notes")
+    .from("md_notes")
     .insert({ slug, title, content })
     .select()
     .single()

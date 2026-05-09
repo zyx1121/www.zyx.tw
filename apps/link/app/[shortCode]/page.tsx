@@ -15,7 +15,7 @@ export default async function ShortCodePage({
   const supabase = createClient(cookieStore)
 
   const { data } = await supabase
-    .from("link")
+    .from("link_redirects")
     .select("url")
     .eq("short_code", shortCode)
     .single()

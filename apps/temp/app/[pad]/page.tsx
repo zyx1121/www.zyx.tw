@@ -23,13 +23,13 @@ export default function PadPage({
 
     async function init() {
       const { data } = await supabase
-        .from("pads")
+        .from("temp_pads")
         .select("content")
         .eq("id", padId)
         .maybeSingle()
 
       if (data === null) {
-        await supabase.from("pads").insert({ id: padId, content: "" })
+        await supabase.from("temp_pads").insert({ id: padId, content: "" })
         setContent("")
       } else {
         setContent(data.content)
@@ -45,7 +45,7 @@ export default function PadPage({
         {
           event: "UPDATE",
           schema: "public",
-          table: "pads",
+          table: "temp_pads",
           filter: "id=eq." + padId,
         },
         (payload: { new: Record<string, unknown> }) => {
@@ -65,7 +65,7 @@ export default function PadPage({
     if (debounceRef.current) clearTimeout(debounceRef.current)
     debounceRef.current = setTimeout(async () => {
       await supabase
-        .from("pads")
+        .from("temp_pads")
         .update({ content: value, updated_at: new Date().toISOString() })
         .eq("id", padId)
     }, 300)
