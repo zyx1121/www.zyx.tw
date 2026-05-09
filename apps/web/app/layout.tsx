@@ -2,9 +2,11 @@ import type { Metadata } from "next"
 import { Geist_Mono } from "next/font/google"
 
 import "@workspace/ui/globals.css"
-import { Footer } from "@workspace/ui/components/footer"
-import { Header } from "@workspace/ui/components/header"
+import { Brand } from "@workspace/ui/components/brand"
+import { Copyright } from "@workspace/ui/components/copyright"
+import { DaysAlive } from "@workspace/ui/components/days-alive"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
+import { ThemeToggle } from "@workspace/ui/components/theme-toggle"
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -31,9 +33,11 @@ export default function RootLayout({
     >
       <body>
         <ThemeProvider>
-          <Header />
+          <Brand />
+          <ThemeToggle />
           {children}
-          <Footer birthday={BIRTHDAY} />
+          <DaysAlive birthday={BIRTHDAY} />
+          <Copyright />
         </ThemeProvider>
       </body>
     </html>

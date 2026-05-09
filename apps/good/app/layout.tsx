@@ -2,16 +2,14 @@ import type { Metadata } from "next"
 import { Geist_Mono } from "next/font/google"
 
 import "@workspace/ui/globals.css"
-import { Footer } from "@workspace/ui/components/footer"
-import { Header } from "@workspace/ui/components/header"
+import { Brand } from "@workspace/ui/components/brand"
+import { Copyright } from "@workspace/ui/components/copyright"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 })
-
-const BIRTHDAY = process.env.NEXT_PUBLIC_BIRTHDAY ?? "2002-01-01"
 
 export const metadata: Metadata = {
   title: "Good — NYCU WinLab",
@@ -39,9 +37,9 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider>
-          <Header />
+          <Brand />
           {children}
-          <Footer birthday={BIRTHDAY} />
+          <Copyright />
         </ThemeProvider>
       </body>
     </html>

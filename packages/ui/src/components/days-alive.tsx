@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@workspace/ui/components/ui/tooltip"
 
@@ -48,19 +49,21 @@ export function DaysAlive({ birthday }: DaysAliveProps) {
     elapsedMs === null ? null : Math.max(0, Math.floor(elapsedMs / MS_PER_DAY))
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <span className="fixed bottom-4 left-4 z-50 cursor-default font-mono text-sm text-muted-foreground tabular-nums">
-          {days === null ? "" : days.toLocaleString()}
-        </span>
-      </TooltipTrigger>
-      <TooltipContent side="top" align="start">
-        <span className="tabular-nums">
-          {now === null ? "—" : formatBreakdown(birthDate, new Date(now))}
-        </span>
-        <br />
-        <span className="text-background/60">since {birthday}</span>
-      </TooltipContent>
-    </Tooltip>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="fixed bottom-4 left-4 z-50 cursor-default font-mono text-sm text-muted-foreground tabular-nums">
+            {days === null ? "" : days.toLocaleString()}
+          </span>
+        </TooltipTrigger>
+        <TooltipContent side="top" align="start">
+          <span className="tabular-nums">
+            {now === null ? "—" : formatBreakdown(birthDate, new Date(now))}
+          </span>
+          <br />
+          <span className="text-background/60">since {birthday}</span>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
