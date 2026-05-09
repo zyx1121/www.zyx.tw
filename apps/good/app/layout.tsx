@@ -12,8 +12,9 @@ const fontMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Good — NYCU WinLab",
-  description: "Interactive 3D showcase for NYCU WinLab.",
+  title: "乖乖",
+  description:
+    "A digital 乖乖 — the green-bag snack engineers tape onto servers so they behave.",
 }
 
 export default function RootLayout({

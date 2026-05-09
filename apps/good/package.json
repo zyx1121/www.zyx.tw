@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "private": true,
-  "description": "Interactive 3D showcase for NYCU WinLab",
+  "description": "good.winlab.tw — a digital 乖乖, the snack engineers tape onto servers so they behave",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
