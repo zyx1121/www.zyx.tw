@@ -1,21 +1,23 @@
 "use client"
 
-import Link from "next/link"
 import { motion } from "motion/react"
 
+import { MapboxMap } from "@workspace/ui/components/mapbox-map"
 import { useInView } from "@workspace/ui/hooks/use-in-view"
-
-const EMAIL = "mail@zyx.tw"
 
 const spring = { type: "spring" as const, stiffness: 200, damping: 20 }
 
-export function Contact() {
+type MapBlockProps = {
+  accessToken: string
+}
+
+export function MapBlock({ accessToken }: MapBlockProps) {
   const { ref, inView } = useInView()
 
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      aria-label="Contact"
+      aria-label="Map"
       className="flex h-dvh w-dvw flex-col items-center justify-center gap-6 px-6 text-center"
     >
       <motion.h2
@@ -24,12 +26,7 @@ export function Contact() {
         transition={spring}
         className="text-2xl font-medium sm:text-3xl"
       >
-        <Link
-          href={`mailto:${EMAIL}`}
-          className="underline underline-offset-8 transition-colors hover:text-brand"
-        >
-          {EMAIL}
-        </Link>
+        Places I&apos;ve shot.
       </motion.h2>
       <motion.p
         initial={{ opacity: 0, y: 16 }}
@@ -37,8 +34,16 @@ export function Contact() {
         transition={{ ...spring, delay: 0.1 }}
         className="max-w-md text-sm text-muted-foreground"
       >
-        Can&apos;t promise a reply, but the door&apos;s open.
+        Snapshots from places I&apos;ve wandered. Tap a pin to peek.
       </motion.p>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={inView ? { opacity: 1, scale: 1 } : {}}
+        transition={{ ...spring, delay: 0.2 }}
+        className="h-[55dvh] w-full max-w-3xl overflow-hidden rounded-3xl border border-border"
+      >
+        <MapboxMap accessToken={accessToken} />
+      </motion.div>
     </section>
   )
 }

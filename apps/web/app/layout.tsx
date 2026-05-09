@@ -1,16 +1,11 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist_Mono } from "next/font/google"
 
 import "@workspace/ui/globals.css"
 import { Footer } from "@workspace/ui/components/footer"
 import { Header } from "@workspace/ui/components/header"
-import { cn } from "@workspace/ui/lib/utils"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
-
-const fontSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
+import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -33,13 +28,15 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontSans.variable, fontMono.variable)}
+      className={`${fontMono.variable} font-mono antialiased`}
     >
-      <body className="font-mono">
+      <body>
         <ThemeProvider>
-          <Header />
-          {children}
-          <Footer birthday={BIRTHDAY} />
+          <TooltipProvider>
+            <Header />
+            {children}
+            <Footer birthday={BIRTHDAY} />
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

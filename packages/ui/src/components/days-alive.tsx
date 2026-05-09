@@ -2,28 +2,65 @@
 
 import { useEffect, useState } from "react"
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@workspace/ui/components/ui/tooltip"
+
 const MS_PER_DAY = 86_400_000
 
 type DaysAliveProps = {
   birthday: string
 }
 
+// Anniversary-based breakdown — leap-year safe.
+function formatBreakdown(birthday: Date, now: Date) {
+  let years = now.getFullYear() - birthday.getFullYear()
+  const anniversary = new Date(birthday)
+  anniversary.setFullYear(now.getFullYear())
+  if (now < anniversary) {
+    years -= 1
+    anniversary.setFullYear(anniversary.getFullYear() - 1)
+  }
+
+  const totalSec = Math.floor((now.getTime() - anniversary.getTime()) / 1000)
+  const days = Math.floor(totalSec / 86_400)
+  const h = Math.floor((totalSec % 86_400) / 3_600)
+  const m = Math.floor((totalSec % 3_600) / 60)
+  const s = totalSec % 60
+  return `${years}y ${days}d ${h}h ${m}m ${s}s`
+}
+
 export function DaysAlive({ birthday }: DaysAliveProps) {
-  const [days, setDays] = useState<number | null>(null)
+  const [now, setNow] = useState<number | null>(null)
 
   useEffect(() => {
-    const compute = () => {
-      const ms = Date.now() - new Date(birthday).getTime()
-      setDays(Math.max(0, Math.floor(ms / MS_PER_DAY)))
-    }
-    compute()
-    const id = setInterval(compute, 60_000)
+    const tick = () => setNow(Date.now())
+    tick()
+    const id = setInterval(tick, 1000)
     return () => clearInterval(id)
-  }, [birthday])
+  }, [])
+
+  const birthDate = new Date(birthday)
+  const elapsedMs = now === null ? null : now - birthDate.getTime()
+  const days =
+    elapsedMs === null ? null : Math.max(0, Math.floor(elapsedMs / MS_PER_DAY))
 
   return (
-    <span className="fixed bottom-4 left-4 z-50 font-mono text-sm text-muted-foreground tabular-nums">
-      {days === null ? "" : days.toLocaleString()}
-    </span>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span className="fixed bottom-4 left-4 z-50 cursor-default font-mono text-sm text-muted-foreground tabular-nums">
+          {days === null ? "" : days.toLocaleString()}
+        </span>
+      </TooltipTrigger>
+      <TooltipContent side="top" align="start">
+        <span className="tabular-nums">
+          {now === null ? "—" : formatBreakdown(birthDate, new Date(now))}
+        </span>
+        <br />
+        <span className="text-background/60">since {birthday}</span>
+      </TooltipContent>
+    </Tooltip>
   )
 }
