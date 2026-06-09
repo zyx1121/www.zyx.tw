@@ -11,7 +11,7 @@
 
 # www.zyx.tw
 
-Loki 的個人網站。Turborepo monorepo — Next.js 16 + Tailwind v4 + shadcn/ui，純黑白配一點 accent。
+Loki's personal site. Turborepo monorepo — Next.js 16 + Tailwind v4 + shadcn/ui, pure black-and-white with a touch of accent.
 
 ## Stack
 
@@ -51,7 +51,7 @@ cd apps/web
 bunx --bun shadcn@latest add button
 ```
 
-新元件會落地到 `packages/ui/src/components/`，從 app 端直接 import：
+New components land in `packages/ui/src/components/` and are imported straight from the app:
 
 ```tsx
 import { Button } from "@workspace/ui/components/button"
@@ -59,4 +59,4 @@ import { Button } from "@workspace/ui/components/button"
 
 ## Design tokens
 
-集中在 `packages/ui/src/styles/globals.css` 的 `@theme`。可讀版本看 [`packages/ui/src/styles/tokens.md`](./packages/ui/src/styles/tokens.md)。
+Centralized in the `@theme` block of `packages/ui/src/styles/globals.css`. For a readable version see [`packages/ui/src/styles/tokens.md`](./packages/ui/src/styles/tokens.md).
