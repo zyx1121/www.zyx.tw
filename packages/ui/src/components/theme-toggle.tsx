@@ -3,12 +3,7 @@
 import { useEffect, useState } from "react"
 import { useTheme } from "next-themes"
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@workspace/ui/components/ui/tooltip"
+import { Tooltip } from "@workspace/ui/components/ui/tooltip"
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme()
@@ -19,25 +14,22 @@ export function ThemeToggle() {
   }, [])
 
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            type="button"
-            aria-label="Toggle theme"
-            onClick={() =>
-              setTheme(resolvedTheme === "dark" ? "light" : "dark")
-            }
-            className="fixed top-4 right-4 z-50 cursor-pointer font-mono text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {mounted ? (resolvedTheme === "dark" ? "Light" : "Dark") : "    "}
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="bottom" align="end">
-          {mounted &&
-            `Switch to ${resolvedTheme === "dark" ? "light" : "dark"} mode (press d)`}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip
+      side="bottom"
+      content={
+        mounted
+          ? `Switch to ${resolvedTheme === "dark" ? "light" : "dark"} mode (press d)`
+          : ""
+      }
+    >
+      <button
+        type="button"
+        aria-label="Toggle theme"
+        onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+        className="fixed top-4 right-4 z-50 cursor-pointer font-mono text-sm text-muted-foreground transition-colors hover:text-foreground"
+      >
+        {mounted ? (resolvedTheme === "dark" ? "Light" : "Dark") : "    "}
+      </button>
+    </Tooltip>
   )
 }
