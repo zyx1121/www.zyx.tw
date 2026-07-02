@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 
-export function useInView(threshold = 0.2) {
+export function useInView(threshold = 0.2, rootMargin = "0px") {
   const ref = useRef<HTMLElement>(null)
   const [inView, setInView] = useState(false)
 
@@ -17,12 +17,12 @@ export function useInView(threshold = 0.2) {
           observer.disconnect()
         }
       },
-      { threshold }
+      { threshold, rootMargin }
     )
 
     observer.observe(el)
     return () => observer.disconnect()
-  }, [threshold])
+  }, [threshold, rootMargin])
 
   return { ref, inView }
 }
