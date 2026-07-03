@@ -1,0 +1,247 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "zyx1121",
+  "homepage": "https://ui.zyx.tw",
+  "items": [
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "Pill button — variants stripped to what I actually use. Loading + dark mode baked in.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/button.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "Pill badge — default, secondary, outline, destructive. Token-driven, dark mode safe.",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/badge.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/badge.tsx"
+        }
+      ]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "Hover hint — single-component wrapper around base-ui's compound API. Pass content + a child element, done.",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/tooltip.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/tooltip.tsx"
+        }
+      ]
+    },
+    {
+      "name": "copy-button",
+      "type": "registry:ui",
+      "title": "Copy Button",
+      "description": "Icon button for clipboard copy actions. Small, async-safe, and built on the registry Button.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["@zyx1121/button"],
+      "files": [
+        {
+          "path": "registry/ui/copy-button.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/copy-button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "copy-command",
+      "type": "registry:ui",
+      "title": "Copy Command",
+      "description": "Token-driven command row with monospace text and a clipboard action. Use for shell snippets and install commands.",
+      "dependencies": [],
+      "registryDependencies": ["@zyx1121/copy-button"],
+      "files": [
+        {
+          "path": "registry/ui/copy-command.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/copy-command.tsx"
+        }
+      ]
+    },
+    {
+      "name": "segmented-control",
+      "type": "registry:ui",
+      "title": "Segmented Control",
+      "description": "Compact one-of-many control for modes, locales, and small view switches. Token-driven and keyboard-focusable.",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/segmented-control.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/segmented-control.tsx"
+        }
+      ]
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "title": "Table",
+      "description": "Small data table primitive with token dividers and a block background container.",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/table.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/table.tsx"
+        }
+      ]
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "Thin divider — horizontal or vertical, token-driven via bg-border. Built on base-ui.",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/separator.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/separator.tsx"
+        }
+      ]
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "Form label — token text, select-none, dims when its associated control is disabled.",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/label.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/label.tsx"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "Native text field — token border, focus ring, aria-invalid, and file styling. Dark mode safe.",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/input.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/input.tsx"
+        }
+      ]
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "Multi-line field — matches Input's border, radius, and focus ring. Auto-grows via field-sizing.",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/textarea.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/textarea.tsx"
+        }
+      ]
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "Borderless content card — bg-block separation, compound header/title/description/content/footer slots.",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/card.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "description": "Modal dialog — compound wrapper over base-ui, centered surface, fade + zoom transitions. Dark mode safe.",
+      "dependencies": ["@base-ui/react", "lucide-react"],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/dialog.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/dialog.tsx"
+        }
+      ]
+    },
+    {
+      "name": "corner",
+      "type": "registry:block",
+      "title": "Corner",
+      "description": "Layout primitive — pin children to a viewport corner (top-left, top-right, bottom-left, bottom-right).",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/blocks/corner.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/corner.tsx"
+        }
+      ]
+    },
+    {
+      "name": "surface",
+      "type": "registry:block",
+      "title": "Surface",
+      "description": "Layout primitive — soft block surface using bg-block, token radius, and no border.",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/blocks/surface.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/surface.tsx"
+        }
+      ]
+    },
+    {
+      "name": "container",
+      "type": "registry:block",
+      "title": "Container",
+      "description": "Layout primitive — centered responsive page width with shared horizontal padding.",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/blocks/container.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/container.tsx"
+        }
+      ]
+    }
+  ]
+}

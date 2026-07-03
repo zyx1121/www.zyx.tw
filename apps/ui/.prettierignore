@@ -1,0 +1,11 @@
+# build artifacts & generated output
+.next/
+out/
+public/r/
+next-env.d.ts
+
+# lockfile
+bun.lock
+
+# hand-written docs (preserve ASCII banner / tables)
+*.md
