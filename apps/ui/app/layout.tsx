@@ -27,6 +27,12 @@ export const metadata: Metadata = {
   },
 };
 
+// No `@workspace/otel/layout` client-attribution call here: this app builds
+// with `output: "export"` (see next.config.ts), and Next.js's static export
+// doesn't support dynamic APIs like `headers()` in Server Components — the
+// build fails if a route under a fully static export tree calls it. There's
+// also no per-request Next.js server at runtime for a static export
+// deployment, so there would be nothing to attribute per-visitor anyway.
 export default function RootLayout({
   children,
 }: Readonly<{

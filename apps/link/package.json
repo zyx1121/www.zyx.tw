@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
+    "@workspace/otel": "workspace:*",
     "@workspace/ui": "workspace:*",
     "js-confetti": "^0.11.0",
     "next": "16.1.6",

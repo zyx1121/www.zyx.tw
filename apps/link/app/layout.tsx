@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 
+import { attributeRootLayoutRequest } from "@workspace/otel/layout"
 import "@workspace/ui/globals.css"
 import { Brand } from "@workspace/ui/components/brand"
 import { Copyright } from "@workspace/ui/components/copyright"
@@ -45,11 +46,15 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  // Client attribution for Sensorium — see @workspace/otel/layout for why
+  // this has to run here (Node.js Server Component) and not middleware.
+  await attributeRootLayoutRequest()
+
   return (
     <html
       lang="en"
