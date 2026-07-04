@@ -11,7 +11,14 @@ import {
 } from "@/lib/os/kernel/fs"
 
 export type { FsEntry, FsNode, FsPath, Vfs } from "@/lib/os/kernel/fs"
-export { basenamePath, joinPath } from "@/lib/os/kernel/fs"
+export {
+  basenamePath,
+  dirnamePath,
+  joinPath,
+  uniqueNameIn,
+  ILLEGAL_NAME_CHARS,
+  ILLEGAL_NAME_MESSAGE,
+} from "@/lib/os/kernel/fs"
 
 /** Direct access to the system-wide virtual filesystem. The returned
  * object is a stable singleton (not per-instance), matching real OS

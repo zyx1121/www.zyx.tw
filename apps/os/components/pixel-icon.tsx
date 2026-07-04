@@ -3,6 +3,7 @@
 
 export type IconName =
   | "computer"
+  | "directory-explorer"
   | "folder"
   | "notepad"
   | "notepad-file"

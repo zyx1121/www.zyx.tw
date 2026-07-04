@@ -92,7 +92,7 @@ interface OsWindow {
 ```
 
 - resize:Win98 式 — 視窗四邊 + 四角 3px 熱區拖拉(pointer events 自寫),maximized 時不可 resize。
-- 關閉流程:title bar X / taskbar 右鍵關閉 → 若該 pid 有註冊 onBeforeClose,先 await 它,回 true 才 kill;工作管理員的「結束工作」= 直接 kill。
+- 關閉流程:title bar X / taskbar 右鍵關閉 → 若該 pid 有註冊 onBeforeClose,先 await 它,回 true 才 kill;工作管理員的「結束工作」= 直接 kill。**M3 補上**:taskbar 視窗鈕右鍵選單(還原/最小化/最大化/關閉)本身在 M1 只有語意沒有 UI,`components/taskbar.tsx` 現在用 `components/ui/context-menu.tsx` 實際掛出來 —— 「關閉」呼叫 `requestClose`(走 onBeforeClose),不是 `kill`。
 
 ### SDK hooks(M1)
 
@@ -146,7 +146,9 @@ export interface Vfs {
 - React 端 `useFs()` 回傳穩定 API,`useFsList(dir)` / `useFsFile(path)` 以 useSyncExternalStore 訂閱 —— 三者定義在 `lib/os/kernel/fs.ts`,經 `lib/os/sdk/use-fs.ts` re-export 給 app 用(app 只 import sdk 那份)。
 - 回收筒 origin 記錄:`C:/Recycled/.meta` 檔存 JSON `{ [name]: originPath }`;`.` 開頭項目在所有列表 UI 隱藏。
 - 重名處理:recycle/mv 撞名時自動加 ` (2)`、` (3)`。
-- `.lnk` 檔:content 為 JSON `{"appId":"notepad"}`;開啟 .lnk = spawn 該 app。
+- `.lnk` 檔:content 為 JSON `{"appId":"notepad"}`,可選 `args`(如
+  `{"appId":"explorer","args":{"path":"C:/My Documents"}}`);開啟 .lnk =
+  spawn 該 app(帶上 args,M3 起支援)。
 - 檔案開啟規則:雙擊 file → 依副檔名查 manifest.fileAssociations → spawn(appId, {path});無關聯 → MessageBox「無法開啟」。判斷邏輯是純函式 `resolveOpenTarget(vfs, apps, path)`(`lib/os/sdk/open-target.ts`),吃 vfs/apps 當參數而不 import registry,避免 registry → manifest → app component → sdk → open-target → registry 的 import 環。桌面 / 我的文件 / 回收筒都共用它。
 - `Vfs` 介面本身不含持久化方法;`dumpFsEntries()` / `loadFsEntries()` / `seedFs()` / `getFsVersion()` 是 fs.ts 額外 export 的 kernel-only 函式,只給 `idb.ts` 用,不進 app 可見的契約。
 - **M2 已實作**(2026-07):`lib/os/kernel/fs.ts`。
@@ -161,7 +163,7 @@ export interface Vfs {
 - Seed:
   ```
   C:/My Documents/
-  C:/Windows/Desktop/我的文件.lnk → {"appId":"my-documents"}
+  C:/Windows/Desktop/我的文件.lnk → {"appId":"explorer","args":{"path":"C:/My Documents"}}
   C:/Windows/Desktop/記事本.lnk   → {"appId":"notepad"}
   C:/Windows/Desktop/控制台.lnk   → {"appId":"control-panel"}
   C:/Windows/Desktop/資源回收筒.lnk → {"appId":"recycle-bin"}
@@ -171,6 +173,34 @@ export interface Vfs {
 - 桌面 = `C:/Windows/Desktop` 的資料夾視圖(.lnk 用 app icon、.txt 用 notepad-file 類 icon;檔名去 .lnk 顯示)。
 - Dev-only 測試鉤子:`components/desktop.tsx` 在 hydrate 完成後,若 `process.env.NODE_ENV !== "production"` 就把 `window.__osfs = vfs`(Next 建置時會連同判斷式一起 dead-code-eliminate,production bundle 不含 —— 已用 `next build` 產物 grep 驗證);Playwright 驗證腳本(`scratchpad/m2-verify.mjs`)靠它直接呼叫 recycle/restore/emptyRecycleBin,不用等 M3 explorer 才有刪除入口。
 - **M2 已實作**(2026-07):`lib/os/kernel/idb.ts`。
+
+### 持久化資料相容(M3 補上)
+
+真實使用者的 IndexedDB 快照是跨版本累積的 —— 它不會因為某個 app id 被
+改名/移除就自動更新。M2 的 seed 把「我的文件」寫成 `{"appId":"my-documents"}`;
+M3 拿掉 `my-documents` manifest 改成 `explorer` 後,**舊快照裡的 `.lnk` 還是
+指著已經不存在的 appId**,`resolveOpenTarget()` 查不到 → 雙擊跳「無法開啟」,
+不是 crash 但對回訪使用者是可見的功能倒退。
+
+- `lib/os/kernel/legacy-migration.ts`:`LEGACY_LNK_MAP`(`Record<舊 appId,
+新 payload>`)+ `migrateLegacyLnks(entries)`,對 `.lnk` 檔案逐一比對、命中
+  才改寫 `content`,冪等(改過一次的 entry 新 appId 不在 map 裡,再跑一次
+  是 no-op)。
+- 套用時機:`idb.ts` 的 `hydrateFs()` 讀到合法 snapshot 後、**丟進
+  `loadFsEntries()` 掛上 store 之前**先跑過 `migrateLegacyLnks`——修的是資料
+  本身,不是在 `resolveOpenTarget()` 查詢時繞過去(繞過去的話每次雙擊都要
+  重新判斷一次,且下次存檔又把舊 payload 寫回去,問題不會消失)。
+- **硬規則**:之後任何一次移除或改名 app id(如 M3 的
+  `my-documents` → `explorer`),都必須在 `LEGACY_LNK_MAP` 補一筆映射,
+  否則舊使用者的捷徑會靜默失效。這條規則跟 app 本身的 registry 異動綁在
+  一起 review,不是可以事後補的 nice-to-have。
+- `resolveOpenTarget()` 本身不用改:查無 appId(遷移表也接不住的情況,例如
+  純粹損毀的 payload)本來就該落回「無法開啟」的既有路徑。
+- 驗證:`scratchpad/m3-verify.mjs` 收了一個**不清空 IndexedDB**的永久
+  case——手動灌一筆 M2 格式快照(`{"appId":"my-documents"}`)、reload、雙擊
+  「我的文件」、斷言開出來的是 explorer 且位址列是 `C:\My Documents`。這條
+  之後每期都要留著跑,不能被「每次都先清庫重 seed」的其他測試蓋過去。
+- **M3 已實作**(2026-07):`lib/os/kernel/legacy-migration.ts`。
 
 ### 系統對話框(M2 基本版,M3 完善)
 
@@ -184,11 +214,13 @@ useDialogs(): {
 }
 ```
 
-- 呈現:系統層級 modal 視窗(Win98 對話框樣式,置中、壓過所有視窗、遮罩不可點),不是 browser alert。
+- 呈現:系統層級 modal 視窗(Win98 對話框樣式,置中、壓過所有視窗),不是
+  browser alert。**M3 修訂**:遮罩不調光 —— 真 Win98 modal 不會把背景變暗,
+  `SystemDialogHost` 的遮罩改成純透明的 click-blocker(仍擋互動、Esc 可關)。
 - MessageBox icon 用原版素材(msg_question / msg_warning / msg_error / msg_information family,win98icons 站抓,慣例同現有 icons)。
-- 實作:`DialogProvider`(`lib/os/kernel/dialog-manager.tsx`)維護一個 request 佇列,同一時間只渲染最前面那個(Win98 msgbox 本來就是嚴格 modal,不疊窗);視覺元件在 `components/system-dialogs.tsx`(`MessageBoxDialog` / `FileDialog`),跟 `Window` 共用同一組 bevel token 但無 drag/resize。Esc = 觸發 dismiss 結果(有 cancel 給 cancel,否則 yesno 給 no,ok 就是 ok)。
-- `openFile` / `saveFile` 基本版:資料夾列表(`vfs.list` 現抓現濾副檔名)+ 檔名輸入框 + `..` 合成列往上一層;沒有 tree、沒有多選 —— M3 explorer 完善時再擴充。
-- **M2 已實作**(2026-07,基本版):`lib/os/kernel/dialog-manager.tsx` + `components/system-dialogs.tsx`。
+- 實作:`DialogProvider`(`lib/os/kernel/dialog-manager.tsx`)維護一個 request 佇列,同一時間只渲染最前面那個(Win98 msgbox 本來就是嚴格 modal,不疊窗);視覺元件在 `components/system-dialogs.tsx`(`MessageBoxDialog` / `FileDialog`),跟 `Window` 共用同一組 bevel token 但無 drag/resize。Esc = 觸發 dismiss 結果(有 cancel 給 cancel,否則 yesno 給 no,ok 就是 ok);`FileDialog` 的非法檔名錯誤是疊在檔案對話框之上的第二層 `MessageBoxDialog`,Esc 先關這層,再關到底層對話框 —— 層級判斷靠 `nameError` state,不是佇列。
+- `openFile` / `saveFile`(**M3 完善**):清單改用共用的 `FolderView`(見下,`readOnly` + `filter` 依副檔名篩選 + `mode="list"`);`..` 合成列拿掉,改成路徑列旁一顆「上一層」按鈕(跟 explorer 同款)。仍沒有多選。
+- **M2 已實作**(2026-07,基本版):`lib/os/kernel/dialog-manager.tsx` + `components/system-dialogs.tsx`。**M3 完善**(2026-07):去調光 + FolderView 化。
 
 ### 記事本(M2 改造,規範示範)
 
@@ -201,12 +233,34 @@ useDialogs(): {
 
 ### 檔案總管(M3)
 
-- `explorer` app:左 tree(dir only,可折疊)+ 右 list(FolderView)+ 上方地址列(顯示 `C:\...`)+ 狀態列(N 個物件)。
-- FolderView 元件共用:桌面 / 我的文件 / 回收筒 / explorer 右側 / 檔案對話框全部用它(props 控制視圖細節)。
-- 右鍵選單(Win98 樣式,自寫,不用 radix ContextMenu 也行但要鍵盤可關):
-  - 空白處:新增資料夾 / 新增文字文件 / 重新整理
-  - 項目上:開啟 / 改名(inline input)/ 刪除(→ 回收筒;回收筒內是永久刪除)/(回收筒內)還原
-- 我的文件 app 改為 explorer 開在 `C:/My Documents`(同一 component,不同初始 path)。
+```ts
+// components/folder-view.tsx — 契約(簽名不得擅改)
+export interface FolderViewProps {
+  dir: FsPath
+  mode?: "icon" | "list"                          // default "icon"
+  columns?: ("size" | "type" | "modified")[]      // list mode 額外欄位
+  filter?: (entry: FsEntry) => boolean            // 目錄一律通過,只篩檔案
+  onActivate?: (info: FolderViewActivation) => void        // 雙擊/Enter
+  onSelectionChange?: (info: FolderViewActivation | null) => void
+  recycleBin?: boolean   // 項目選單變 還原/永久刪除;空白選單拿掉新增動作
+  readOnly?: boolean     // 檔案對話框用:純瀏覽,無右鍵選單
+  emptyMessage?: string
+  className?: string
+}
+export interface FolderViewActivation { name: string; path: FsPath; node: FsNode }
+```
+
+- `explorer` app(`components/apps/explorer/`):左 tree(`tree.tsx`,dir only、可折疊、[+]/[-] 方框切換,不是圖示切換)+ 右 `FolderView`(`mode="list"`,`columns=["size","type","modified"]`)+ 上方地址列(顯示 `C:\...`,Enter 導航、無效路徑跳 msgBox)+「上一層」按鈕 + 狀態列(N 個物件,自己另外訂閱 `useFsList` 算數,不靠 FolderView 回拋)。視窗標題不是固定的「檔案總管」,是當前資料夾名稱(`basenamePath`,根目錄顯示「本機磁碟 (C:)」)——真 Explorer 也是這樣,標題跟著導航變。
+- `FolderView` 是唯一實作,五處共用:桌面(`mode="icon"`,絕對定位鋪滿整個桌面 —— 空白處右鍵/單擊清除選取因此涵蓋全螢幕,不只圖示那一小塊)、回收筒(`mode="list" recycleBin`)、explorer 右側、`FileDialog` 的瀏覽清單(`mode="list" readOnly`)。**我的文件已不是獨立 app** —— 桌面的「我的文件.lnk」現在 spawn `explorer` app、`args.path` 指向 `C:/My Documents`(同一 component,靠 `.lnk` payload 帶的 args 給不同初始路徑;`resolveOpenTarget` M3 起把 `.lnk` 的 `args` 欄位一併傳出)。
+- 建立/改名/刪除全部是 `FolderView` 內部狀態機(`useFs()` 直接操作 vfs,不外洩到呼叫端):
+  - 新增資料夾/新增文字文件:`uniqueNameIn(vfs, dir, base)`(`fs.ts` 新 export,沿用 recycle() 那套 `(2)`/`(3)` 撞名規則)取名 → mkdir/writeFile → 立刻進 inline 改名(Win98 行為)。
+  - 改名:F2 或右鍵「改名」→ inline `<Input>`(取代該列的按鈕,不是嵌在 button 裡 —— button 包 input 是無效巢狀互動元件);Enter/blur 提交,Escape 取消;非法字元或撞名 → `msgBox` 錯誤、還原原名不改(`ILLEGAL_NAME_CHARS`/`ILLEGAL_NAME_MESSAGE` 從 `fs.ts` 匯出,`FileDialog` 的 Save As 驗證也共用同一份,不再各自定義)。
+  - 刪除(一般資料夾):`vfs.recycle()`。刪除(回收筒內,選單文字是「永久刪除」):`msgBox` yesno 確認 → `vfs.rm()` + 順手清 `C:/Recycled/.meta` 對應的那一筆(`.meta` 是 DESIGN.md 記載的公開檔案格式,不是私有實作細節,FolderView 可以直接讀寫它)。回收筒內「還原」= `vfs.restore(name)`。
+- 右鍵選單(`components/ui/context-menu.tsx`,自寫、非 radix):silver `bevel-raised` 面板,項目 hover/鍵盤 focus 都是 navy 反白,分隔線用跟 `MenuBarSeparator` 一樣的雙 border 公式。Esc / 點外 / 選完自動關閉;方向鍵上下移動 focus(跳過分隔線與 disabled 項)、Enter 觸發。掛載點:
+  - 空白處(桌面/資料夾):新增資料夾 / 新增文字文件 / 重新整理(重新整理是 no-op —— 清單已經是 `useSyncExternalStore` 即時訂閱,不需要手動刷新,選單留這一項只是保留使用者習慣的入口)
+  - 項目上:開啟 / 改名 / 刪除;回收筒內是 還原 / 永久刪除
+  - taskbar 視窗鈕:還原 / 最小化 / 最大化 / 關閉(見上面 WindowManager 段落)
+- **M3 已實作**(2026-07):`components/folder-view.tsx`、`components/ui/context-menu.tsx`、`components/apps/explorer/{manifest.tsx,explorer.tsx,tree.tsx}`。`components/desktop-icon.tsx` 與 `components/apps/my-documents/` 已刪除(併入 FolderView / explorer)。
 
 ### 開機/關機(M4)
 

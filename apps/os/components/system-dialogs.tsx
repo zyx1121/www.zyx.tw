@@ -2,6 +2,7 @@
 
 import * as React from "react"
 
+import { FolderView, type FolderViewActivation } from "@/components/folder-view"
 import { PixelIcon, type IconName } from "@/components/pixel-icon"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,13 +16,15 @@ import type {
   SaveFileOptions,
 } from "@/lib/os/kernel/dialog-manager"
 import {
+  basenamePath,
   dirnamePath,
+  ILLEGAL_NAME_CHARS,
+  ILLEGAL_NAME_MESSAGE,
   joinPath,
   vfs,
-  type FsNode,
+  type FsEntry,
   type FsPath,
 } from "@/lib/os/kernel/fs"
-import { cn } from "@/lib/utils"
 
 /** Win98 chrome for system-modal dialogs — same bevel formulas as
  * components/ui/window.tsx, but centered/static (no drag, no resize). */
@@ -31,15 +34,18 @@ function DialogFrame({
   onRequestClose,
   footer,
   children,
+  containerRef,
 }: {
   title: string
   width: number
   onRequestClose: () => void
   footer: React.ReactNode
   children: React.ReactNode
+  containerRef?: React.Ref<HTMLDivElement>
 }) {
   return (
     <div
+      ref={containerRef}
       role="dialog"
       aria-modal="true"
       aria-label={title}
@@ -120,6 +126,7 @@ function MessageBoxDialog({
   const buttonsKind = options.buttons ?? "ok"
   const buttons = MSG_BUTTONS[buttonsKind]
   const dismissResult = DISMISS_RESULT[buttonsKind]
+  const dialogRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -129,8 +136,31 @@ function MessageBoxDialog({
     return () => document.removeEventListener("keydown", handleKeyDown)
   }, [dismissResult, onResolve])
 
+  React.useEffect(() => {
+    // Not a plain `autoFocus`: if this msgBox was itself opened in
+    // response to an Enter keypress (e.g. explorer's address bar
+    // rejecting an invalid path), that same physical key's keyup can
+    // still be in flight — landing on a synchronously-focused default
+    // button re-triggers it as a click, and the dialog self-dismisses
+    // before anyone (human or Playwright) ever sees it. Two rAFs push
+    // the focus call past the paint that keyup is racing against.
+    let secondFrame = 0
+    const firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => {
+        dialogRef.current
+          ?.querySelector<HTMLButtonElement>('[data-default-button="true"]')
+          ?.focus()
+      })
+    })
+    return () => {
+      cancelAnimationFrame(firstFrame)
+      cancelAnimationFrame(secondFrame)
+    }
+  }, [])
+
   return (
     <DialogFrame
+      containerRef={dialogRef}
       title={options.title}
       width={320}
       onRequestClose={() => onResolve(dismissResult)}
@@ -138,7 +168,7 @@ function MessageBoxDialog({
         <Button
           key={button.result}
           tone="default"
-          autoFocus={index === 0}
+          data-default-button={index === 0 ? "true" : undefined}
           onClick={() => onResolve(button.result)}
         >
           {button.label}
@@ -163,15 +193,6 @@ interface FileDialogProps {
   onResolve: (result: FsPath | null) => void
 }
 
-const UP_ENTRY_NAME = ".."
-
-// Windows-reserved filename characters — a name containing one of these
-// would otherwise slip through as a path (e.g. "evil/pwn.txt" splits into
-// a nonexistent "evil" subdirectory) and blow up fs.ts's writeFile() with
-// an uncaught "parent directory does not exist" throw.
-const ILLEGAL_NAME_CHARS = /[\\/:*?"<>|]/
-const ILLEGAL_NAME_MESSAGE = '檔案名稱不能包含下列任何字元:\n\\ / : * ? " < > |'
-
 function FileDialog({ mode, options, onResolve }: FileDialogProps) {
   const [dir, setDir] = React.useState<FsPath>(
     options.startDir ?? "C:/My Documents"
@@ -179,20 +200,20 @@ function FileDialog({ mode, options, onResolve }: FileDialogProps) {
   const [name, setName] = React.useState(
     mode === "save" ? ((options as SaveFileOptions).defaultName ?? "") : ""
   )
-  const [selected, setSelected] = React.useState<string | null>(null)
   const [nameError, setNameError] = React.useState<string | null>(null)
 
   const extensions =
     mode === "open" ? (options as OpenFileOptions).extensions : undefined
 
-  const entries = vfs.list(dir).filter((entry) => {
-    if (entry.name.startsWith(".")) return false
-    if (entry.node.type === "dir") return true
-    if (!extensions || extensions.length === 0) return true
-    return extensions.some((ext) =>
-      entry.name.toLowerCase().endsWith(ext.toLowerCase())
-    )
-  })
+  const matchesExtension = React.useCallback(
+    (entry: FsEntry) => {
+      if (!extensions || extensions.length === 0) return true
+      return extensions.some((ext) =>
+        entry.name.toLowerCase().endsWith(ext.toLowerCase())
+      )
+    },
+    [extensions]
+  )
 
   const canGoUp = dir !== "C:"
 
@@ -220,20 +241,19 @@ function FileDialog({ mode, options, onResolve }: FileDialogProps) {
     if (target) onResolve(target)
   }
 
-  const handleActivate = (entryName: string, node: FsNode) => {
-    if (entryName === UP_ENTRY_NAME) {
-      setDir(dirnamePath(dir) || "C:")
-      setSelected(null)
-      return
-    }
+  const handleActivate = ({ path, node }: FolderViewActivation) => {
     if (node.type === "dir") {
-      setDir(joinPath(dir, entryName))
-      setSelected(null)
+      setDir(path)
       return
     }
-    setName(entryName)
-    setSelected(entryName)
-    if (mode === "open") onResolve(joinPath(dir, entryName))
+    setName(basenamePath(path))
+    if (mode === "open") onResolve(path)
+  }
+
+  const handleSelectionChange = (info: FolderViewActivation | null) => {
+    // A directory single-click only navigates-on-activate — it must not
+    // clobber whatever filename the user already typed/selected.
+    if (info && info.node.type === "file") setName(info.name)
   }
 
   React.useEffect(() => {
@@ -251,16 +271,6 @@ function FileDialog({ mode, options, onResolve }: FileDialogProps) {
     return () => document.removeEventListener("keydown", handleKeyDown)
   }, [nameError, onResolve])
 
-  const rows = canGoUp
-    ? [
-        {
-          name: UP_ENTRY_NAME,
-          node: { type: "dir", mtime: 0 } as FsNode,
-        },
-        ...entries,
-      ]
-    : entries
-
   const dialog = (
     <DialogFrame
       title={mode === "open" ? "開啟舊檔" : "另存新檔"}
@@ -276,51 +286,33 @@ function FileDialog({ mode, options, onResolve }: FileDialogProps) {
       }
     >
       <div className="flex items-center gap-2">
-        <span className="w-14 shrink-0">查詢:</span>
+        <Button
+          onClick={() => setDir(dirnamePath(dir) || "C:")}
+          disabled={!canGoUp}
+          className="min-w-0 shrink-0 px-2"
+        >
+          上一層
+        </Button>
         <div className="bevel-sunken flex-1 truncate bg-white px-1 py-[3px]">
           {dir.replace(/\//g, "\\")}
         </div>
       </div>
-      <div className="bevel-sunken h-40 overflow-auto bg-white">
-        {rows.length === 0 ? (
-          <p className="px-2 py-1 text-button-shadow">(空的)</p>
-        ) : (
-          <ul className="m-0 list-none p-0.5">
-            {rows.map(({ name: entryName, node }) => (
-              <li key={entryName}>
-                <button
-                  type="button"
-                  className={cn(
-                    "flex w-full items-center gap-2 px-1 py-0.5 text-left",
-                    selected === entryName &&
-                      "bg-selection text-selection-foreground"
-                  )}
-                  onClick={() => {
-                    setSelected(entryName)
-                    if (node.type === "file") setName(entryName)
-                  }}
-                  onDoubleClick={() => handleActivate(entryName, node)}
-                >
-                  <PixelIcon
-                    name={node.type === "dir" ? "folder" : "notepad-file"}
-                    size={16}
-                  />
-                  <span className="truncate">{entryName}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      <FolderView
+        dir={dir}
+        mode="list"
+        readOnly
+        filter={matchesExtension}
+        onActivate={handleActivate}
+        onSelectionChange={handleSelectionChange}
+        emptyMessage="(空的)"
+        className="h-40"
+      />
       <label className="flex items-center gap-2">
         <span className="w-14 shrink-0">檔案名稱:</span>
         <Input
           autoFocus
           value={name}
-          onChange={(event) => {
-            setName(event.target.value)
-            setSelected(null)
-          }}
+          onChange={(event) => setName(event.target.value)}
           onKeyDown={(event) => {
             if (event.key === "Enter" && target) confirm()
           }}
@@ -333,7 +325,7 @@ function FileDialog({ mode, options, onResolve }: FileDialogProps) {
     <>
       {dialog}
       {nameError && (
-        <div className="fixed inset-0 z-[3100] flex items-center justify-center bg-black/20">
+        <div className="fixed inset-0 z-[3100] flex items-center justify-center">
           <MessageBoxDialog
             options={{
               title: mode === "open" ? "開啟舊檔" : "另存新檔",
@@ -349,7 +341,8 @@ function FileDialog({ mode, options, onResolve }: FileDialogProps) {
 }
 
 /** Renders the one active system dialog on top of everything, behind a
- * click-swallowing (but non-dismissing) mask. */
+ * click-swallowing (but *not* dimming — real Win98 modals never darken
+ * the desktop behind them) transparent mask. */
 export function SystemDialogHost({
   request,
   onSettle,
@@ -358,7 +351,7 @@ export function SystemDialogHost({
   onSettle: () => void
 }) {
   return (
-    <div className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/40">
+    <div className="fixed inset-0 z-[3000] flex items-center justify-center">
       {request.kind === "msg" && (
         <MessageBoxDialog
           options={request.options}

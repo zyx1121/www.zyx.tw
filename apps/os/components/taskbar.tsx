@@ -3,7 +3,14 @@
 import * as React from "react"
 
 import { PixelIcon } from "@/components/pixel-icon"
-import { useWindowManager } from "@/lib/os/kernel/window-manager"
+import {
+  ContextMenu,
+  clampContextMenuPosition,
+  type ContextMenuEntry,
+  type ContextMenuState,
+} from "@/components/ui/context-menu"
+import { useProcessTable } from "@/lib/os/kernel/process-table"
+import { useWindowManager, type OsWindow } from "@/lib/os/kernel/window-manager"
 import { cn } from "@/lib/utils"
 import { TASKBAR_HEIGHT } from "@/lib/constants"
 
@@ -38,10 +45,54 @@ export function Taskbar({
   startOpen: boolean
   onToggleStart: () => void
 }) {
-  const { windows, activeId, focusWindow, minimizeWindow } = useWindowManager()
+  const { windows, activeId, focusWindow, minimizeWindow, toggleMaximize } =
+    useWindowManager()
+  const { requestClose } = useProcessTable()
+  const [windowMenu, setWindowMenu] = React.useState<ContextMenuState | null>(
+    null
+  )
+
+  const openWindowMenu = (event: React.MouseEvent, win: OsWindow) => {
+    event.preventDefault()
+    const position = clampContextMenuPosition(event.clientX, event.clientY)
+    const canMaximize = win.controls.includes("maximize")
+    const items: ContextMenuEntry[] = [
+      {
+        label: "還原",
+        disabled: !win.minimized && !win.maximized,
+        onSelect: () => {
+          focusWindow(win.pid)
+          if (!win.minimized && win.maximized) toggleMaximize(win.pid)
+        },
+      },
+      {
+        label: "最小化",
+        disabled: win.minimized,
+        onSelect: () => minimizeWindow(win.pid),
+      },
+      {
+        label: "最大化",
+        disabled: !canMaximize || win.maximized,
+        onSelect: () => {
+          focusWindow(win.pid)
+          toggleMaximize(win.pid)
+        },
+      },
+      { separator: true },
+      {
+        label: "關閉",
+        disabled: !win.controls.includes("close"),
+        // Same flow as the title bar's X — respects onBeforeClose (e.g.
+        // Notepad's dirty-save prompt), never a bare kill().
+        onSelect: () => void requestClose(win.pid),
+      },
+    ]
+    setWindowMenu({ ...position, entries: items })
+  }
 
   return (
     <div
+      data-testid="taskbar"
       className="bevel-raised absolute inset-x-0 bottom-0 flex items-center gap-1 bg-surface px-1"
       style={{ height: TASKBAR_HEIGHT, zIndex: 1000 }}
     >
@@ -77,6 +128,7 @@ export function Taskbar({
                   focusWindow(win.pid)
                 }
               }}
+              onContextMenu={(event) => openWindowMenu(event, win)}
             >
               <PixelIcon name={win.icon} size={16} className="shrink-0" />
               <span className="truncate">{win.title}</span>
@@ -86,6 +138,7 @@ export function Taskbar({
       </div>
 
       <Clock />
+      <ContextMenu state={windowMenu} onClose={() => setWindowMenu(null)} />
     </div>
   )
 }

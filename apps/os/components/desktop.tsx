@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-import { DesktopIcon } from "@/components/desktop-icon"
+import { FolderView, type FolderViewActivation } from "@/components/folder-view"
 import { StartMenu } from "@/components/start-menu"
 import { Taskbar } from "@/components/taskbar"
 import { Window } from "@/components/ui/window"
@@ -20,15 +20,9 @@ import {
 } from "@/lib/os/kernel/window-manager"
 import { AppHost } from "@/lib/os/sdk/app-host"
 import { useDialogs } from "@/lib/os/sdk/use-dialogs"
-import { useFsList } from "@/lib/os/sdk/use-fs"
-import {
-  iconForEntry,
-  labelForEntry,
-  resolveOpenTarget,
-} from "@/lib/os/sdk/open-target"
+import { labelForEntry, resolveOpenTarget } from "@/lib/os/sdk/open-target"
 
 function DesktopSurface() {
-  const [selectedIcon, setSelectedIcon] = React.useState<string | null>(null)
   const [startOpen, setStartOpen] = React.useState(false)
   const taskbarScopeRef = React.useRef<HTMLDivElement>(null)
 
@@ -43,9 +37,6 @@ function DesktopSurface() {
   } = useWindowManager()
   const { spawn, requestClose } = useProcessTable()
   const { msgBox } = useDialogs()
-  const desktopEntries = useFsList(DESKTOP_DIR).filter(
-    (entry) => !entry.name.startsWith(".")
-  )
 
   React.useEffect(() => {
     if (!startOpen) return
@@ -63,8 +54,17 @@ function DesktopSurface() {
     setStartOpen(false)
   }
 
-  const handleOpenDesktopEntry = async (name: string) => {
-    const path = `${DESKTOP_DIR}/${name}`
+  const handleActivateDesktopEntry = async ({
+    name,
+    path,
+    node,
+  }: FolderViewActivation) => {
+    // A folder created on the desktop (via the new right-click menu) has
+    // no navigation concept of its own here — hand it to explorer.
+    if (node.type === "dir") {
+      spawn("explorer", { path })
+      return
+    }
     const target = resolveOpenTarget(vfs, APPS, path)
     if (target.kind === "spawn") {
       spawn(target.appId, target.args)
@@ -78,22 +78,12 @@ function DesktopSurface() {
   }
 
   return (
-    <div
-      className="relative h-dvh w-dvw overflow-hidden bg-desktop"
-      onClick={() => setSelectedIcon(null)}
-    >
-      <div className="absolute top-2 left-2 flex flex-col gap-1">
-        {desktopEntries.map(({ name, node }) => (
-          <DesktopIcon
-            key={name}
-            label={labelForEntry(name)}
-            icon={iconForEntry(name, node, APPS)}
-            selected={selectedIcon === name}
-            onSelect={() => setSelectedIcon(name)}
-            onOpen={() => void handleOpenDesktopEntry(name)}
-          />
-        ))}
-      </div>
+    <div className="relative h-dvh w-dvw overflow-hidden bg-desktop">
+      <FolderView
+        dir={DESKTOP_DIR}
+        mode="icon"
+        onActivate={(entry) => void handleActivateDesktopEntry(entry)}
+      />
 
       {windows.map((win) => {
         const app = APPS[win.appId]

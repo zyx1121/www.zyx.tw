@@ -44,6 +44,13 @@ export const RECYCLE_DIR: FsPath = "C:/Recycled"
 export const MY_DOCUMENTS_DIR: FsPath = "C:/My Documents"
 export const DESKTOP_DIR: FsPath = "C:/Windows/Desktop"
 
+/** Windows-reserved filename characters, shared by every naming surface
+ * (Save As, explorer create/rename) so the rule and its message live in
+ * one place instead of drifting between call sites. */
+export const ILLEGAL_NAME_CHARS = /[\\/:*?"<>|]/
+export const ILLEGAL_NAME_MESSAGE =
+  '檔案名稱不能包含下列任何字元:\n\\ / : * ? " < > |'
+
 const RECYCLE_META: FsPath = `${RECYCLE_DIR}/.meta`
 
 const README_TEXT = `歡迎使用 os.zyx.tw!
@@ -82,6 +89,19 @@ function withSuffix(name: string, n: number): string {
   const dot = name.lastIndexOf(".")
   if (dot <= 0) return `${name} (${n})`
   return `${name.slice(0, dot)} (${n})${name.slice(dot)}`
+}
+
+/** Shared "new folder"/"new text file" naming policy — same " (2)", " (3)"
+ * collision scheme as recycle()/restore(), exposed for explorer's create
+ * flow (components/folder-view.tsx). */
+export function uniqueNameIn(vfs: Vfs, dir: FsPath, base: string): string {
+  let name = base
+  let n = 2
+  while (vfs.exists(joinPath(dir, name))) {
+    name = withSuffix(base, n)
+    n += 1
+  }
+  return name
 }
 
 class FsStore implements Vfs {
@@ -305,7 +325,7 @@ export function seedFs(): void {
   store.mkdir(RECYCLE_DIR)
   store.writeFile(
     joinPath(DESKTOP_DIR, "我的文件.lnk"),
-    JSON.stringify({ appId: "my-documents" })
+    JSON.stringify({ appId: "explorer", args: { path: MY_DOCUMENTS_DIR } })
   )
   store.writeFile(
     joinPath(DESKTOP_DIR, "記事本.lnk"),
