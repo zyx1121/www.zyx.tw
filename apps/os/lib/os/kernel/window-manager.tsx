@@ -194,6 +194,14 @@ function reducer(
       }
     }
     case "SET_TITLE": {
+      const target = state.windows.find((w) => w.pid === action.pid)
+      // Bail out on no-op writes: apps call setTitle from a
+      // useEffect keyed on their own dirty-state (e.g. Notepad's "*"
+      // prefix), and returning a fresh `windows` array here even when
+      // nothing changed would recreate the WindowManager context value,
+      // which recreates every SDK closure derived from it, which the
+      // effect depends on — an infinite render loop.
+      if (!target || target.title === action.title) return state
       return {
         ...state,
         windows: state.windows.map((w) =>

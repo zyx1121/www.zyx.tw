@@ -18,10 +18,3 @@ const MANIFESTS: OsAppManifest[] = [
 export const APPS: Record<string, OsAppManifest> = Object.fromEntries(
   MANIFESTS.map((app) => [app.id, app])
 )
-
-export const DESKTOP_ICON_ORDER: string[] = [
-  "my-documents",
-  "notepad",
-  "control-panel",
-  "recycle-bin",
-]

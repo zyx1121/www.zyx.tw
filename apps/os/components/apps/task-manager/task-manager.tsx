@@ -2,12 +2,9 @@
 
 import * as React from "react"
 
-// Task manager is a system utility: it needs visibility into every running
-// process, which the per-instance SDK hooks (useProcess/useWindow) don't
-// expose. It reaches into the kernel directly instead of going app-blind.
 import { APPS } from "@/components/apps/registry"
 import { Button } from "@/components/ui/button"
-import { useProcessTable } from "@/lib/os/kernel/process-table"
+import { useSystem } from "@/lib/os/sdk/use-system"
 import { cn } from "@/lib/utils"
 import type { Pid } from "@/lib/os/types"
 
@@ -20,7 +17,7 @@ function formatStartedAt(ms: number) {
 }
 
 export function TaskManagerApp() {
-  const { processes, kill } = useProcessTable()
+  const { processes, kill } = useSystem()
   const [selected, setSelected] = React.useState<Pid | null>(null)
 
   const handleEndTask = () => {
