@@ -8,26 +8,30 @@ import { Taskbar } from "@/components/taskbar"
 import { Window } from "@/components/ui/window"
 import { APPS, DESKTOP_ICON_ORDER } from "@/components/apps/registry"
 import {
+  ProcessTableProvider,
+  useProcessTable,
+} from "@/lib/os/kernel/process-table"
+import {
   useWindowManager,
   WindowManagerProvider,
-} from "@/components/window-manager"
-import type { AppId } from "@/lib/types"
+} from "@/lib/os/kernel/window-manager"
+import { AppHost } from "@/lib/os/sdk/app-host"
 
 function DesktopSurface() {
-  const [selectedIcon, setSelectedIcon] = React.useState<AppId | null>(null)
+  const [selectedIcon, setSelectedIcon] = React.useState<string | null>(null)
   const [startOpen, setStartOpen] = React.useState(false)
   const taskbarScopeRef = React.useRef<HTMLDivElement>(null)
 
   const {
     windows,
     activeId,
-    openWindow,
-    closeWindow,
     focusWindow,
     minimizeWindow,
     toggleMaximize,
     moveWindow,
+    resizeWindow,
   } = useWindowManager()
+  const { spawn, requestClose } = useProcessTable()
 
   React.useEffect(() => {
     if (!startOpen) return
@@ -40,16 +44,8 @@ function DesktopSurface() {
     return () => document.removeEventListener("pointerdown", handlePointerDown)
   }, [startOpen])
 
-  const handleOpenApp = (id: AppId) => {
-    const app = APPS[id]
-    openWindow({
-      id: app.id,
-      title: app.title,
-      icon: app.icon,
-      width: app.width,
-      height: app.height,
-      controls: app.controls,
-    })
+  const handleOpenApp = (id: string) => {
+    spawn(id)
     setStartOpen(false)
   }
 
@@ -61,10 +57,11 @@ function DesktopSurface() {
       <div className="absolute top-2 left-2 flex flex-col gap-1">
         {DESKTOP_ICON_ORDER.map((id) => {
           const app = APPS[id]
+          if (!app) return null
           return (
             <DesktopIcon
               key={id}
-              label={app.title}
+              label={app.name}
               icon={app.icon}
               selected={selectedIcon === id}
               onSelect={() => setSelectedIcon(id)}
@@ -75,28 +72,36 @@ function DesktopSurface() {
       </div>
 
       {windows.map((win) => {
-        const app = APPS[win.id]
-        if (win.minimized) return null
+        const app = APPS[win.appId]
+        if (win.minimized || !app) return null
         return (
           <Window
-            key={win.id}
+            key={win.pid}
             title={win.title}
             icon={win.icon}
-            active={win.id === activeId}
+            active={win.pid === activeId}
             maximized={win.maximized}
             x={win.x}
             y={win.y}
             width={win.width}
             height={win.height}
+            minWidth={win.minWidth}
+            minHeight={win.minHeight}
+            resizable={win.resizable}
             zIndex={win.zIndex}
             controls={win.controls}
-            onFocus={() => focusWindow(win.id)}
-            onClose={() => closeWindow(win.id)}
-            onMinimize={() => minimizeWindow(win.id)}
-            onToggleMaximize={() => toggleMaximize(win.id)}
-            onMove={(x, y) => moveWindow(win.id, x, y)}
+            onFocus={() => focusWindow(win.pid)}
+            onClose={() => {
+              void requestClose(win.pid)
+            }}
+            onMinimize={() => minimizeWindow(win.pid)}
+            onToggleMaximize={() => toggleMaximize(win.pid)}
+            onMove={(x, y) => moveWindow(win.pid, x, y)}
+            onResize={(rect) => resizeWindow(win.pid, rect)}
           >
-            <app.Component onClose={() => closeWindow(win.id)} />
+            <AppHost pid={win.pid}>
+              <app.Component pid={win.pid} />
+            </AppHost>
           </Window>
         )
       })}
@@ -115,7 +120,9 @@ function DesktopSurface() {
 export function Desktop() {
   return (
     <WindowManagerProvider>
-      <DesktopSurface />
+      <ProcessTableProvider>
+        <DesktopSurface />
+      </ProcessTableProvider>
     </WindowManagerProvider>
   )
 }

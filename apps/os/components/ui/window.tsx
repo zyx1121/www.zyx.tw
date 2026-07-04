@@ -4,8 +4,108 @@ import * as React from "react"
 
 import { PixelIcon, type IconName } from "@/components/pixel-icon"
 import { cn } from "@/lib/utils"
-import { TASKBAR_HEIGHT, TITLE_BAR_HEIGHT } from "@/lib/constants"
-import type { WindowControl } from "@/lib/types"
+import {
+  RESIZE_HANDLE_SIZE,
+  TASKBAR_HEIGHT,
+  TITLE_BAR_HEIGHT,
+} from "@/lib/constants"
+import type { WindowControl } from "@/lib/os/types"
+
+interface ResizeRect {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+type ResizeDir = "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw"
+
+const RESIZE_HANDLES: {
+  dir: ResizeDir
+  cursorClassName: string
+  style: React.CSSProperties
+}[] = [
+  {
+    dir: "n",
+    cursorClassName: "cursor-ns-resize",
+    style: {
+      top: 0,
+      left: RESIZE_HANDLE_SIZE,
+      right: RESIZE_HANDLE_SIZE,
+      height: RESIZE_HANDLE_SIZE,
+    },
+  },
+  {
+    dir: "s",
+    cursorClassName: "cursor-ns-resize",
+    style: {
+      bottom: 0,
+      left: RESIZE_HANDLE_SIZE,
+      right: RESIZE_HANDLE_SIZE,
+      height: RESIZE_HANDLE_SIZE,
+    },
+  },
+  {
+    dir: "w",
+    cursorClassName: "cursor-ew-resize",
+    style: {
+      left: 0,
+      top: RESIZE_HANDLE_SIZE,
+      bottom: RESIZE_HANDLE_SIZE,
+      width: RESIZE_HANDLE_SIZE,
+    },
+  },
+  {
+    dir: "e",
+    cursorClassName: "cursor-ew-resize",
+    style: {
+      right: 0,
+      top: RESIZE_HANDLE_SIZE,
+      bottom: RESIZE_HANDLE_SIZE,
+      width: RESIZE_HANDLE_SIZE,
+    },
+  },
+  {
+    dir: "nw",
+    cursorClassName: "cursor-nwse-resize",
+    style: {
+      top: 0,
+      left: 0,
+      width: RESIZE_HANDLE_SIZE,
+      height: RESIZE_HANDLE_SIZE,
+    },
+  },
+  {
+    dir: "se",
+    cursorClassName: "cursor-nwse-resize",
+    style: {
+      bottom: 0,
+      right: 0,
+      width: RESIZE_HANDLE_SIZE,
+      height: RESIZE_HANDLE_SIZE,
+    },
+  },
+  {
+    dir: "ne",
+    cursorClassName: "cursor-nesw-resize",
+    style: {
+      top: 0,
+      right: 0,
+      width: RESIZE_HANDLE_SIZE,
+      height: RESIZE_HANDLE_SIZE,
+    },
+  },
+  {
+    dir: "sw",
+    cursorClassName: "cursor-nesw-resize",
+    style: {
+      bottom: 0,
+      left: 0,
+      width: RESIZE_HANDLE_SIZE,
+      height: RESIZE_HANDLE_SIZE,
+    },
+  },
+]
 
 interface WindowProps {
   title: string
@@ -16,6 +116,9 @@ interface WindowProps {
   y: number
   width: number
   height: number
+  minWidth: number
+  minHeight: number
+  resizable: boolean
   zIndex: number
   controls?: WindowControl[]
   onFocus: () => void
@@ -23,13 +126,16 @@ interface WindowProps {
   onMinimize?: () => void
   onToggleMaximize?: () => void
   onMove: (x: number, y: number) => void
+  onResize: (rect: ResizeRect) => void
   statusBar?: React.ReactNode
   bodyClassName?: string
   children: React.ReactNode
 }
 
 /** Win98 window chrome: gradient title bar (self-drawn pointer drag, clamped
- * to viewport), minimize/maximize/close, click-to-focus z-order. */
+ * to viewport), minimize/maximize/close, click-to-focus z-order, and
+ * self-drawn edge/corner resize handles (clamped to minWidth/minHeight and
+ * viewport). */
 export function Window({
   title,
   icon,
@@ -39,6 +145,9 @@ export function Window({
   y,
   width,
   height,
+  minWidth,
+  minHeight,
+  resizable,
   zIndex,
   controls = ["minimize", "maximize", "close"],
   onFocus,
@@ -46,6 +155,7 @@ export function Window({
   onMinimize,
   onToggleMaximize,
   onMove,
+  onResize,
   statusBar,
   bodyClassName,
   children,
@@ -56,6 +166,14 @@ export function Window({
     startY: number
     originX: number
     originY: number
+  } | null>(null)
+
+  const resizeRef = React.useRef<{
+    pointerId: number
+    dir: ResizeDir
+    startX: number
+    startY: number
+    origin: ResizeRect
   } | null>(null)
 
   const handleTitleBarPointerDown = (event: React.PointerEvent) => {
@@ -90,6 +208,57 @@ export function Window({
 
   const handleTitleBarPointerUp = () => {
     dragRef.current = null
+  }
+
+  const beginResize = (dir: ResizeDir) => (event: React.PointerEvent) => {
+    event.stopPropagation()
+    event.currentTarget.setPointerCapture(event.pointerId)
+    resizeRef.current = {
+      pointerId: event.pointerId,
+      dir,
+      startX: event.clientX,
+      startY: event.clientY,
+      origin: { x, y, width, height },
+    }
+  }
+
+  const handleResizePointerMove = (event: React.PointerEvent) => {
+    const resize = resizeRef.current
+    if (!resize || resize.pointerId !== event.pointerId) return
+    const dx = event.clientX - resize.startX
+    const dy = event.clientY - resize.startY
+    const { x: ox, y: oy, width: ow, height: oh } = resize.origin
+
+    let nextX = ox
+    let nextY = oy
+    let nextWidth = ow
+    let nextHeight = oh
+
+    if (resize.dir.includes("e")) {
+      nextWidth = Math.max(ow + dx, minWidth)
+    }
+    if (resize.dir.includes("w")) {
+      nextWidth = Math.max(ow - dx, minWidth)
+      nextX = ox + (ow - nextWidth)
+    }
+    if (resize.dir.includes("s")) {
+      nextHeight = Math.max(oh + dy, minHeight)
+    }
+    if (resize.dir.includes("n")) {
+      nextHeight = Math.max(oh - dy, minHeight)
+      nextY = oy + (oh - nextHeight)
+    }
+
+    const maxX = Math.max(window.innerWidth - nextWidth, 0)
+    const maxY = Math.max(window.innerHeight - TASKBAR_HEIGHT - nextHeight, 0)
+    nextX = Math.min(Math.max(nextX, 0), maxX)
+    nextY = Math.min(Math.max(nextY, 0), maxY)
+
+    onResize({ x: nextX, y: nextY, width: nextWidth, height: nextHeight })
+  }
+
+  const handleResizePointerUp = () => {
+    resizeRef.current = null
   }
 
   return (
@@ -163,6 +332,20 @@ export function Window({
         {children}
       </div>
       {statusBar}
+      {resizable &&
+        !maximized &&
+        RESIZE_HANDLES.map(({ dir, cursorClassName, style }) => (
+          <div
+            key={dir}
+            aria-hidden
+            data-resize-handle={dir}
+            className={cn("absolute touch-none", cursorClassName)}
+            style={style}
+            onPointerDown={beginResize(dir)}
+            onPointerMove={handleResizePointerMove}
+            onPointerUp={handleResizePointerUp}
+          />
+        ))}
     </div>
   )
 }

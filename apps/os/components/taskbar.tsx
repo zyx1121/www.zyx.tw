@@ -3,7 +3,7 @@
 import * as React from "react"
 
 import { PixelIcon } from "@/components/pixel-icon"
-import { useWindowManager } from "@/components/window-manager"
+import { useWindowManager } from "@/lib/os/kernel/window-manager"
 import { cn } from "@/lib/utils"
 import { TASKBAR_HEIGHT } from "@/lib/constants"
 
@@ -61,10 +61,10 @@ export function Taskbar({
 
       <div className="flex flex-1 items-center gap-1 overflow-hidden">
         {windows.map((win) => {
-          const isActive = win.id === activeId && !win.minimized
+          const isActive = win.pid === activeId && !win.minimized
           return (
             <button
-              key={win.id}
+              key={win.pid}
               type="button"
               className={cn(
                 "win98-focusable flex h-6 max-w-40 min-w-24 items-center gap-1 px-2 text-win98-text",
@@ -72,9 +72,9 @@ export function Taskbar({
               )}
               onClick={() => {
                 if (isActive) {
-                  minimizeWindow(win.id)
+                  minimizeWindow(win.pid)
                 } else {
-                  focusWindow(win.id)
+                  focusWindow(win.pid)
                 }
               }}
             >

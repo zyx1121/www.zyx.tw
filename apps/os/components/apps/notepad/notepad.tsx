@@ -10,13 +10,15 @@ import {
   MenuBarSeparator,
   MenuBarTrigger,
 } from "@/components/ui/menu-bar"
-import type { AppContentProps } from "@/components/apps/registry"
+import { useProcess } from "@/lib/os/sdk/use-process"
 
 const PLACEHOLDER = `這是記事本的 sunken textarea。
 
 試著打幾個字、拖拉視窗、或從「檔案」選單按下「關閉」。`
 
-export function NotepadApp({ onClose }: AppContentProps) {
+export function NotepadApp() {
+  const { exit } = useProcess()
+
   return (
     <div className="-m-2 flex flex-1 flex-col gap-0">
       <MenuBar>
@@ -27,7 +29,7 @@ export function NotepadApp({ onClose }: AppContentProps) {
             <MenuBarItem disabled>開啟舊檔...</MenuBarItem>
             <MenuBarItem disabled>儲存</MenuBarItem>
             <MenuBarSeparator />
-            <MenuBarItem onSelect={onClose}>關閉</MenuBarItem>
+            <MenuBarItem onSelect={exit}>關閉</MenuBarItem>
           </MenuBarContent>
         </MenuBarMenu>
         <MenuBarMenu>

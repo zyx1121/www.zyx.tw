@@ -2,11 +2,15 @@ import { PixelIcon } from "@/components/pixel-icon"
 import { APPS } from "@/components/apps/registry"
 import { cn } from "@/lib/utils"
 import { TASKBAR_HEIGHT } from "@/lib/constants"
-import type { AppId } from "@/lib/types"
 
-const MENU_ITEMS: AppId[] = ["notepad", "control-panel", "about"]
+const MENU_ITEMS: string[] = [
+  "notepad",
+  "control-panel",
+  "task-manager",
+  "about",
+]
 
-export function StartMenu({ onOpenApp }: { onOpenApp: (id: AppId) => void }) {
+export function StartMenu({ onOpenApp }: { onOpenApp: (id: string) => void }) {
   return (
     <div
       className="bevel-raised absolute left-0 flex w-56 bg-surface"
@@ -20,6 +24,7 @@ export function StartMenu({ onOpenApp }: { onOpenApp: (id: AppId) => void }) {
       <ul className="m-0 flex flex-1 list-none flex-col gap-0.5 p-0.5">
         {MENU_ITEMS.map((id) => {
           const app = APPS[id]
+          if (!app) return null
           return (
             <li key={id}>
               <button
@@ -28,7 +33,7 @@ export function StartMenu({ onOpenApp }: { onOpenApp: (id: AppId) => void }) {
                 onClick={() => onOpenApp(id)}
               >
                 <PixelIcon name={app.icon} size={20} />
-                {app.title}
+                {app.name}
               </button>
             </li>
           )

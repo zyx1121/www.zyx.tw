@@ -1,8 +1,13 @@
 import { PixelIcon } from "@/components/pixel-icon"
 import { Button } from "@/components/ui/button"
-import type { AppContentProps } from "@/components/apps/registry"
+import { useProcess } from "@/lib/os/sdk/use-process"
 
-export function AboutApp({ onClose }: AppContentProps) {
+// Component signature intentionally has no params: everything it needs
+// (exit) comes from SDK hooks via <AppHost pid>, matching OsAppManifest's
+// `ComponentType<OsAppProps>` contract without an unused pid destructure.
+export function AboutApp() {
+  const { exit } = useProcess()
+
   return (
     <div className="flex flex-1 flex-col gap-4">
       <div className="flex flex-1 gap-4">
@@ -21,7 +26,7 @@ export function AboutApp({ onClose }: AppContentProps) {
         </div>
       </div>
       <div className="flex justify-end">
-        <Button tone="default" onClick={onClose} autoFocus>
+        <Button tone="default" onClick={exit} autoFocus>
           確定
         </Button>
       </div>
