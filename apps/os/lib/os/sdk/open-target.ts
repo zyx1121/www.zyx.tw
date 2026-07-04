@@ -18,6 +18,9 @@ const LNK_EXTENSION = ".lnk"
 
 interface LnkPayload {
   appId?: string
+  /** Optional spawn args baked into the shortcut — e.g. the 我的文件.lnk
+   * seed points at "explorer" with args.path set to C:/My Documents. */
+  args?: AppArgs
 }
 
 function parseLnk(content: string): LnkPayload | null {
@@ -50,7 +53,7 @@ export function resolveOpenTarget(
   if (path.toLowerCase().endsWith(LNK_EXTENSION)) {
     const payload = parseLnk(node.content)
     if (payload?.appId && apps[payload.appId]) {
-      return { kind: "spawn", appId: payload.appId }
+      return { kind: "spawn", appId: payload.appId, args: payload.args }
     }
     return { kind: "unsupported" }
   }

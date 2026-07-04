@@ -11,6 +11,7 @@ import {
   type FsNode,
   type FsPath,
 } from "@/lib/os/kernel/fs"
+import { migrateLegacyLnks } from "@/lib/os/kernel/legacy-migration"
 
 const DB_NAME = "os-zyx-tw"
 const DB_VERSION = 1
@@ -111,7 +112,9 @@ export async function hydrateFs(): Promise<void> {
   try {
     const snapshot = await idbGet<FsSnapshot>(SNAPSHOT_KEY)
     if (isValidSnapshot(snapshot)) {
-      loadFsEntries(snapshot.entries)
+      // Normalize legacy .lnk payloads (retired app ids) before they ever
+      // reach the live store — see legacy-migration.ts.
+      loadFsEntries(migrateLegacyLnks(snapshot.entries))
     } else {
       seedFs()
     }
