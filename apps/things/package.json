@@ -15,6 +15,7 @@
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.105.1",
+    "@workspace/otel": "workspace:*",
     "@workspace/ui": "workspace:*",
     "next": "16.1.6",
     "next-themes": "^0.4.6",
