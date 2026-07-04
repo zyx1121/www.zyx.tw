@@ -21,6 +21,11 @@ interface LnkPayload {
   /** Optional spawn args baked into the shortcut — e.g. the 我的文件.lnk
    * seed points at "explorer" with args.path set to C:/My Documents. */
   args?: AppArgs
+  /** Optional icon override (M4) — a shortcut normally inherits its target
+   * app's icon, but a few desktop shortcuts need a different one (我的文件.lnk
+   * points at the generic explorer icon otherwise, not the classic My
+   * Documents folder). */
+  icon?: IconName
 }
 
 function parseLnk(content: string): LnkPayload | null {
@@ -69,7 +74,8 @@ export function resolveOpenTarget(
 
 /** Icon for a listing row: folders and .lnk shortcuts resolve to their
  * target app's icon, everything else falls back to the text-file icon
- * (the only file kind that exists in M2). */
+ * (the only file kind that exists in M2). A shortcut's optional `icon`
+ * field (M4) wins over the target app's own icon when present. */
 export function iconForEntry(
   name: string,
   node: FsNode,
@@ -78,6 +84,7 @@ export function iconForEntry(
   if (node.type === "dir") return "folder"
   if (name.toLowerCase().endsWith(LNK_EXTENSION) && node.type === "file") {
     const payload = parseLnk(node.content)
+    if (payload?.icon) return payload.icon
     const app = payload?.appId ? apps[payload.appId] : undefined
     if (app) return app.icon
   }

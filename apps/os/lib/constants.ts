@@ -1,6 +1,9 @@
 export const TASKBAR_HEIGHT = 32
 export const TITLE_BAR_HEIGHT = 20
 
+/** Boot screen floor (M4) — see components/desktop.tsx. */
+export const MIN_BOOT_DURATION_MS = 1200
+
 /** Manifest window.minWidth / minHeight fallback when omitted. */
 export const DEFAULT_MIN_WIDTH = 160
 export const DEFAULT_MIN_HEIGHT = 120

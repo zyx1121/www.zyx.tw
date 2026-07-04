@@ -59,6 +59,13 @@ export interface FolderViewProps {
   recycleBin?: boolean
   /** File dialogs: browse only — no context menu, no create/rename/delete. */
   readOnly?: boolean
+  /** Desktop-only (M4): raw entry names to float to the front of the
+   * listing, in the given order, ahead of the normal dir-then-lexicographic
+   * order — e.g. pinning 我的電腦.lnk above the alphabetically-earlier
+   * 我的文件.lnk. Everything not listed keeps its normal relative order
+   * behind the pinned entries. Purely a rendering concern: it doesn't touch
+   * the underlying fs.list() order other callers (explorer, dialogs) rely on. */
+  pinFirst?: string[]
   emptyMessage?: string
   className?: string
 }
@@ -102,6 +109,7 @@ export function FolderView({
   onSelectionChange,
   recycleBin = false,
   readOnly = false,
+  pinFirst,
   emptyMessage = "這個資料夾是空的。",
   className,
 }: FolderViewProps) {
@@ -109,15 +117,22 @@ export function FolderView({
   const { msgBox } = useDialogs()
 
   const rawEntries = useFsList(dir)
-  const entries = React.useMemo(
-    () =>
-      rawEntries.filter((entry) => {
-        if (entry.name.startsWith(".")) return false
-        if (!filter || entry.node.type === "dir") return true
-        return filter(entry)
-      }),
-    [rawEntries, filter]
-  )
+  const entries = React.useMemo(() => {
+    const filtered = rawEntries.filter((entry) => {
+      if (entry.name.startsWith(".")) return false
+      if (!filter || entry.node.type === "dir") return true
+      return filter(entry)
+    })
+    if (!pinFirst || pinFirst.length === 0) return filtered
+    const pinned: FsEntry[] = []
+    const rest: FsEntry[] = []
+    for (const entry of filtered) {
+      if (pinFirst.includes(entry.name)) pinned.push(entry)
+      else rest.push(entry)
+    }
+    pinned.sort((a, b) => pinFirst.indexOf(a.name) - pinFirst.indexOf(b.name))
+    return [...pinned, ...rest]
+  }, [rawEntries, filter, pinFirst])
 
   const [selectedNameState, setSelectedNameState] = React.useState<
     string | null

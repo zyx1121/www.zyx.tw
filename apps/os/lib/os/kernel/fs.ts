@@ -324,8 +324,20 @@ export function seedFs(): void {
   store.mkdir(DESKTOP_DIR)
   store.mkdir(RECYCLE_DIR)
   store.writeFile(
+    joinPath(DESKTOP_DIR, "我的電腦.lnk"),
+    JSON.stringify({
+      appId: "explorer",
+      args: { path: "C:" },
+      icon: "computer",
+    })
+  )
+  store.writeFile(
     joinPath(DESKTOP_DIR, "我的文件.lnk"),
-    JSON.stringify({ appId: "explorer", args: { path: MY_DOCUMENTS_DIR } })
+    JSON.stringify({
+      appId: "explorer",
+      args: { path: MY_DOCUMENTS_DIR },
+      icon: "mydocs",
+    })
   )
   store.writeFile(
     joinPath(DESKTOP_DIR, "記事本.lnk"),
@@ -334,6 +346,10 @@ export function seedFs(): void {
   store.writeFile(
     joinPath(DESKTOP_DIR, "控制台.lnk"),
     JSON.stringify({ appId: "control-panel" })
+  )
+  store.writeFile(
+    joinPath(DESKTOP_DIR, "小算盤.lnk"),
+    JSON.stringify({ appId: "calculator" })
   )
   store.writeFile(
     joinPath(DESKTOP_DIR, "資源回收筒.lnk"),

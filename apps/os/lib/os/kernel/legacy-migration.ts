@@ -13,12 +13,19 @@
  * *before* they're mounted into the live store — fix the data, don't
  * route around it at read time. */
 
-import type { FsNode, FsPath } from "@/lib/os/kernel/fs"
+import type { IconName } from "@/components/pixel-icon"
+import {
+  DESKTOP_DIR,
+  joinPath,
+  type FsNode,
+  type FsPath,
+} from "@/lib/os/kernel/fs"
 import type { AppArgs } from "@/lib/os/types"
 
 interface LnkPayload {
   appId?: string
   args?: AppArgs
+  icon?: IconName
 }
 
 export const LEGACY_LNK_MAP: Record<string, LnkPayload> = {
@@ -60,4 +67,54 @@ export function migrateLegacyLnks(
     return [path, { ...node, content: JSON.stringify(replacement) }]
   })
   return changed ? migrated : entries
+}
+
+// --- M4 desktop-shortcut upsert -------------------------------------------
+//
+// Unlike LEGACY_LNK_MAP (renaming an appId a shortcut already points at),
+// these two changes add data that simply didn't exist in pre-M4 snapshots:
+// a new "我的電腦.lnk" shortcut, and an icon override on the existing
+// "我的文件.lnk" (M3's explorer swap left it showing the generic explorer
+// icon instead of the classic My Documents folder). Both are applied
+// idempotently — a snapshot that already has them is left untouched, and a
+// user who deletes either afterwards isn't fought on the next boot.
+
+const MY_DOCUMENTS_LNK: FsPath = joinPath(DESKTOP_DIR, "我的文件.lnk")
+const MY_COMPUTER_LNK: FsPath = joinPath(DESKTOP_DIR, "我的電腦.lnk")
+
+/** Upserts the two M4 desktop shortcuts into a hydrated snapshot's raw
+ * entries. Run once at hydrate time, after migrateLegacyLnks() and before
+ * the entries are mounted into the live store — see idb.ts's hydrateFs(). */
+export function upsertM4DesktopIcons(
+  entries: [FsPath, FsNode][]
+): [FsPath, FsNode][] {
+  const byPath = new Map(entries)
+  let changed = false
+
+  const myDocuments = byPath.get(MY_DOCUMENTS_LNK)
+  if (myDocuments && myDocuments.type === "file") {
+    const payload = parseLnkPayload(myDocuments.content)
+    if (payload && payload.icon !== "mydocs") {
+      byPath.set(MY_DOCUMENTS_LNK, {
+        ...myDocuments,
+        content: JSON.stringify({ ...payload, icon: "mydocs" }),
+      })
+      changed = true
+    }
+  }
+
+  if (!byPath.has(MY_COMPUTER_LNK)) {
+    byPath.set(MY_COMPUTER_LNK, {
+      type: "file",
+      content: JSON.stringify({
+        appId: "explorer",
+        args: { path: "C:" },
+        icon: "computer",
+      } satisfies LnkPayload),
+      mtime: Date.now(),
+    })
+    changed = true
+  }
+
+  return changed ? [...byPath] : entries
 }

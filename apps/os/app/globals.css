@@ -119,4 +119,19 @@
     outline: 1px dotted #000;
     outline-offset: -4px;
   }
+
+  /* Boot screen (M4) — bottom progress bar sweeps left to right, looping
+     for as long as the boot gate holds (components/boot-screen.tsx). */
+  @keyframes boot-bar {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(300%);
+    }
+  }
+
+  .animate-boot-bar {
+    animation: boot-bar 1.1s ease-in-out infinite;
+  }
 }

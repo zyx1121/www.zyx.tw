@@ -43,6 +43,7 @@ export interface OsAppManifest {
   multiInstance: boolean           // false → spawn 已存在時 focus 舊的
   fileAssociations?: string[]      // 副檔名含點:[".txt"]
   desktopHidden?: boolean          // true → 不出現在桌面(M2 起桌面由 VFS 管,此欄只影響 seed)
+  startMenuHidden?: boolean        // true → 不出現在開始選單(M4;預設全部顯示,見「開始選單」節)
   Component: React.ComponentType<OsAppProps>
 }
 export interface OsAppProps { pid: Pid }   // 其餘一律透過 SDK hooks 取得
@@ -61,7 +62,7 @@ export interface OsProcess { pid: Pid; appId: string; args: AppArgs; startedAt: 
   processes: OsProcess[]
   spawn(appId: string, args?: AppArgs): Pid   // multiInstance=false 且已存在 → focus 舊視窗、回傳舊 pid
   kill(pid: Pid): void                        // 移除 process + 其視窗(不走 onBeforeClose,是強殺)
-  requestClose(pid: Pid): Promise<void>       // 有註冊 onBeforeClose 就先 await 它,回 true 才 kill;否則直接 kill
+  requestClose(pid: Pid): Promise<boolean>    // 有註冊 onBeforeClose 就先 await 它,回 true 才 kill;否則直接 kill;回傳值 = 視窗是否真的關了
   registerBeforeClose(pid: Pid, fn: (() => boolean | Promise<boolean>) | null): void
 }
 ```
@@ -70,7 +71,13 @@ pid 從 1 遞增。startedAt 用 Date.now()(client only)。
 
 `requestClose` / `registerBeforeClose` 是 M1 就有的實作,M2 拍板列為正式
 契約(useWindow 的 `requestClose()` / `setOnBeforeClose()` 就是包這兩個)—
-簽名跟既有語意都不再變動。
+簽名跟既有語意都不再變動。**M4 的一次例外加寬**:`requestClose` 回傳型別從
+`Promise<void>` 改成 `Promise<boolean>`——關機流程要依序對每個開著的視窗跑
+`requestClose`,任一個 `onBeforeClose` 回 false 就要中止整個關機序列,沒有
+回傳值就無從判斷該不該停。純加寬(所有既有呼叫端都是 `void requestClose(pid)`
+丟棄回傳值),`useWindow().requestClose()` 這層 SDK 包裝本身仍是
+`void`,app 感受不到這個變動——只有 `components/desktop.tsx`(OS shell,本
+來就直接用 `useProcessTable()`)消費新回傳值。
 
 ### WindowManager(M1 改造)
 
@@ -148,10 +155,22 @@ export interface Vfs {
 - 重名處理:recycle/mv 撞名時自動加 ` (2)`、` (3)`。
 - `.lnk` 檔:content 為 JSON `{"appId":"notepad"}`,可選 `args`(如
   `{"appId":"explorer","args":{"path":"C:/My Documents"}}`);開啟 .lnk =
-  spawn 該 app(帶上 args,M3 起支援)。
+  spawn 該 app(帶上 args,M3 起支援)。**M4 加一個可選欄位 `icon`**(如
+  `{"appId":"explorer","args":{"path":"C:"},"icon":"computer"}`)——覆蓋掉
+  預設繼承目標 app 的 icon,只給「同一個 app 要在不同捷徑上顯示不同 icon」
+  這種例外用(我的電腦/我的文件都開 `explorer` 但要看起來像不同東西),新增
+  一般 app 不需要碰這個欄位(見 `docs/APP-SPEC.md`)。
 - 檔案開啟規則:雙擊 file → 依副檔名查 manifest.fileAssociations → spawn(appId, {path});無關聯 → MessageBox「無法開啟」。判斷邏輯是純函式 `resolveOpenTarget(vfs, apps, path)`(`lib/os/sdk/open-target.ts`),吃 vfs/apps 當參數而不 import registry,避免 registry → manifest → app component → sdk → open-target → registry 的 import 環。桌面 / 我的文件 / 回收筒都共用它。
 - `Vfs` 介面本身不含持久化方法;`dumpFsEntries()` / `loadFsEntries()` / `seedFs()` / `getFsVersion()` 是 fs.ts 額外 export 的 kernel-only 函式,只給 `idb.ts` 用,不進 app 可見的契約。
 - **M2 已實作**(2026-07):`lib/os/kernel/fs.ts`。
+- **M4 桌面排序**(`components/folder-view.tsx`):`Vfs.list()` 本身的
+  dir-first + `localeCompare(zh-Hant)` 排序契約不變(所有呼叫方,包含
+  explorer/對話框,都還是這個順序)。桌面需要「我的電腦」永遠排最前面,這
+  不是字典序能保證的事 —— 沒有加 fs 層的手動排序欄位,而是在 `FolderView`
+  加一個純渲染層的可選 prop `pinFirst?: string[]`:把列出的名稱依
+  `pinFirst` 給定順序挪到最前面,其餘維持原本相對順序。只有
+  `components/desktop.tsx` 傳這個 prop(`pinFirst={["我的電腦.lnk"]}`),
+  explorer / 回收筒 / 檔案對話框都不傳,行為不受影響。
 
 **M1 遺留 bug 順手修的一件事**:`WindowManager` reducer 的 `SET_TITLE` 原本每次都回傳新的 `windows` 陣列,即使 title 沒變 —— app 若在 `useEffect` 裡呼叫 `setTitle`(記事本的 dirty `*` 前綴就是這樣做)會導致 context value 每次都重建、SDK closure 跟著換身分、effect 依賴陣列判定「變了」再度觸發,形成無限迴圈。現在 `SET_TITLE` 對 no-op 寫入直接回傳原 state,不觸發下游重渲染。之後任何會被放進 `useEffect` deps 的 kernel action,都要照這個模式先檢查是否真的變了。
 
@@ -159,17 +178,22 @@ export interface Vfs {
 
 - `lib/os/kernel/idb.ts`:手寫 promise wrapper(open/get/put,單 DB `os-zyx-tw`、單 store `fs`、單 key `snapshot`),**不加任何依賴**。
 - 寫入 debounce 500ms;snapshot = `{ version: 1, entries: [path, node][] }`。
-- 開機 hydrate:讀到 → 載入;讀不到/壞掉 → seed。hydrate 完成前桌面顯示純 teal(M4 換開機畫面)。
-- Seed:
+- 開機 hydrate:讀到 → 載入;讀不到/壞掉 → seed。**M4 起**hydrate 完成前顯示
+  Win98 開機畫面(見「開機/關機」節),不再是純 teal。
+- Seed(**M4 更新**——加了我的電腦、小算盤,我的文件補上 `icon` 覆蓋):
   ```
   C:/My Documents/
-  C:/Windows/Desktop/我的文件.lnk → {"appId":"explorer","args":{"path":"C:/My Documents"}}
-  C:/Windows/Desktop/記事本.lnk   → {"appId":"notepad"}
-  C:/Windows/Desktop/控制台.lnk   → {"appId":"control-panel"}
+  C:/Windows/Desktop/我的電腦.lnk   → {"appId":"explorer","args":{"path":"C:"},"icon":"computer"}
+  C:/Windows/Desktop/我的文件.lnk   → {"appId":"explorer","args":{"path":"C:/My Documents"},"icon":"mydocs"}
+  C:/Windows/Desktop/記事本.lnk     → {"appId":"notepad"}
+  C:/Windows/Desktop/控制台.lnk     → {"appId":"control-panel"}
+  C:/Windows/Desktop/小算盤.lnk     → {"appId":"calculator"}
   C:/Windows/Desktop/資源回收筒.lnk → {"appId":"recycle-bin"}
-  C:/Windows/Desktop/README.txt   → 簡短歡迎文(繁中)
+  C:/Windows/Desktop/README.txt     → 簡短歡迎文(繁中)
   C:/Recycled/
   ```
+  桌面渲染順序把「我的電腦」挪到最前面(`pinFirst`,見上),其餘維持
+  `list()` 的字典序,不特別調整。
 - 桌面 = `C:/Windows/Desktop` 的資料夾視圖(.lnk 用 app icon、.txt 用 notepad-file 類 icon;檔名去 .lnk 顯示)。
 - Dev-only 測試鉤子:`components/desktop.tsx` 在 hydrate 完成後,若 `process.env.NODE_ENV !== "production"` 就把 `window.__osfs = vfs`(Next 建置時會連同判斷式一起 dead-code-eliminate,production bundle 不含 —— 已用 `next build` 產物 grep 驗證);Playwright 驗證腳本(`scratchpad/m2-verify.mjs`)靠它直接呼叫 recycle/restore/emptyRecycleBin,不用等 M3 explorer 才有刪除入口。
 - **M2 已實作**(2026-07):`lib/os/kernel/idb.ts`。
@@ -201,6 +225,18 @@ M3 拿掉 `my-documents` manifest 改成 `explorer` 後,**舊快照裡的 `.lnk`
   「我的文件」、斷言開出來的是 explorer 且位址列是 `C:\My Documents`。這條
   之後每期都要留著跑,不能被「每次都先清庫重 seed」的其他測試蓋過去。
 - **M3 已實作**(2026-07):`lib/os/kernel/legacy-migration.ts`。
+- **M4 擴充 —— 補資料而非改名的 upsert**:`LEGACY_LNK_MAP` 解的是「舊
+  `.lnk` 指著一個已改名/移除的 appId」;M4 遇到的是不同形狀的問題 ——舊
+  快照裡**根本沒有**「我的電腦.lnk」,而既有的「我的文件.lnk」缺少新加的
+  `icon` 欄位。這兩者都是「補資料」不是「改名」,所以另開
+  `upsertM4DesktopIcons(entries)`(同檔案),在 `migrateLegacyLnks` 之後、
+  `loadFsEntries` 之前跑:命中「我的文件.lnk」就把 `icon` patch 成
+  `"mydocs"`(保留其餘欄位);「我的電腦.lnk」不存在才新增,存在就不動。
+  兩者都冪等,且都尊重使用者刪除 —— upsert 只在「缺資料」時補,不會在使用者
+  事後刪掉這兩個捷徑後於下次開機把它們救回來。驗證:
+  `scratchpad/m4-verify.mjs` 灌一筆 M3 形狀的快照(含使用者自訂資料夾)、
+  reload、斷言「我的電腦」被補上、「我的文件」icon 被 patch、使用者自訂
+  項目沒被動到,並且重複 reload 不會產生重複項目。
 
 ### 系統對話框(M2 基本版,M3 完善)
 
@@ -264,18 +300,76 @@ export interface FolderViewActivation { name: string; path: FsPath; node: FsNode
 
 ### 開機/關機(M4)
 
-- 開機:每次 load 顯示 Win98 boot 畫面(黑底 logo + 底部漸層條)至 hydrate 完成,最短 1.2s。
-- 關機:start menu 關機 → msgBox 樣式的關機對話框(確定要關機嗎)→ 全螢幕黑底橘字「現在可以放心關閉電腦。」,點擊任意處重新開機(reload)。
-- Alt+F4 關閉 active 視窗(走 onBeforeClose)。
-- APP-SPEC.md:新 app 步驟、規則、checklist(見驗收)。
-- 試金石:新增「小算盤」app(calculator,原版 calc icon,基本四則),只准動 `components/apps/calculator/` + registry 一行 + seed 桌面捷徑一行,證明規範成立。
+- **開機**:`components/boot-screen.tsx`——黑底、置中「OS 98」字樣 + 「正在
+  啟動...」、底部一條循環掃過的漸層進度條(純 CSS `@keyframes`,見
+  `app/globals.css` 的 `boot-bar`)。`components/desktop.tsx` 的
+  `Desktop()` 記錄 `hydrateFs()` 呼叫時的時間戳,resolve 後若總耗時未滿
+  `MIN_BOOT_DURATION_MS`(`lib/constants.ts`,1200ms)就用 `setTimeout` 補
+  到滿——避免暖 IndexedDB 讀秒開就一閃而過,讀起來不像刻意的開機序列。取代
+  M1–M3 hydrate 前的純 teal 佔位。
+- **開始選單改為 registry 衍生**:`components/start-menu.tsx` 原本是一份
+  手寫的 `MENU_ITEMS` app-id 白名單(只列 4 個 app)——這讓「新增一個 app」
+  多出第五個要碰的檔案,牴觸終態「manifest + component 就夠了」。M4 改成
+  `Object.values(APPS).filter((app) => !app.startMenuHidden)`,依
+  `registry.ts` 的 `MANIFESTS` 宣告順序渲染,新增 app 進 registry 的那一刻
+  開始選單入口就自動有了。`startMenuHidden`(manifest 新欄位,見上)是唯一
+  的例外閥門,目前沒有任何 app 用到。
+- **關機**:「關機...」項目從 M1–M3 的
+  disabled 佔位改為真的可點,`onClick` 交給 `components/desktop.tsx` 的
+  `handleShutdownRequest`:呼叫既有的 `useDialogs().msgBox`(標題「關機
+  Windows」、`icon:"question"`、`buttons:"okcancel"`、文案「您要將電腦關機
+  嗎?」——跟系統其他 msgBox 共用同一套 `SystemDialogHost` 渲染,不是另開
+  一種對話框元件)。選「確定」後**先依 z-order(最上層先)對每個開著的
+  視窗跑 `requestClose`**——跟 X / taskbar 右鍵 / Alt+F4 走同一條
+  `onBeforeClose` 路徑,dirty 記事本一樣會跳三鍵存檔確認;任一個
+  `requestClose` 回 false(使用者選「取消」)就整段中止,已經關掉的維持
+  關掉、還沒問到的維持開著,不繼續往下關,也不進黑屏——真 Win98 關機被使用
+  者攔下時就是這樣(reviewer 對抗驗收抓到的 gap:第一版直接跳黑屏,靜默丟
+  掉 dirty 內容,已修正)。全部視窗都同意關閉才把 `DesktopSurface` 的
+  `shutdown` state 設 true,提早 return `components/shutdown-screen.tsx`
+  (黑底、`#ffa500` 橘字「現在可以放心關閉電腦。」),點擊或按任意鍵都觸發
+  `window.location.reload()`——重新走一次開機序列,不是切一個「假桌面」
+  state,忠實對應「關機再開機」的心智模型。
+- **Alt+F4**:`DesktopSurface` 掛一個 `window` 級 `keydown` 監聽,命中
+  `altKey && key === "F4"` 就 `preventDefault()` 並對
+  `useWindowManager().activeId` 呼叫 `requestClose`——跟 title bar 的 X
+  走同一條路徑(會先問 `onBeforeClose`,例如記事本的未儲存確認)。**已知
+  限制**:多數瀏覽器把 Alt+F4 保留給「關閉瀏覽器視窗」本身,`preventDefault`
+  在頁面層級攔不住瀏覽器 chrome 這一層——這是瀏覽器安全模型的邊界,不是
+  這裡的實作漏洞,做到「頁面收到這個按鍵就做對事」是這一層能做的全部。
+  無視窗時(`activeId === null`)整個 handler 直接是 no-op。
+- **`.lnk` icon 覆蓋 + 桌面 seed 補完**:見上面「VFS」「持久化」兩節—— `.lnk`
+  payload 新增可選 `icon` 欄位、seed 新增「我的電腦.lnk」(開 `explorer`
+  於 `C:`)、「我的文件.lnk」補 `icon:"mydocs"`(M3 把我的文件併入 explorer
+  後,原本專屬的資料夾 icon 被 explorer 的放大鏡 icon 蓋掉,這裡修回來)、
+  桌面用 `FolderView` 的 `pinFirst` prop 讓「我的電腦」排最前面、
+  `legacy-migration.ts` 的 `upsertM4DesktopIcons` 讓舊快照冪等補齊。
+- **APP-SPEC.md**(`docs/APP-SPEC.md`):新 app 步驟、規則、checklist,以
+  小算盤為實例。
+- **試金石 —— 小算盤**(`calculator`,`components/apps/calculator/`):
+  Win98 風計算機版面(sunken 顯示欄 + 4 欄按鈕 grid),基本四則
+  (`+ - × ÷`,含清除/退格/正負號/除以零 msgBox 錯誤)。icon 原版
+  `calculator`(win98icons 剛好同名 family)。診斷紀錄:`app/globals.css`
+  把根字體設成 `11px`,Tailwind 的 rem 尺寸(`h-8`/`gap-2`)因此只有
+  16px 基準心算值的 ~69%——第一版用 16px 心算寫的 `window.height` 因此偏大
+  近 90px,留了一大塊空白,靠 Playwright 量實際 bounding box 校正到
+  184px 才貼合(見 `docs/APP-SPEC.md` 的對應規則)。小算盤進 registry 後
+  自動出現在開始選單(見上「開始選單改為 registry 衍生」),另外補了
+  `小算盤.lnk` 桌面捷徑;除此之外沒有動 `calculator/` + registry 一行 +
+  seed 一行 + icon 檔之外的任何檔案。
 
 ## 各期驗收(reviewer 逐條驗)
 
 - **M1**:5 app 遷移後行為不退化;可同時開兩個記事本(multiInstance);工作管理員列出進程並能結束;視窗可 resize 且 clamp min 尺寸;app 能 setTitle;lint/typecheck/build 綠。
 - **M2**:存檔→重新整理→檔案還在(IndexedDB);桌面來自 VFS;雙擊 README.txt 開記事本;記事本全選單可用;未儲存攔截三鍵行為正確;回收筒還原/清空(UI)+ recycle(M2 無刪除入口,走 fs API/dev hook 驗證,刪除 UI 是 M3 explorer 右鍵選單);lint/typecheck/build 綠。
 - **M3**:explorer tree/list/地址列;右鍵新增/改名/刪除/還原全通;對話框鍵盤 Esc 可關;lint/typecheck/build 綠。
-- **M4**:開機/關機流程;Alt+F4;小算盤按規範加入且 diff 範圍符合限制;APP-SPEC.md 與實作一致;lint/typecheck/build 綠。
+- **M4**:開機畫面(出現→維持 ~1.2s 底線→消失)；關機(對話框→確定→黑底
+  橘字畫面→點擊/按鍵重新開機)；Alt+F4 關閉 active 視窗(乾淨視窗直接關、
+  dirty 記事本走 onBeforeClose 確認)；桌面「我的電腦」排最前且開
+  `C:\`、「我的文件」icon 回復資料夾樣式，M3 形狀舊快照 reload 後冪等補齊
+  且不動使用者自訂項目；小算盤按規範加入、四則運算含除以零錯誤、diff 範圍
+  符合硬限制；APP-SPEC.md 與實作一致；lint/typecheck/build 綠;
+  `scratchpad/m4-verify.mjs` 全綠、零 console/pageerror。
 
 ## 硬規則(所有期共用)
 
