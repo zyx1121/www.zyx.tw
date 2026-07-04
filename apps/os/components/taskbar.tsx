@@ -53,7 +53,7 @@ export function Taskbar({
         )}
         onClick={onToggleStart}
       >
-        <PixelIcon name="computer" size={16} />
+        <PixelIcon name="start" size={16} />
         開始
       </button>
 

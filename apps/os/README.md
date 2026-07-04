@@ -31,7 +31,8 @@ bun dev
 
 ## What's in the POC
 
-- Teal desktop with pixel-art icons (hand-drawn, no Microsoft assets —
+- Teal desktop with original Windows 98 icons (© Microsoft, sourced from
+  win98icons.alexmeub.com for personal, non-commercial nostalgia use —
   see `components/pixel-icon.tsx`)
 - Draggable windows with Win98 chrome (gradient title bar, minimize /
   maximize / close, click-to-focus z-order)

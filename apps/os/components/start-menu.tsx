@@ -43,7 +43,7 @@ export function StartMenu({ onOpenApp }: { onOpenApp: (id: AppId) => void }) {
               "[text-shadow:1px_1px_0_var(--color-button-highlight)]"
             )}
           >
-            <PixelIcon name="computer" size={20} />
+            <PixelIcon name="shutdown" size={20} />
             關機...
           </button>
         </li>

@@ -14,8 +14,9 @@ export function AboutApp({ onClose }: AppContentProps) {
             像素圖示與工作列互動的真實比例與行為。
           </p>
           <p>
-            版面、bevel 公式與字體皆取自 98.css 的真值，圖示則是全部手繪的像
-            素藝術，沒有使用任何 Microsoft 版權素材。
+            版面、bevel 公式與字體皆取自 98.css 的真值，圖示則是原版 Windows 98
+            icon（© Microsoft，取自 win98icons.alexmeub.com），僅供個人
+            非商業懷舊用途。
           </p>
         </div>
       </div>
