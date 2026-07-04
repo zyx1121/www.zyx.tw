@@ -1,0 +1,122 @@
+@import "tailwindcss";
+@import "shadcn/tailwind.css";
+
+/* "Pixelated MS Sans Serif" — MIT licensed webfont from jdan/98.css. */
+@font-face {
+  font-family: "Pixelated MS Sans Serif";
+  src: url("/fonts/ms_sans_serif.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pixelated MS Sans Serif";
+  src: url("/fonts/ms_sans_serif_bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-win98: "Pixelated MS Sans Serif", Tahoma, Arial, sans-serif;
+
+  --color-surface: #c0c0c0;
+  --color-desktop: #008080;
+  --color-button-highlight: #ffffff;
+  --color-button-face-light: #dfdfdf;
+  --color-button-shadow: #808080;
+  --color-window-frame: #0a0a0a;
+  --color-win98-text: #222222;
+  --color-selection: #000080;
+  --color-selection-foreground: #ffffff;
+}
+
+:root {
+  --title-active: linear-gradient(90deg, navy, #1084d0);
+  --title-inactive: linear-gradient(90deg, grey, #b5b5b5);
+}
+
+@layer base {
+  * {
+    border-radius: 0;
+  }
+
+  html {
+    font-family: var(--font-win98);
+    font-size: 11px;
+    color: var(--color-win98-text);
+    -webkit-font-smoothing: none;
+  }
+
+  body {
+    margin: 0;
+    height: 100dvh;
+    width: 100dvw;
+    overflow: hidden;
+    background-color: var(--color-desktop);
+  }
+
+  img,
+  svg {
+    image-rendering: pixelated;
+  }
+}
+
+/* Bevel formulas — the only four (plus two variants) 98.css uses. Values
+   are copied verbatim from spec, not eyeballed. */
+@layer components {
+  .bevel-raised {
+    box-shadow:
+      inset -1px -1px #0a0a0a,
+      inset 1px 1px #fff,
+      inset -2px -2px grey,
+      inset 2px 2px #dfdfdf;
+  }
+
+  .bevel-pressed {
+    box-shadow:
+      inset -1px -1px #fff,
+      inset 1px 1px #0a0a0a,
+      inset -2px -2px #dfdfdf,
+      inset 2px 2px grey;
+  }
+
+  .bevel-window {
+    box-shadow:
+      inset -1px -1px #0a0a0a,
+      inset 1px 1px #dfdfdf,
+      inset -2px -2px grey,
+      inset 2px 2px #fff;
+    padding: 3px;
+  }
+
+  .bevel-sunken {
+    box-shadow:
+      inset -1px -1px #fff,
+      inset 1px 1px grey,
+      inset -2px -2px #dfdfdf,
+      inset 2px 2px #0a0a0a;
+    background: #fff;
+  }
+
+  .bevel-default-button {
+    box-shadow:
+      inset -2px -2px #0a0a0a,
+      inset 1px 1px #0a0a0a,
+      inset 2px 2px #fff,
+      inset -3px -3px grey,
+      inset 3px 3px #dfdfdf;
+  }
+
+  .bevel-status-field {
+    box-shadow:
+      inset -1px -1px #dfdfdf,
+      inset 1px 1px grey;
+  }
+
+  .win98-focusable:focus-visible {
+    outline: 1px dotted #000;
+    outline-offset: -4px;
+  }
+}
