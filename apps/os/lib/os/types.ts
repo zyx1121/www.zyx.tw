@@ -42,5 +42,10 @@ export interface OsAppManifest {
   fileAssociations?: string[]
   /** true → excluded from the desktop icon seed (M2+). */
   desktopHidden?: boolean
+  /** true → excluded from the start menu's app list (M4+). The start menu
+   * otherwise derives its items straight from the registry — no manifest
+   * currently sets this, it exists so a future app can opt out without
+   * reintroducing a hand-maintained menu whitelist. */
+  startMenuHidden?: boolean
   Component: ComponentType<OsAppProps>
 }

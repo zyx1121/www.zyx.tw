@@ -23,8 +23,10 @@ interface ProcessTableContextValue {
    * onBeforeClose. Used by kill-from-outside flows (task manager). */
   kill: (pid: Pid) => void
   /** Runs the pid's registered onBeforeClose (if any) and only kills when
-   * it resolves true. Used by the window's own close affordances. */
-  requestClose: (pid: Pid) => Promise<void>
+   * it resolves true. Used by the window's own close affordances. Resolves
+   * to whether the window actually closed (M4) — the shutdown sequence
+   * sweeps every open window through this and needs to know when to stop. */
+  requestClose: (pid: Pid) => Promise<boolean>
   registerBeforeClose: (pid: Pid, fn: BeforeClose | null) => void
 }
 
@@ -101,6 +103,7 @@ export function ProcessTableProvider({
       const before = beforeCloseRef.current.get(pid)
       const ok = before ? await before() : true
       if (ok) kill(pid)
+      return ok
     },
     [kill]
   )

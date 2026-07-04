@@ -1,5 +1,6 @@
 import type { OsAppManifest } from "@/lib/os/types"
 import { aboutManifest } from "@/components/apps/about/manifest"
+import { calculatorManifest } from "@/components/apps/calculator/manifest"
 import { controlPanelManifest } from "@/components/apps/control-panel/manifest"
 import { explorerManifest } from "@/components/apps/explorer/manifest"
 import { notepadManifest } from "@/components/apps/notepad/manifest"
@@ -8,6 +9,7 @@ import { taskManagerManifest } from "@/components/apps/task-manager/manifest"
 
 const MANIFESTS: OsAppManifest[] = [
   aboutManifest,
+  calculatorManifest,
   controlPanelManifest,
   explorerManifest,
   notepadManifest,

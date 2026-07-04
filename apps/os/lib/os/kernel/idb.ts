@@ -11,7 +11,10 @@ import {
   type FsNode,
   type FsPath,
 } from "@/lib/os/kernel/fs"
-import { migrateLegacyLnks } from "@/lib/os/kernel/legacy-migration"
+import {
+  migrateLegacyLnks,
+  upsertM4DesktopIcons,
+} from "@/lib/os/kernel/legacy-migration"
 
 const DB_NAME = "os-zyx-tw"
 const DB_VERSION = 1
@@ -113,8 +116,9 @@ export async function hydrateFs(): Promise<void> {
     const snapshot = await idbGet<FsSnapshot>(SNAPSHOT_KEY)
     if (isValidSnapshot(snapshot)) {
       // Normalize legacy .lnk payloads (retired app ids) before they ever
-      // reach the live store — see legacy-migration.ts.
-      loadFsEntries(migrateLegacyLnks(snapshot.entries))
+      // reach the live store, then upsert the M4 desktop shortcuts a
+      // pre-M4 snapshot won't have yet — see legacy-migration.ts.
+      loadFsEntries(upsertM4DesktopIcons(migrateLegacyLnks(snapshot.entries)))
     } else {
       seedFs()
     }
