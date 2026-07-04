@@ -10,6 +10,7 @@ export type IconName =
   | "recycle-bin"
   | "start"
   | "shutdown"
+  | "task-manager"
 
 /** Sprite sheet only ships 16px and 32px source PNGs — any requested size
  * snaps to whichever is closer and gets scaled (pixelated) by the browser. */
