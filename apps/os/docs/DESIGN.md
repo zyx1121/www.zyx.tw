@@ -7,11 +7,15 @@
 ```
 userland   components/apps/<id>/{manifest.tsx, <id>.tsx}
               │  SDK hooks(lib/os/sdk/)
-              │  useProcess · useWindow · useFs · useDialogs
+              │  useProcess · useWindow · useFs · useDialogs · useSystem
 kernel     lib/os/kernel/(context + reducer,無外部 state 套件)
-              ProcessTable · WindowManager · VFS
+              ProcessTable · WindowManager · VFS · DialogManager
 persist    IndexedDB(debounced snapshot,開機 hydrate)
 ```
+
+app 一律只走 SDK hooks,不 import `lib/os/kernel/*`(eslint 不強制,靠
+review)—— 系統管理類 app(工作管理員)走 `useSystem()`,不例外直接碰
+`useProcessTable()`。
 
 ## 契約(全部 TypeScript,檔名 kebab-case)
 
@@ -52,15 +56,21 @@ export interface OsAppProps { pid: Pid }   // 其餘一律透過 SDK hooks 取�
 ```ts
 // lib/os/kernel/process-table.tsx
 export interface OsProcess { pid: Pid; appId: string; args: AppArgs; startedAt: number }
-// context value:
+// context value(正式契約,簽名不得擅改):
 {
   processes: OsProcess[]
   spawn(appId: string, args?: AppArgs): Pid   // multiInstance=false 且已存在 → focus 舊視窗、回傳舊 pid
   kill(pid: Pid): void                        // 移除 process + 其視窗(不走 onBeforeClose,是強殺)
+  requestClose(pid: Pid): Promise<void>       // 有註冊 onBeforeClose 就先 await 它,回 true 才 kill;否則直接 kill
+  registerBeforeClose(pid: Pid, fn: (() => boolean | Promise<boolean>) | null): void
 }
 ```
 
 pid 從 1 遞增。startedAt 用 Date.now()(client only)。
+
+`requestClose` / `registerBeforeClose` 是 M1 就有的實作,M2 拍板列為正式
+契約(useWindow 的 `requestClose()` / `setOnBeforeClose()` 就是包這兩個)—
+簽名跟既有語意都不再變動。
 
 ### WindowManager(M1 改造)
 
@@ -98,9 +108,14 @@ useWindow(): {
   requestClose(): void
   setOnBeforeClose(fn: (() => boolean | Promise<boolean>) | null): void
 }
+
+// lib/os/sdk/use-system.ts(M2 補上的契約修訂)
+useSystem(): { processes: OsProcess[]; kill(pid: Pid): void; spawn(appId: string, args?: AppArgs): Pid }
+// 系統管理類 app(工作管理員)專用 —— 需要看到全部 process 的 app 走這個
+// hook,不再例外直接 import useProcessTable。
 ```
 
-hooks 由 `<AppHost pid>` 包每個 app instance 提供 context;app component 不直接 import kernel。
+hooks 由 `<AppHost pid>` 包每個 app instance 提供 context;app component 不直接 import kernel。`useFs` / `useFsList` / `useFsFile` / `useDialogs` / `useSystem` 不依賴 pid,不需要 `<AppHost>` 包裹(OS shell 本身 —— `components/desktop.tsx` —— 也可以直接呼叫)。
 
 ### VFS(M2)
 
@@ -128,11 +143,15 @@ export interface Vfs {
 ```
 
 - 實作:`Map<FsPath, FsNode>` + 版本號;所有寫入 bump 版本、通知 subscriber。
-- React 端 `useFs()` 回傳穩定 API,`useFsList(dir)` / `useFsFile(path)` 以 useSyncExternalStore 訂閱。
+- React 端 `useFs()` 回傳穩定 API,`useFsList(dir)` / `useFsFile(path)` 以 useSyncExternalStore 訂閱 —— 三者定義在 `lib/os/kernel/fs.ts`,經 `lib/os/sdk/use-fs.ts` re-export 給 app 用(app 只 import sdk 那份)。
 - 回收筒 origin 記錄:`C:/Recycled/.meta` 檔存 JSON `{ [name]: originPath }`;`.` 開頭項目在所有列表 UI 隱藏。
 - 重名處理:recycle/mv 撞名時自動加 ` (2)`、` (3)`。
 - `.lnk` 檔:content 為 JSON `{"appId":"notepad"}`;開啟 .lnk = spawn 該 app。
-- 檔案開啟規則:雙擊 file → 依副檔名查 manifest.fileAssociations → spawn(appId, {path});無關聯 → MessageBox「無法開啟」。
+- 檔案開啟規則:雙擊 file → 依副檔名查 manifest.fileAssociations → spawn(appId, {path});無關聯 → MessageBox「無法開啟」。判斷邏輯是純函式 `resolveOpenTarget(vfs, apps, path)`(`lib/os/sdk/open-target.ts`),吃 vfs/apps 當參數而不 import registry,避免 registry → manifest → app component → sdk → open-target → registry 的 import 環。桌面 / 我的文件 / 回收筒都共用它。
+- `Vfs` 介面本身不含持久化方法;`dumpFsEntries()` / `loadFsEntries()` / `seedFs()` / `getFsVersion()` 是 fs.ts 額外 export 的 kernel-only 函式,只給 `idb.ts` 用,不進 app 可見的契約。
+- **M2 已實作**(2026-07):`lib/os/kernel/fs.ts`。
+
+**M1 遺留 bug 順手修的一件事**:`WindowManager` reducer 的 `SET_TITLE` 原本每次都回傳新的 `windows` 陣列,即使 title 沒變 —— app 若在 `useEffect` 裡呼叫 `setTitle`(記事本的 dirty `*` 前綴就是這樣做)會導致 context value 每次都重建、SDK closure 跟著換身分、effect 依賴陣列判定「變了」再度觸發,形成無限迴圈。現在 `SET_TITLE` 對 no-op 寫入直接回傳原 state,不觸發下游重渲染。之後任何會被放進 `useEffect` deps 的 kernel action,都要照這個模式先檢查是否真的變了。
 
 ### 持久化(M2)
 
@@ -150,6 +169,8 @@ export interface Vfs {
   C:/Recycled/
   ```
 - 桌面 = `C:/Windows/Desktop` 的資料夾視圖(.lnk 用 app icon、.txt 用 notepad-file 類 icon;檔名去 .lnk 顯示)。
+- Dev-only 測試鉤子:`components/desktop.tsx` 在 hydrate 完成後,若 `process.env.NODE_ENV !== "production"` 就把 `window.__osfs = vfs`(Next 建置時會連同判斷式一起 dead-code-eliminate,production bundle 不含 —— 已用 `next build` 產物 grep 驗證);Playwright 驗證腳本(`scratchpad/m2-verify.mjs`)靠它直接呼叫 recycle/restore/emptyRecycleBin,不用等 M3 explorer 才有刪除入口。
+- **M2 已實作**(2026-07):`lib/os/kernel/idb.ts`。
 
 ### 系統對話框(M2 基本版,M3 完善)
 
@@ -165,6 +186,9 @@ useDialogs(): {
 
 - 呈現:系統層級 modal 視窗(Win98 對話框樣式,置中、壓過所有視窗、遮罩不可點),不是 browser alert。
 - MessageBox icon 用原版素材(msg_question / msg_warning / msg_error / msg_information family,win98icons 站抓,慣例同現有 icons)。
+- 實作:`DialogProvider`(`lib/os/kernel/dialog-manager.tsx`)維護一個 request 佇列,同一時間只渲染最前面那個(Win98 msgbox 本來就是嚴格 modal,不疊窗);視覺元件在 `components/system-dialogs.tsx`(`MessageBoxDialog` / `FileDialog`),跟 `Window` 共用同一組 bevel token 但無 drag/resize。Esc = 觸發 dismiss 結果(有 cancel 給 cancel,否則 yesno 給 no,ok 就是 ok)。
+- `openFile` / `saveFile` 基本版:資料夾列表(`vfs.list` 現抓現濾副檔名)+ 檔名輸入框 + `..` 合成列往上一層;沒有 tree、沒有多選 —— M3 explorer 完善時再擴充。
+- **M2 已實作**(2026-07,基本版):`lib/os/kernel/dialog-manager.tsx` + `components/system-dialogs.tsx`。
 
 ### 記事本(M2 改造,規範示範)
 
@@ -172,6 +196,8 @@ useDialogs(): {
 - title:`未命名 - 記事本` / `README.txt - 記事本`,dirty 加 `*` 前綴。
 - 未儲存關閉 → onBeforeClose → msgBox yesnocancel(是=存後關,否=直接關,取消=不關)。
 - args.path 存在時開檔載入。
+- 「開新檔案」「開啟舊檔」在 dirty 狀態下也先跑同一套 yesnocancel 確認(跟關閉共用 `confirmDiscard()`),不只有視窗關閉才防丟資料。
+- **M2 已實作**(2026-07):`components/apps/notepad/notepad.tsx`。
 
 ### 檔案總管(M3)
 
@@ -193,7 +219,7 @@ useDialogs(): {
 ## 各期驗收(reviewer 逐條驗)
 
 - **M1**:5 app 遷移後行為不退化;可同時開兩個記事本(multiInstance);工作管理員列出進程並能結束;視窗可 resize 且 clamp min 尺寸;app 能 setTitle;lint/typecheck/build 綠。
-- **M2**:存檔→重新整理→檔案還在(IndexedDB);桌面來自 VFS;雙擊 README.txt 開記事本;記事本全選單可用;未儲存攔截三鍵行為正確;回收筒刪除/還原/清空;lint/typecheck/build 綠。
+- **M2**:存檔→重新整理→檔案還在(IndexedDB);桌面來自 VFS;雙擊 README.txt 開記事本;記事本全選單可用;未儲存攔截三鍵行為正確;回收筒還原/清空(UI)+ recycle(M2 無刪除入口,走 fs API/dev hook 驗證,刪除 UI 是 M3 explorer 右鍵選單);lint/typecheck/build 綠。
 - **M3**:explorer tree/list/地址列;右鍵新增/改名/刪除/還原全通;對話框鍵盤 Esc 可關;lint/typecheck/build 綠。
 - **M4**:開機/關機流程;Alt+F4;小算盤按規範加入且 diff 範圍符合限制;APP-SPEC.md 與實作一致;lint/typecheck/build 綠。
 

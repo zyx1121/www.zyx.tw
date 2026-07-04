@@ -6,7 +6,10 @@ import { DesktopIcon } from "@/components/desktop-icon"
 import { StartMenu } from "@/components/start-menu"
 import { Taskbar } from "@/components/taskbar"
 import { Window } from "@/components/ui/window"
-import { APPS, DESKTOP_ICON_ORDER } from "@/components/apps/registry"
+import { APPS } from "@/components/apps/registry"
+import { DESKTOP_DIR, vfs, type Vfs } from "@/lib/os/kernel/fs"
+import { hydrateFs } from "@/lib/os/kernel/idb"
+import { DialogProvider } from "@/lib/os/kernel/dialog-manager"
 import {
   ProcessTableProvider,
   useProcessTable,
@@ -16,6 +19,13 @@ import {
   WindowManagerProvider,
 } from "@/lib/os/kernel/window-manager"
 import { AppHost } from "@/lib/os/sdk/app-host"
+import { useDialogs } from "@/lib/os/sdk/use-dialogs"
+import { useFsList } from "@/lib/os/sdk/use-fs"
+import {
+  iconForEntry,
+  labelForEntry,
+  resolveOpenTarget,
+} from "@/lib/os/sdk/open-target"
 
 function DesktopSurface() {
   const [selectedIcon, setSelectedIcon] = React.useState<string | null>(null)
@@ -32,6 +42,10 @@ function DesktopSurface() {
     resizeWindow,
   } = useWindowManager()
   const { spawn, requestClose } = useProcessTable()
+  const { msgBox } = useDialogs()
+  const desktopEntries = useFsList(DESKTOP_DIR).filter(
+    (entry) => !entry.name.startsWith(".")
+  )
 
   React.useEffect(() => {
     if (!startOpen) return
@@ -49,26 +63,36 @@ function DesktopSurface() {
     setStartOpen(false)
   }
 
+  const handleOpenDesktopEntry = async (name: string) => {
+    const path = `${DESKTOP_DIR}/${name}`
+    const target = resolveOpenTarget(vfs, APPS, path)
+    if (target.kind === "spawn") {
+      spawn(target.appId, target.args)
+      return
+    }
+    await msgBox({
+      title: "桌面",
+      message: `無法開啟「${labelForEntry(name)}」。`,
+      icon: "error",
+    })
+  }
+
   return (
     <div
       className="relative h-dvh w-dvw overflow-hidden bg-desktop"
       onClick={() => setSelectedIcon(null)}
     >
       <div className="absolute top-2 left-2 flex flex-col gap-1">
-        {DESKTOP_ICON_ORDER.map((id) => {
-          const app = APPS[id]
-          if (!app) return null
-          return (
-            <DesktopIcon
-              key={id}
-              label={app.name}
-              icon={app.icon}
-              selected={selectedIcon === id}
-              onSelect={() => setSelectedIcon(id)}
-              onOpen={() => handleOpenApp(id)}
-            />
-          )
-        })}
+        {desktopEntries.map(({ name, node }) => (
+          <DesktopIcon
+            key={name}
+            label={labelForEntry(name)}
+            icon={iconForEntry(name, node, APPS)}
+            selected={selectedIcon === name}
+            onSelect={() => setSelectedIcon(name)}
+            onOpen={() => void handleOpenDesktopEntry(name)}
+          />
+        ))}
       </div>
 
       {windows.map((win) => {
@@ -118,10 +142,35 @@ function DesktopSurface() {
 }
 
 export function Desktop() {
+  const [ready, setReady] = React.useState(false)
+
+  React.useEffect(() => {
+    let cancelled = false
+    void hydrateFs().then(() => {
+      if (cancelled) return
+      if (process.env.NODE_ENV !== "production") {
+        // Test-only hook for the Playwright verification harness; the
+        // NODE_ENV check above is dead-code-eliminated out of prod builds.
+        ;(window as unknown as { __osfs?: Vfs }).__osfs = vfs
+      }
+      setReady(true)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  // Boot gate: hydrate 完成前桌面顯示純 teal (M4 換成真開機畫面).
+  if (!ready) {
+    return <div className="h-dvh w-dvw bg-desktop" />
+  }
+
   return (
     <WindowManagerProvider>
       <ProcessTableProvider>
-        <DesktopSurface />
+        <DialogProvider>
+          <DesktopSurface />
+        </DialogProvider>
       </ProcessTableProvider>
     </WindowManagerProvider>
   )

@@ -5,12 +5,17 @@ export type IconName =
   | "computer"
   | "folder"
   | "notepad"
+  | "notepad-file"
   | "control-panel"
   | "help"
   | "recycle-bin"
   | "start"
   | "shutdown"
   | "task-manager"
+  | "msg-information"
+  | "msg-warning"
+  | "msg-error"
+  | "msg-question"
 
 /** Sprite sheet only ships 16px and 32px source PNGs — any requested size
  * snaps to whichever is closer and gets scaled (pixelated) by the browser. */
