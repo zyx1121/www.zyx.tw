@@ -23,7 +23,7 @@ export function Intro() {
         transition={spring}
         className="text-2xl font-medium sm:text-3xl"
       >
-        I&apos;m Loki — 詹詠翔.
+        loki — 詹詠翔.
       </motion.h2>
       <motion.p
         initial={{ opacity: 0, y: 16 }}
@@ -31,25 +31,25 @@ export function Intro() {
         transition={{ ...spring, delay: 0.1 }}
         className="text-sm text-muted-foreground"
       >
-        MS in CS at{" "}
+        cs grad @{" "}
         <Link
           href="https://www.cs.nycu.edu.tw"
           target="_blank"
           rel="noopener noreferrer"
           className="underline underline-offset-4 transition-colors hover:text-foreground"
         >
-          NYCU
+          nycu
         </Link>
-        , with{" "}
+        ,{" "}
         <Link
           href="https://www.winlab.tw"
           target="_blank"
           rel="noopener noreferrer"
           className="underline underline-offset-4 transition-colors hover:text-foreground"
         >
-          WinLab
+          winlab
         </Link>
-        .
+        . i build things.
       </motion.p>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
