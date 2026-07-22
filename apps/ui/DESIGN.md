@@ -9,7 +9,7 @@ This registry **does not ship composite content blocks** (no Hero, no CTA, no Pr
 What we ship:
 
 - **UI primitives** — `Button`, `Badge`, `Input`, `Card`. One interactive or visual concept per file.
-- **Layout primitives** — `Corner`, `Container`, `Surface`. Pure structure / spacing / wrapping. No content slots opinionated beyond `children`.
+- **Layout primitives** — `Stack`, `Corner`, `Container`, `Surface`. Pure structure / spacing / wrapping. No content slots opinionated beyond `children`.
 
 What we don't ship:
 
@@ -75,7 +75,7 @@ If a component can't satisfy 1–4, it lives under `registry/_drafts/` and stays
 | Type             | Path               | Examples                                    | Visual rule                                                                      |
 | ---------------- | ------------------ | ------------------------------------------- | -------------------------------------------------------------------------------- |
 | `registry:ui`    | `registry/ui/`     | `button.tsx`, `badge.tsx`, `input.tsx`      | small primitives — pill / `rounded-md`                                           |
-| `registry:block` | `registry/blocks/` | `surface.tsx`, `corner.tsx`, `container.tsx` | layout primitives — structural only, **no border**, `bg-block` when surface-like |
+| `registry:block` | `registry/blocks/` | `surface.tsx`, `stack.tsx`, `corner.tsx` | layout primitives — structural only, **no border**, `bg-block` when surface-like |
 
 We don't use `registry:component`. If you reach for it, you're probably about to ship a composite — stop and decompose.
 
