@@ -11,8 +11,7 @@ import { basenamePath } from "@/lib/os/kernel/fs"
 import type { AppArgs, OsAppManifest } from "@/lib/os/types"
 
 export type OpenTarget =
-  | { kind: "spawn"; appId: string; args?: AppArgs }
-  | { kind: "unsupported" }
+  { kind: "spawn"; appId: string; args?: AppArgs } | { kind: "unsupported" }
 
 const LNK_EXTENSION = ".lnk"
 
