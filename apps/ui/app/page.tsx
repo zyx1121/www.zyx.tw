@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTheme } from "next-themes";
+import { toast } from "sonner";
 
 import { Container } from "@/registry/blocks/container";
 import { Corner } from "@/registry/blocks/corner";
@@ -32,6 +32,15 @@ import { Input } from "@/registry/ui/input";
 import { Label } from "@/registry/ui/label";
 import { SegmentedControl } from "@/registry/ui/segmented-control";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/ui/select";
+import { Skeleton } from "@/registry/ui/skeleton";
+import { Switch } from "@/registry/ui/switch";
+import {
   Table,
   TableBody,
   TableCell,
@@ -40,7 +49,15 @@ import {
   TableRow,
 } from "@/registry/ui/table";
 import { Textarea } from "@/registry/ui/textarea";
+import { ThemeToggle } from "@/registry/ui/theme-toggle";
 import { Tooltip } from "@/registry/ui/tooltip";
+
+const FLAVORS = [
+  { label: "Vanilla", value: "vanilla" },
+  { label: "Matcha", value: "matcha" },
+  { label: "Hojicha", value: "hojicha" },
+  { label: "Black sesame", value: "black-sesame" },
+];
 
 function ZyxLogo({ className }: { className?: string }) {
   return (
@@ -59,8 +76,6 @@ function ZyxLogo({ className }: { className?: string }) {
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [segment, setSegment] = useState("shell");
-  const { resolvedTheme, setTheme } = useTheme();
-  const dark = resolvedTheme === "dark";
 
   const trigger = async () => {
     setLoading(true);
@@ -81,18 +96,8 @@ export default function Home() {
       </Corner>
 
       <Corner at="top-right">
-        <Tooltip
-          content={dark ? "Switch to light mode" : "Switch to dark mode"}
-          side="bottom"
-        >
-          <Button
-            variant="raw"
-            onClick={() => setTheme(dark ? "light" : "dark")}
-            aria-label="Toggle theme"
-            className="font-mono text-base"
-          >
-            {dark ? "light" : "dark"}
-          </Button>
+        <Tooltip content="Toggle theme (d)" side="bottom">
+          <ThemeToggle hotkey="d" className="text-base" />
         </Tooltip>
       </Corner>
 
@@ -335,6 +340,128 @@ export default function Home() {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
+            </Surface>
+          </section>
+
+          <section className="space-y-4">
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-lg font-medium">Switch</h2>
+              <code className="text-xs text-foreground/60">
+                bunx shadcn@latest add @zyx1121/switch
+              </code>
+            </div>
+
+            <Surface size="lg" className="flex flex-wrap items-center gap-8">
+              <div className="flex items-center gap-2">
+                <Switch id="demo-notify" defaultChecked />
+                <Label htmlFor="demo-notify">Notifications</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch id="demo-off" />
+                <Label htmlFor="demo-off">Off</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch id="demo-locked" disabled defaultChecked />
+                <Label htmlFor="demo-locked">Disabled</Label>
+              </div>
+            </Surface>
+          </section>
+
+          <section className="space-y-4">
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-lg font-medium">Select</h2>
+              <code className="text-xs text-foreground/60">
+                bunx shadcn@latest add @zyx1121/select
+              </code>
+            </div>
+
+            <Surface size="lg" className="flex flex-wrap items-center gap-3">
+              <Select items={FLAVORS} defaultValue="matcha">
+                <SelectTrigger className="w-44">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {FLAVORS.map((flavor) => (
+                    <SelectItem key={flavor.value} value={flavor.value}>
+                      {flavor.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select items={FLAVORS}>
+                <SelectTrigger className="w-44">
+                  <SelectValue placeholder="Pick a flavor" />
+                </SelectTrigger>
+                <SelectContent>
+                  {FLAVORS.map((flavor) => (
+                    <SelectItem key={flavor.value} value={flavor.value}>
+                      {flavor.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Surface>
+          </section>
+
+          <section className="space-y-4">
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-lg font-medium">Skeleton</h2>
+              <code className="text-xs text-foreground/60">
+                bunx shadcn@latest add @zyx1121/skeleton
+              </code>
+            </div>
+
+            <Surface size="lg" className="max-w-sm">
+              <div className="flex items-center gap-3">
+                <Skeleton className="size-10 rounded-full" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-1/3" />
+                  <Skeleton className="h-4 w-2/3" />
+                </div>
+              </div>
+            </Surface>
+          </section>
+
+          <section className="space-y-4">
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-lg font-medium">Toast</h2>
+              <code className="text-xs text-foreground/60">
+                bunx shadcn@latest add @zyx1121/toaster
+              </code>
+            </div>
+
+            <Surface size="lg" className="flex flex-wrap items-center gap-3">
+              <Button
+                variant="outline"
+                onClick={() =>
+                  toast("Saved", { description: "Change is on its way out." })
+                }
+              >
+                Show toast
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => toast.error("Something broke")}
+              >
+                Error toast
+              </Button>
+            </Surface>
+          </section>
+
+          <section className="space-y-4">
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-lg font-medium">Theme Toggle</h2>
+              <code className="text-xs text-foreground/60">
+                bunx shadcn@latest add @zyx1121/theme-toggle
+              </code>
+            </div>
+
+            <Surface size="lg" className="flex items-center gap-3">
+              <ThemeToggle className="text-base" />
+              <p className="text-sm text-foreground/60">
+                The top-right corner instance also binds the{" "}
+                <code className="font-mono">d</code> key.
+              </p>
             </Surface>
           </section>
         </Container>
