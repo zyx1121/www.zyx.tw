@@ -274,6 +274,66 @@
       ]
     },
     {
+      "name": "sheet",
+      "type": "registry:ui",
+      "title": "Sheet",
+      "description": "Side panel over a scrim — four sides, inner-edge radius, slide transition. Built on base-ui dialog.",
+      "dependencies": ["@base-ui/react", "lucide-react"],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/sheet.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/sheet.tsx"
+        }
+      ]
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Popover",
+      "description": "Anchored floating surface — borderless, shadow separation, fade + zoom. Built on base-ui.",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/popover.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/popover.tsx"
+        }
+      ]
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "Pill tabs with a sliding active indicator and content panels. Built on base-ui.",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/tabs.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/tabs.tsx"
+        }
+      ]
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "title": "Kbd",
+      "description": "Inline keyboard hint — mono, block surface, no border.",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/kbd.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/kbd.tsx"
+        }
+      ]
+    },
+    {
       "name": "corner",
       "type": "registry:block",
       "title": "Corner",
@@ -285,6 +345,21 @@
           "path": "registry/blocks/corner.tsx",
           "type": "registry:block",
           "target": "components/blocks/corner.tsx"
+        }
+      ]
+    },
+    {
+      "name": "stack",
+      "type": "registry:block",
+      "title": "Stack",
+      "description": "Layout primitive — flex column (or row) with a named gap scale. Structure only.",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/blocks/stack.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/stack.tsx"
         }
       ]
     },

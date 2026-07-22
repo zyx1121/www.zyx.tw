@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import { Container } from "@/registry/blocks/container";
 import { Corner } from "@/registry/blocks/corner";
+import { Stack } from "@/registry/blocks/stack";
 import { Surface } from "@/registry/blocks/surface";
 import { Badge } from "@/registry/ui/badge";
 import { Button } from "@/registry/ui/button";
@@ -29,7 +30,9 @@ import {
   DialogTrigger,
 } from "@/registry/ui/dialog";
 import { Input } from "@/registry/ui/input";
+import { Kbd } from "@/registry/ui/kbd";
 import { Label } from "@/registry/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/registry/ui/popover";
 import { SegmentedControl } from "@/registry/ui/segmented-control";
 import {
   Select,
@@ -38,6 +41,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/registry/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/registry/ui/sheet";
 import { Skeleton } from "@/registry/ui/skeleton";
 import { Switch } from "@/registry/ui/switch";
 import {
@@ -48,6 +60,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/registry/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/ui/tabs";
 import { Textarea } from "@/registry/ui/textarea";
 import { ThemeToggle } from "@/registry/ui/theme-toggle";
 import { Tooltip } from "@/registry/ui/tooltip";
@@ -462,6 +475,144 @@ export default function Home() {
                 The top-right corner instance also binds the{" "}
                 <code className="font-mono">d</code> key.
               </p>
+            </Surface>
+          </section>
+
+          <section className="space-y-4">
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-lg font-medium">Popover</h2>
+              <code className="text-xs text-foreground/60">
+                bunx shadcn@latest add @zyx1121/popover
+              </code>
+            </div>
+
+            <Surface size="lg">
+              <Popover>
+                <PopoverTrigger
+                  render={<Button variant="outline">Open popover</Button>}
+                />
+                <PopoverContent>
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium">Anchored surface</p>
+                    <p className="text-sm text-foreground/60">
+                      Borderless, separated by shadow. Closes on outside click
+                      or Escape.
+                    </p>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </Surface>
+          </section>
+
+          <section className="space-y-4">
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-lg font-medium">Sheet</h2>
+              <code className="text-xs text-foreground/60">
+                bunx shadcn@latest add @zyx1121/sheet
+              </code>
+            </div>
+
+            <Surface size="lg" className="flex flex-wrap items-center gap-3">
+              <Sheet>
+                <SheetTrigger
+                  render={<Button variant="outline">From right</Button>}
+                />
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>Side panel</SheetTitle>
+                    <SheetDescription>
+                      Slides over the page, inner edge rounded, scrim behind.
+                    </SheetDescription>
+                  </SheetHeader>
+                  <SheetFooter>
+                    <Button size="sm">Done</Button>
+                  </SheetFooter>
+                </SheetContent>
+              </Sheet>
+              <Sheet>
+                <SheetTrigger
+                  render={<Button variant="outline">From bottom</Button>}
+                />
+                <SheetContent side="bottom">
+                  <SheetHeader>
+                    <SheetTitle>Bottom sheet</SheetTitle>
+                    <SheetDescription>
+                      Same primitive, side=&quot;bottom&quot;.
+                    </SheetDescription>
+                  </SheetHeader>
+                </SheetContent>
+              </Sheet>
+            </Surface>
+          </section>
+
+          <section className="space-y-4">
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-lg font-medium">Tabs</h2>
+              <code className="text-xs text-foreground/60">
+                bunx shadcn@latest add @zyx1121/tabs
+              </code>
+            </div>
+
+            <Surface size="lg">
+              <Tabs defaultValue="write">
+                <TabsList>
+                  <TabsTrigger value="write">Write</TabsTrigger>
+                  <TabsTrigger value="preview">Preview</TabsTrigger>
+                  <TabsTrigger value="settings">Settings</TabsTrigger>
+                </TabsList>
+                <TabsContent value="write">
+                  The active pill slides between tabs.
+                </TabsContent>
+                <TabsContent value="preview">
+                  Panels swap without remounting the list.
+                </TabsContent>
+                <TabsContent value="settings">
+                  Keyboard: arrow keys move, Home / End jump.
+                </TabsContent>
+              </Tabs>
+            </Surface>
+          </section>
+
+          <section className="space-y-4">
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-lg font-medium">Kbd</h2>
+              <code className="text-xs text-foreground/60">
+                bunx shadcn@latest add @zyx1121/kbd
+              </code>
+            </div>
+
+            <Surface size="lg" className="flex flex-wrap items-center gap-6">
+              <p className="text-sm text-foreground/80">
+                Press <Kbd>d</Kbd> to toggle theme
+              </p>
+              <p className="text-sm text-foreground/80">
+                <Kbd>&#8984;</Kbd> <Kbd>K</Kbd> command menu
+              </p>
+              <p className="text-sm text-foreground/80">
+                <Kbd>Esc</Kbd> to close
+              </p>
+            </Surface>
+          </section>
+
+          <section className="space-y-4">
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-lg font-medium">Stack</h2>
+              <code className="text-xs text-foreground/60">
+                bunx shadcn@latest add @zyx1121/stack
+              </code>
+            </div>
+
+            <Surface size="lg" className="space-y-6">
+              <Stack direction="row" gap="sm">
+                <Badge variant="secondary">row</Badge>
+                <Badge variant="secondary">gap-sm</Badge>
+                <Badge variant="secondary">items-center</Badge>
+              </Stack>
+              <Stack gap="sm" className="max-w-48">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-4 w-1/2" />
+              </Stack>
             </Surface>
           </section>
         </Container>
