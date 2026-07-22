@@ -101,6 +101,7 @@ export function Projects() {
   // every reload surfaces a different opener without an SSR mismatch.
   const [order, setOrder] = useState<Project[]>(() => PROJECTS.slice())
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- deliberate one-shot client shuffle, see comment above
     setOrder(shuffle(PROJECTS))
   }, [])
 
@@ -196,7 +197,6 @@ function ProjectCard({ project }: { project: Project }) {
             }}
           />
         ) : thumb ? (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={thumb}
             alt={name}

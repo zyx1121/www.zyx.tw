@@ -21,7 +21,7 @@ export function JsonLd() {
     <script
       type="application/ld+json"
       // Build-time literal — no user input ever flows in.
-      // eslint-disable-next-line react/no-danger
+
       dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />
   )

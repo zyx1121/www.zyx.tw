@@ -57,7 +57,7 @@ export default function PadPage({
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [padId])
+  }, [padId, supabase])
 
   function handleChange(value: string) {
     setContent(value)
