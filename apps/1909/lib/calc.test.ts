@@ -1,4 +1,5 @@
 import { describe, test, expect } from "bun:test"
+
 import { calculateDebts } from "./calc"
 import type { Member, Expense } from "./types"
 

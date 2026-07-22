@@ -1,0 +1,3 @@
+# build artifacts & generated output
+.next/
+next-env.d.ts

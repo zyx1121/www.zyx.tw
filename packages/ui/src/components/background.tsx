@@ -19,7 +19,6 @@ export function Background() {
       className="pointer-events-none fixed top-0 left-0 z-10 flex h-dvh w-dvw items-center justify-center"
       style={{ opacity, filter: blur, willChange: "opacity, filter" }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/zyx.svg"
         alt=""
