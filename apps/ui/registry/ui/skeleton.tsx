@@ -1,0 +1,16 @@
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+export function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="skeleton"
+      className={cn(
+        "rounded-md bg-foreground/10 corner-token motion-safe:animate-pulse",
+        className
+      )}
+      {...props}
+    />
+  );
+}
