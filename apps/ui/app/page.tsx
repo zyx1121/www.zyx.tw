@@ -203,7 +203,7 @@ export default function Home() {
 
             <Surface size="lg" className="space-y-4">
               <SegmentedControl
-                ariaLabel="Install mode"
+                aria-label="Install mode"
                 value={segment}
                 onValueChange={setSegment}
                 options={[

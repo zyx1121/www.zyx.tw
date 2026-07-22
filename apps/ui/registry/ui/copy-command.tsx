@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+
 import { CopyButton } from "./copy-button";
 
 export interface CopyCommandProps extends React.HTMLAttributes<HTMLDivElement> {

@@ -82,7 +82,7 @@
       "name": "segmented-control",
       "type": "registry:ui",
       "title": "Segmented Control",
-      "description": "Compact one-of-many control for modes, locales, and small view switches. Token-driven and keyboard-focusable.",
+      "description": "Compact one-of-many control for modes, locales, and small view switches. Token-driven, radiogroup semantics, arrow-key navigation.",
       "dependencies": [],
       "registryDependencies": [],
       "files": [

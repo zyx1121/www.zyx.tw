@@ -9,12 +9,12 @@ This registry **does not ship composite content blocks** (no Hero, no CTA, no Pr
 What we ship:
 
 - **UI primitives** — `Button`, `Badge`, `Input`, `Card`. One interactive or visual concept per file.
-- **Layout primitives** — `Stack`, `Container`, `Surface`. Pure structure / spacing / wrapping. No content slots opinionated beyond `children`.
+- **Layout primitives** — `Corner`, `Container`, `Surface`. Pure structure / spacing / wrapping. No content slots opinionated beyond `children`.
 
 What we don't ship:
 
 - Hero / CTA / Pricing / Footer sections — too opinionated, consumer's job.
-- Data tables / Command palettes — too heavy; pick a focused upstream lib.
+- Feature-grade data tables (sorting / pagination / selection) / Command palettes — too heavy; pick a focused upstream lib. The shipped `table` is styling primitives over native `<table>`, not one of these.
 - Anything that combines >2 primitives into a fixed shape.
 
 ## Anchor tokens (`app/globals.css`)
@@ -75,7 +75,7 @@ If a component can't satisfy 1–4, it lives under `registry/_drafts/` and stays
 | Type             | Path               | Examples                                    | Visual rule                                                                      |
 | ---------------- | ------------------ | ------------------------------------------- | -------------------------------------------------------------------------------- |
 | `registry:ui`    | `registry/ui/`     | `button.tsx`, `badge.tsx`, `input.tsx`      | small primitives — pill / `rounded-md`                                           |
-| `registry:block` | `registry/blocks/` | `surface.tsx`, `stack.tsx`, `container.tsx` | layout primitives — structural only, **no border**, `bg-block` when surface-like |
+| `registry:block` | `registry/blocks/` | `surface.tsx`, `corner.tsx`, `container.tsx` | layout primitives — structural only, **no border**, `bg-block` when surface-like |
 
 We don't use `registry:component`. If you reach for it, you're probably about to ship a composite — stop and decompose.
 
@@ -92,6 +92,6 @@ Before flipping to `items[]`: did you walk rules 1–4? If not, ship to `_drafts
 
 - **No composite content blocks.** Primitives compose at the call site, not in the registry.
 - **No border on surfaces.** Background contrast does the work.
-- **No raw hex / rgb in component files.** Always token-via-class. The whole point of `--block`, `--foreground`, etc. is that swapping themes shouldn't require touching component source. _Exception: overlay scrims (Dialog / Sheet / Popover backdrops) use `bg-black/NN` — a scrim must darken the page in **both** themes, so it deliberately does not theme-flip. This is the only sanctioned raw color._
+- **No raw hex / rgb in component files.** Always token-via-class. The whole point of `--block`, `--foreground`, etc. is that swapping themes shouldn't require touching component source. _Exception: overlay scrims (Dialog / Sheet / Popover backdrops) use `bg-black/NN` — a scrim must darken the page in **both** themes, so it deliberately does not theme-flip. Second exception: text on saturated status colors (`text-white` on `bg-destructive`) — the red stays saturated in both themes, so its text doesn't flip either. These two are the only sanctioned raw colors._
 - **No CSS-in-JS.** Tailwind utility classes only. The registry exists to ship plain `.tsx` files that drop into any shadcn project without bringing emotion/styled-components.
 - **No `class-variance-authority` unless variants actually justify it.** A 3-variant button doesn't need cva — a `Record<Variant, string>` lookup reads cleaner. Add cva when the variant matrix exceeds ~6 combinations.
