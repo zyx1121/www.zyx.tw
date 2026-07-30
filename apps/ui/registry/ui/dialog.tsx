@@ -38,7 +38,7 @@ function DialogContent({
         data-slot="dialog-content"
         className={cn(
           "fixed top-1/2 left-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-background p-6 text-foreground shadow-lg corner-token",
-          "focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none",
+          "focus-visible:outline-none",
           "motion-safe:transition-[opacity,transform] motion-safe:duration-150 motion-safe:ease-out",
           "data-[starting-style]:scale-95 data-[starting-style]:opacity-0",
           "data-[ending-style]:scale-95 data-[ending-style]:opacity-0",
@@ -50,7 +50,7 @@ function DialogContent({
         {showClose ? (
           <DialogPrimitive.Close
             data-slot="dialog-close"
-            className="absolute top-4 right-4 inline-flex size-7 items-center justify-center rounded-md text-foreground/60 transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+            className="absolute top-4 right-4 inline-flex size-7 items-center justify-center rounded-md text-foreground/60 transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
           >
             <X aria-hidden className="size-4" />
             <span className="sr-only">Close</span>

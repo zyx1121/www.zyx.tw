@@ -93,7 +93,7 @@ export function SegmentedControl({
             data-value={option.value}
             disabled={option.disabled}
             className={cn(
-              "h-8 rounded-full px-3 text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+              "h-8 rounded-full px-3 text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
               selected
                 ? "bg-background text-foreground"
                 : "text-foreground/60 hover:bg-foreground/5 hover:text-foreground"

@@ -61,7 +61,7 @@ function SheetContent({
         {showClose ? (
           <SheetPrimitive.Close
             data-slot="sheet-close"
-            className="absolute top-4 right-4 inline-flex size-7 items-center justify-center rounded-md text-foreground/60 transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+            className="absolute top-4 right-4 inline-flex size-7 items-center justify-center rounded-md text-foreground/60 transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
           >
             <X aria-hidden className="size-4" />
             <span className="sr-only">Close</span>

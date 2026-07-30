@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Copy } from "lucide-react";
 import { toast } from "sonner";
 
 import { Container } from "@/registry/blocks/container";
@@ -133,14 +134,20 @@ export default function Home() {
             <Surface size="lg" className="space-y-6">
               <div className="flex flex-wrap items-center gap-3">
                 <Button>Default</Button>
+                <Button variant="secondary">Secondary</Button>
                 <Button variant="outline">Outline</Button>
                 <Button variant="ghost">Ghost</Button>
+                <Button variant="destructive">Destructive</Button>
+                <Button variant="link">Link</Button>
                 <Button variant="raw">Raw</Button>
               </div>
               <div className="flex flex-wrap items-center gap-3">
                 <Button size="sm">Small</Button>
                 <Button size="default">Default</Button>
                 <Button size="lg">Large</Button>
+                <Button size="icon" aria-label="Copy">
+                  <Copy aria-hidden className="size-4" />
+                </Button>
               </div>
               <div className="flex flex-wrap items-center gap-3">
                 <Button disabled>Disabled</Button>
@@ -159,11 +166,18 @@ export default function Home() {
               </code>
             </div>
 
-            <Surface size="lg" className="flex flex-wrap items-center gap-3">
-              <Badge>Default</Badge>
-              <Badge variant="secondary">Secondary</Badge>
-              <Badge variant="outline">Outline</Badge>
-              <Badge variant="destructive">Destructive</Badge>
+            <Surface size="lg" className="space-y-6">
+              <div className="flex flex-wrap items-center gap-3">
+                <Badge>Default</Badge>
+                <Badge variant="secondary">Secondary</Badge>
+                <Badge variant="outline">Outline</Badge>
+                <Badge variant="destructive">Destructive</Badge>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <Badge size="sm">Small</Badge>
+                <Badge size="default">Default</Badge>
+                <Badge size="lg">Large</Badge>
+              </div>
             </Surface>
           </section>
 
@@ -292,6 +306,20 @@ export default function Home() {
               <div className="grid gap-2">
                 <Label htmlFor="demo-msg">Message</Label>
                 <Textarea id="demo-msg" placeholder="Leave a comment..." />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="demo-sizes">Sizes</Label>
+                <Input id="demo-sizes" size="sm" placeholder="Small" />
+                <Input size="default" placeholder="Default" />
+                <Input size="lg" placeholder="Large" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="demo-invalid">Invalid</Label>
+                <Input
+                  id="demo-invalid"
+                  aria-invalid
+                  defaultValue="not-an-email"
+                />
               </div>
             </Surface>
           </section>
