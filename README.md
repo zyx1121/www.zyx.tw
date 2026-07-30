@@ -68,7 +68,7 @@ Plain `bun dev` boots turbo across all 9 apps at once. `--filter=<app>` (or `cd 
 | Observability | `@workspace/otel`, shared bootstrap shipping logs to Sensorium |
 | Tooling | Bun 1.3 workspaces + Turbo 2 |
 
-Shared packages: `packages/ui` (design system + components) · `packages/otel` (the Sensorium bootstrap) · `packages/eslint-config` (flat config: base / next-js / react-internal) · `packages/typescript-config` (base / nextjs / react-library).
+Shared packages: `packages/ui` (design system + components) · `packages/cli` (the `zyxui` CLI, published to npm) · `packages/otel` (the Sensorium bootstrap) · `packages/eslint-config` (flat config: base / next-js / react-internal) · `packages/typescript-config` (base / nextjs / react-library).
 
 ## Adding a shadcn component
 
@@ -84,6 +84,17 @@ import { Button } from "@workspace/ui/components/button"
 ```
 
 Design tokens live in the `@theme` block of `packages/ui/src/styles/globals.css`; the readable version is [`packages/ui/src/styles/tokens.md`](./packages/ui/src/styles/tokens.md).
+
+## Pulling the registry into another project
+
+Outside this monorepo, use the registry's own CLI instead of shadcn's:
+
+```bash
+bunx zyxui@latest init
+bunx zyxui@latest add button badge dialog
+```
+
+It writes a self-contained `app/globals.css` and `lib/utils.ts`, then copies components in with their dependencies resolved. No `components.json`, no style matrix. See [`packages/cli/README.md`](./packages/cli/README.md) for why it exists alongside `shadcn`.
 
 ## Environment variables
 

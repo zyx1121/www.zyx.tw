@@ -28,6 +28,21 @@ Dark mode pairs (under `.dark`):
 - `--block: oklch(0.21 0.004 85)`
 - everything else inherits via the existing `.dark` block
 
+## Two stylesheets, one palette
+
+There are two token files and they are not the same file:
+
+| File                    | Who reads it                        | Contents                                                                      |
+| ----------------------- | ----------------------------------- | ----------------------------------------------------------------------------- |
+| `app/globals.css`       | this site                           | the full shadcn token set, because the site is itself a shadcn project        |
+| `registry/tokens.css`   | consumers, via `zyxui init`          | self-contained: 8 colors, radius scale, corner utilities, 5 state variants     |
+
+`registry/tokens.css` deliberately drops `--primary` / `--secondary` / `--accent` / `--muted` / `--card` / `--popover` / `--sidebar-*` / `--chart-*`. No component in this registry references them; they exist in `app/globals.css` only because shadcn's own base ships them.
+
+It also replaces `@import "shadcn/tailwind.css"` with the five `@custom-variant` rules the registry actually uses (`data-checked`, `data-disabled`, `data-active`, `data-horizontal`, `data-vertical`), and drops `tw-animate-css` entirely: the only animation utilities in use are Tailwind's own `animate-spin` and `animate-pulse`.
+
+**The eight color values must stay identical between the two files.** Changing `--block` in one and not the other means the site and its consumers drift apart silently. Until the site imports `registry/tokens.css` directly, that is a manual invariant.
+
 ## Radius scale
 
 All radius tokens derive from `--radius`. Don't hardcode `rounded-[18px]` — pick from the scale or extend the scale.
