@@ -4,6 +4,36 @@
   "homepage": "https://ui.zyx.tw",
   "items": [
     {
+      "name": "tokens",
+      "type": "registry:file",
+      "title": "Tokens",
+      "description": "The whole design system in one stylesheet — 8 colors, the radius scale, squircle corners, and the 5 base-ui state variants the registry uses. Self-contained: no shadcn/tailwind.css, no tw-animate-css.",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/tokens.css",
+          "type": "registry:file",
+          "target": "app/globals.css"
+        }
+      ]
+    },
+    {
+      "name": "utils",
+      "type": "registry:lib",
+      "title": "Utils",
+      "description": "The cn() helper — clsx piped through tailwind-merge. Every component imports it.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/lib/utils.ts",
+          "type": "registry:lib",
+          "target": "lib/utils.ts"
+        }
+      ]
+    },
+    {
       "name": "button",
       "type": "registry:ui",
       "title": "Button",

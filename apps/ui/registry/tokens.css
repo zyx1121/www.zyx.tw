@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+/* base-ui state variants.
+   Only the five the registry actually uses. Everything else base-ui emits
+   (data-placeholder, data-highlighted, data-[starting-style], data-[instant])
+   works through Tailwind's built-in data-* variant and needs nothing here. */
+@custom-variant data-checked {
+  &:where([data-checked]:not([data-checked="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-disabled {
+  &:where([data-disabled]:not([data-disabled="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-active {
+  &:where([data-active]:not([data-active="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-horizontal {
+  &:where([data-orientation="horizontal"]) {
+    @slot;
+  }
+}
+
+@custom-variant data-vertical {
+  &:where([data-orientation="vertical"]) {
+    @slot;
+  }
+}
+
+@theme inline {
+  /* Eight colors. There is no primary / secondary / accent / muted / card /
+     popover / sidebar / chart tier: the registry composes everything from
+     foreground, background and block, with opacity modifiers for the rest. */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-block: var(--block);
+  --color-block-foreground: var(--block-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+
+  --font-sans: var(--font-geist-sans, ui-sans-serif, system-ui, sans-serif);
+  --font-mono: var(--font-geist-mono, ui-monospace, monospace);
+
+  /* Every radius derives from --radius. Never hardcode rounded-[18px]. */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --block: oklch(0.97 0.004 85);
+  --block-foreground: var(--foreground);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+
+  --radius: 1rem;
+  --corner-shape: squircle;
+  --corner-shape-smooth: squircle;
+  --corner-shape-superellipse: superellipse(0.72);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --block: oklch(0.21 0.004 85);
+  --block-foreground: var(--foreground);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* Smooth corners are a progressive enhancement. Always pair with a rounded-*
+   utility so the component still looks finished without corner-shape. */
+@utility corner-token {
+  @supports (corner-shape: squircle) {
+    corner-shape: var(--corner-shape);
+  }
+}
+
+@utility corner-smooth {
+  @supports (corner-shape: squircle) {
+    corner-shape: var(--corner-shape-smooth);
+  }
+}
+
+@utility corner-superellipse {
+  @supports (corner-shape: superellipse(0.72)) {
+    corner-shape: var(--corner-shape-superellipse);
+  }
+}
