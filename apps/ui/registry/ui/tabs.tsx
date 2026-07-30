@@ -40,7 +40,7 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
       className={cn(
         "relative z-[1] h-8 rounded-full px-3 text-sm font-medium whitespace-nowrap text-foreground/60 transition-colors select-none",
         "hover:text-foreground data-active:text-foreground",
-        "focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none",
+        "focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none",
         "data-disabled:pointer-events-none data-disabled:opacity-50",
         className
       )}

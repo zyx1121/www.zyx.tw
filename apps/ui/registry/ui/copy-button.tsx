@@ -56,6 +56,7 @@ export function CopyButton({
     <Button
       type="button"
       variant="raw"
+      data-slot="copy-button"
       loading={pending}
       aria-label={label ?? `Copy ${value}`}
       title={copied ? copiedLabel : (label ?? "Copy")}

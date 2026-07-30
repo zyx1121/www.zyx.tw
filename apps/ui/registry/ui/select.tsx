@@ -27,9 +27,9 @@ function SelectTrigger({
       className={cn(
         "flex h-9 w-fit min-w-0 items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-1 text-sm whitespace-nowrap select-none corner-token",
         "data-placeholder:text-foreground/50",
-        "outline-none focus-visible:ring-1 focus-visible:ring-ring",
+        "outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
         "data-disabled:pointer-events-none data-disabled:opacity-50",
-        "aria-invalid:border-destructive aria-invalid:ring-destructive/40",
+        "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
         "motion-safe:transition-[color,box-shadow]",
         className
       )}

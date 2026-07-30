@@ -59,6 +59,61 @@ Utilities:
 
 Always pair these with an existing `rounded-*` utility. Browsers without `corner-shape` keep the normal `border-radius`, so the component must still look finished without the enhancement.
 
+## Shared vocabulary
+
+The registry reads as one set because every item draws its prop values and its state classes from the same short list. A new item does not get to invent a synonym.
+
+### `variant`
+
+| Value         | Meaning                                        | Who has it     |
+| ------------- | ---------------------------------------------- | -------------- |
+| `default`     | the primary, filled treatment                  | Button, Badge  |
+| `secondary`   | filled but recessive, sits on `bg-block`       | Button, Badge  |
+| `outline`     | border only, transparent fill                  | Button, Badge  |
+| `ghost`       | no border, no fill, hover tint only            | Button         |
+| `destructive` | filled `bg-destructive`, `text-white`          | Button, Badge  |
+| `link`        | inline text with `hover:underline`, no box      | Button         |
+| `raw`         | escape hatch: no height, no padding, no fill    | Button         |
+
+`raw` is deliberately not shadcn's vocabulary. It exists because icon-only and inline-chrome buttons (`CopyButton`, corner controls) need the semantics and the loading state of `Button` while supplying their own box. Keep it out of new components unless the same need shows up.
+
+### `size`
+
+| Value     | Who has it                            |
+| --------- | ------------------------------------- |
+| `sm`      | Button, Badge, Input, Textarea        |
+| `default` | Button, Badge, Input, Textarea        |
+| `lg`      | Button, Badge, Input, Textarea        |
+| `icon`    | Button (square, `size-9`, no padding) |
+
+Layout primitives (`Surface`, `Container`) also take `size`, but there it means **width or inset**, not control height. That is the one sanctioned overload.
+
+`Input` shadows the native `size` attribute (a character count nobody uses) via `Omit<..., "size">` so the prop means the same thing across every item.
+
+### State classes
+
+Copy these strings verbatim. Do not paraphrase the opacity or the ring width, and do not extract them into a shared module: registry items must stay standalone files.
+
+| State           | Classes                                                                                          |
+| --------------- | ------------------------------------------------------------------------------------------------ |
+| focus           | `focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none`                  |
+| disabled (DOM)  | `disabled:pointer-events-none disabled:opacity-50`                                               |
+| disabled (base-ui) | `data-disabled:pointer-events-none data-disabled:opacity-50`                                  |
+| disabled (field) | `disabled:cursor-not-allowed disabled:opacity-50`                                               |
+| invalid         | `aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40` |
+
+`ring-1` is banned. At `--radius: 1rem` a 1px ring reads as an artifact, not as focus.
+
+Popups (`DialogContent`, `SheetContent`, tooltip / select popups) take `focus-visible:outline-none` and **no ring**. The surface itself receives focus on open, so a ring there is noise; the ring belongs on the controls inside.
+
+### `data-slot`
+
+Every element the consumer might want to target from outside carries `data-slot="<component>"` or `data-slot="<component>-<part>"`, so a project can restyle via `[data-slot="card-header"]` without editing the copied file. Components with a variant matrix also carry `data-variant` and `data-size`.
+
+Naming: the container part is `-content` (`dialog-content`, `sheet-content`, `select-content`, `tooltip-content`), never `-popup` or `-body`.
+
+Exception: `Toaster` wraps sonner's own component, whose props are a closed interface, so it carries no `data-slot`.
+
 ## Component contracts
 
 Every item shipped in `registry.json` must satisfy:
@@ -67,8 +122,9 @@ Every item shipped in `registry.json` must satisfy:
 2. **Loading state present** _(async-capable only)_ — interactive components that can trigger async work expose `loading` (or `isPending`) prop. Visual: spinner or skeleton, `aria-busy="true"`, underlying interactive disabled. Static layout primitives are exempt.
 3. **No border on surfaces / layout primitives** — they lean on `--block` background for separation. Border on a surface = drift back to Material; resist.
 4. **Reduced motion respected** — animations gated by `@media (prefers-reduced-motion: no-preference)` or `motion`'s built-in handling.
+5. **Shared vocabulary honoured** — every `variant` / `size` value comes from the tables above, the state classes are copied verbatim, and every targetable element has a `data-slot`. A new synonym (`subtle`, `muted`, `md`, `tiny`) is a review blocker, not a preference.
 
-If a component can't satisfy 1–4, it lives under `registry/_drafts/` and stays out of `items[]`. Half-finished components are debt; the registry only ships finished ones.
+If a component can't satisfy 1–5, it lives under `registry/_drafts/` and stays out of `items[]`. Half-finished components are debt; the registry only ships finished ones.
 
 ## Item types & locations
 
@@ -86,7 +142,7 @@ We don't use `registry:component`. If you reach for it, you're probably about to
 3. `bun run registry:build` regen `public/r/`
 4. Push — Vercel rebuilds + serves
 
-Before flipping to `items[]`: did you walk rules 1–4? If not, ship to `_drafts/` and come back.
+Before flipping to `items[]`: did you walk rules 1–5? If not, ship to `_drafts/` and come back.
 
 ## What we explicitly don't do
 
@@ -94,4 +150,4 @@ Before flipping to `items[]`: did you walk rules 1–4? If not, ship to `_drafts
 - **No border on surfaces.** Background contrast does the work.
 - **No raw hex / rgb in component files.** Always token-via-class. The whole point of `--block`, `--foreground`, etc. is that swapping themes shouldn't require touching component source. _Exception: overlay scrims (Dialog / Sheet / Popover backdrops) use `bg-black/NN` — a scrim must darken the page in **both** themes, so it deliberately does not theme-flip. Second exception: text on saturated status colors (`text-white` on `bg-destructive`) — the red stays saturated in both themes, so its text doesn't flip either. These two are the only sanctioned raw colors._
 - **No CSS-in-JS.** Tailwind utility classes only. The registry exists to ship plain `.tsx` files that drop into any shadcn project without bringing emotion/styled-components.
-- **No `class-variance-authority` unless variants actually justify it.** A 3-variant button doesn't need cva — a `Record<Variant, string>` lookup reads cleaner. Add cva when the variant matrix exceeds ~6 combinations.
+- **No `class-variance-authority` unless variants actually justify it.** Two flat `Record<Variant, string>` / `Record<Size, string>` lookups read cleaner than a cva config and add no dependency, however long the lists get. The threshold is not a count: reach for cva only when you need **compound variants**, meaning a class that depends on `variant` and `size` together. Button carries 7 variants and 4 sizes on plain records precisely because none of them interact.

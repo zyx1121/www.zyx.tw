@@ -11,7 +11,7 @@ function Switch({ className, ...props }: SwitchPrimitive.Root.Props) {
       className={cn(
         "inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full p-0.5 transition-colors",
         "bg-foreground/15 data-checked:bg-foreground",
-        "focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none",
+        "focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none",
         "data-disabled:pointer-events-none data-disabled:opacity-50",
         className
       )}

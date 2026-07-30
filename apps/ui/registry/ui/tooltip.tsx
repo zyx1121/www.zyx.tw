@@ -31,6 +31,7 @@ export function Tooltip({
         <TooltipPrimitive.Portal>
           <TooltipPrimitive.Positioner side={side} sideOffset={sideOffset}>
             <TooltipPrimitive.Popup
+              data-slot="tooltip-content"
               className={cn(
                 "rounded-md bg-foreground px-2.5 py-1.5 text-xs font-medium text-background shadow-sm",
                 "origin-[var(--transform-origin)]",

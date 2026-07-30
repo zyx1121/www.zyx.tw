@@ -7,7 +7,7 @@
       "name": "button",
       "type": "registry:ui",
       "title": "Button",
-      "description": "Pill button — variants stripped to what I actually use. Loading + dark mode baked in.",
+      "description": "Pill button — 7 variants x 4 sizes on the shared vocabulary, plus a loading state. Dark mode baked in.",
       "dependencies": ["lucide-react"],
       "registryDependencies": [],
       "files": [
@@ -22,7 +22,7 @@
       "name": "badge",
       "type": "registry:ui",
       "title": "Badge",
-      "description": "Pill badge — default, secondary, outline, destructive. Token-driven, dark mode safe.",
+      "description": "Pill badge — default, secondary, outline, destructive in sm / default / lg. Token-driven, dark mode safe.",
       "dependencies": [],
       "registryDependencies": [],
       "files": [
@@ -142,7 +142,7 @@
       "name": "input",
       "type": "registry:ui",
       "title": "Input",
-      "description": "Native text field — token border, focus ring, aria-invalid, and file styling. Dark mode safe.",
+      "description": "Native text field — sm / default / lg, token border, focus ring, aria-invalid, and file styling. Dark mode safe.",
       "dependencies": [],
       "registryDependencies": [],
       "files": [
@@ -157,7 +157,7 @@
       "name": "textarea",
       "type": "registry:ui",
       "title": "Textarea",
-      "description": "Multi-line field — matches Input's border, radius, and focus ring. Auto-grows via field-sizing.",
+      "description": "Multi-line field — matches Input's sizes, border, radius, and focus ring. Auto-grows via field-sizing.",
       "dependencies": [],
       "registryDependencies": [],
       "files": [

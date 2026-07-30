@@ -46,11 +46,12 @@ export function ThemeToggle({ hotkey, className, ...props }: ThemeToggleProps) {
   return (
     <button
       type="button"
+      data-slot="theme-toggle"
       aria-label="Toggle theme"
       title={hotkey ? `Toggle theme (${hotkey})` : "Toggle theme"}
       onClick={() => setTheme(dark ? "light" : "dark")}
       className={cn(
-        "cursor-pointer font-mono text-sm text-foreground/60 transition-colors hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none",
+        "cursor-pointer font-mono text-sm text-foreground/60 transition-colors hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none",
         className
       )}
       {...props}
