@@ -3,25 +3,28 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/registry/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ui.zyx.tw"),
   title: "ui.zyx.tw",
-  description: "Loki's component registry. Copy in, own outright.",
+  description:
+    "Loki's design system. Stock shadcn/ui, grayscale palette, plus my own components.",
   openGraph: {
     title: "ui.zyx.tw",
-    description: "Loki's component registry. Copy in, own outright.",
+    description:
+      "Loki's design system. Stock shadcn/ui, grayscale palette, plus my own components.",
     url: "https://ui.zyx.tw",
     siteName: "ui.zyx.tw",
     type: "website",
@@ -52,7 +55,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <TooltipProvider>{children}</TooltipProvider>
           <Toaster />
         </ThemeProvider>
       </body>

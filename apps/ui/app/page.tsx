@@ -1,15 +1,38 @@
 "use client";
 
 import { useState } from "react";
-import { Copy } from "lucide-react";
+import { ChevronsUpDown, Italic, Underline } from "lucide-react";
 import { toast } from "sonner";
 
-import { Container } from "@/registry/blocks/container";
-import { Corner } from "@/registry/blocks/corner";
-import { Stack } from "@/registry/blocks/stack";
-import { Surface } from "@/registry/blocks/surface";
-import { Badge } from "@/registry/ui/badge";
-import { Button } from "@/registry/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -17,42 +40,75 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/registry/ui/card";
-import { CopyButton } from "@/registry/ui/copy-button";
-import { CopyCommand } from "@/registry/ui/copy-command";
+} from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/registry/ui/dialog";
-import { Input } from "@/registry/ui/input";
-import { Kbd } from "@/registry/ui/kbd";
-import { Label } from "@/registry/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/registry/ui/popover";
-import { SegmentedControl } from "@/registry/ui/segmented-control";
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { Input } from "@/components/ui/input";
+import { Kbd, KbdGroup } from "@/components/ui/kbd";
+import { Label } from "@/components/ui/label";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Progress } from "@/components/ui/progress";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/registry/ui/select";
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/registry/ui/sheet";
-import { Skeleton } from "@/registry/ui/skeleton";
-import { Switch } from "@/registry/ui/switch";
+} from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Slider } from "@/components/ui/slider";
+import { Spinner } from "@/components/ui/spinner";
+import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -60,18 +116,18 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/registry/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/ui/tabs";
-import { Textarea } from "@/registry/ui/textarea";
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { Toggle } from "@/components/ui/toggle";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { ShimmeringText } from "@/registry/ui/shimmering-text";
 import { ThemeToggle } from "@/registry/ui/theme-toggle";
-import { Tooltip } from "@/registry/ui/tooltip";
-
-const FLAVORS = [
-  { label: "Vanilla", value: "vanilla" },
-  { label: "Matcha", value: "matcha" },
-  { label: "Hojicha", value: "hojicha" },
-  { label: "Black sesame", value: "black-sesame" },
-];
 
 function ZyxLogo({ className }: { className?: string }) {
   return (
@@ -87,9 +143,31 @@ function ZyxLogo({ className }: { className?: string }) {
   );
 }
 
+function Section({
+  title,
+  command,
+  children,
+}: {
+  title: string;
+  command: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="space-y-4">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 className="text-lg font-medium">{title}</h2>
+        <code className="font-mono text-xs text-muted-foreground">
+          {command}
+        </code>
+      </div>
+      <div className="space-y-6 rounded-xl bg-muted/40 p-8">{children}</div>
+    </section>
+  );
+}
+
 export default function Home() {
   const [loading, setLoading] = useState(false);
-  const [segment, setSegment] = useState("shell");
+  const [progress, setProgress] = useState(60);
 
   const trigger = async () => {
     setLoading(true);
@@ -99,551 +177,462 @@ export default function Home() {
 
   return (
     <>
-      <Corner at="top-left">
-        <Tooltip content="Loki's component registry" side="bottom">
-          <div className="flex items-center gap-2 font-mono text-base font-semibold tracking-tight">
-            <ZyxLogo className="size-5" />
-            <span className="text-foreground/40">/</span>
-            <span>ui</span>
-          </div>
-        </Tooltip>
-      </Corner>
+      <div className="fixed top-6 left-6 z-50">
+        <div className="flex items-center gap-2 font-mono text-base font-semibold tracking-tight">
+          <ZyxLogo className="size-5" />
+          <span className="text-foreground/40">/</span>
+          <span>ui</span>
+        </div>
+      </div>
 
-      <Corner at="top-right">
-        <Tooltip content="Toggle theme (d)" side="bottom">
-          <ThemeToggle hotkey="d" className="text-base" />
-        </Tooltip>
-      </Corner>
+      <div className="fixed top-6 right-6 z-50">
+        <ThemeToggle />
+      </div>
 
-      <Corner at="bottom-right">
-        <Tooltip content="© 2026 zyx1121" side="top">
-          <span className="font-mono text-base text-foreground/50">© 2026</span>
-        </Tooltip>
-      </Corner>
+      <div className="fixed right-6 bottom-6 z-50">
+        <span className="font-mono text-base text-foreground/50">© 2026</span>
+      </div>
 
       <main>
-        <Container size="lg" className="space-y-16 pt-40 pb-32">
+        <div className="mx-auto w-full max-w-3xl space-y-16 px-6 pt-40 pb-32">
           <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Button</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/button
-              </code>
-            </div>
-
-            <Surface size="lg" className="space-y-6">
-              <div className="flex flex-wrap items-center gap-3">
-                <Button>Default</Button>
-                <Button variant="secondary">Secondary</Button>
-                <Button variant="outline">Outline</Button>
-                <Button variant="ghost">Ghost</Button>
-                <Button variant="destructive">Destructive</Button>
-                <Button variant="link">Link</Button>
-                <Button variant="raw">Raw</Button>
-              </div>
-              <div className="flex flex-wrap items-center gap-3">
-                <Button size="sm">Small</Button>
-                <Button size="default">Default</Button>
-                <Button size="lg">Large</Button>
-                <Button size="icon" aria-label="Copy">
-                  <Copy aria-hidden className="size-4" />
-                </Button>
-              </div>
-              <div className="flex flex-wrap items-center gap-3">
-                <Button disabled>Disabled</Button>
-                <Button loading={loading} onClick={trigger}>
-                  Trigger async
-                </Button>
-              </div>
-            </Surface>
+            <h1 className="text-3xl font-semibold tracking-tight">
+              <ShimmeringText>ui.zyx.tw</ShimmeringText>
+            </h1>
+            <p className="text-muted-foreground">
+              Stock shadcn/ui on a full grayscale palette, radius raised to
+              1rem, plus my own components. Init with the radix base, add the
+              theme, done.
+            </p>
+            <code className="block font-mono text-xs text-muted-foreground">
+              bunx shadcn@latest init -b radix -p nova && bunx shadcn@latest add
+              https://ui.zyx.tw/r/theme.json
+            </code>
           </section>
 
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Badge</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/badge
-              </code>
-            </div>
-
-            <Surface size="lg" className="space-y-6">
-              <div className="flex flex-wrap items-center gap-3">
-                <Badge>Default</Badge>
-                <Badge variant="secondary">Secondary</Badge>
-                <Badge variant="outline">Outline</Badge>
-                <Badge variant="destructive">Destructive</Badge>
-              </div>
-              <div className="flex flex-wrap items-center gap-3">
-                <Badge size="sm">Small</Badge>
-                <Badge size="default">Default</Badge>
-                <Badge size="lg">Large</Badge>
-              </div>
-            </Surface>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Tooltip</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/tooltip
-              </code>
-            </div>
-
-            <Surface size="lg" className="flex flex-wrap items-center gap-3">
-              <Tooltip content="Default tooltip on top">
-                <Button variant="outline">Hover me</Button>
-              </Tooltip>
-              <Tooltip content="Bottom placement" side="bottom">
-                <Button variant="outline">Bottom</Button>
-              </Tooltip>
-              <Tooltip content="Right placement" side="right">
-                <Button variant="outline">Right</Button>
-              </Tooltip>
-            </Surface>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Copy</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/copy-command
-              </code>
-            </div>
-
-            <Surface size="lg" className="space-y-4">
-              <CopyCommand value="bunx shadcn@latest add @zyx1121/surface" />
-              <div className="flex items-center gap-2">
-                <code className="rounded-md bg-background px-3 py-2 font-mono text-sm">
-                  claude-statusline
-                </code>
-                <CopyButton
-                  value="claude-statusline"
-                  label="Copy project name"
-                />
-              </div>
-            </Surface>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Segmented Control</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/segmented-control
-              </code>
-            </div>
-
-            <Surface size="lg" className="space-y-4">
-              <SegmentedControl
-                aria-label="Install mode"
-                value={segment}
-                onValueChange={setSegment}
-                options={[
-                  { value: "shell", label: "Shell" },
-                  { value: "claude", label: "Claude" },
-                  { value: "manual", label: "Manual" },
-                ]}
-              />
-              <p className="text-sm text-foreground/60">
-                Current segment:{" "}
-                <span className="font-mono text-foreground">{segment}</span>
+          <Section
+            title="Shimmering Text"
+            command="bunx shadcn@latest add https://ui.zyx.tw/r/shimmering-text.json"
+          >
+            <div className="space-y-2">
+              <p className="text-2xl font-medium">
+                <ShimmeringText>Generating response...</ShimmeringText>
               </p>
-            </Surface>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Table</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/table
-              </code>
+              <p className="text-sm">
+                <ShimmeringText duration={3}>
+                  Slow shimmer for long waits
+                </ShimmeringText>
+              </p>
             </div>
+          </Section>
 
+          <Section
+            title="Theme Toggle"
+            command="bunx shadcn@latest add https://ui.zyx.tw/r/theme-toggle.json"
+          >
+            <ThemeToggle />
+          </Section>
+
+          <Section title="Button" command="bunx shadcn@latest add button">
+            <div className="flex flex-wrap items-center gap-3">
+              <Button>Default</Button>
+              <Button variant="secondary">Secondary</Button>
+              <Button variant="outline">Outline</Button>
+              <Button variant="ghost">Ghost</Button>
+              <Button variant="destructive">Destructive</Button>
+              <Button variant="link">Link</Button>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button size="xs">Extra small</Button>
+              <Button size="sm">Small</Button>
+              <Button size="default">Default</Button>
+              <Button size="lg">Large</Button>
+              <Button disabled={loading} onClick={trigger}>
+                {loading && <Spinner />}
+                {loading ? "Saving..." : "Trigger loading"}
+              </Button>
+            </div>
+          </Section>
+
+          <Section title="Badge" command="bunx shadcn@latest add badge">
+            <div className="flex flex-wrap items-center gap-3">
+              <Badge>Default</Badge>
+              <Badge variant="secondary">Secondary</Badge>
+              <Badge variant="outline">Outline</Badge>
+              <Badge variant="destructive">Destructive</Badge>
+            </div>
+          </Section>
+
+          <Section
+            title="Input / Textarea / Label"
+            command="bunx shadcn@latest add input textarea label"
+          >
+            <div className="grid max-w-sm gap-6">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" type="email" placeholder="loki@zyx.tw" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="bio">Bio</Label>
+                <Textarea id="bio" placeholder="Say something." />
+              </div>
+              <Input aria-invalid placeholder="Invalid state" />
+              <Input disabled placeholder="Disabled" />
+            </div>
+          </Section>
+
+          <Section
+            title="Select / Checkbox / Radio / Switch / Slider"
+            command="bunx shadcn@latest add select checkbox radio-group switch slider"
+          >
+            <div className="grid max-w-sm gap-6">
+              <Select defaultValue="matcha">
+                <SelectTrigger>
+                  <SelectValue placeholder="Pick a flavor" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="vanilla">Vanilla</SelectItem>
+                  <SelectItem value="matcha">Matcha</SelectItem>
+                  <SelectItem value="hojicha">Hojicha</SelectItem>
+                  <SelectItem value="black-sesame">Black sesame</SelectItem>
+                </SelectContent>
+              </Select>
+              <div className="flex items-center gap-2">
+                <Checkbox id="terms" defaultChecked />
+                <Label htmlFor="terms">Accept terms</Label>
+              </div>
+              <RadioGroup defaultValue="comfortable" className="flex gap-6">
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="compact" id="r-compact" />
+                  <Label htmlFor="r-compact">Compact</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="comfortable" id="r-comfortable" />
+                  <Label htmlFor="r-comfortable">Comfortable</Label>
+                </div>
+              </RadioGroup>
+              <div className="flex items-center gap-2">
+                <Switch id="notify" defaultChecked />
+                <Label htmlFor="notify">Notifications</Label>
+              </div>
+              <Slider defaultValue={[40]} max={100} step={1} />
+            </div>
+          </Section>
+
+          <Section
+            title="Tabs / Toggle"
+            command="bunx shadcn@latest add tabs toggle toggle-group"
+          >
+            <Tabs defaultValue="account" className="max-w-sm">
+              <TabsList>
+                <TabsTrigger value="account">Account</TabsTrigger>
+                <TabsTrigger value="password">Password</TabsTrigger>
+              </TabsList>
+              <TabsContent
+                value="account"
+                className="text-sm text-muted-foreground"
+              >
+                Manage your account here.
+              </TabsContent>
+              <TabsContent
+                value="password"
+                className="text-sm text-muted-foreground"
+              >
+                Change your password here.
+              </TabsContent>
+            </Tabs>
+            <div className="flex items-center gap-3">
+              <Toggle aria-label="Toggle italic">
+                <Italic />
+              </Toggle>
+              <ToggleGroup type="multiple" variant="outline">
+                <ToggleGroupItem value="italic" aria-label="Italic">
+                  <Italic />
+                </ToggleGroupItem>
+                <ToggleGroupItem value="underline" aria-label="Underline">
+                  <Underline />
+                </ToggleGroupItem>
+              </ToggleGroup>
+            </div>
+          </Section>
+
+          <Section title="Card" command="bunx shadcn@latest add card">
+            <Card className="max-w-sm">
+              <CardHeader>
+                <CardTitle>Project torpor</CardTitle>
+                <CardDescription>
+                  Protocol-aware agent hibernation.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">
+                Idle agents park their state and release the GPU until the next
+                A2A message arrives.
+              </CardContent>
+              <CardFooter>
+                <Button size="sm">Resume</Button>
+              </CardFooter>
+            </Card>
+          </Section>
+
+          <Section
+            title="Overlays"
+            command="bunx shadcn@latest add dialog alert-dialog sheet popover tooltip dropdown-menu hover-card"
+          >
+            <div className="flex flex-wrap items-center gap-3">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline">Dialog</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Rename project</DialogTitle>
+                    <DialogDescription>
+                      Give the project a new name.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <Input defaultValue="torpor" />
+                  <DialogFooter>
+                    <Button>Save</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive">Alert dialog</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete this run?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction>Delete</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline">Sheet</Button>
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>Settings</SheetTitle>
+                    <SheetDescription>
+                      Side panel over a scrim.
+                    </SheetDescription>
+                  </SheetHeader>
+                </SheetContent>
+              </Sheet>
+
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline">Popover</Button>
+                </PopoverTrigger>
+                <PopoverContent className="text-sm">
+                  Anchored floating surface.
+                </PopoverContent>
+              </Popover>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="outline">Tooltip</Button>
+                </TooltipTrigger>
+                <TooltipContent>Hover hint</TooltipContent>
+              </Tooltip>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline">
+                    Menu <ChevronsUpDown />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>My account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>Billing</DropdownMenuItem>
+                  <DropdownMenuItem variant="destructive">
+                    Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <Button variant="link">@zyx1121</Button>
+                </HoverCardTrigger>
+                <HoverCardContent className="text-sm">
+                  Loki — NYCU CS, WinLab.
+                </HoverCardContent>
+              </HoverCard>
+            </div>
+          </Section>
+
+          <Section
+            title="Accordion / Collapsible"
+            command="bunx shadcn@latest add accordion collapsible"
+          >
+            <Accordion type="single" collapsible className="max-w-sm">
+              <AccordionItem value="what">
+                <AccordionTrigger>What is this?</AccordionTrigger>
+                <AccordionContent>
+                  Stock shadcn/ui with a grayscale theme.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="why">
+                <AccordionTrigger>Why grayscale?</AccordionTrigger>
+                <AccordionContent>
+                  Color comes from content, not chrome.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+            <Collapsible className="max-w-sm">
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <ChevronsUpDown /> Toggle details
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="pt-2 text-sm text-muted-foreground">
+                Hidden details revealed.
+              </CollapsibleContent>
+            </Collapsible>
+          </Section>
+
+          <Section title="Alert" command="bunx shadcn@latest add alert">
+            <div className="grid max-w-md gap-4">
+              <Alert>
+                <AlertTitle>Heads up</AlertTitle>
+                <AlertDescription>
+                  Registry rebuilt on stock shadcn/ui.
+                </AlertDescription>
+              </Alert>
+              <Alert variant="destructive">
+                <AlertTitle>Build failed</AlertTitle>
+                <AlertDescription>
+                  Check the CI logs for details.
+                </AlertDescription>
+              </Alert>
+            </div>
+          </Section>
+
+          <Section title="Table" command="bunx shadcn@latest add table">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Primitive</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Shape</TableHead>
+                  <TableHead>App</TableHead>
+                  <TableHead>Domain</TableHead>
+                  <TableHead className="text-right">Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 <TableRow>
-                  <TableCell className="font-mono">surface</TableCell>
-                  <TableCell>registry:block</TableCell>
-                  <TableCell>rounded-xl + bg-block</TableCell>
+                  <TableCell>ui</TableCell>
+                  <TableCell>ui.zyx.tw</TableCell>
+                  <TableCell className="text-right">live</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell className="font-mono">copy-command</TableCell>
-                  <TableCell>registry:ui</TableCell>
-                  <TableCell>rounded-md + copy action</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-mono">segmented-control</TableCell>
-                  <TableCell>registry:ui</TableCell>
-                  <TableCell>rounded-full + bg-block</TableCell>
+                  <TableCell>web</TableCell>
+                  <TableCell>www.zyx.tw</TableCell>
+                  <TableCell className="text-right">live</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
-          </section>
+          </Section>
 
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Form</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/input @zyx1121/label
-              </code>
+          <Section
+            title="Avatar / Kbd / Separator / Skeleton / Spinner / Progress"
+            command="bunx shadcn@latest add avatar kbd separator skeleton spinner progress"
+          >
+            <div className="flex flex-wrap items-center gap-6">
+              <Avatar>
+                <AvatarImage src="https://github.com/zyx1121.png" alt="Loki" />
+                <AvatarFallback>ZY</AvatarFallback>
+              </Avatar>
+              <KbdGroup>
+                <Kbd>⌘</Kbd>
+                <Kbd>K</Kbd>
+              </KbdGroup>
+              <Spinner />
+              <Skeleton className="h-8 w-32" />
             </div>
-
-            <Surface size="lg" className="grid max-w-sm gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="demo-email">Email</Label>
-                <Input
-                  id="demo-email"
-                  type="email"
-                  placeholder="you@example.com"
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="demo-msg">Message</Label>
-                <Textarea id="demo-msg" placeholder="Leave a comment..." />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="demo-sizes">Sizes</Label>
-                <Input id="demo-sizes" size="sm" placeholder="Small" />
-                <Input size="default" placeholder="Default" />
-                <Input size="lg" placeholder="Large" />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="demo-invalid">Invalid</Label>
-                <Input
-                  id="demo-invalid"
-                  aria-invalid
-                  defaultValue="not-an-email"
-                />
-              </div>
-            </Surface>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Card</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/card
-              </code>
-            </div>
-
-            <Card className="max-w-sm">
-              <CardHeader>
-                <CardTitle>Component registry</CardTitle>
-                <CardDescription>
-                  Copy in, own outright. Every piece ships finished.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="text-sm text-foreground/80">
-                Borderless by design — separation comes from the block surface
-                color, not a stroke.
-              </CardContent>
-              <CardFooter>
-                <Button size="sm">Install</Button>
-                <Button size="sm" variant="ghost">
-                  Docs
-                </Button>
-              </CardFooter>
-            </Card>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Dialog</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/dialog
-              </code>
-            </div>
-
-            <Surface size="lg">
-              <Dialog>
-                <DialogTrigger
-                  render={<Button variant="outline">Open dialog</Button>}
-                />
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Delete project</DialogTitle>
-                    <DialogDescription>
-                      This permanently removes the project and everything in it.
-                      This action cannot be undone.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter>
-                    <DialogClose
-                      render={<Button variant="ghost">Cancel</Button>}
-                    />
-                    <DialogClose render={<Button>Delete</Button>} />
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </Surface>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Switch</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/switch
-              </code>
-            </div>
-
-            <Surface size="lg" className="flex flex-wrap items-center gap-8">
-              <div className="flex items-center gap-2">
-                <Switch id="demo-notify" defaultChecked />
-                <Label htmlFor="demo-notify">Notifications</Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Switch id="demo-off" />
-                <Label htmlFor="demo-off">Off</Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Switch id="demo-locked" disabled defaultChecked />
-                <Label htmlFor="demo-locked">Disabled</Label>
-              </div>
-            </Surface>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Select</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/select
-              </code>
-            </div>
-
-            <Surface size="lg" className="flex flex-wrap items-center gap-3">
-              <Select items={FLAVORS} defaultValue="matcha">
-                <SelectTrigger className="w-44">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {FLAVORS.map((flavor) => (
-                    <SelectItem key={flavor.value} value={flavor.value}>
-                      {flavor.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select items={FLAVORS}>
-                <SelectTrigger className="w-44">
-                  <SelectValue placeholder="Pick a flavor" />
-                </SelectTrigger>
-                <SelectContent>
-                  {FLAVORS.map((flavor) => (
-                    <SelectItem key={flavor.value} value={flavor.value}>
-                      {flavor.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </Surface>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Skeleton</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/skeleton
-              </code>
-            </div>
-
-            <Surface size="lg" className="max-w-sm">
-              <div className="flex items-center gap-3">
-                <Skeleton className="size-10 rounded-full" />
-                <div className="flex-1 space-y-2">
-                  <Skeleton className="h-4 w-1/3" />
-                  <Skeleton className="h-4 w-2/3" />
-                </div>
-              </div>
-            </Surface>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Toast</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/toaster
-              </code>
-            </div>
-
-            <Surface size="lg" className="flex flex-wrap items-center gap-3">
+            <Separator />
+            <div className="flex max-w-sm items-center gap-3">
+              <Progress value={progress} />
               <Button
+                size="xs"
                 variant="outline"
-                onClick={() =>
-                  toast("Saved", { description: "Change is on its way out." })
-                }
+                onClick={() => setProgress((p) => (p >= 100 ? 0 : p + 20))}
               >
-                Show toast
+                +20
               </Button>
-              <Button
-                variant="outline"
-                onClick={() => toast.error("Something broke")}
-              >
-                Error toast
-              </Button>
-            </Surface>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Theme Toggle</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/theme-toggle
-              </code>
             </div>
+          </Section>
 
-            <Surface size="lg" className="flex items-center gap-3">
-              <ThemeToggle className="text-base" />
-              <p className="text-sm text-foreground/60">
-                The top-right corner instance also binds the{" "}
-                <code className="font-mono">d</code> key.
+          <Section
+            title="Breadcrumb / Pagination"
+            command="bunx shadcn@latest add breadcrumb pagination"
+          >
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/">zyx.tw</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>ui</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious href="#" />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#" isActive>
+                    1
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#">2</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext href="#" />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </Section>
+
+          <Section title="Sonner" command="bunx shadcn@latest add sonner">
+            <Button
+              variant="outline"
+              onClick={() => toast("Copied to clipboard")}
+            >
+              Show toast
+            </Button>
+          </Section>
+
+          <Section
+            title="Scroll Area"
+            command="bunx shadcn@latest add scroll-area"
+          >
+            <ScrollArea className="h-40 max-w-sm rounded-lg border p-4">
+              <p className="text-sm text-muted-foreground">
+                {Array.from({ length: 12 })
+                  .map((_, i) => `Line ${i + 1} of scrollable content.`)
+                  .join(" ")}
               </p>
-            </Surface>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Popover</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/popover
-              </code>
-            </div>
-
-            <Surface size="lg">
-              <Popover>
-                <PopoverTrigger
-                  render={<Button variant="outline">Open popover</Button>}
-                />
-                <PopoverContent>
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium">Anchored surface</p>
-                    <p className="text-sm text-foreground/60">
-                      Borderless, separated by shadow. Closes on outside click
-                      or Escape.
-                    </p>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            </Surface>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Sheet</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/sheet
-              </code>
-            </div>
-
-            <Surface size="lg" className="flex flex-wrap items-center gap-3">
-              <Sheet>
-                <SheetTrigger
-                  render={<Button variant="outline">From right</Button>}
-                />
-                <SheetContent>
-                  <SheetHeader>
-                    <SheetTitle>Side panel</SheetTitle>
-                    <SheetDescription>
-                      Slides over the page, inner edge rounded, scrim behind.
-                    </SheetDescription>
-                  </SheetHeader>
-                  <SheetFooter>
-                    <Button size="sm">Done</Button>
-                  </SheetFooter>
-                </SheetContent>
-              </Sheet>
-              <Sheet>
-                <SheetTrigger
-                  render={<Button variant="outline">From bottom</Button>}
-                />
-                <SheetContent side="bottom">
-                  <SheetHeader>
-                    <SheetTitle>Bottom sheet</SheetTitle>
-                    <SheetDescription>
-                      Same primitive, side=&quot;bottom&quot;.
-                    </SheetDescription>
-                  </SheetHeader>
-                </SheetContent>
-              </Sheet>
-            </Surface>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Tabs</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/tabs
-              </code>
-            </div>
-
-            <Surface size="lg">
-              <Tabs defaultValue="write">
-                <TabsList>
-                  <TabsTrigger value="write">Write</TabsTrigger>
-                  <TabsTrigger value="preview">Preview</TabsTrigger>
-                  <TabsTrigger value="settings">Settings</TabsTrigger>
-                </TabsList>
-                <TabsContent value="write">
-                  The active pill slides between tabs.
-                </TabsContent>
-                <TabsContent value="preview">
-                  Panels swap without remounting the list.
-                </TabsContent>
-                <TabsContent value="settings">
-                  Keyboard: arrow keys move, Home / End jump.
-                </TabsContent>
-              </Tabs>
-            </Surface>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Kbd</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/kbd
-              </code>
-            </div>
-
-            <Surface size="lg" className="flex flex-wrap items-center gap-6">
-              <p className="text-sm text-foreground/80">
-                Press <Kbd>d</Kbd> to toggle theme
-              </p>
-              <p className="text-sm text-foreground/80">
-                <Kbd>&#8984;</Kbd> <Kbd>K</Kbd> command menu
-              </p>
-              <p className="text-sm text-foreground/80">
-                <Kbd>Esc</Kbd> to close
-              </p>
-            </Surface>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-lg font-medium">Stack</h2>
-              <code className="text-xs text-foreground/60">
-                bunx shadcn@latest add @zyx1121/stack
-              </code>
-            </div>
-
-            <Surface size="lg" className="space-y-6">
-              <Stack direction="row" gap="sm">
-                <Badge variant="secondary">row</Badge>
-                <Badge variant="secondary">gap-sm</Badge>
-                <Badge variant="secondary">items-center</Badge>
-              </Stack>
-              <Stack gap="sm" className="max-w-48">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-2/3" />
-                <Skeleton className="h-4 w-1/2" />
-              </Stack>
-            </Surface>
-          </section>
-        </Container>
+            </ScrollArea>
+          </Section>
+        </div>
       </main>
     </>
   );
