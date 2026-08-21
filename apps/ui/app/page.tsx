@@ -201,11 +201,11 @@ export default function Home() {
             </h1>
             <p className="text-muted-foreground">
               Stock shadcn/ui on a full grayscale palette, radius raised to
-              1rem, plus my own components. Init with the radix base, add the
+              1rem, plus my own components. Init with the base preset, add the
               theme, done.
             </p>
             <code className="block font-mono text-xs text-muted-foreground">
-              bunx shadcn@latest init -b radix -p nova && bunx shadcn@latest add
+              bunx shadcn@latest init -b base -p nova && bunx shadcn@latest add
               https://ui.zyx.tw/r/theme.json
             </code>
           </section>
@@ -345,7 +345,7 @@ export default function Home() {
               <Toggle aria-label="Toggle italic">
                 <Italic />
               </Toggle>
-              <ToggleGroup type="multiple" variant="outline">
+              <ToggleGroup multiple variant="outline">
                 <ToggleGroupItem value="italic" aria-label="Italic">
                   <Italic />
                 </ToggleGroupItem>
@@ -380,9 +380,9 @@ export default function Home() {
           >
             <div className="flex flex-wrap items-center gap-3">
               <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="outline">Dialog</Button>
-                </DialogTrigger>
+                <DialogTrigger
+                  render={<Button variant="outline">Dialog</Button>}
+                />
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>Rename project</DialogTitle>
@@ -398,9 +398,9 @@ export default function Home() {
               </Dialog>
 
               <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="destructive">Alert dialog</Button>
-                </AlertDialogTrigger>
+                <AlertDialogTrigger
+                  render={<Button variant="destructive">Alert dialog</Button>}
+                />
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Delete this run?</AlertDialogTitle>
@@ -416,9 +416,9 @@ export default function Home() {
               </AlertDialog>
 
               <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline">Sheet</Button>
-                </SheetTrigger>
+                <SheetTrigger
+                  render={<Button variant="outline">Sheet</Button>}
+                />
                 <SheetContent>
                   <SheetHeader>
                     <SheetTitle>Settings</SheetTitle>
@@ -430,27 +430,29 @@ export default function Home() {
               </Sheet>
 
               <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline">Popover</Button>
-                </PopoverTrigger>
+                <PopoverTrigger
+                  render={<Button variant="outline">Popover</Button>}
+                />
                 <PopoverContent className="text-sm">
                   Anchored floating surface.
                 </PopoverContent>
               </Popover>
 
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline">Tooltip</Button>
-                </TooltipTrigger>
+                <TooltipTrigger
+                  render={<Button variant="outline">Tooltip</Button>}
+                />
                 <TooltipContent>Hover hint</TooltipContent>
               </Tooltip>
 
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline">
-                    Menu <ChevronsUpDown />
-                  </Button>
-                </DropdownMenuTrigger>
+                <DropdownMenuTrigger
+                  render={
+                    <Button variant="outline">
+                      Menu <ChevronsUpDown />
+                    </Button>
+                  }
+                />
                 <DropdownMenuContent>
                   <DropdownMenuLabel>My account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -463,9 +465,9 @@ export default function Home() {
               </DropdownMenu>
 
               <HoverCard>
-                <HoverCardTrigger asChild>
-                  <Button variant="link">@zyx1121</Button>
-                </HoverCardTrigger>
+                <HoverCardTrigger
+                  render={<Button variant="link">@zyx1121</Button>}
+                />
                 <HoverCardContent className="text-sm">
                   Loki — NYCU CS, WinLab.
                 </HoverCardContent>
@@ -477,7 +479,7 @@ export default function Home() {
             title="Accordion / Collapsible"
             command="bunx shadcn@latest add accordion collapsible"
           >
-            <Accordion type="single" collapsible className="max-w-sm">
+            <Accordion multiple={false} className="max-w-sm">
               <AccordionItem value="what">
                 <AccordionTrigger>What is this?</AccordionTrigger>
                 <AccordionContent>
@@ -492,11 +494,13 @@ export default function Home() {
               </AccordionItem>
             </Accordion>
             <Collapsible className="max-w-sm">
-              <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <ChevronsUpDown /> Toggle details
-                </Button>
-              </CollapsibleTrigger>
+              <CollapsibleTrigger
+                render={
+                  <Button variant="ghost" size="sm">
+                    <ChevronsUpDown /> Toggle details
+                  </Button>
+                }
+              />
               <CollapsibleContent className="pt-2 text-sm text-muted-foreground">
                 Hidden details revealed.
               </CollapsibleContent>

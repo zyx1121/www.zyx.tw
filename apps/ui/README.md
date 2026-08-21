@@ -15,10 +15,10 @@ The base components are shadcn/ui as-is — the shadcn CLI owns them, this regis
 
 ## Use it
 
-Init a project on the radix base, then add the theme:
+Init a project on the Base UI base, then add the theme:
 
 ```bash
-bunx shadcn@latest init -b radix -p nova
+bunx shadcn@latest init -b base -p nova
 bunx shadcn@latest add https://ui.zyx.tw/r/theme.json
 ```
 
@@ -52,7 +52,7 @@ bunx shadcn@latest add @zyx1121/shimmering-text
 
 - **Framework**: Next.js 16 (App Router)
 - **Styling**: Tailwind CSS v4
-- **Components**: shadcn/ui (radix base)
+- **Components**: shadcn/ui (Base UI base)
 - **Registry**: shadcn CLI
 - **Package Manager**: Bun
 

@@ -4,7 +4,7 @@
 
 ## Philosophy — theme + additions, not a fork
 
-The previous registry maintained its own copies of every primitive (button, input, dialog, ...) on base-ui. That meant owning variants, edge cases, and dark mode for 20+ components. Rebuilt 2026-08: base components now come from stock shadcn/ui (radix base, `nova` preset) and the CLI owns them. This registry ships exactly two kinds of things:
+The previous registry maintained its own copies of every primitive (button, input, dialog, ...) on base-ui. That meant owning variants, edge cases, and dark mode for 20+ components. Rebuilt 2026-08: base components now come from stock shadcn/ui (`base-nova` preset) and the CLI owns them. This registry ships exactly two kinds of things:
 
 - **The theme** — full grayscale palette, radius raised to `1rem`. One `registry:theme` item.
 - **zyx components** — things shadcn/ui doesn't have (`shimmering-text`, `theme-toggle`). One concept per file.
@@ -13,7 +13,7 @@ If shadcn/ui ships a component, we do not re-ship it. If a component needs resty
 
 ## Anchor decisions (`app/globals.css`)
 
-- **Base**: shadcn `radix-nova` preset, `neutral` base color — the stock palette is already zero-chroma grayscale.
+- **Base**: shadcn `base-nova` preset (Base UI primitives — shadcn CLI default, actively maintained by the ex-Radix team), `neutral` base color — the stock palette is already zero-chroma grayscale.
 - **`--radius: 1rem`** — the one deliberate departure from stock (0.625rem). Buttons read soft-pill, surfaces read friendly. The stock multiplier scale (`sm` 0.6x ... `4xl` 2.6x) derives everything else.
 - **Grayscale everywhere** — the only chroma on screen is `--destructive` and content itself. The stock dark `--sidebar-primary` (blue) is overridden to gray.
 - **Fonts** — Geist (`--font-sans`) + Geist Mono (`--font-mono`) via `next/font/google`.

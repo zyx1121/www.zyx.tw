@@ -7,7 +7,7 @@
       "name": "theme",
       "type": "registry:theme",
       "title": "Theme",
-      "description": "The zyx.tw theme on top of stock shadcn/ui — full grayscale palette, radius raised to 1rem. Init with the radix base and neutral color, then add this.",
+      "description": "The zyx.tw theme on top of stock shadcn/ui — full grayscale palette, radius raised to 1rem. Init with the base preset and neutral color, then add this.",
       "cssVars": {
         "light": {
           "radius": "1rem"
