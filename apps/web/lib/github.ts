@@ -1,7 +1,14 @@
+import type {
+  GhEvent,
+  Heatmap,
+  StatusData,
+} from "@workspace/ui/components/status"
+
 const USER = "zyx1121"
 const GH_API = "https://api.github.com"
 const GRAPHQL_URL = `${GH_API}/graphql`
 const TOKEN = process.env.GITHUB_TOKEN
+const REVALIDATE_SECONDS = 300
 
 const HEATMAP_QUERY = `
   query($login: String!) {
@@ -33,14 +40,7 @@ const RELEVANT_TYPES = [
   "PublicEvent",
 ]
 
-type GhEvent = {
-  id: string
-  type: string
-  public?: boolean
-  repo: { name: string; url: string }
-  payload: Record<string, unknown>
-  created_at: string
-}
+type RawEvent = GhEvent & { public?: boolean }
 
 const headers: Record<string, string> = {
   Accept: "application/vnd.github+json",
@@ -53,10 +53,10 @@ async function fetchEvents(): Promise<GhEvent[]> {
   // /events/orgs/{org} would catch private-org events but needs read:org scope.
   const res = await fetch(
     `${GH_API}/users/${USER}/events/public?per_page=100`,
-    { headers, next: { revalidate: 300 } }
+    { headers, next: { revalidate: REVALIDATE_SECONDS } }
   )
   if (!res.ok) return []
-  const events = (await res.json()) as GhEvent[]
+  const events = (await res.json()) as RawEvent[]
 
   // PR merges fire two events: PullRequestEvent (merged) + PushEvent on main.
   // Drop the trailing push so we don't claim someone "pushed to main" when
@@ -112,17 +112,6 @@ async function fetchEvents(): Promise<GhEvent[]> {
     }))
 }
 
-type Heatmap = {
-  totalContributions: number
-  weeks: {
-    contributionDays: {
-      date: string
-      contributionCount: number
-      contributionLevel: string
-    }[]
-  }[]
-}
-
 async function fetchHeatmap(): Promise<Heatmap | null> {
   if (!TOKEN) return null
   try {
@@ -136,7 +125,7 @@ async function fetchHeatmap(): Promise<Heatmap | null> {
         query: HEATMAP_QUERY,
         variables: { login: USER },
       }),
-      next: { revalidate: 300 },
+      next: { revalidate: REVALIDATE_SECONDS },
     })
     if (!res.ok) return null
     const data = (await res.json()) as {
@@ -153,7 +142,18 @@ async function fetchHeatmap(): Promise<Heatmap | null> {
   }
 }
 
-export async function GET() {
-  const [events, heatmap] = await Promise.all([fetchEvents(), fetchHeatmap()])
-  return Response.json({ user: USER, events, heatmap })
+/**
+ * Server-side GitHub status for the landing page. Used to be a route handler
+ * the Status component fetched after hydration, which left "Loading…" in the
+ * SSR HTML and cost every visitor a round-trip. Failures resolve to an empty
+ * event list rather than throwing, so a GitHub outage never fails a build.
+ */
+export async function getGithubStatus(): Promise<StatusData> {
+  try {
+    const [events, heatmap] = await Promise.all([fetchEvents(), fetchHeatmap()])
+    return { user: USER, events, heatmap }
+  } catch (err) {
+    console.error("[github] status fetch failed:", err)
+    return { user: USER, events: [], heatmap: null }
+  }
 }

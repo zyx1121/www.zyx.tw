@@ -1,9 +1,10 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
-import { motion, useScroll, useTransform } from "motion/react"
-import { SiGithub } from "react-icons/si"
+import { useScroll, useTransform } from "motion/react"
+import * as m from "motion/react-m"
 
 import { useInView } from "@workspace/ui/hooks/use-in-view"
 
@@ -11,7 +12,14 @@ type Project = {
   name: string
   description: string
   href: string
-  web: boolean
+  /**
+   * Static preview, 680x383 (16:9, 2x of the widest card). Live sites are
+   * screenshots committed under apps/web/public/previews and refreshed with
+   * `bun run previews`; GitHub repos use GitHub's own OpenGraph card. Sites
+   * used to be embedded as live iframes, which cost ~7 MB per visit and
+   * rendered blank for anything with `frame-ancestors 'none'`.
+   */
+  preview: string
 }
 
 const PROJECTS: Project[] = [
@@ -20,57 +28,57 @@ const PROJECTS: Project[] = [
     description:
       "A scrapbook for texts, links, images, and videos worth keeping.",
     href: "https://things.zyx.tw",
-    web: true,
+    preview: "/previews/things.zyx.tw.webp",
   },
   {
     name: "good.zyx.tw",
     description:
       "Digital 乖乖 — the snack engineers tape onto servers for luck.",
     href: "https://good.zyx.tw",
-    web: true,
+    preview: "/previews/good.zyx.tw.webp",
   },
   {
     name: "ai.winlab.tw",
     description: "NYCU's Office of AI Affairs — the official site.",
     href: "https://ai.winlab.tw",
-    web: true,
+    preview: "/previews/ai.winlab.tw.webp",
   },
   {
     name: "winlab.tw",
     description: "WinLab — Chien-Chao Tseng's lab at NYCU CS.",
     href: "https://winlab.tw",
-    web: true,
+    preview: "/previews/www.winlab.tw.webp",
   },
   {
     name: "gallery.winlab.tw",
     description: "Art from NYCU WinLab — sketches, prints, the whole wall.",
     href: "https://gallery.winlab.tw",
-    web: true,
+    preview: "/previews/gallery.winlab.tw.webp",
   },
   {
     name: "scriptorium",
     description:
       "Self-hosted LLM wiki for teams — Karpathy's pattern over Postgres + MCP.",
     href: "https://github.com/zyx1121/scriptorium",
-    web: false,
+    preview: "https://opengraph.githubassets.com/1/zyx1121/scriptorium",
   },
   {
     name: "temp.zyx.tw",
     description: "Anonymous shared notepad — one URL, one pad, no account.",
     href: "https://temp.zyx.tw",
-    web: true,
+    preview: "/previews/temp.zyx.tw.webp",
   },
   {
     name: "link.zyx.tw",
     description: "URL shortener — paste a long one, get a short one back.",
     href: "https://link.zyx.tw",
-    web: true,
+    preview: "/previews/link.zyx.tw.webp",
   },
   {
     name: "time.zyx.tw",
     description: "What time is it? A clock, that's all.",
     href: "https://time.zyx.tw",
-    web: true,
+    preview: "/previews/time.zyx.tw.webp",
   },
 ] as const
 
@@ -86,11 +94,6 @@ function shuffle<T>(input: readonly T[]): T[] {
 }
 
 const spring = { type: "spring" as const, stiffness: 200, damping: 20 }
-
-function parseGithubRepo(url: string) {
-  const m = url.match(/^https?:\/\/github\.com\/([\w-]+\/[\w.-]+?)\/?$/)
-  return m ? m[1] : null
-}
 
 export function Projects() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -124,7 +127,7 @@ export function Projects() {
       aria-label="Projects"
     >
       <div className="sticky top-0 flex h-dvh flex-col justify-center overflow-hidden">
-        <motion.h2
+        <m.h2
           ref={headingRef as React.RefObject<HTMLHeadingElement>}
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -132,16 +135,16 @@ export function Projects() {
           className="px-6 text-center text-2xl font-medium sm:text-3xl"
         >
           Things I&apos;ve built.
-        </motion.h2>
-        <motion.p
+        </m.h2>
+        <m.p
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ ...spring, delay: 0.1 }}
           className="px-6 pt-3 pb-10 text-center text-sm text-muted-foreground"
         >
           Side projects, lab work, and corners of the internet I keep alive.
-        </motion.p>
-        <motion.div
+        </m.p>
+        <m.div
           ref={trackRef}
           style={{ x }}
           className="flex shrink-0 items-stretch gap-6 px-8 will-change-transform sm:gap-8 sm:px-12"
@@ -149,30 +152,14 @@ export function Projects() {
           {order.map((project) => (
             <ProjectCard key={project.name} project={project} />
           ))}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   )
 }
 
 function ProjectCard({ project }: { project: Project }) {
-  const { name, description, href, web } = project
-  const repo = !web ? parseGithubRepo(href) : null
-  const [thumb, setThumb] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!repo) return
-    let cancelled = false
-    fetch(`/api/repo-thumbnail?repo=${repo}`)
-      .then((r) => (r.ok ? r.json() : { url: null }))
-      .then((d: { url: string | null }) => {
-        if (!cancelled) setThumb(d.url)
-      })
-      .catch(() => {})
-    return () => {
-      cancelled = true
-    }
-  }, [repo])
+  const { name, description, href, preview } = project
 
   return (
     <Link
@@ -182,32 +169,15 @@ function ProjectCard({ project }: { project: Project }) {
       className="group flex w-[280px] shrink-0 flex-col overflow-hidden rounded-3xl border border-border bg-card transition-colors hover:border-foreground/30 sm:w-[340px]"
     >
       <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-border bg-muted/40">
-        {web ? (
-          <iframe
-            src={href}
-            title={name}
-            scrolling="no"
-            loading="lazy"
-            sandbox="allow-scripts allow-same-origin"
-            className="pointer-events-none origin-top-left"
-            style={{
-              width: "400%",
-              height: "400%",
-              transform: "scale(0.25)",
-            }}
-          />
-        ) : thumb ? (
-          <img
-            src={thumb}
-            alt={name}
-            loading="lazy"
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <SiGithub className="h-10 w-10 text-muted-foreground/30" />
-          </div>
-        )}
+        <Image
+          src={preview}
+          alt={`Preview of ${name}`}
+          width={680}
+          height={383}
+          sizes="(min-width: 640px) 340px, 280px"
+          loading="lazy"
+          className="h-full w-full object-cover object-top"
+        />
       </div>
       <div className="flex flex-col gap-2 p-5">
         <h3 className="text-lg font-medium transition-colors group-hover:text-brand sm:text-xl">

@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { motion } from "motion/react"
+import * as m from "motion/react-m"
 
 import { useInView } from "@workspace/ui/hooks/use-in-view"
 
@@ -17,15 +17,15 @@ export function Intro() {
       aria-label="About"
       className="flex h-dvh w-dvw flex-col items-center justify-center gap-6 px-6 text-center"
     >
-      <motion.h2
+      <m.h1
         initial={{ opacity: 0, y: 16 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={spring}
         className="text-2xl font-medium sm:text-3xl"
       >
         loki — 詹詠翔.
-      </motion.h2>
-      <motion.p
+      </m.h1>
+      <m.p
         initial={{ opacity: 0, y: 16 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ ...spring, delay: 0.1 }}
@@ -50,22 +50,22 @@ export function Intro() {
           winlab
         </Link>
         . i build things.
-      </motion.p>
-      <motion.div
+      </m.p>
+      <m.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={inView ? { opacity: 1, scale: 1 } : {}}
         transition={{ ...spring, delay: 0.2 }}
         className="overflow-hidden rounded-3xl border border-border"
       >
         <Image
-          src="/me.gif"
+          src="/me.webp"
           alt="Ralph Wiggum waving"
           width={240}
           height={240}
           className="w-full max-w-[200px] sm:max-w-[240px]"
           unoptimized
         />
-      </motion.div>
+      </m.div>
     </section>
   )
 }

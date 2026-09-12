@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { motion } from "motion/react"
+import * as m from "motion/react-m"
 
 import { useInView } from "@workspace/ui/hooks/use-in-view"
 
@@ -18,7 +18,7 @@ export function Contact() {
       aria-label="Contact"
       className="flex h-dvh w-dvw flex-col items-center justify-center gap-6 px-6 text-center"
     >
-      <motion.h2
+      <m.h2
         initial={{ opacity: 0, y: 16 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={spring}
@@ -30,15 +30,15 @@ export function Contact() {
         >
           {EMAIL}
         </Link>
-      </motion.h2>
-      <motion.p
+      </m.h2>
+      <m.p
         initial={{ opacity: 0, y: 16 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ ...spring, delay: 0.1 }}
         className="max-w-md text-sm text-muted-foreground"
       >
         Can&apos;t promise a reply, but the door&apos;s open.
-      </motion.p>
+      </m.p>
     </section>
   )
 }

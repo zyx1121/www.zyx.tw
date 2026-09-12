@@ -1,6 +1,7 @@
 "use client"
 
-import { motion, useScroll, useTransform } from "motion/react"
+import { useScroll, useTransform } from "motion/react"
+import * as m from "motion/react-m"
 
 export function Background() {
   const { scrollY } = useScroll()
@@ -15,7 +16,7 @@ export function Background() {
   })
 
   return (
-    <motion.div
+    <m.div
       className="pointer-events-none fixed top-0 left-0 z-10 flex h-dvh w-dvw items-center justify-center"
       style={{ opacity, filter: blur, willChange: "opacity, filter" }}
     >
@@ -24,6 +25,6 @@ export function Background() {
         alt=""
         className="h-full w-full object-cover dark:invert"
       />
-    </motion.div>
+    </m.div>
   )
 }
