@@ -1,8 +1,9 @@
 import { type NextRequest } from "next/server"
-
 import { createClient } from "@/utils/supabase/middleware"
 
-export async function middleware(request: NextRequest) {
+// Next 16 file convention (was middleware.ts). Same matcher, same session
+// refresh; runs on the Node.js runtime like apps/1909/proxy.ts.
+export async function proxy(request: NextRequest) {
   return createClient(request)
 }
 
