@@ -13,6 +13,7 @@ import { execFileSync } from "node:child_process"
 import { mkdtempSync, mkdirSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
+import { fileURLToPath } from "node:url"
 
 const SITES = [
   "things.zyx.tw",
@@ -25,7 +26,10 @@ const SITES = [
   "time.zyx.tw",
 ]
 
-const OUT_DIR = new URL("../public/previews/", import.meta.url).pathname
+// fileURLToPath, not .pathname: the real checkout lives under
+// "~/Library/Mobile Documents/..." and .pathname would percent-encode the
+// space, sending every screenshot into a stray "Mobile%20Documents" tree.
+const OUT_DIR = fileURLToPath(new URL("../public/previews/", import.meta.url))
 const WIDTH = 680 // 2x of the widest card (340px)
 
 mkdirSync(OUT_DIR, { recursive: true })

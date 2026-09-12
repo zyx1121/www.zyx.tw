@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "private": true,
-  "description": "ZYX.tw \u2014 the actual website",
+  "description": "ZYX.tw — the actual website",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
