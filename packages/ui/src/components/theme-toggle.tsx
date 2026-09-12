@@ -25,7 +25,14 @@ export function ThemeToggle() {
     >
       <button
         type="button"
-        aria-label="Toggle theme"
+        // The visible text ("Light"/"Dark") must be part of the accessible
+        // name, or assistive tech announces something other than what is on
+        // screen (axe: label-content-name-mismatch).
+        aria-label={
+          mounted
+            ? `Switch to ${resolvedTheme === "dark" ? "light" : "dark"} mode`
+            : "Toggle theme"
+        }
         onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
         className="fixed top-4 right-4 z-50 cursor-pointer font-mono text-sm text-muted-foreground transition-colors hover:text-foreground"
       >

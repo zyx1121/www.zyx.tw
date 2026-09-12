@@ -4,7 +4,7 @@ export function JsonLd() {
     "@type": "Person",
     name: "Zhan Yong Xiang",
     alternateName: ["Loki", "詹詠翔"],
-    url: "https://zyx.tw",
+    url: "https://www.zyx.tw",
     email: "mail@zyx.tw",
     jobTitle: "MS student in Computer Science",
     affiliation: {

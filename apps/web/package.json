@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "private": true,
-  "description": "ZYX.tw — the actual website",
+  "description": "ZYX.tw \u2014 the actual website",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -11,7 +11,8 @@
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx}\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "previews": "node scripts/capture-previews.mjs"
   },
   "dependencies": {
     "@workspace/otel": "workspace:*",

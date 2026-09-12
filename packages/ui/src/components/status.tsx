@@ -1,8 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useState } from "react"
-import { motion } from "motion/react"
+import * as m from "motion/react-m"
 import { SiGithub } from "react-icons/si"
 import {
   VscGitCommit,
@@ -20,7 +19,7 @@ import { cn } from "@workspace/ui/lib/utils"
 
 const spring = { type: "spring" as const, stiffness: 200, damping: 20 }
 
-type GhEvent = {
+export type GhEvent = {
   id: string
   type: string
   repo: { name: string; url: string }
@@ -39,12 +38,12 @@ type HeatmapDay = {
     | "FOURTH_QUARTILE"
 }
 
-type Heatmap = {
+export type Heatmap = {
   totalContributions: number
   weeks: { contributionDays: HeatmapDay[] }[]
 }
 
-type ApiResponse = {
+export type StatusData = {
   user: string
   events: GhEvent[]
   heatmap: Heatmap | null
@@ -137,25 +136,8 @@ function HeatmapGrid({ heatmap }: { heatmap: Heatmap }) {
   )
 }
 
-export function Status() {
+export function Status({ data }: { data: StatusData }) {
   const { ref, inView } = useInView()
-  const [data, setData] = useState<ApiResponse | null>(null)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    let cancelled = false
-    fetch("/api/github")
-      .then((r) => r.json())
-      .then((d: ApiResponse & { error?: string }) => {
-        if (cancelled) return
-        if (d.error) setError(d.error)
-        setData(d)
-      })
-      .catch(() => !cancelled && setError("fetch_failed"))
-    return () => {
-      cancelled = true
-    }
-  }, [])
 
   return (
     <section
@@ -163,23 +145,23 @@ export function Status() {
       aria-label="Status"
       className="flex h-dvh w-dvw flex-col items-center justify-center gap-6 px-6 text-center"
     >
-      <motion.h2
+      <m.h2
         initial={{ opacity: 0, y: 16 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={spring}
         className="text-2xl font-medium sm:text-3xl"
       >
         Status.
-      </motion.h2>
-      <motion.p
+      </m.h2>
+      <m.p
         initial={{ opacity: 0, y: 16 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ ...spring, delay: 0.1 }}
         className="max-w-md text-sm text-muted-foreground"
       >
         A peek at what I&apos;ve been messing with lately.
-      </motion.p>
-      <motion.div
+      </m.p>
+      <m.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={inView ? { opacity: 1, scale: 1 } : {}}
         transition={{ ...spring, delay: 0.2 }}
@@ -192,10 +174,10 @@ export function Status() {
             rel="noopener noreferrer"
             className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
-            <SiGithub className="h-4 w-4" />
+            <SiGithub className="h-4 w-4" aria-hidden="true" />
             <span>@zyx1121</span>
           </Link>
-          {data?.heatmap && (
+          {data.heatmap && (
             <span className="text-xs text-muted-foreground">
               {data.heatmap.totalContributions.toLocaleString()} contributions
               this year
@@ -203,34 +185,29 @@ export function Status() {
           )}
         </div>
 
-        {data?.heatmap && (
+        {data.heatmap && (
           <div className="mt-5">
             <HeatmapGrid heatmap={data.heatmap} />
           </div>
         )}
 
         <ul className="mt-5 space-y-3">
-          {data === null && !error && (
-            <li className="text-sm text-muted-foreground">Loading…</li>
-          )}
-          {error && (
-            <li className="text-sm text-muted-foreground">
-              GitHub is being shy ({error}).
-            </li>
-          )}
-          {data?.events.length === 0 && !error && (
+          {data.events.length === 0 && (
             <li className="text-sm text-muted-foreground">
               No public activity in the last few days.
             </li>
           )}
-          {data?.events.map((e) => {
+          {data.events.map((e) => {
             const { icon: Icon, text } = describe(e)
             return (
               <li
                 key={e.id}
                 className="flex items-baseline gap-3 text-sm text-muted-foreground"
               >
-                <Icon className="h-4 w-4 shrink-0 translate-y-0.5 text-muted-foreground" />
+                <Icon
+                  className="h-4 w-4 shrink-0 translate-y-0.5 text-muted-foreground"
+                  aria-hidden="true"
+                />
                 <span className="flex-1 truncate">
                   <span className="text-foreground">{text}</span>
                   <span> in </span>
@@ -243,14 +220,21 @@ export function Status() {
                     {e.repo.name}
                   </Link>
                 </span>
-                <span className="shrink-0 text-xs text-muted-foreground/70 tabular-nums">
+                {/* The page is prerendered (ISR, 5 min), so the server's
+                    "3m ago" is stale by the time the client hydrates and
+                    recomputes it. The client value is the right one; suppress
+                    the text-mismatch warning instead of forcing a match. */}
+                <span
+                  className="shrink-0 text-xs text-muted-foreground/70 tabular-nums"
+                  suppressHydrationWarning
+                >
                   {timeAgo(e.created_at)}
                 </span>
               </li>
             )
           })}
         </ul>
-      </motion.div>
+      </m.div>
     </section>
   )
 }
