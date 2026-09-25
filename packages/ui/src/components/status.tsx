@@ -51,10 +51,10 @@ export type StatusData = {
 
 const LEVEL_CLASS: Record<HeatmapDay["contributionLevel"], string> = {
   NONE: "bg-muted",
-  FIRST_QUARTILE: "bg-brand/25",
-  SECOND_QUARTILE: "bg-brand/50",
-  THIRD_QUARTILE: "bg-brand/75",
-  FOURTH_QUARTILE: "bg-brand",
+  FIRST_QUARTILE: "bg-foreground/25",
+  SECOND_QUARTILE: "bg-foreground/50",
+  THIRD_QUARTILE: "bg-foreground/75",
+  FOURTH_QUARTILE: "bg-foreground",
 }
 
 const dateFmt = new Intl.DateTimeFormat("en-US", {
@@ -225,7 +225,7 @@ export function Status({ data }: { data: StatusData }) {
                     recomputes it. The client value is the right one; suppress
                     the text-mismatch warning instead of forcing a match. */}
                 <span
-                  className="shrink-0 text-xs text-muted-foreground/70 tabular-nums"
+                  className="shrink-0 font-mono text-xs text-muted-foreground/70 tabular-nums"
                   suppressHydrationWarning
                 >
                   {timeAgo(e.created_at)}

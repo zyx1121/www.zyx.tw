@@ -3,6 +3,9 @@
 import JSConfetti from "js-confetti"
 import { useActionState, useEffect, useRef } from "react"
 
+import { Button } from "@workspace/ui/components/ui/button"
+import { Input } from "@workspace/ui/components/ui/input"
+
 import { createShortLink } from "./actions"
 
 type ActionState =
@@ -66,22 +69,23 @@ export default function HomePage() {
         action={action}
         className="flex w-full max-w-xl flex-col items-center gap-4"
       >
-        <input
+        <Input
           ref={inputRef}
           name="url"
           type="url"
           placeholder="https://your-very-long-url.com/goes/here"
           required
           disabled={isPending}
-          className="w-full border-0 bg-transparent text-center text-xl text-foreground outline-none placeholder:text-muted-foreground"
+          className="h-auto rounded-none border-0 bg-transparent p-0 text-center font-mono text-xl text-foreground focus-visible:ring-0 disabled:bg-transparent md:text-xl dark:bg-transparent dark:disabled:bg-transparent"
         />
-        <button
+        <Button
           type="submit"
+          variant="ghost"
           disabled={isPending}
-          className="cursor-pointer border-0 bg-transparent text-3xl transition-opacity hover:opacity-80 disabled:opacity-40"
+          className="h-auto p-0 text-3xl transition-opacity hover:bg-transparent hover:opacity-80 disabled:opacity-40 dark:hover:bg-transparent"
         >
           {isPending ? "⏳" : "🔥"}
-        </button>
+        </Button>
       </form>
 
       {state && !state.ok && (
@@ -94,16 +98,17 @@ export default function HomePage() {
             href={state.shortUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xl hover:underline"
+            className="font-mono text-xl hover:underline"
           >
             {state.shortUrl}
           </a>
-          <button
+          <Button
+            variant="ghost"
             onClick={handleCopy}
-            className="cursor-pointer border-0 bg-transparent text-3xl transition-opacity hover:opacity-80"
+            className="h-auto p-0 text-3xl transition-opacity hover:bg-transparent hover:opacity-80 dark:hover:bg-transparent"
           >
             📋
-          </button>
+          </Button>
         </div>
       )}
     </main>

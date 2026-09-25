@@ -1,11 +1,18 @@
 import type { Metadata } from "next"
-import { Geist_Mono } from "next/font/google"
+import { Geist, Geist_Mono } from "next/font/google"
 
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
 import "@workspace/ui/globals.css"
 import { Brand } from "@workspace/ui/components/brand"
 import { Copyright } from "@workspace/ui/components/copyright"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
+import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
+import { cn } from "@workspace/ui/lib/utils"
+
+const fontSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -54,7 +61,12 @@ export default async function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${fontMono.variable} font-mono antialiased`}
+      className={cn(
+        "antialiased",
+        fontSans.variable,
+        fontMono.variable,
+        "font-sans"
+      )}
     >
       <head>
         <link
@@ -66,9 +78,11 @@ export default async function RootLayout({
       </head>
       <body>
         <ThemeProvider>
-          <Brand />
-          {children}
-          <Copyright />
+          <TooltipProvider>
+            <Brand />
+            {children}
+            <Copyright />
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

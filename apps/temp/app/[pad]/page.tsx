@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 
+import { Textarea } from "@workspace/ui/components/ui/textarea"
+
 import { createClient } from "@/utils/supabase/client"
 
 export default function PadPage({
@@ -74,8 +76,8 @@ export default function PadPage({
   if (content === null) return null
 
   return (
-    <textarea
-      className="fixed inset-0 h-full w-full resize-none bg-transparent p-16 font-mono text-base focus:outline-none md:p-24"
+    <Textarea
+      className="fixed inset-0 field-sizing-fixed h-full w-full resize-none rounded-none border-0 bg-transparent p-16 font-mono text-base focus-visible:ring-0 md:p-24 md:text-base dark:bg-transparent"
       value={content}
       onChange={(e) => handleChange(e.target.value)}
       spellCheck={false}
