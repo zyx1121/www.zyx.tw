@@ -25,6 +25,9 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Theme drift check
+        run: bun run theme:check
+
       - name: Lint
         run: bun run lint
 

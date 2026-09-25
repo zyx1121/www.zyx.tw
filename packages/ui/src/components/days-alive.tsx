@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react"
 
-import { Tooltip } from "@workspace/ui/components/ui/tooltip"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@workspace/ui/components/ui/tooltip"
 
 const MS_PER_DAY = 86_400_000
 const BIRTHDAY = "2002-11-21"
@@ -41,21 +45,23 @@ export function DaysAlive() {
     elapsedMs === null ? null : Math.max(0, Math.floor(elapsedMs / MS_PER_DAY))
 
   return (
-    <Tooltip
-      side="top"
-      content={
-        <>
-          <span className="tabular-nums">
+    <Tooltip>
+      <TooltipTrigger
+        render={
+          <span className="fixed bottom-4 left-4 z-50 cursor-default font-mono text-sm text-muted-foreground tabular-nums" />
+        }
+      >
+        {days === null ? "" : days.toLocaleString()}
+      </TooltipTrigger>
+      <TooltipContent side="top">
+        <span>
+          <span className="font-mono tabular-nums">
             {now === null ? "—" : formatBreakdown(birthDate, new Date(now))}
           </span>
           <br />
           <span className="text-background/60">since {BIRTHDAY}</span>
-        </>
-      }
-    >
-      <span className="fixed bottom-4 left-4 z-50 cursor-default font-mono text-sm text-muted-foreground tabular-nums">
-        {days === null ? "" : days.toLocaleString()}
-      </span>
+        </span>
+      </TooltipContent>
     </Tooltip>
   )
 }

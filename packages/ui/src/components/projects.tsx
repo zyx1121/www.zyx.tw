@@ -173,7 +173,7 @@ function ProjectCard({ project }: { project: Project }) {
         />
       </div>
       <div className="flex flex-col gap-2 p-5">
-        <h3 className="text-lg font-medium transition-colors group-hover:text-brand sm:text-xl">
+        <h3 className="text-lg font-medium transition-colors group-hover:text-muted-foreground sm:text-xl">
           {name}
         </h3>
         <p className="text-xs text-muted-foreground sm:text-sm">

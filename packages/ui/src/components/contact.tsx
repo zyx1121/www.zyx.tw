@@ -26,7 +26,7 @@ export function Contact() {
       >
         <Link
           href={`mailto:${EMAIL}`}
-          className="underline underline-offset-8 transition-colors hover:text-brand"
+          className="underline underline-offset-8 transition-colors hover:text-muted-foreground"
         >
           {EMAIL}
         </Link>

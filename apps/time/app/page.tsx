@@ -36,7 +36,7 @@ export default function Page() {
 
   return (
     <div className="flex min-h-dvh w-dvw items-center justify-center">
-      <span className="text-[clamp(3rem,12vw,18rem)] font-bold tabular-nums">
+      <span className="font-mono text-[clamp(3rem,12vw,18rem)] font-bold tabular-nums">
         {time ?? "—"}
       </span>
     </div>

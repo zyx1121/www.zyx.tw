@@ -7,6 +7,7 @@ import { Brand } from "@workspace/ui/components/brand"
 import { Copyright } from "@workspace/ui/components/copyright"
 import { cn } from "@workspace/ui/lib/utils"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
+import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -59,13 +60,20 @@ export default async function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontSans.variable, fontMono.variable)}
+      className={cn(
+        "antialiased",
+        fontSans.variable,
+        fontMono.variable,
+        "font-sans"
+      )}
     >
-      <body className="font-mono select-none">
+      <body className="select-none">
         <ThemeProvider>
-          <Brand />
-          {children}
-          <Copyright />
+          <TooltipProvider>
+            <Brand />
+            {children}
+            <Copyright />
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

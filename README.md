@@ -58,7 +58,7 @@ Plain `bun dev` boots turbo across all 7 apps at once. `--filter=<app>` (or `cd 
 | Layer | Choice |
 |-------|--------|
 | Framework | Next.js 16.1 (App Router + Turbopack) |
-| UI | React 19, Tailwind CSS v4, shadcn/ui (`radix-luma` theme) |
+| UI | React 19, Tailwind CSS v4, shadcn/ui (`base-nova`, Base UI) + the [ui.zyx.tw](https://ui.zyx.tw) theme |
 | Language | TypeScript 5.9, strict + `noUncheckedIndexedAccess` |
 | Backend | Supabase (`1909`, `link`, `temp`) |
 | Observability | `@workspace/otel`, shared bootstrap shipping logs to Sensorium |
@@ -66,27 +66,41 @@ Plain `bun dev` boots turbo across all 7 apps at once. `--filter=<app>` (or `cd 
 
 Shared packages: `packages/ui` (design system + components) · `packages/otel` (the Sensorium bootstrap) · `packages/eslint-config` (flat config: base / next-js / react-internal) · `packages/typescript-config` (base / nextjs / react-library).
 
-## Adding a shadcn component
+## Design system
+
+Every app follows [`apps/ui/DESIGN.md`](./apps/ui/DESIGN.md): stock shadcn/ui on the `base-nova` preset (Base UI primitives, so `asChild` is the `render` prop), the grayscale ui.zyx.tw theme with `--radius: 1rem`, Geist for text and Geist Mono for code and numbers. Base components are never forked; the CLI owns `components/ui/`.
+
+Shared components live in `packages/ui`. Add a stock component there with the shadcn CLI:
 
 ```bash
-cd apps/web
+cd packages/ui
 bunx --bun shadcn@latest add button
 ```
 
-New components land in `packages/ui/src/components/` and import straight from any app:
+It lands in `packages/ui/src/components/ui/` and imports from any app:
 
 ```tsx
-import { Button } from "@workspace/ui/components/button"
+import { Button } from "@workspace/ui/components/ui/button"
 ```
 
-Design tokens live in the `@theme` block of `packages/ui/src/styles/globals.css`; the readable version is [`packages/ui/src/styles/tokens.md`](./packages/ui/src/styles/tokens.md).
+zyx components (`theme-toggle`, `shimmering-text`) come from the registry, already configured in `components.json`:
+
+```bash
+bunx --bun shadcn@latest add @zyx1121/theme-toggle
+```
+
+The theme tokens in `packages/ui/src/styles/globals.css` must match `apps/ui/app/globals.css` and the `theme` item in `apps/ui/registry.json`. CI runs the check; run it locally with:
+
+```bash
+bun run theme:check
+```
 
 ## Pulling the design system into another project
 
-Outside this monorepo, init with the shadcn CLI and add the theme from ui.zyx.tw:
+Outside this monorepo, init on the Base UI base and add the theme from ui.zyx.tw:
 
 ```bash
-bunx shadcn@latest init -b radix -p nova
+bunx shadcn@latest init -b base -p nova
 bunx shadcn@latest add https://ui.zyx.tw/r/theme.json
 ```
 

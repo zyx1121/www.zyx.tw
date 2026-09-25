@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Geist_Mono } from "next/font/google"
+import { Geist, Geist_Mono } from "next/font/google"
 
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
 import "@workspace/ui/globals.css"
@@ -7,10 +7,22 @@ import { Brand } from "@workspace/ui/components/brand"
 import { Copyright } from "@workspace/ui/components/copyright"
 import { DaysAlive } from "@workspace/ui/components/days-alive"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
-import { ThemeToggle } from "@workspace/ui/components/theme-toggle"
+import { ThemeToggle } from "@workspace/ui/components/ui/theme-toggle"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@workspace/ui/components/ui/tooltip"
+import { cn } from "@workspace/ui/lib/utils"
 import { MotionProvider } from "@workspace/ui/components/motion-provider"
 
 import { JsonLd } from "@/components/json-ld"
+
+const fontSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -69,18 +81,37 @@ export default async function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${fontMono.variable} font-mono antialiased`}
+      className={cn(
+        "antialiased",
+        fontSans.variable,
+        fontMono.variable,
+        "font-sans"
+      )}
     >
       <body>
         <JsonLd />
         <ThemeProvider>
-          <MotionProvider>
-            <Brand />
-            <ThemeToggle />
-            {children}
-            <DaysAlive />
-            <Copyright />
-          </MotionProvider>
+          <TooltipProvider>
+            <MotionProvider>
+              <Brand />
+              {/* Placement lives here, the registry component stays stock. */}
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <span className="fixed top-2.5 right-2.5 z-50 flex" />
+                  }
+                >
+                  <ThemeToggle className="text-muted-foreground" />
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  Toggle theme (press d)
+                </TooltipContent>
+              </Tooltip>
+              {children}
+              <DaysAlive />
+              <Copyright />
+            </MotionProvider>
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>
