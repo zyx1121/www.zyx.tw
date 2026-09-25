@@ -37,7 +37,7 @@ export function ExpenseList({
             onClick={() => setSelected(expense)}
             className="flex w-full items-center gap-3 px-1 py-3 text-left text-sm transition-colors hover:bg-muted/50"
           >
-            <span className="w-12 shrink-0 text-muted-foreground">
+            <span className="w-12 shrink-0 font-mono text-muted-foreground">
               {new Date(expense.created_at).toLocaleDateString("zh-TW", {
                 month: "2-digit",
                 day: "2-digit",
@@ -47,7 +47,7 @@ export function ExpenseList({
               {expense.member?.name}
             </span>
             <span className="min-w-0 flex-1 truncate">{expense.title}</span>
-            <span className="shrink-0 tabular-nums">
+            <span className="shrink-0 font-mono tabular-nums">
               ${expense.amount.toLocaleString()}
             </span>
             <Badge variant={expense.settled ? "secondary" : "default"}>

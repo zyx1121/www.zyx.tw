@@ -22,7 +22,7 @@ export function BalanceSummary({ debts }: { debts: Debt[] }) {
               {" 欠 "}
               <span className="font-medium">{debt.to}</span>
             </span>
-            <span className="font-medium tabular-nums">
+            <span className="font-mono font-medium tabular-nums">
               ${debt.amount.toLocaleString()}
             </span>
           </CardContent>

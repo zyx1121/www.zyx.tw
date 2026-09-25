@@ -1,6 +1,6 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "radix-luma",
+  "style": "base-nova",
   "rsc": true,
   "tsx": true,
   "tailwind": {
@@ -22,6 +22,7 @@
     "hooks": "@/hooks"
   },
   "registries": {
-    "@supabase": "https://supabase.com/ui/r/{name}.json"
+    "@supabase": "https://supabase.com/ui/r/{name}.json",
+    "@zyx1121": "https://ui.zyx.tw/r/{name}.json"
   }
 }
