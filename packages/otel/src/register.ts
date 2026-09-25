@@ -5,7 +5,7 @@ import { OTLPHttpJsonTraceExporter, registerOTel } from "@vercel/otel"
 export interface RegisterSensoriumOptions {
   /**
    * Fallback `service.name` when `OTEL_SERVICE_NAME` is unset. Pass the
-   * app's workspace name (web/good/link/temp/things/time/ui/1909) so traces
+   * app's workspace name (web/good/link/temp/time/ui/1909) so traces
    * stay attributable even if the Vercel project's env var is missing.
    */
   defaultServiceName: string

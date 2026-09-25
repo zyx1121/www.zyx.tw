@@ -24,13 +24,6 @@ type Project = {
 
 const PROJECTS: Project[] = [
   {
-    name: "things.zyx.tw",
-    description:
-      "A scrapbook for texts, links, images, and videos worth keeping.",
-    href: "https://things.zyx.tw",
-    preview: "/previews/things.zyx.tw.webp",
-  },
-  {
     name: "good.zyx.tw",
     description:
       "Digital 乖乖 — the snack engineers tape onto servers for luck.",

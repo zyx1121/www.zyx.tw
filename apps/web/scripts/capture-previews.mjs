@@ -16,7 +16,6 @@ import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 
 const SITES = [
-  "things.zyx.tw",
   "good.zyx.tw",
   "ai.winlab.tw",
   "www.winlab.tw",

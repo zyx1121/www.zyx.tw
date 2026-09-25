@@ -11,7 +11,7 @@
 
 # www.zyx.tw
 
-> Every idea that outgrows a scratch file gets its own subdomain here: one Turborepo, nine apps, one shared design system.
+> Every idea that outgrows a scratch file gets its own subdomain here: one Turborepo, seven apps, one shared design system.
 
 `nextjs` · `turborepo` · `tailwind` · `shadcn` · `supabase`
 
@@ -19,8 +19,6 @@
 
 ```
 zyx.tw          the site itself, home base
-things.zyx.tw   a personal scrapbook: text, links, images, video
-os.zyx.tw       Windows 98, rebuilt in the browser
 link.zyx.tw     your URLs, but shorter
 temp.zyx.tw     a shared notepad, no account needed
 time.zyx.tw     what time is it?
@@ -28,7 +26,7 @@ good.zyx.tw     a digital 乖乖 taped onto servers
 ui.zyx.tw       the component registry every app above imports from
 1909            a shared-expense dashboard for three flatmates
 ```
-<sub>One Turborepo, one CI pipeline, nine live apps.</sub>
+<sub>One Turborepo, one CI pipeline, seven live apps.</sub>
 
 Every subdomain of zyx.tw used to mean a fresh repo and copying the same eslint config, Tailwind tokens, and OTel bootstrap into it by hand. This monorepo folds the personal site and every side-project subdomain into one Turborepo instead, so a new idea is a new folder under `apps/`, not a new setup decision.
 
@@ -41,15 +39,13 @@ cp apps/web/.env.example apps/web/.env.local   # fill in the keys below
 bun dev --filter=web                            # -> http://localhost:3000
 ```
 
-Plain `bun dev` boots turbo across all 9 apps at once. `--filter=<app>` (or `cd apps/<app> && bun dev`) runs just one.
+Plain `bun dev` boots turbo across all 7 apps at once. `--filter=<app>` (or `cd apps/<app> && bun dev`) runs just one.
 
 ## What it gives you
 
 | App | Live at | What it does |
 |-----|---------|---------------|
 | `web` | [zyx.tw](https://zyx.tw) | the actual website: home, projects, GitHub heatmap |
-| `things` | [things.zyx.tw](https://things.zyx.tw) | a personal scrapbook, Are.na-style |
-| `os` | os.zyx.tw | Win98 desktop: real VFS, window manager, boot/shutdown chrome |
 | `link` | [link.zyx.tw](https://link.zyx.tw) | your URLs, but shorter |
 | `temp` | [temp.zyx.tw](https://temp.zyx.tw) | a shared notepad, one URL, no account |
 | `time` | [time.zyx.tw](https://time.zyx.tw) | what time is it? |
@@ -64,7 +60,7 @@ Plain `bun dev` boots turbo across all 9 apps at once. `--filter=<app>` (or `cd 
 | Framework | Next.js 16.1 (App Router + Turbopack) |
 | UI | React 19, Tailwind CSS v4, shadcn/ui (`radix-luma` theme) |
 | Language | TypeScript 5.9, strict + `noUncheckedIndexedAccess` |
-| Backend | Supabase (`1909`, `link`, `temp`, `things`) |
+| Backend | Supabase (`1909`, `link`, `temp`) |
 | Observability | `@workspace/otel`, shared bootstrap shipping logs to Sensorium |
 | Tooling | Bun 1.3 workspaces + Turbo 2 |
 
@@ -98,7 +94,7 @@ Base components come straight from `bunx shadcn@latest add <name>`; zyx-only com
 
 ## Environment variables
 
-`web`, `1909`, `link`, `temp`, and `things` each ship their own `.env.example`. One gotcha worth knowing: `GITHUB_TOKEN` on `web` is optional, a fine-grained PAT with `read:user` scope. Without it the GitHub contribution heatmap is hidden but the events list still works.
+`web`, `1909`, `link`, and `temp` each ship their own `.env.example`. One gotcha worth knowing: `GITHUB_TOKEN` on `web` is optional, a fine-grained PAT with `read:user` scope. Without it the GitHub contribution heatmap is hidden but the events list still works.
 
 ## Contributing
 
@@ -106,4 +102,4 @@ Issues and PRs welcome: start with [CONTRIBUTING.md](https://github.com/zyx1121/
 
 ## License
 
-[MIT](LICENSE) · one license file for nine subdomains and counting.
+[MIT](LICENSE) · one license file for seven subdomains and counting.
