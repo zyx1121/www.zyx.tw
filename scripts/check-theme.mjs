@@ -18,7 +18,10 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..")
 
 const SOURCE = "apps/ui/app/globals.css"
 const REGISTRY = "apps/ui/registry.json"
-const CONSUMERS = ["packages/ui/src/styles/globals.css"]
+const CONSUMERS = [
+  "packages/ui/src/styles/globals.css",
+  "apps/1909/app/globals.css",
+]
 
 const MODES = { light: ":root", dark: ".dark" }
 

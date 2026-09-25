@@ -34,8 +34,8 @@ export default async function RootLayout({
       className={cn(
         "antialiased",
         fontSans.variable,
-        "font-mono",
-        geistMono.variable
+        geistMono.variable,
+        "font-sans"
       )}
     >
       <body>

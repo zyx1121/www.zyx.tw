@@ -61,13 +61,13 @@ export function ExpenseDetail({
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">金額</span>
-              <span className="tabular-nums">
+              <span className="font-mono tabular-nums">
                 ${expense.amount.toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">日期</span>
-              <span>
+              <span className="font-mono">
                 {new Date(expense.created_at).toLocaleDateString("zh-TW")}
               </span>
             </div>
