@@ -73,6 +73,7 @@ export default function HomePage() {
           ref={inputRef}
           name="url"
           type="url"
+          aria-label="URL to shorten"
           placeholder="https://your-very-long-url.com/goes/here"
           required
           disabled={isPending}
@@ -82,9 +83,10 @@ export default function HomePage() {
           type="submit"
           variant="ghost"
           disabled={isPending}
+          aria-label={isPending ? "Shortening URL" : "Shorten URL"}
           className="h-auto p-0 text-3xl transition-opacity hover:bg-transparent hover:opacity-80 disabled:opacity-40 dark:hover:bg-transparent"
         >
-          {isPending ? "⏳" : "🔥"}
+          <span aria-hidden="true">{isPending ? "⏳" : "🔥"}</span>
         </Button>
       </form>
 
@@ -105,9 +107,10 @@ export default function HomePage() {
           <Button
             variant="ghost"
             onClick={handleCopy}
+            aria-label="Copy short URL"
             className="h-auto p-0 text-3xl transition-opacity hover:bg-transparent hover:opacity-80 dark:hover:bg-transparent"
           >
-            📋
+            <span aria-hidden="true">📋</span>
           </Button>
         </div>
       )}

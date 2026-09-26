@@ -78,6 +78,7 @@ export default function PadPage({
   return (
     <Textarea
       className="fixed inset-0 field-sizing-fixed h-full w-full resize-none rounded-none border-0 bg-transparent p-16 font-mono text-base focus-visible:ring-0 md:p-24 md:text-base dark:bg-transparent"
+      aria-label="Note"
       value={content}
       onChange={(e) => handleChange(e.target.value)}
       spellCheck={false}
