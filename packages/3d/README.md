@@ -77,10 +77,10 @@ Each preset is one file. Its `params` define the editor's controls, so the panel
    ```
 
 2. List it in that folder's `index.ts`.
-3. For an environment, also put its `.hdr` in `apps/3d/public/env/`.
+3. For an environment, convert its HDRI to a gain map first (for example with the free [Gain map creator](https://gainmap-creator.monogrid.com): WebP output, 4096 × 2048) and put `sdr.webp`, `gainmap.webp` and `metadata.json` in `apps/3d/public/env/<name>/`; the preset then sets `files: gainMapFiles("<name>")`. A plain `.hdr` path works too, but weighs about 30 times as much.
 
 A param is a `number` (slider), a `color` (color picker) or a `boolean` (switch). Mark it `fixed: true` to keep it at its default: the editor hides it and the renderer ignores other values, so a look that needs another value becomes its own preset instead of another slider. An effect also names its `stage`: `"scene"` effects run on the linear frame before tone mapping, which glow needs; `"display"` effects run on the finished image, background included, which a vignette or grain needs.
 
 ## Credits
 
-Environment maps from [Poly Haven](https://polyhaven.com), CC0: Studio Small 03 and Potsdamer Platz, both by Greg Zaal.
+Environment maps from [Poly Haven](https://polyhaven.com), CC0, converted to 4096 × 2048 gain maps: Studio Small 03, Potsdamer Platz and Shanghai Bund by Greg Zaal; Wooden Studio 10 and Wooden Studio 14 by Alexander Scholten; Ferndale Studio 05 and Pretville Cinema by Dimitrios Savva and Jarod Guest; Ferndale Studio 06 by Dimitrios Savva and Greg Zaal; The Sky Is On Fire by Greg Zaal and Rico Cilliers; Kloofendal 48d Partly Cloudy (Pure Sky) by Greg Zaal and Jarod Guest.

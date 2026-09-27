@@ -42,7 +42,7 @@ const CAMERA_DISTANCE = 6
 
 export type Scene3DProps = {
   scene: SceneV1
-  /** Where environment files live; a preset's file name is appended to it. */
+  /** Where environment files live; a preset's file paths are appended to it. */
   envBaseUrl?: string
   className?: string
   /** Orbit, zoom and turn with pointer or touch. */
@@ -130,7 +130,11 @@ function SceneContents({
     findPreset(environments, scene.environment.id) ?? environments[0]
   const env = resolveValues(environmentControls, scene.environment)
   const staging = resolveValues(stagingControls, scene.staging)
-  const envUrl = envBaseUrl + environment.file
+  const envFiles =
+    typeof environment.files === "string"
+      ? envBaseUrl + environment.files
+      : environment.files.map((file) => envBaseUrl + file)
+  const envKey = String(envFiles)
   const envRotation: [number, number, number] = [
     0,
     THREE.MathUtils.degToRad(env.rotation),
@@ -157,10 +161,10 @@ function SceneContents({
     <>
       {/* Keyed by URL, so picking another environment retries after a
           failed one. */}
-      <EnvironmentBoundary key={envUrl}>
+      <EnvironmentBoundary key={envKey}>
         <Suspense fallback={null}>
           <Environment
-            files={envUrl}
+            files={envFiles}
             background={env.background}
             environmentIntensity={env.intensity}
             environmentRotation={envRotation}
