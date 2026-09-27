@@ -19,6 +19,7 @@ export {
   defineEnvironment,
   defineMaterial,
   findPreset,
+  gainMapFiles,
 } from "./registry"
 export type {
   EffectPreset,

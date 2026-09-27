@@ -28,8 +28,11 @@ export type EffectPreset<P extends ParamDefs = ParamDefs> = {
 export type EnvironmentPreset = {
   id: string
   label: string
-  /** An equirectangular .hdr, resolved against the renderer's envBaseUrl. */
-  file: string
+  /**
+   * Resolved against the renderer's envBaseUrl: an equirectangular .hdr, or
+   * a gain map's three files (see gainMapFiles).
+   */
+  files: string | readonly [string, string, string]
 }
 
 /** A registry always has a first entry, which stands in for unknown ids. */
@@ -49,6 +52,15 @@ export function defineEffect<const P extends ParamDefs>(
 
 export function defineEnvironment(preset: EnvironmentPreset) {
   return preset
+}
+
+/**
+ * A gain map rendition in apps/3d/public/env/<name>/: an SDR image, the gain
+ * map that restores its HDR range, and their metadata. At 4096 x 2048 it
+ * weighs well under a megabyte, where the .hdr it came from is about 25 MB.
+ */
+export function gainMapFiles(name: string): readonly [string, string, string] {
+  return [`${name}/sdr.webp`, `${name}/gainmap.webp`, `${name}/metadata.json`]
 }
 
 export function findPreset<T extends { id: string }>(

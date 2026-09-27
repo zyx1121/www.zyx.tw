@@ -1,8 +1,8 @@
-import { defineEnvironment } from "../registry"
+import { defineEnvironment, gainMapFiles } from "../registry"
 
-/** Poly Haven "Potsdamer Platz" by Greg Zaal, CC0. */
+/** Poly Haven "Potsdamer Platz by Greg Zaal", CC0. */
 export const city = defineEnvironment({
   id: "city",
   label: "City",
-  file: "potsdamer_platz_2k.hdr",
+  files: gainMapFiles("potsdamer_platz"),
 })

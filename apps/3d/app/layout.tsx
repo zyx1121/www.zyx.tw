@@ -68,14 +68,6 @@ export default async function RootLayout({
         "font-sans"
       )}
     >
-      <head>
-        <link
-          rel="preload"
-          href="/env/studio_small_03_2k.hdr"
-          as="fetch"
-          crossOrigin="anonymous"
-        />
-      </head>
       <body>
         <ThemeProvider>
           <TooltipProvider>
