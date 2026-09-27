@@ -69,7 +69,7 @@ export const stagingControls = {
     min: 0,
     max: 360,
     step: 1,
-    default: 45,
+    default: 40,
   },
   lightElevation: {
     type: "number",
@@ -78,7 +78,7 @@ export const stagingControls = {
     min: 0,
     max: 90,
     step: 1,
-    default: 45,
+    default: 35,
   },
   lightIntensity: {
     type: "number",

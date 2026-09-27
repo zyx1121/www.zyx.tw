@@ -31,6 +31,14 @@ export const DEFAULT_ENV_BASE_URL = "https://3d.zyx.tw/env/"
 /** Radians per second when autoRotate turns the shape. */
 const SPIN_SPEED = 0.4
 
+/** Where the camera starts, in degrees: around the shape and above it. */
+export type SceneView = { azimuth: number; elevation: number }
+
+/** From the left and above, so the depth and bevel show at a glance. */
+export const DEFAULT_VIEW: SceneView = { azimuth: -45, elevation: 30 }
+
+const CAMERA_DISTANCE = 6
+
 export type Scene3DProps = {
   scene: SceneV1
   /** Where environment files live; a preset's file name is appended to it. */
@@ -40,6 +48,8 @@ export type Scene3DProps = {
   controls?: boolean
   /** Turn the shape slowly about its vertical axis, with or without controls. */
   autoRotate?: boolean
+  /** The starting camera angle; read once, when the canvas mounts. */
+  view?: SceneView
 }
 
 /** Renders a scene.json. Use it from a client component; it fills its parent. */
@@ -49,11 +59,15 @@ export function Scene3D({
   className,
   controls = true,
   autoRotate = false,
+  view = DEFAULT_VIEW,
 }: Scene3DProps) {
   return (
     <Canvas
       className={className}
-      camera={{ position: [0, 0, 6], fov: 35 }}
+      camera={{
+        position: onSphere(view.azimuth, view.elevation, CAMERA_DISTANCE),
+        fov: 35,
+      }}
       dpr={[1, 2]}
       // Every frame goes through the composer, which antialiases on its own.
       gl={{ antialias: false }}
@@ -135,7 +149,7 @@ function SceneContents({
         </Suspense>
       </EnvironmentBoundary>
       <directionalLight
-        position={lightPosition(staging.lightAzimuth, staging.lightElevation)}
+        position={onSphere(staging.lightAzimuth, staging.lightElevation, 10)}
         intensity={staging.lightIntensity}
       />
       <group ref={spin}>
@@ -240,13 +254,13 @@ function tryBuild(shape: SceneV1["shape"]) {
 }
 
 /** Degrees in, a point on a sphere around the shape out. */
-function lightPosition(
+function onSphere(
   azimuth: number,
-  elevation: number
+  elevation: number,
+  distance: number
 ): [number, number, number] {
   const theta = THREE.MathUtils.degToRad(azimuth)
   const phi = THREE.MathUtils.degToRad(elevation)
-  const distance = 10
   return [
     distance * Math.cos(phi) * Math.sin(theta),
     distance * Math.sin(phi),
