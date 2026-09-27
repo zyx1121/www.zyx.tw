@@ -1,5 +1,5 @@
 import { createEffectComponent } from "@react-three/postprocessing"
-import { BloomEffect } from "postprocessing"
+import { BlendFunction, BloomEffect } from "postprocessing"
 
 import { defineEffect } from "../registry"
 
@@ -63,8 +63,11 @@ export const bloom = defineEffect({
     },
   },
   render: ({ intensity, threshold }) => (
+    // ADD, as postprocessing's own <Bloom> uses: BloomEffect's default,
+    // SCREEN, dims highlights brighter than 1 where the glow is faint.
     <Glow
       args={GLOW_ARGS}
+      blendFunction={BlendFunction.ADD}
       intensity={intensity}
       luminanceMaterial-threshold={threshold}
     />
