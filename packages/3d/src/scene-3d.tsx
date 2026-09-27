@@ -1,13 +1,15 @@
 "use client"
 
-import { Environment, OrbitControls } from "@react-three/drei"
-import { Canvas, useFrame, useThree } from "@react-three/fiber"
+import { GainMapLoader } from "@monogrid/gainmap-js"
+import { Environment, OrbitControls, useEnvironment } from "@react-three/drei"
+import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber"
 import { EffectComposer, ToneMapping } from "@react-three/postprocessing"
 import { RenderPass, ToneMappingMode } from "postprocessing"
 import {
   Component,
   Fragment,
   Suspense,
+  useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -130,11 +132,15 @@ function SceneContents({
     findPreset(environments, scene.environment.id) ?? environments[0]
   const env = resolveValues(environmentControls, scene.environment)
   const staging = resolveValues(stagingControls, scene.staging)
-  const envFiles =
-    typeof environment.files === "string"
-      ? envBaseUrl + environment.files
-      : environment.files.map((file) => envBaseUrl + file)
+  const envFiles = useMemo(
+    () =>
+      typeof environment.files === "string"
+        ? envBaseUrl + environment.files
+        : environment.files.map((file) => envBaseUrl + file),
+    [environment, envBaseUrl]
+  )
   const envKey = String(envFiles)
+  const releasePreviousMap = useReleasePreviousMap()
   const envRotation: [number, number, number] = [
     0,
     THREE.MathUtils.degToRad(env.rotation),
@@ -163,12 +169,12 @@ function SceneContents({
           failed one. */}
       <EnvironmentBoundary key={envKey}>
         <Suspense fallback={null}>
-          <Environment
+          <EnvironmentMap
             files={envFiles}
+            onReady={releasePreviousMap}
             background={env.background}
-            environmentIntensity={env.intensity}
-            environmentRotation={envRotation}
-            backgroundRotation={envRotation}
+            intensity={env.intensity}
+            rotation={envRotation}
           />
         </Suspense>
       </EnvironmentBoundary>
@@ -235,6 +241,123 @@ function transparentRenderPass(scene: THREE.Scene, camera: THREE.Camera) {
   pass.clearPass.overrideClearColor = new THREE.Color(0, 0, 0)
   pass.clearPass.overrideClearAlpha = 0
   return pass
+}
+
+type LoadedMap = { key: string; release: () => void }
+
+/**
+ * drei caches every environment map it decodes for the life of the page, and
+ * a 4k gain map holds about 90 MB of GPU memory once three has built its
+ * reflection maps from it. So only the map in use is kept: once a new one is
+ * up, the one before it is released. Waiting for that, rather than releasing
+ * on unmount, also keeps React's double-mounted effects from freeing a map
+ * that is still on screen.
+ */
+function useReleasePreviousMap() {
+  const current = useRef<LoadedMap | null>(null)
+  return useCallback((next: LoadedMap) => {
+    const previous = current.current
+    if (previous && previous.key !== next.key) previous.release()
+    current.current = next
+  }, [])
+}
+
+type EnvironmentMapProps = {
+  onReady: (map: LoadedMap) => void
+  background: boolean
+  intensity: number
+  rotation: [number, number, number]
+}
+
+/** A preset's map, whichever form its files take. */
+function EnvironmentMap({
+  files,
+  ...props
+}: EnvironmentMapProps & { files: string | string[] }) {
+  return typeof files === "string" ? (
+    <FileEnvironment file={files} {...props} />
+  ) : (
+    <GainMapEnvironment files={files} {...props} />
+  )
+}
+
+/**
+ * A gain map decodes into a render target, and three never frees the
+ * reflection map it builds from a render target's texture, since it only
+ * listens for disposal on ordinary textures. So this builds the reflection
+ * map itself, where it can free both render targets on release.
+ */
+function GainMapEnvironment({
+  files,
+  onReady,
+  ...props
+}: EnvironmentMapProps & { files: string[] }) {
+  const gl = useThree((state) => state.gl)
+  // One load of the three files together, hence the extra array.
+  const [decoded] = useLoader(GainMapLoader, [files] as never, (loader) =>
+    loader.setRenderer(gl)
+  ) as unknown as [GainMapResult]
+  const reflections = useMemo(() => {
+    // fromEquirectangular reads any non-cube texture as equirectangular,
+    // so the decoded texture needs no mapping set.
+    const generator = new THREE.PMREMGenerator(gl)
+    const target = generator.fromEquirectangular(decoded.renderTarget.texture)
+    generator.dispose()
+    return target
+  }, [decoded, gl])
+  useLayoutEffect(() => {
+    onReady({
+      key: String(files),
+      release: () => {
+        reflections.dispose()
+        decoded.dispose()
+        useLoader.clear(GainMapLoader, [files] as never)
+      },
+    })
+  }, [files, decoded, reflections, onReady])
+  return <EnvironmentTexture texture={reflections.texture} {...props} />
+}
+
+/** What GainMapLoader resolves to: the decoded render target and its owner. */
+type GainMapResult = {
+  renderTarget: THREE.WebGLRenderTarget
+  dispose: () => void
+}
+
+/** A plain .hdr becomes an ordinary texture, which three frees in full on dispose. */
+function FileEnvironment({
+  file,
+  onReady,
+  ...props
+}: EnvironmentMapProps & { file: string }) {
+  const texture = useEnvironment({ files: file })
+  useLayoutEffect(() => {
+    onReady({
+      key: file,
+      release: () => {
+        texture.dispose()
+        useEnvironment.clear({ files: file })
+      },
+    })
+  }, [file, texture, onReady])
+  return <EnvironmentTexture texture={texture} {...props} />
+}
+
+function EnvironmentTexture({
+  texture,
+  background,
+  intensity,
+  rotation,
+}: Omit<EnvironmentMapProps, "onReady"> & { texture: THREE.Texture }) {
+  return (
+    <Environment
+      map={texture}
+      background={background}
+      environmentIntensity={intensity}
+      environmentRotation={rotation}
+      backgroundRotation={rotation}
+    />
+  )
 }
 
 /** A missing or blocked environment map leaves the scene without it rather than taking the page down. */
