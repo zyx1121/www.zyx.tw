@@ -15,6 +15,9 @@ export const SHAPE_SIZE = 2
 /** Faces meeting at a sharper angle keep a hard edge; gentler ones, like bevel steps and curves, shade smooth. */
 const CREASE_ANGLE = THREE.MathUtils.degToRad(40)
 
+/** The shape's longer side while its normals are computed. */
+const SMOOTHING_SIZE = 2000
+
 /** ExtrudeGeometry's group material index for the front and back faces. */
 const LID_GROUP = 0
 
@@ -38,14 +41,21 @@ export function buildShapeGeometry(
     bevelSegments: Math.round(bevelSegments),
     curveSegments: Math.round(curveSegments),
   })
-  extruded.scale(scale, scale, scale)
+  // toCreasedNormals finds shared vertices on a 0.01 grid. At scene size the
+  // bevel's rings sit about 0.004 apart, so it would merge neighbours and
+  // streak the reflections; at SMOOTHING_SIZE the grid is far finer than
+  // any vertex spacing.
+  const toSmoothing = (scale * SMOOTHING_SIZE) / SHAPE_SIZE
+  extruded.scale(toSmoothing, toSmoothing, toSmoothing)
   // SVG's y axis points down. A half turn around x stands the shape upright
   // without mirroring it, which a negative scale would.
   extruded.rotateX(Math.PI)
-  extruded.center()
 
   const geometry = smoothSides(extruded)
   extruded.dispose()
+  const toScene = SHAPE_SIZE / SMOOTHING_SIZE
+  geometry.scale(toScene, toScene, toScene)
+  geometry.center()
   return geometry
 }
 
