@@ -26,8 +26,8 @@ export type {
   MaterialPreset,
   Registry,
 } from "./registry"
-export { DEFAULT_ENV_BASE_URL, Scene3D } from "./scene-3d"
-export type { Scene3DProps } from "./scene-3d"
+export { DEFAULT_ENV_BASE_URL, DEFAULT_VIEW, Scene3D } from "./scene-3d"
+export type { Scene3DProps, SceneView } from "./scene-3d"
 export {
   createScene,
   normalizeScene,
