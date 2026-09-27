@@ -1,7 +1,18 @@
 "use client"
 
 import {
+  Box,
+  Download,
+  FolderOpen,
+  PaintBucket,
+  Palette,
+  Sparkles,
+  Sun,
+} from "lucide-react"
+import {
+  useEffect,
   useRef,
+  useState,
   type Dispatch,
   type ReactNode,
   type SetStateAction,
@@ -22,12 +33,19 @@ import {
 } from "@workspace/3d"
 import { Button } from "@workspace/ui/components/ui/button"
 import { Label } from "@workspace/ui/components/ui/label"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@workspace/ui/components/ui/popover"
+import { Separator } from "@workspace/ui/components/ui/separator"
 import { Switch } from "@workspace/ui/components/ui/switch"
 
 import { ParamGroup } from "@/components/param-control"
 import { PresetSelect } from "@/components/preset-select"
 
-type PanelProps = {
+type DockProps = {
   scene: SceneV1
   onChange: Dispatch<SetStateAction<SceneV1>>
   onOpenFile: (file: File) => void
@@ -35,55 +53,45 @@ type PanelProps = {
   error: string | null
 }
 
-export function Panel({
+/** A bar floating along the bottom; each section opens its controls in a popover above it. */
+export function Dock({
   scene,
   onChange,
   onOpenFile,
   onExport,
   error,
-}: PanelProps) {
+}: DockProps) {
   const fileInput = useRef<HTMLInputElement>(null)
+  // One section open at a time, by label.
+  const [open, setOpen] = useState<string | null>(null)
+  useCloseOnCanvasPress(setOpen)
+  const section = (label: string) => ({
+    label,
+    open: open === label,
+    onOpenChange: (next: boolean) =>
+      setOpen((current) => (next ? label : current === label ? null : current)),
+  })
   const material = findPreset(materials, scene.material.id) ?? materials[0]
   const environment =
     findPreset(environments, scene.environment.id) ?? environments[0]
 
   return (
-    <aside className="absolute inset-x-2 bottom-12 flex max-h-[45dvh] flex-col overflow-hidden rounded-2xl border bg-background/85 backdrop-blur-md sm:inset-x-auto sm:top-4 sm:right-4 sm:bottom-auto sm:max-h-[calc(100dvh-4rem)] sm:w-72">
-      <div className="flex gap-2 border-b p-3">
-        <Button
-          variant="outline"
-          className="flex-1"
-          onClick={() => fileInput.current?.click()}
-        >
-          Open
-        </Button>
-        <Button className="flex-1" onClick={onExport}>
-          Export
-        </Button>
-        <input
-          ref={fileInput}
-          type="file"
-          accept=".svg,image/svg+xml,.json,application/json"
-          aria-label="Open an SVG or a scene.json"
-          className="hidden"
-          onChange={(event) => {
-            const file = event.target.files?.[0]
-            // Clear it so choosing the same file again still fires
-            event.target.value = ""
-            if (file) onOpenFile(file)
-          }}
-        />
-      </div>
+    // The row spans the width so it can centre the bar; only the bar and
+    // the error take pointer events, the rest stays the canvas's.
+    <div className="pointer-events-none absolute inset-x-0 bottom-12 flex flex-col items-center gap-2 px-2">
       {error && (
         <p
           role="alert"
-          className="border-b px-4 py-2 font-mono text-xs whitespace-pre-line text-destructive"
+          className="pointer-events-auto max-w-md rounded-xl border bg-background/85 px-3 py-2 font-mono text-xs whitespace-pre-line text-destructive backdrop-blur-md"
         >
           {error}
         </p>
       )}
-      <div className="flex-1 space-y-6 overflow-y-auto p-4">
-        <Section title="Shape">
+      <nav
+        aria-label="Editor"
+        className="pointer-events-auto flex items-center gap-0.5 rounded-full border bg-background/85 p-1 backdrop-blur-md"
+      >
+        <Section icon={<Box />} {...section("Shape")}>
           <ParamGroup
             id="shape"
             defs={shapeControls}
@@ -97,7 +105,7 @@ export function Panel({
           />
         </Section>
 
-        <Section title="Material">
+        <Section icon={<Palette />} {...section("Material")}>
           <PresetSelect
             label="Material"
             presets={materials}
@@ -129,7 +137,7 @@ export function Panel({
           />
         </Section>
 
-        <Section title="Environment">
+        <Section icon={<Sun />} {...section("Environment")}>
           <PresetSelect
             label="Environment"
             presets={environments}
@@ -154,7 +162,7 @@ export function Panel({
           />
         </Section>
 
-        <Section title="Staging">
+        <Section icon={<PaintBucket />} {...section("Background")}>
           <ParamGroup
             id="staging"
             defs={stagingControls}
@@ -168,7 +176,7 @@ export function Panel({
           />
         </Section>
 
-        <Section title="Effects">
+        <Section icon={<Sparkles />} {...section("Effects")}>
           {effects.map((preset) => {
             const active = scene.effects.find(
               (effect) => effect.id === preset.id
@@ -203,17 +211,100 @@ export function Panel({
             )
           })}
         </Section>
-      </div>
-    </aside>
+
+        <Separator orientation="vertical" className="mx-1 h-5" />
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="rounded-full"
+          aria-label="Open an SVG or a scene.json"
+          onClick={() => fileInput.current?.click()}
+        >
+          <FolderOpen />
+          <span className="hidden sm:inline">Open</span>
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="rounded-full"
+          aria-label="Export scene.json"
+          onClick={onExport}
+        >
+          <Download />
+          <span className="hidden sm:inline">Export</span>
+        </Button>
+        <input
+          ref={fileInput}
+          type="file"
+          accept=".svg,image/svg+xml,.json,application/json"
+          aria-label="Open an SVG or a scene.json"
+          className="hidden"
+          onChange={(event) => {
+            const file = event.target.files?.[0]
+            // Clear it so choosing the same file again still fires
+            event.target.value = ""
+            if (file) onOpenFile(file)
+          }}
+        />
+      </nav>
+    </div>
   )
 }
 
-function Section({ title, children }: { title: string; children: ReactNode }) {
+/**
+ * Closes the open section when the canvas is pressed. Base UI dismisses on
+ * outside presses too, but it skips the first one after a press inside the
+ * popup, such as flipping a switch, and the canvas is where people click.
+ */
+function useCloseOnCanvasPress(
+  setOpen: Dispatch<SetStateAction<string | null>>
+) {
+  useEffect(() => {
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.target instanceof HTMLCanvasElement) setOpen(null)
+    }
+    document.addEventListener("pointerdown", onPointerDown)
+    return () => document.removeEventListener("pointerdown", onPointerDown)
+  }, [setOpen])
+}
+
+/** One button on the bar; its controls open in a popover above it. */
+function Section({
+  icon,
+  label,
+  open,
+  onOpenChange,
+  children,
+}: {
+  icon: ReactNode
+  label: string
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  children: ReactNode
+}) {
   return (
-    <section className="space-y-4">
-      <h2 className="text-xs font-medium text-muted-foreground">{title}</h2>
-      {children}
-    </section>
+    <Popover open={open} onOpenChange={onOpenChange}>
+      <PopoverTrigger
+        render={
+          <Button
+            variant="ghost"
+            size="sm"
+            aria-label={label}
+            className="rounded-full data-popup-open:bg-muted"
+          />
+        }
+      >
+        {icon}
+        <span className="hidden sm:inline">{label}</span>
+      </PopoverTrigger>
+      <PopoverContent side="top" sideOffset={10} className="w-72 gap-4 p-4">
+        <PopoverTitle className="text-xs font-medium text-muted-foreground">
+          {label}
+        </PopoverTitle>
+        {children}
+      </PopoverContent>
+    </Popover>
   )
 }
 

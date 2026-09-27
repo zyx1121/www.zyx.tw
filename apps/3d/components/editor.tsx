@@ -10,7 +10,7 @@ import {
   type SceneV1,
 } from "@workspace/3d"
 
-import { Panel } from "@/components/panel"
+import { Dock } from "@/components/dock"
 import { ZYX_SVG } from "@/lib/zyx-svg"
 
 const STORAGE_KEY = "3d:scene:v1"
@@ -98,7 +98,7 @@ export function Editor() {
       }}
     >
       <Scene3D scene={preview} envBaseUrl="/env/" />
-      <Panel
+      <Dock
         scene={scene}
         onChange={setScene}
         onOpenFile={(file) => void openFile(file)}
