@@ -47,6 +47,7 @@ export const bloom = defineEffect({
   params: {
     intensity: {
       type: "number",
+      fixed: true,
       label: "Intensity",
       min: 0,
       max: 3,
@@ -55,6 +56,7 @@ export const bloom = defineEffect({
     },
     threshold: {
       type: "number",
+      fixed: true,
       label: "Threshold",
       min: 0,
       max: 1,

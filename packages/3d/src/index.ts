@@ -30,6 +30,7 @@ export { DEFAULT_ENV_BASE_URL, Scene3D } from "./scene-3d"
 export type { Scene3DProps } from "./scene-3d"
 export {
   createScene,
+  normalizeScene,
   parseScene,
   safeParseScene,
   SCENE_VERSION,

@@ -7,6 +7,7 @@ export const glass = defineMaterial({
     color: { type: "color", label: "Tint", default: "#ffffff" },
     roughness: {
       type: "number",
+      fixed: true,
       label: "Roughness",
       min: 0,
       max: 1,
@@ -15,6 +16,7 @@ export const glass = defineMaterial({
     },
     thickness: {
       type: "number",
+      fixed: true,
       label: "Thickness",
       min: 0,
       max: 2,
@@ -23,6 +25,7 @@ export const glass = defineMaterial({
     },
     ior: {
       type: "number",
+      fixed: true,
       label: "Refraction",
       min: 1,
       max: 2.333,

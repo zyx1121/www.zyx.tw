@@ -48,7 +48,7 @@ export function Panel({
     findPreset(environments, scene.environment.id) ?? environments[0]
 
   return (
-    <aside className="absolute inset-x-2 bottom-12 flex h-[45dvh] flex-col overflow-hidden rounded-2xl border bg-background/85 backdrop-blur-md sm:inset-x-auto sm:top-4 sm:right-4 sm:h-auto sm:w-72">
+    <aside className="absolute inset-x-2 bottom-12 flex max-h-[45dvh] flex-col overflow-hidden rounded-2xl border bg-background/85 backdrop-blur-md sm:inset-x-auto sm:top-4 sm:right-4 sm:bottom-auto sm:max-h-[calc(100dvh-4rem)] sm:w-72">
       <div className="flex gap-2 border-b p-3">
         <Button
           variant="outline"

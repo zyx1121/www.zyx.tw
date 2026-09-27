@@ -45,7 +45,7 @@ Turns an SVG into a 3D object and renders it from one `scene.json`. The editor a
 | `staging` | The `background` color and the key light's `lightAzimuth`, `lightElevation` (degrees) and `lightIntensity`. |
 | `effects` | Postprocessing effects, each an `id` and its `params`. They run in registry order, one of each, whatever order the file lists them in. |
 
-Numbers outside a control's range are clamped. An unknown material or environment id falls back to the first preset and an unknown effect is skipped, so old files keep rendering as presets come and go.
+Fixed params are still written, always at their defaults. Numbers outside a control's range are clamped. An unknown material or environment id falls back to the first preset and an unknown effect is skipped, so old files keep rendering as presets come and go.
 
 ## Add a preset
 
@@ -79,7 +79,7 @@ Each preset is one file. Its `params` define the editor's controls, so the panel
 2. List it in that folder's `index.ts`.
 3. For an environment, also put its `.hdr` in `apps/3d/public/env/`.
 
-A param is a `number` (slider), a `color` (color picker) or a `boolean` (switch). An effect also names its `stage`: `"scene"` effects run on the linear frame before tone mapping, which glow needs; `"display"` effects run on the finished image, background included, which a vignette or grain needs.
+A param is a `number` (slider), a `color` (color picker) or a `boolean` (switch). Mark it `fixed: true` to keep it at its default: the editor hides it and the renderer ignores other values, so a look that needs another value becomes its own preset instead of another slider. An effect also names its `stage`: `"scene"` effects run on the linear frame before tone mapping, which glow needs; `"display"` effects run on the finished image, background included, which a vignette or grain needs.
 
 ## Credits
 
