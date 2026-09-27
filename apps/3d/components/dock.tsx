@@ -212,7 +212,9 @@ export function Dock({
           })}
         </Section>
 
-        <Separator orientation="vertical" className="mx-1 h-5" />
+        {/* Stretches to the bar's full height; -my-1 cancels the bar's
+            padding so the line meets its top and bottom edges. */}
+        <Separator orientation="vertical" className="mx-1 -my-1" />
 
         <Button
           variant="ghost"
