@@ -4,5 +4,5 @@ import { defineEnvironment } from "../registry"
 export const studio = defineEnvironment({
   id: "studio",
   label: "Studio",
-  file: "studio_small_03_1k.hdr",
+  file: "studio_small_03_2k.hdr",
 })

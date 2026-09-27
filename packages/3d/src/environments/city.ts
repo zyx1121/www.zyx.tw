@@ -4,5 +4,5 @@ import { defineEnvironment } from "../registry"
 export const city = defineEnvironment({
   id: "city",
   label: "City",
-  file: "potsdamer_platz_1k.hdr",
+  file: "potsdamer_platz_2k.hdr",
 })

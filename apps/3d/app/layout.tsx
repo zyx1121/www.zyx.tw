@@ -71,7 +71,7 @@ export default async function RootLayout({
       <head>
         <link
           rel="preload"
-          href="/env/studio_small_03_1k.hdr"
+          href="/env/studio_small_03_2k.hdr"
           as="fetch"
           crossOrigin="anonymous"
         />
