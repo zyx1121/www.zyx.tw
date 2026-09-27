@@ -18,12 +18,14 @@ type ParamGroupProps = {
   onChange: (key: string, value: ParamValue) => void
 }
 
-/** One control per definition, so a new preset's params need no panel code. */
+/** One control per definition that isn't fixed, so a new preset's params need no panel code. */
 export function ParamGroup({ id, defs, values, onChange }: ParamGroupProps) {
   const resolved = resolveValues(defs, values)
+  const shown = Object.entries(defs).filter(([, def]) => !def.fixed)
+  if (shown.length === 0) return null
   return (
     <div className="space-y-4">
-      {Object.entries(defs).map(([key, def]) => (
+      {shown.map(([key, def]) => (
         <ParamControl
           key={key}
           id={`${id}-${key}`}

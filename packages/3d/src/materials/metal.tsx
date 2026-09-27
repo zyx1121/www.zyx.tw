@@ -7,6 +7,7 @@ export const metal = defineMaterial({
     color: { type: "color", label: "Color", default: "#e4e4e7" },
     roughness: {
       type: "number",
+      fixed: true,
       label: "Roughness",
       min: 0,
       max: 1,

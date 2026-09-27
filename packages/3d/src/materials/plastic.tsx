@@ -7,6 +7,7 @@ export const plastic = defineMaterial({
     color: { type: "color", label: "Color", default: "#f4f4f5" },
     roughness: {
       type: "number",
+      fixed: true,
       label: "Roughness",
       min: 0,
       max: 1,
@@ -15,6 +16,7 @@ export const plastic = defineMaterial({
     },
     clearcoat: {
       type: "number",
+      fixed: true,
       label: "Clearcoat",
       min: 0,
       max: 1,

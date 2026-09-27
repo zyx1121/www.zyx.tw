@@ -20,6 +20,7 @@ export const shapeControls = {
   },
   bevelSegments: {
     type: "number",
+    fixed: true,
     label: "Bevel segments",
     min: 1,
     max: 12,
@@ -28,6 +29,7 @@ export const shapeControls = {
   },
   curveSegments: {
     type: "number",
+    fixed: true,
     label: "Curve segments",
     min: 4,
     max: 64,
@@ -39,6 +41,7 @@ export const shapeControls = {
 export const environmentControls = {
   intensity: {
     type: "number",
+    fixed: true,
     label: "Intensity",
     min: 0,
     max: 3,
@@ -47,6 +50,7 @@ export const environmentControls = {
   },
   rotation: {
     type: "number",
+    fixed: true,
     label: "Rotation",
     min: 0,
     max: 360,
@@ -60,6 +64,7 @@ export const stagingControls = {
   background: { type: "color", label: "Background", default: "#0a0a0a" },
   lightAzimuth: {
     type: "number",
+    fixed: true,
     label: "Light direction",
     min: 0,
     max: 360,
@@ -68,6 +73,7 @@ export const stagingControls = {
   },
   lightElevation: {
     type: "number",
+    fixed: true,
     label: "Light height",
     min: 0,
     max: 90,
@@ -76,6 +82,7 @@ export const stagingControls = {
   },
   lightIntensity: {
     type: "number",
+    fixed: true,
     label: "Light intensity",
     min: 0,
     max: 5,

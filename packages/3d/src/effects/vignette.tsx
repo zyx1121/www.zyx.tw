@@ -9,6 +9,7 @@ export const vignette = defineEffect({
   params: {
     darkness: {
       type: "number",
+      fixed: true,
       label: "Darkness",
       min: 0,
       max: 1,
@@ -17,6 +18,7 @@ export const vignette = defineEffect({
     },
     offset: {
       type: "number",
+      fixed: true,
       label: "Offset",
       min: 0,
       max: 1,

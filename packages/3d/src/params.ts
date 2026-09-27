@@ -3,6 +3,7 @@ export type ParamValue = number | string | boolean
 export type NumberParam = {
   type: "number"
   label: string
+  fixed?: boolean
   min: number
   max: number
   step: number
@@ -12,6 +13,7 @@ export type NumberParam = {
 export type ColorParam = {
   type: "color"
   label: string
+  fixed?: boolean
   /** `#rrggbb` */
   default: string
 }
@@ -19,10 +21,16 @@ export type ColorParam = {
 export type BooleanParam = {
   type: "boolean"
   label: string
+  fixed?: boolean
   default: boolean
 }
 
-/** One adjustable value. The editor builds its control from this, the renderer reads the value. */
+/**
+ * One adjustable value. The editor builds its control from this, the
+ * renderer reads the value. A `fixed` param always takes its default: the
+ * editor doesn't show it and the renderer ignores anything else, so a look
+ * that needs another value becomes a preset rather than one more slider.
+ */
 export type ParamDef = NumberParam | ColorParam | BooleanParam
 
 export type ParamDefs = Record<string, ParamDef>
@@ -41,6 +49,7 @@ const HEX_COLOR = /^#[0-9a-f]{6}$/i
 
 /** Coerces a stored value to its definition: numbers are clamped, a value of the wrong type becomes the default. */
 export function resolveValue(def: ParamDef, value: unknown): ParamValue {
+  if (def.fixed) return def.default
   switch (def.type) {
     case "number":
       return typeof value === "number" && Number.isFinite(value)
