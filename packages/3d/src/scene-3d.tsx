@@ -1,0 +1,255 @@
+"use client"
+
+import { Environment, OrbitControls } from "@react-three/drei"
+import { Canvas, useFrame, useThree } from "@react-three/fiber"
+import { EffectComposer, ToneMapping } from "@react-three/postprocessing"
+import { RenderPass, ToneMappingMode } from "postprocessing"
+import {
+  Component,
+  Fragment,
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  type ReactNode,
+} from "react"
+import * as THREE from "three"
+
+import { Backdrop } from "./backdrop"
+import { environmentControls, stagingControls } from "./controls"
+import { effects as effectPresets } from "./effects"
+import { environments } from "./environments"
+import { buildShapeGeometry } from "./geometry"
+import { materials } from "./materials"
+import { resolveValues } from "./params"
+import { findPreset, type EffectPreset } from "./registry"
+import type { SceneV1 } from "./schema"
+
+/** The editor at 3d.zyx.tw serves the environment maps, with CORS open to other sites. */
+export const DEFAULT_ENV_BASE_URL = "https://3d.zyx.tw/env/"
+
+/** Radians per second when autoRotate turns the shape. */
+const SPIN_SPEED = 0.4
+
+export type Scene3DProps = {
+  scene: SceneV1
+  /** Where environment files live; a preset's file name is appended to it. */
+  envBaseUrl?: string
+  className?: string
+  /** Orbit, zoom and turn with pointer or touch. */
+  controls?: boolean
+  /** Turn the shape slowly about its vertical axis, with or without controls. */
+  autoRotate?: boolean
+}
+
+/** Renders a scene.json. Use it from a client component; it fills its parent. */
+export function Scene3D({
+  scene,
+  envBaseUrl = DEFAULT_ENV_BASE_URL,
+  className,
+  controls = true,
+  autoRotate = false,
+}: Scene3DProps) {
+  return (
+    <Canvas
+      className={className}
+      camera={{ position: [0, 0, 6], fov: 35 }}
+      dpr={[1, 2]}
+      // Every frame goes through the composer, which antialiases on its own.
+      gl={{ antialias: false }}
+    >
+      <SceneContents
+        scene={scene}
+        envBaseUrl={envBaseUrl}
+        autoRotate={autoRotate}
+      />
+      {controls && (
+        <OrbitControls
+          enablePan={false}
+          enableDamping
+          minDistance={3}
+          maxDistance={14}
+        />
+      )}
+    </Canvas>
+  )
+}
+
+function SceneContents({
+  scene,
+  envBaseUrl,
+  autoRotate,
+}: {
+  scene: SceneV1
+  envBaseUrl: string
+  autoRotate: boolean
+}) {
+  const geometry = useShapeGeometry(scene.shape)
+  const spin = useRef<THREE.Group>(null)
+  useFrame((_, delta) => {
+    if (autoRotate && spin.current)
+      spin.current.rotation.y += delta * SPIN_SPEED
+  })
+
+  const material = findPreset(materials, scene.material.id) ?? materials[0]
+  const environment =
+    findPreset(environments, scene.environment.id) ?? environments[0]
+  const env = resolveValues(environmentControls, scene.environment)
+  const staging = resolveValues(stagingControls, scene.staging)
+  const envUrl = envBaseUrl + environment.file
+  const envRotation: [number, number, number] = [
+    0,
+    THREE.MathUtils.degToRad(env.rotation),
+    0,
+  ]
+  // Registry order and one of each, whatever order the file lists them in;
+  // ids this version doesn't know are skipped.
+  const active = effectPresets.flatMap((preset) => {
+    const stored = scene.effects.find((effect) => effect.id === preset.id)
+    return stored
+      ? [{ preset, values: resolveValues(preset.params, stored.params) }]
+      : []
+  })
+  const backdrop = !env.background
+  useTransmissionBackground(staging.background)
+  const effectsAt = (stage: EffectPreset["stage"]) =>
+    active
+      .filter(({ preset }) => preset.stage === stage)
+      .map(({ preset, values }) => (
+        <Fragment key={preset.id}>{preset.render(values)}</Fragment>
+      ))
+
+  return (
+    <>
+      {/* Keyed by URL, so picking another environment retries after a
+          failed one. */}
+      <EnvironmentBoundary key={envUrl}>
+        <Suspense fallback={null}>
+          <Environment
+            files={envUrl}
+            background={env.background}
+            environmentIntensity={env.intensity}
+            environmentRotation={envRotation}
+            backgroundRotation={envRotation}
+          />
+        </Suspense>
+      </EnvironmentBoundary>
+      <directionalLight
+        position={lightPosition(staging.lightAzimuth, staging.lightElevation)}
+        intensity={staging.lightIntensity}
+      />
+      <group ref={spin}>
+        {geometry && (
+          <mesh geometry={geometry}>
+            {/* Keyed so switching presets starts from a fresh material
+                instead of inheriting the last preset's settings. */}
+            <Fragment key={material.id}>
+              {material.render(
+                resolveValues(material.params, scene.material.params)
+              )}
+            </Fragment>
+          </mesh>
+        )}
+      </group>
+      {/* three.js tone maps only when it draws straight to the screen, and
+          it never tone maps a plain background color. With the composer in
+          between, the chain does both jobs itself, in that order: glow on
+          the linear frame, ACES as three would apply it, then the
+          background color untouched, then effects on the finished image. */}
+      <EffectComposer
+        // The render pass is fixed when a composer is made, so each mode
+        // gets its own. Clearing is the render pass's job; three's own
+        // clear would paint the frame opaque.
+        key={backdrop ? "backdrop" : "environment"}
+        autoClear={false}
+        renderPass={backdrop ? transparentRenderPass : undefined}
+      >
+        {effectsAt("scene")}
+        <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
+        {backdrop ? <Backdrop color={staging.background} /> : null}
+        {effectsAt("display")}
+      </EffectComposer>
+    </>
+  )
+}
+
+/**
+ * Glass samples whatever three clears its transmission target to: the
+ * renderer's clear color when that is opaque, a half-transparent white when
+ * it isn't. So the renderer clears to the background color, and the frame
+ * itself is cleared by transparentRenderPass.
+ */
+function useTransmissionBackground(background: string) {
+  const gl = useThree((state) => state.gl)
+  useEffect(() => {
+    gl.setClearColor(new THREE.Color(background), 1)
+  }, [gl, background])
+}
+
+/**
+ * Clears the frame to transparent black instead of the renderer's clear
+ * color, which is how the Backdrop effect tells the shape's pixels from the
+ * background's. It also hides scene.background while it renders, so it is
+ * only for scenes whose environment isn't shown as the background.
+ */
+function transparentRenderPass(scene: THREE.Scene, camera: THREE.Camera) {
+  const pass = new RenderPass(scene, camera)
+  pass.clearPass.overrideClearColor = new THREE.Color(0, 0, 0)
+  pass.clearPass.overrideClearAlpha = 0
+  return pass
+}
+
+/** A missing or blocked environment map leaves the scene without it rather than taking the page down. */
+class EnvironmentBoundary extends Component<
+  { children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false }
+
+  static getDerivedStateFromError() {
+    return { failed: true }
+  }
+
+  render() {
+    return this.state.failed ? null : this.props.children
+  }
+}
+
+function useShapeGeometry({
+  svg,
+  depth,
+  bevel,
+  bevelSegments,
+  curveSegments,
+}: SceneV1["shape"]) {
+  const geometry = useMemo(
+    () => tryBuild({ svg, depth, bevel, bevelSegments, curveSegments }),
+    [svg, depth, bevel, bevelSegments, curveSegments]
+  )
+  useEffect(() => () => geometry?.dispose(), [geometry])
+  return geometry
+}
+
+/** An unreadable SVG renders nothing rather than taking the page down. */
+function tryBuild(shape: SceneV1["shape"]) {
+  try {
+    return buildShapeGeometry(shape)
+  } catch {
+    return null
+  }
+}
+
+/** Degrees in, a point on a sphere around the shape out. */
+function lightPosition(
+  azimuth: number,
+  elevation: number
+): [number, number, number] {
+  const theta = THREE.MathUtils.degToRad(azimuth)
+  const phi = THREE.MathUtils.degToRad(elevation)
+  const distance = 10
+  return [
+    distance * Math.cos(phi) * Math.sin(theta),
+    distance * Math.sin(phi),
+    distance * Math.cos(phi) * Math.cos(theta),
+  ]
+}
