@@ -5,6 +5,7 @@ import { defineEffect } from "../registry"
 export const vignette = defineEffect({
   id: "vignette",
   label: "Vignette",
+  stage: "display",
   params: {
     darkness: {
       type: "number",

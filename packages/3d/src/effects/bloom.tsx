@@ -5,6 +5,7 @@ import { defineEffect } from "../registry"
 export const bloom = defineEffect({
   id: "bloom",
   label: "Bloom",
+  stage: "scene",
   params: {
     intensity: {
       type: "number",

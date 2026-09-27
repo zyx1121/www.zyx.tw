@@ -32,7 +32,7 @@ Turns an SVG into a 3D object and renders it from one `scene.json`. The editor a
    }
    ```
 
-`<Scene3D>` fills its parent, so give the parent a size. Environment maps load from `https://3d.zyx.tw/env/`, which sends `Access-Control-Allow-Origin: *`; pass `envBaseUrl` to serve them from somewhere else.
+`<Scene3D>` fills its parent, so give the parent a size. `autoRotate` turns the shape itself, so it works with `controls` off. Environment maps load from `https://3d.zyx.tw/env/`, which sends `Access-Control-Allow-Origin: *`; pass `envBaseUrl` to serve them from somewhere else.
 
 ## scene.json v1
 
@@ -43,9 +43,9 @@ Turns an SVG into a 3D object and renders it from one `scene.json`. The editor a
 | `material` | A material preset `id` and its `params`. |
 | `environment` | An environment preset `id`, its `intensity`, `rotation` in degrees, and whether it shows as the `background`. |
 | `staging` | The `background` color and the key light's `lightAzimuth`, `lightElevation` (degrees) and `lightIntensity`. |
-| `effects` | Postprocessing effects, each an `id` and its `params`, applied in registry order. |
+| `effects` | Postprocessing effects, each an `id` and its `params`. They run in registry order, one of each, whatever order the file lists them in. |
 
-Numbers outside a control's range are clamped, and unknown preset ids fall back to the first preset, so old files keep rendering as presets come and go.
+Numbers outside a control's range are clamped. An unknown material or environment id falls back to the first preset and an unknown effect is skipped, so old files keep rendering as presets come and go.
 
 ## Add a preset
 
@@ -79,7 +79,7 @@ Each preset is one file. Its `params` define the editor's controls, so the panel
 2. List it in that folder's `index.ts`.
 3. For an environment, also put its `.hdr` in `apps/3d/public/env/`.
 
-A param is a `number` (slider), a `color` (color picker) or a `boolean` (switch).
+A param is a `number` (slider), a `color` (color picker) or a `boolean` (switch). An effect also names its `stage`: `"scene"` effects run on the linear frame before tone mapping, which glow needs; `"display"` effects run on the finished image, background included, which a vignette or grain needs.
 
 ## Credits
 

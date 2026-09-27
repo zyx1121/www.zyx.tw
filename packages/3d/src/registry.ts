@@ -14,6 +14,12 @@ export type MaterialPreset<P extends ParamDefs = ParamDefs> = {
 export type EffectPreset<P extends ParamDefs = ParamDefs> = {
   id: string
   label: string
+  /**
+   * "scene" effects see the linear, unbounded frame before tone mapping,
+   * which is what glow needs. "display" effects see the finished image,
+   * background included, which is what a vignette or grain needs.
+   */
+  stage: "scene" | "display"
   params: P
   /** A postprocessing effect element, rendered inside the EffectComposer. */
   render(values: ValuesOf<P>): ReactElement

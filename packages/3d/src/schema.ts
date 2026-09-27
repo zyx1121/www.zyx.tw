@@ -13,9 +13,10 @@ const paramValues = z.record(
 )
 
 /**
- * scene.json, version 1. Numbers outside a control's range are clamped
- * when rendered, and unknown preset ids fall back to the first preset,
- * so older files keep working as presets come and go.
+ * scene.json, version 1. Numbers outside a control's range are clamped when
+ * rendered. An unknown material or environment id falls back to the first
+ * preset and an unknown effect is skipped, so older files keep working as
+ * presets come and go.
  */
 export const sceneSchema = z.object({
   version: z.literal(SCENE_VERSION),

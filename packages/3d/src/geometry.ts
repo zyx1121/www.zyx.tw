@@ -6,7 +6,7 @@ import {
 } from "three/examples/jsm/utils/BufferGeometryUtils.js"
 
 import { shapeControls } from "./controls"
-import { defaultValues, resolveValues } from "./params"
+import { resolveValues } from "./params"
 import type { SceneV1 } from "./schema"
 
 /** Length of the shape's longer side, in scene units. Depth and bevel are measured against it. */
@@ -22,25 +22,7 @@ const LID_GROUP = 0
 export function buildShapeGeometry(
   shape: SceneV1["shape"]
 ): THREE.BufferGeometry {
-  const { paths } = new SVGLoader().parse(shape.svg)
-  // A path with fill="none" is a stroke, not an area. Use those only when
-  // nothing is filled, so a line-art SVG still becomes something.
-  const filled = paths.filter((path) => fillOf(path) !== "none")
-  const shapes = (filled.length > 0 ? filled : paths).flatMap((path) =>
-    path.toShapes()
-  )
-  if (shapes.length === 0) {
-    throw new Error("The SVG has no closed shapes to extrude")
-  }
-
-  const bounds = new THREE.Box2()
-  for (const outline of shapes) {
-    for (const point of outline.getPoints()) bounds.expandByPoint(point)
-  }
-  const size = bounds.getSize(new THREE.Vector2())
-  const longest = Math.max(size.x, size.y)
-  if (!(longest > 0)) throw new Error("The SVG's shapes have no area")
-  const scale = SHAPE_SIZE / longest
+  const { shapes, scale } = readShapes(shape.svg)
 
   const { depth, bevel, bevelSegments, curveSegments } = resolveValues(
     shapeControls,
@@ -65,6 +47,29 @@ export function buildShapeGeometry(
   const geometry = smoothSides(extruded)
   extruded.dispose()
   return geometry
+}
+
+/** The SVG's outlines, and the factor that brings its longer side to SHAPE_SIZE. */
+function readShapes(svg: string): { shapes: THREE.Shape[]; scale: number } {
+  const { paths } = new SVGLoader().parse(svg)
+  // A path with fill="none" is a stroke, not an area. Use those only when
+  // nothing is filled, so a line-art SVG still becomes something.
+  const filled = paths.filter((path) => fillOf(path) !== "none")
+  const shapes = (filled.length > 0 ? filled : paths).flatMap((path) =>
+    path.toShapes()
+  )
+  if (shapes.length === 0) {
+    throw new Error("The SVG has no closed shapes to extrude")
+  }
+
+  const bounds = new THREE.Box2()
+  for (const outline of shapes) {
+    for (const point of outline.getPoints()) bounds.expandByPoint(point)
+  }
+  const size = bounds.getSize(new THREE.Vector2())
+  const longest = Math.max(size.x, size.y)
+  if (!(longest > 0)) throw new Error("The SVG's shapes have no area")
+  return { shapes, scale: SHAPE_SIZE / longest }
 }
 
 /**
@@ -117,7 +122,9 @@ function fillOf(path: THREE.ShapePath): string | undefined {
 /** Why this SVG can't become a shape, or null when it can. */
 export function checkSvg(svg: string): string | null {
   try {
-    buildShapeGeometry({ svg, ...defaultValues(shapeControls) }).dispose()
+    // Reading the outlines catches an SVG with nothing to extrude without
+    // paying for the extrusion; the preview builds the mesh right after.
+    readShapes(svg)
     return null
   } catch (error) {
     return error instanceof Error ? error.message : "The SVG could not be read"
