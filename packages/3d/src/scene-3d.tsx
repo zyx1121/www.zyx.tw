@@ -9,6 +9,7 @@ import {
   Fragment,
   Suspense,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   type ReactNode,
@@ -72,6 +73,7 @@ export function Scene3D({
       // Every frame goes through the composer, which antialiases on its own.
       gl={{ antialias: false }}
     >
+      <FitCamera />
       <SceneContents
         scene={scene}
         envBaseUrl={envBaseUrl}
@@ -82,11 +84,29 @@ export function Scene3D({
           enablePan={false}
           enableDamping
           minDistance={3}
-          maxDistance={14}
+          maxDistance={20}
         />
       )}
     </Canvas>
   )
+}
+
+/**
+ * The camera distance frames the shape top to bottom; on a portrait screen
+ * that crops it at the sides, so the camera backs off by the aspect ratio,
+ * keeping its direction. It scales whatever distance the camera is at, so a
+ * zoom the viewer chose survives resizing and rotating the screen.
+ */
+function FitCamera() {
+  const camera = useThree((state) => state.camera)
+  const aspect = useThree((state) => state.size.width / state.size.height)
+  const applied = useRef(1)
+  useLayoutEffect(() => {
+    const fit = 1 / Math.min(1, aspect)
+    camera.position.multiplyScalar(fit / applied.current)
+    applied.current = fit
+  }, [camera, aspect])
+  return null
 }
 
 function SceneContents({
