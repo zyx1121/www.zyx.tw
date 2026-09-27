@@ -94,13 +94,17 @@ export function Scene3D({
 /**
  * The camera distance frames the shape top to bottom; on a portrait screen
  * that crops it at the sides, so the camera backs off by the aspect ratio,
- * keeping its direction.
+ * keeping its direction. It scales whatever distance the camera is at, so a
+ * zoom the viewer chose survives resizing and rotating the screen.
  */
 function FitCamera() {
   const camera = useThree((state) => state.camera)
   const aspect = useThree((state) => state.size.width / state.size.height)
+  const applied = useRef(1)
   useLayoutEffect(() => {
-    camera.position.setLength(CAMERA_DISTANCE / Math.min(1, aspect))
+    const fit = 1 / Math.min(1, aspect)
+    camera.position.multiplyScalar(fit / applied.current)
+    applied.current = fit
   }, [camera, aspect])
   return null
 }
