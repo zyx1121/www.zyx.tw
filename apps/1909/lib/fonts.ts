@@ -5,14 +5,16 @@ import localFont from "next/font/local"
 // (apps/ui/DESIGN.md). This app does not depend on @workspace/ui, so it keeps
 // its own copy of packages/ui/src/lib/fonts.ts; keep the two in step.
 
-// Inter 4.1 from rsms/inter, unmodified (LICENSE.txt beside the files). The
-// Google Fonts build of Inter lacks the ss01 (open digits) and zero (slashed
-// zero) features that the theme turns on, so it is self-hosted.
+// Inter 4.1 from rsms/inter, subset to Latin (../fonts/README.md has the
+// command). The Google Fonts build of Inter lacks the ss01 (open digits) and
+// zero (slashed zero) features that the theme turns on, so it is self-hosted.
+// Characters outside the subset fall back to the metric-adjusted Arial face.
 export const inter = localFont({
   src: "../fonts/InterVariable.woff2",
   weight: "100 900",
   style: "normal",
   display: "swap",
+  adjustFontFallback: "Arial",
   variable: "--font-inter",
 })
 

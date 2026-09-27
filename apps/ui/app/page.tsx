@@ -200,9 +200,8 @@ export default function Home() {
               <ShimmeringText>ui.zyx.tw</ShimmeringText>
             </h1>
             <p className="text-muted-foreground">
-              Stock shadcn/ui on a full grayscale palette, radius raised to
-              1rem, plus my own components. Init with the base preset, add the
-              theme, done.
+              Stock shadcn/ui on a full grayscale palette, plus my own
+              components. Init with the base preset, add the theme, done.
             </p>
             <code className="block font-mono text-xs text-muted-foreground">
               bunx shadcn@latest init -b base -p nova && bunx shadcn@latest add
