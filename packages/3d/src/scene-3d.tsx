@@ -35,7 +35,7 @@ const SPIN_SPEED = 0.4
 export type SceneView = { azimuth: number; elevation: number }
 
 /** From the left and above, so the depth and bevel show at a glance. */
-export const DEFAULT_VIEW: SceneView = { azimuth: -45, elevation: 30 }
+export const DEFAULT_VIEW: SceneView = { azimuth: -30, elevation: 30 }
 
 const CAMERA_DISTANCE = 6
 
