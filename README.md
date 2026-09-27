@@ -11,7 +11,7 @@
 
 # www.zyx.tw
 
-> Every idea that outgrows a scratch file gets its own subdomain here: one Turborepo, seven apps, one shared design system.
+> Every idea that outgrows a scratch file gets its own subdomain here: one Turborepo, eight apps, one shared design system.
 
 `nextjs` · `turborepo` · `tailwind` · `shadcn` · `supabase`
 
@@ -23,10 +23,11 @@ link.zyx.tw     your URLs, but shorter
 temp.zyx.tw     a shared notepad, no account needed
 time.zyx.tw     what time is it?
 good.zyx.tw     a digital 乖乖 taped onto servers
+3d.zyx.tw       an SVG, extruded into 3D
 ui.zyx.tw       the component registry every app above imports from
 1909            a shared-expense dashboard for three flatmates
 ```
-<sub>One Turborepo, one CI pipeline, seven live apps.</sub>
+<sub>One Turborepo, one CI pipeline, eight live apps.</sub>
 
 Every subdomain of zyx.tw used to mean a fresh repo and copying the same eslint config, Tailwind tokens, and OTel bootstrap into it by hand. This monorepo folds the personal site and every side-project subdomain into one Turborepo instead, so a new idea is a new folder under `apps/`, not a new setup decision.
 
@@ -39,7 +40,7 @@ cp apps/web/.env.example apps/web/.env.local   # fill in the keys below
 bun dev --filter=web                            # -> http://localhost:3000
 ```
 
-Plain `bun dev` boots turbo across all 7 apps at once. `--filter=<app>` (or `cd apps/<app> && bun dev`) runs just one.
+Plain `bun dev` boots turbo across all 8 apps at once. `--filter=<app>` (or `cd apps/<app> && bun dev`) runs just one.
 
 ## What it gives you
 
@@ -50,6 +51,7 @@ Plain `bun dev` boots turbo across all 7 apps at once. `--filter=<app>` (or `cd 
 | `temp` | [temp.zyx.tw](https://temp.zyx.tw) | a shared notepad, one URL, no account |
 | `time` | [time.zyx.tw](https://time.zyx.tw) | what time is it? |
 | `good` | [good.zyx.tw](https://good.zyx.tw) | a digital 乖乖, the snack engineers tape onto servers |
+| `3d` | [3d.zyx.tw](https://3d.zyx.tw) | an SVG, extruded into 3D, lit and saved as one scene.json |
 | `ui` | [ui.zyx.tw](https://ui.zyx.tw) | the shadcn registry every app above pulls components from |
 | `1909` | (private) | a shared-expense dashboard for three flatmates |
 
@@ -61,10 +63,11 @@ Plain `bun dev` boots turbo across all 7 apps at once. `--filter=<app>` (or `cd 
 | UI | React 19, Tailwind CSS v4, shadcn/ui (`base-nova`, Base UI) + the [ui.zyx.tw](https://ui.zyx.tw) theme |
 | Language | TypeScript 5.9, strict + `noUncheckedIndexedAccess` |
 | Backend | Supabase (`1909`, `link`, `temp`) |
+| 3D | three.js, React Three Fiber, drei and postprocessing (`good`, `3d`) |
 | Observability | `@workspace/otel`, shared bootstrap shipping logs to Sensorium |
 | Tooling | Bun 1.3 workspaces + Turbo 2 |
 
-Shared packages: `packages/ui` (design system + components) · `packages/otel` (the Sensorium bootstrap) · `packages/eslint-config` (flat config: base / next-js / react-internal) · `packages/typescript-config` (base / nextjs / react-library).
+Shared packages: `packages/ui` (design system + components) · `packages/3d` (scene.json v1, preset registries, `<Scene3D>`; see [its README](./packages/3d/README.md)) · `packages/otel` (the Sensorium bootstrap) · `packages/eslint-config` (flat config: base / next-js / react-internal) · `packages/typescript-config` (base / nextjs / react-library).
 
 ## Design system
 
