@@ -14,11 +14,15 @@ If shadcn/ui ships a component, we do not re-ship it. If a component needs resty
 ## Anchor decisions (`app/globals.css`)
 
 - **Base**: shadcn `base-nova` preset (Base UI primitives — shadcn CLI default, actively maintained by the ex-Radix team), `neutral` base color — the stock palette is already zero-chroma grayscale.
-- **`--radius: 1rem`** — the one deliberate departure from stock (0.625rem). Buttons read soft-pill, surfaces read friendly. The stock multiplier scale (`sm` 0.6x ... `4xl` 2.6x) derives everything else.
+- **`--radius: 0.625rem`**: stock. The stock multiplier scale derives the rest: `sm` 6px, `md` 8px, `lg` 10px, `xl` 14px, `2xl` 18px.
 - **Grayscale everywhere** — the only chroma on screen is `--destructive` and content itself. The stock dark `--sidebar-primary` (blue) is overridden to gray.
-- **Fonts** — Geist (`--font-sans`) + Geist Mono (`--font-mono`) via `next/font/google`.
+- **Dark first, pure black**: every app starts dark (`defaultTheme="dark"`, `enableSystem={false}`), whatever the OS prefers; the theme toggles and the `d` hotkey still switch to light. Dark `--background` is `oklch(0 0 0)`. Apart from `--muted-foreground` and the gray sidebar primary pair, the other dark tokens stay stock.
+- **Muted text at 4.5:1**: `--muted-foreground` must reach WCAG AA (4.5:1) on `--background`, `--card` and `--popover`. Dark `oklch(0.6 0 0)` (#808080) is the darkest gray that does: 5.32:1 on black, 4.54:1 on card and popover (#171717). On `--muted`, `--accent` and `--secondary` (#262626) it reaches only 3.83:1.
+- **Fonts**: `--font-sans` is Inter, then Noto Sans JP, then Noto Sans TC, then the system stack. Inter 4.1 is self-hosted from rsms/inter with `next/font/local`, because the Google Fonts build lacks `ss01` and `zero`; only the upright file is preloaded, the italic loads on first use. `--font-mono` is Geist Mono, for code only. Numbers use Inter with `tabular-nums`.
+- **Japanese forms first**: Noto Sans JP comes before Noto Sans TC, so Han characters take Japanese glyph shapes and punctuation. Noto Sans TC fills the characters JP lacks (such as 值 and 夠), so they stay in the same Source Han design instead of falling back to a system font. Both load from `next/font/google` as unicode-range slices (124 for JP, 105 for TC) with `preload: false`, so a page downloads only the slices its text uses.
+- **OpenType features**: `--default-font-feature-settings: "liga" 1, "calt" 1, "ss01" 1, "zero" 1` turns on Inter's open digits and slashed zero on every page. Geist Mono and the Noto fonts have neither feature, so they render unchanged.
 
-The same values ship to consumers as the `theme` registry item. `app/globals.css` and `registry.json`'s `theme` cssVars must stay in sync — that is a manual invariant.
+The same color and radius values ship to consumers as the `theme` registry item. The `:root` and `.dark` tokens in `app/globals.css`, `packages/ui/src/styles/globals.css`, `apps/1909/app/globals.css` and the `theme` item in `registry.json` must match; `bun run theme:check` enforces it in CI. Fonts are not in the registry item: apps load them with next/font from `packages/ui/src/lib/fonts.ts` (this app and `apps/1909` keep their own `lib/fonts.ts`).
 
 ## Component contracts (zyx components only)
 

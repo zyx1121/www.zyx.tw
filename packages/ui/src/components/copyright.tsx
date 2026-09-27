@@ -10,7 +10,7 @@ export function Copyright() {
     <Tooltip>
       <TooltipTrigger
         render={
-          <span className="fixed right-4 bottom-4 z-50 cursor-default font-mono text-sm text-muted-foreground" />
+          <span className="fixed right-4 bottom-4 z-50 cursor-default text-sm text-muted-foreground tabular-nums" />
         }
       >
         © {year}

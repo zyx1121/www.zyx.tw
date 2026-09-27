@@ -1,17 +1,9 @@
-import { Geist, Geist_Mono } from "next/font/google"
-
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { fontVariables } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
-
-const fontSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
-
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" })
 
 export const metadata = {
   title: "1909",
@@ -31,12 +23,7 @@ export default async function RootLayout({
     <html
       lang="zh-TW"
       suppressHydrationWarning
-      className={cn(
-        "antialiased",
-        fontSans.variable,
-        geistMono.variable,
-        "font-sans"
-      )}
+      className={cn("antialiased", fontVariables, "font-sans")}
     >
       <body>
         <ThemeProvider>{children}</ThemeProvider>

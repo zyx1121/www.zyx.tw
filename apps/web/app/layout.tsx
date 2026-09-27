@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
 
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
 import "@workspace/ui/globals.css"
@@ -14,20 +13,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@workspace/ui/components/ui/tooltip"
+import { fontVariables } from "@workspace/ui/lib/fonts"
 import { cn } from "@workspace/ui/lib/utils"
 import { MotionProvider } from "@workspace/ui/components/motion-provider"
 
 import { JsonLd } from "@/components/json-ld"
-
-const fontSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
-
-const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-})
 
 const SITE_NAME = "zyx"
 const SITE_DESCRIPTION =
@@ -81,12 +71,7 @@ export default async function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn(
-        "antialiased",
-        fontSans.variable,
-        fontMono.variable,
-        "font-sans"
-      )}
+      className={cn("antialiased", fontVariables, "font-sans")}
     >
       <body>
         <JsonLd />

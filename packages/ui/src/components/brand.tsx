@@ -13,7 +13,7 @@ export function Brand() {
         render={
           <Link
             href="https://www.zyx.tw"
-            className="fixed top-4 left-4 z-50 font-mono text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className="fixed top-4 left-4 z-50 text-sm text-muted-foreground transition-colors hover:text-foreground"
           />
         }
       >

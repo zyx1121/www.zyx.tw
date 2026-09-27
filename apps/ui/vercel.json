@@ -4,6 +4,12 @@
   "buildCommand": "bun run build",
   "outputDirectory": "out",
   "trailingSlash": false,
+  "git": {
+    "deploymentEnabled": {
+      "**": false,
+      "main": true
+    }
+  },
   "headers": [
     {
       "source": "/r/(.*)",
