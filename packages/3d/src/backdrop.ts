@@ -1,4 +1,4 @@
-import { wrapEffect } from "@react-three/postprocessing"
+import { createEffectComponent } from "@react-three/postprocessing"
 import { BlendFunction, Effect } from "postprocessing"
 import * as THREE from "three"
 
@@ -6,7 +6,9 @@ const fragmentShader = /* glsl */ `
 uniform vec3 color;
 
 void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
-  outputColor = vec4(inputColor.rgb + color * (1.0 - inputColor.a), 1.0);
+  // Clamped in case an effect upstream leaves alpha outside [0, 1].
+  float coverage = clamp(inputColor.a, 0.0, 1.0);
+  outputColor = vec4(inputColor.rgb + color * (1.0 - coverage), 1.0);
 }
 `
 
@@ -36,4 +38,9 @@ export class BackdropEffect extends Effect {
   }
 }
 
-export const Backdrop = wrapEffect(BackdropEffect)
+// createEffectComponent applies props to the live effect; wrapEffect would
+// rebuild it, and recompile the pass, on every color change.
+export const Backdrop = createEffectComponent<
+  typeof BackdropEffect,
+  { color?: THREE.ColorRepresentation }
+>(BackdropEffect)
