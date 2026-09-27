@@ -316,13 +316,15 @@ function GainMapEnvironment({
     })
   }, [files, decoded, reflections, onReady])
   // A decoded map belongs to one WebGL context. Like drei's own gain map
-  // loading, drop it from the cache if the context is lost, so a remounted
-  // canvas decodes it again rather than reusing a dead texture.
+  // loading, drop it from the cache when the context is lost, so a remounted
+  // canvas decodes it again rather than reusing a dead texture. The listener
+  // is never removed: R3F loses the context only after the canvas unmounts.
   useLayoutEffect(() => {
-    const canvas = gl.domElement
-    const forget = () => useLoader.clear(GainMapLoader, [files] as never)
-    canvas.addEventListener("webglcontextlost", forget, { once: true })
-    return () => canvas.removeEventListener("webglcontextlost", forget)
+    gl.domElement.addEventListener(
+      "webglcontextlost",
+      () => useLoader.clear(GainMapLoader, [files] as never),
+      { once: true }
+    )
   }, [gl, files])
   return <EnvironmentTexture texture={reflections.texture} {...props} />
 }
