@@ -14,6 +14,8 @@ import { cn } from "@/lib/utils"
 export const metadata = {
   title: "1909",
   description: "三個室友的共同支出",
+  // A private app for three flatmates: keep every page out of search results.
+  robots: { index: false, follow: false },
 }
 
 export default async function RootLayout({

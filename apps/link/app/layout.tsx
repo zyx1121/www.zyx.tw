@@ -12,12 +12,11 @@ import { cn } from "@workspace/ui/lib/utils"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 
-const SITE_NAME = "Link"
-const SITE_DESC = "URL shortener — paste a long one, get a short one back."
+import { SITE_DESC, SITE_NAME, SITE_TITLE } from "@/lib/site"
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://link.zyx.tw"),
-  title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
+  title: { default: SITE_TITLE, template: `%s | ${SITE_NAME}` },
   description: SITE_DESC,
   applicationName: SITE_NAME,
   authors: [{ name: "Loki", url: "https://zyx.tw" }],
@@ -30,12 +29,12 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "/",
     siteName: SITE_NAME,
-    title: SITE_NAME,
+    title: SITE_TITLE,
     description: SITE_DESC,
   },
   twitter: {
     card: "summary_large_image",
-    title: SITE_NAME,
+    title: SITE_TITLE,
     description: SITE_DESC,
   },
 }

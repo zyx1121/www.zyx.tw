@@ -12,13 +12,11 @@ import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 import { fontVariables } from "@workspace/ui/lib/fonts"
 import { cn } from "@workspace/ui/lib/utils"
 
-const SITE_NAME = "3D"
-const SITE_DESC =
-  "Turn an SVG into a 3D object: pick a material, light it, add effects, and keep it all in one scene.json."
+import { SITE_DESC, SITE_NAME, SITE_TITLE } from "@/lib/site"
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://3d.zyx.tw"),
-  title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
+  title: { default: SITE_TITLE, template: `%s | ${SITE_NAME}` },
   description: SITE_DESC,
   applicationName: SITE_NAME,
   authors: [{ name: "Loki", url: "https://zyx.tw" }],
@@ -31,12 +29,12 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "/",
     siteName: SITE_NAME,
-    title: SITE_NAME,
+    title: SITE_TITLE,
     description: SITE_DESC,
   },
   twitter: {
     card: "summary_large_image",
-    title: SITE_NAME,
+    title: SITE_TITLE,
     description: SITE_DESC,
   },
 }

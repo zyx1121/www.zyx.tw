@@ -7,6 +7,7 @@ import { Button } from "@workspace/ui/components/ui/button"
 import { Input } from "@workspace/ui/components/ui/input"
 
 import { createShortLink } from "./actions"
+import { SITE_DESC, SITE_NAME } from "@/lib/site"
 
 type ActionState =
   | { ok: true; shortCode: string; shortUrl: string }
@@ -65,6 +66,8 @@ export default function HomePage() {
 
   return (
     <main className="flex h-dvh w-dvw flex-col items-center justify-center gap-6 px-4">
+      <h1 className="sr-only">{SITE_NAME}</h1>
+      <p className="sr-only">{SITE_DESC}</p>
       <form
         action={action}
         className="flex w-full max-w-xl flex-col items-center gap-4"
