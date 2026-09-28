@@ -1,9 +1,8 @@
-import { redirect } from "next/navigation"
-
 import { Corner } from "@workspace/ui/components/corners"
 
-import { createClient } from "@/lib/supabase/server"
 import { calculateDebts } from "@/lib/calc"
+import { db } from "@/lib/db"
+import { requireMember } from "@/lib/member"
 import type { Member, Expense } from "@/lib/types"
 import { UserNav } from "@/components/user-nav"
 import { BalanceSummary } from "@/components/balance-summary"
@@ -12,28 +11,25 @@ import { ExpenseList } from "@/components/expense-list"
 import { Separator } from "@/components/ui/separator"
 
 export default async function Page() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) redirect("/auth/login")
+  const currentMember = await requireMember()
+  const sql = db()
 
-  const { data: members } = await supabase
-    .from("members")
-    .select("*")
-    .returns<Member[]>()
+  const members = (await sql`
+    select id, name, email from app_1909.members order by id
+  `) as Member[]
 
-  const { data: expenses } = await supabase
-    .from("expenses")
-    .select("*, member:members(*)")
-    .order("created_at", { ascending: false })
-    .returns<Expense[]>()
+  // created_at as ISO text and member as an object, the shape PostgREST gave.
+  const expenses = (await sql`
+    select e.id, e.member_id, e.title, e.amount, e.settled,
+      to_json(e.created_at) #>> '{}' as created_at,
+      json_build_object('id', m.id, 'name', m.name, 'email', m.email) as member
+    from app_1909.expenses e
+    join app_1909.members m on m.id = e.member_id
+    order by e.created_at desc
+  `) as Expense[]
 
-  const currentMember = members?.find((m) => m.email === user.email)
-  if (!currentMember) redirect("/auth/login")
-
-  const unsettled = (expenses ?? []).filter((e) => !e.settled)
-  const debts = calculateDebts(unsettled, members ?? [])
+  const unsettled = expenses.filter((e) => !e.settled)
+  const debts = calculateDebts(unsettled, members)
 
   return (
     <div className="mx-auto flex min-h-svh max-w-2xl flex-col gap-6 px-6 pt-20 pb-25">
@@ -52,10 +48,7 @@ export default async function Page() {
 
       <section className="flex flex-col gap-2">
         <h2 className="text-sm text-muted-foreground">支出紀錄</h2>
-        <ExpenseList
-          expenses={expenses ?? []}
-          currentMemberId={currentMember.id}
-        />
+        <ExpenseList expenses={expenses} currentMemberId={currentMember.id} />
       </section>
     </div>
   )
