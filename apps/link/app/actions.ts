@@ -1,8 +1,8 @@
 "use server"
 
-import { cookies, headers } from "next/headers"
+import { headers } from "next/headers"
 
-import { createClient } from "@/utils/supabase/server"
+import { db } from "@/utils/db"
 
 type ActionState =
   | { ok: true; shortCode: string; shortUrl: string }
@@ -42,31 +42,28 @@ export async function createShortLink(
     return { ok: false, error: "Only http/https URLs, please." }
   }
 
-  const cookieStore = await cookies()
-  const supabase = createClient(cookieStore)
+  try {
+    const sql = db()
 
-  const { data: existing } = await supabase
-    .from("link_redirects")
-    .select("short_code")
-    .eq("url", url)
-    .single()
+    const [existing] = await sql`
+      select short_code from link.redirects where url = ${url} limit 1
+    `
 
-  if (existing) {
-    const shortCode = existing.short_code as string
+    if (existing) {
+      const shortCode = existing.short_code as string
+      const shortUrl = `https://link.zyx.tw/${shortCode}`
+      return { ok: true, shortCode, shortUrl }
+    }
+
+    const shortCode = generateShortCode()
+
+    await sql`
+      insert into link.redirects (short_code, url) values (${shortCode}, ${url})
+    `
+
     const shortUrl = `https://link.zyx.tw/${shortCode}`
     return { ok: true, shortCode, shortUrl }
-  }
-
-  const shortCode = generateShortCode()
-
-  const { error } = await supabase
-    .from("link_redirects")
-    .insert({ short_code: shortCode, url })
-
-  if (error) {
+  } catch {
     return { ok: false, error: "Database said no. Try again?" }
   }
-
-  const shortUrl = `https://link.zyx.tw/${shortCode}`
-  return { ok: true, shortCode, shortUrl }
 }

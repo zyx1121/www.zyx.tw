@@ -1,7 +1,6 @@
-import { cookies } from "next/headers"
 import { notFound, redirect } from "next/navigation"
 
-import { createClient } from "@/utils/supabase/server"
+import { db } from "@/utils/db"
 
 export const dynamic = "force-dynamic"
 
@@ -11,18 +10,15 @@ export default async function ShortCodePage({
   params: Promise<{ shortCode: string }>
 }) {
   const { shortCode } = await params
-  const cookieStore = await cookies()
-  const supabase = createClient(cookieStore)
+  const sql = db()
 
-  const { data } = await supabase
-    .from("link_redirects")
-    .select("url")
-    .eq("short_code", shortCode)
-    .single()
+  const [row] = await sql`
+    select url from link.redirects where short_code = ${shortCode}
+  `
 
-  if (!data?.url) {
+  if (!row?.url) {
     notFound()
   }
 
-  redirect(data.url as string)
+  redirect(row.url as string)
 }
