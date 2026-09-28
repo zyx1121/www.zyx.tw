@@ -1,5 +1,4 @@
 import type { EnvironmentPreset, Registry } from "../registry"
-import { aurora } from "./aurora"
 import { castle } from "./castle"
 import { cinema } from "./cinema"
 import { city } from "./city"
@@ -13,7 +12,6 @@ import { sky } from "./sky"
 import { studio } from "./studio"
 import { sunset } from "./sunset"
 import { underwater } from "./underwater"
-import { vaporwave } from "./vaporwave"
 import { violet } from "./violet"
 
 /**
@@ -35,7 +33,5 @@ export const environments: Registry<EnvironmentPreset> = [
   castle,
   crystal,
   garden,
-  vaporwave,
-  aurora,
   underwater,
 ]
