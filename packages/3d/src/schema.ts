@@ -28,6 +28,11 @@ export const sceneSchema = z.object({
     bevel: z.number(),
     bevelSegments: z.number(),
     curveSegments: z.number(),
+    /**
+     * Set when the SVG was made from text: what was typed and the editor's
+     * font id, so the editor can reopen it. Renderers only read `svg`.
+     */
+    text: z.object({ value: z.string(), font: z.string() }).optional(),
   }),
   material: z.object({ id: z.string(), params: paramValues }),
   environment: z.object({
@@ -77,6 +82,7 @@ export function normalizeScene(scene: SceneV1): SceneV1 {
     shape: {
       svg: scene.shape.svg,
       ...resolveValues(shapeControls, scene.shape),
+      ...(scene.shape.text && { text: scene.shape.text }),
     },
     material: {
       id: material.id,
