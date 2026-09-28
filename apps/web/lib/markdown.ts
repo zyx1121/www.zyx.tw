@@ -113,25 +113,16 @@ export function aboutMarkdown(status: StatusData) {
     FACTS.map(
       ({ label, value, href }) => `- ${label}: ${linked(value, href)}`
     ).join("\n"),
-    ...SECTIONS.map(({ title, lead, entries }) =>
+    ...SECTIONS.map(({ title, entries }) =>
       [
         `## ${text(title)}`,
-        lead &&
-          runs(
-            lead.map(({ text: value, href }) => ({
-              text: value,
-              href: href && absoluteUrl(href),
-            }))
-          ),
         entries
           .map(
             ({ when, what, note, where, href }) =>
               `- ${text(when)}: ${text(what)}, ${linked(where, href)}${note ? ` (${text(note)})` : ""}`
           )
           .join("\n"),
-      ]
-        .filter(Boolean)
-        .join("\n\n")
+      ].join("\n\n")
     ),
     [
       `## ${text(STATUS_COPY.title)}`,
