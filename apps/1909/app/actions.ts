@@ -53,9 +53,13 @@ export async function updateExpense(
 }
 
 export async function deleteExpense(expenseId: number) {
-  await requireMember()
+  const member = await requireMember()
 
-  await db()`delete from app_1909.expenses where id = ${expenseId}`
+  // Same rule as the old RLS policy: flatmates only delete their own expenses.
+  await db()`
+    delete from app_1909.expenses
+    where id = ${expenseId} and member_id = ${member.id}
+  `
 
   revalidatePath("/")
 }
