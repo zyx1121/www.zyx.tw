@@ -1,11 +1,12 @@
 import { EMAIL, GITHUB_USER } from "@workspace/ui/lib/profile"
 
 /**
- * The about page's resume, as data so /about and /about.md say the same
- * thing. Every entry is checked against a record: the degrees, the
- * internship, the award and the coaching against school and employer
- * documents, each paper against its DOI or its camera-ready copy, each
- * project against its repository or report. Client work stays off.
+ * The about page's CV, as data so /about and /about.md say the same thing.
+ * Entries come from a record or from Loki himself: the degrees, the award
+ * and the coaching from school documents, each paper from its DOI or its
+ * PDF, each project from its repository or report, and the MediaTek
+ * course, the TANET paper and the internship's end from Loki. Other
+ * client work stays off.
  */
 
 /** A labelled fact; one with `href` renders as a link. */

@@ -217,7 +217,7 @@ export function agentInstructions() {
       [
         "## Use it for",
         [
-          "- Who Loki is: his studies, his timeline and what he builds.",
+          "- Who Loki is: his studies, work, papers and what he builds.",
           "- What each of his projects is for, and its link.",
           "- His recent GitHub activity.",
           "- How to reach him.",

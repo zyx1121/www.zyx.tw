@@ -28,6 +28,16 @@ const LINK =
 /** The resume's section headings, at group-heading size. */
 const HEADING = "text-2xl"
 
+/**
+ * Titles as displayed: "Wi-Fi" keeps its hyphen and "6 GHz" its space on one
+ * line. The data, and so the Markdown, keeps plain characters.
+ */
+function unbroken(text: string) {
+  return text
+    .replace(/Wi-Fi/g, "Wi\u2011Fi")
+    .replace(/(\d) GHz/g, "$1\u00a0GHz")
+}
+
 /** A value that links when it has an address. */
 function Value({ text, href }: { text: string; href?: string }) {
   if (!href) return <>{text}</>
@@ -106,7 +116,7 @@ export default async function About() {
                   {when}
                 </span>
                 <span className="text-pretty">
-                  {what}
+                  {unbroken(what)}
                   {note && (
                     <span className="block text-muted-foreground">{note}</span>
                   )}
