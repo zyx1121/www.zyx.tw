@@ -7,7 +7,7 @@
 # ///
 """Regenerates the project previews in apps/web/public/previews/.
 
-Reads lib/projects.json, the same list the home page renders, and writes two
+Reads lib/projects.json, the same list /works renders, and writes two
 files per project to the paths in its "preview" field:
 
   <slug>.webp         a 1440x900 screenshot of the live site in dark mode
@@ -175,6 +175,8 @@ class Browser:
         self._browser = None
 
     def capture(self, url: str) -> Image.Image:
+        from playwright.sync_api import TimeoutError as PlaywrightTimeout
+
         if self._browser is None:
             from playwright.sync_api import sync_playwright
 
@@ -194,7 +196,13 @@ class Browser:
         )
         page = context.new_page()
         try:
-            page.goto(url, wait_until="networkidle", timeout=60_000)
+            page.goto(url, wait_until="load", timeout=60_000)
+            # A page that holds a request open (a streamed response, a poll)
+            # never goes idle; after 15 s the capture goes ahead from load.
+            try:
+                page.wait_for_load_state("networkidle", timeout=15_000)
+            except PlaywrightTimeout:
+                pass
             page.evaluate("document.fonts.ready.then(() => true)")
             page.wait_for_timeout(self.wait_ms)
             return Image.open(io.BytesIO(page.screenshot(type="png"))).convert("RGB")
