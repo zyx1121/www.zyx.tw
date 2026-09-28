@@ -6,8 +6,9 @@ import { useActionState, useEffect, useRef } from "react"
 import { Button } from "@workspace/ui/components/ui/button"
 import { Input } from "@workspace/ui/components/ui/input"
 
-import { createShortLink } from "./actions"
 import { SITE_DESC, SITE_NAME } from "@/lib/site"
+
+import { createShortLink } from "./actions"
 
 type ActionState =
   | { ok: true; shortCode: string; shortUrl: string }
