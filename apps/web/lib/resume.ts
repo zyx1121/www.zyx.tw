@@ -15,7 +15,7 @@ import { SOCIAL } from "@/lib/site"
 export type Fact = { label: string; value: string; href?: string }
 
 export const FACTS: Fact[] = [
-  { label: "From", value: "Changhua" },
+  { label: "From", value: "Changhua, Taiwan" },
   { label: "Email", value: EMAIL, href: `mailto:${EMAIL}` },
   ...SOCIAL.map(({ label, handle, href }) => ({ label, value: handle, href })),
 ]
