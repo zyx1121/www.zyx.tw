@@ -38,3 +38,4 @@ export {
   sceneSchema,
 } from "./schema"
 export type { ParseSceneResult, SceneV1 } from "./schema"
+export { DEFAULT_TEXTURE_BASE_URL } from "./textures"
