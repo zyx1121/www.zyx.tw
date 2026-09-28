@@ -32,7 +32,7 @@ Turns an SVG into a 3D object and renders it from one `scene.json`. The editor a
    }
    ```
 
-`<Scene3D>` fills its parent, so give the parent a size. `autoRotate` turns the shape itself, so it works with `controls` off. `view` sets the starting camera angle in degrees; the default, `DEFAULT_VIEW`, looks from 30° to the left and 30° above. Environment maps load from `https://3d.zyx.tw/env/`, which sends `Access-Control-Allow-Origin: *`; pass `envBaseUrl` to serve them from somewhere else.
+`<Scene3D>` fills its parent, so give the parent a size. `autoRotate` turns the shape itself, so it works with `controls` off. The camera angle comes from the scene's staging; `view` overrides it, in degrees (`DEFAULT_VIEW` is Oblique's: 30° to the left and 30° above), and when either changes the camera swings over. The scene's `motion.hover` needs nothing on your side: the shape leans toward a mouse over the canvas and grows a little under it. Environment maps load from `https://3d.zyx.tw/env/`, which sends `Access-Control-Allow-Origin: *`; pass `envBaseUrl` to serve them from somewhere else.
 
 ## scene.json v1
 
@@ -42,16 +42,17 @@ Turns an SVG into a 3D object and renders it from one `scene.json`. The editor a
 | `shape` | The SVG markup, plus `depth`, `bevel`, `bevelSegments` and `curveSegments`, in scene units where the shape's longer side is 2. A shape typed as text in the editor also keeps `text`: the `value` typed and the editor's `font` id, so it can be edited again. Its outlines are in `svg` like any other shape, so renderers never read `text`. |
 | `material` | A material preset `id` and its `params`. |
 | `environment` | An environment preset `id`, its `intensity`, `rotation` in degrees, and whether it shows as the `background`. |
-| `staging` | The `background` color and the key light's `lightAzimuth`, `lightElevation` (degrees) and `lightIntensity`. |
+| `staging` | A staging preset `id`, which sets the camera angle, the key light and, for Floor, a soft shadow on an invisible floor; and the `background` color. |
+| `motion` | `hover`: whether the shape leans toward the mouse and grows under it. |
 | `effects` | Postprocessing effects, each an `id` and its `params`. They run in registry order, one of each, whatever order the file lists them in. |
 
-Fixed params are still written, always at their defaults. Numbers outside a control's range are clamped. An unknown material or environment id falls back to the first preset and an unknown effect is skipped, so old files keep rendering as presets come and go.
+Fixed params are still written, always at their defaults. Numbers outside a control's range are clamped. An unknown material, environment or staging id falls back to the first preset and an unknown effect is skipped, so old files keep rendering as presets come and go. A file from before stagings, with no `staging.id` and no `motion`, gets Oblique, the look it had, and hover on; its `lightAzimuth`, `lightElevation` and `lightIntensity` are ignored, since Oblique carries the same light.
 
 ## Add a preset
 
 Each preset is one file. Its `params` define the editor's controls, so the panel needs no changes.
 
-1. Create the file in `src/materials/`, `src/effects/` or `src/environments/`:
+1. Create the file in `src/materials/`, `src/effects/`, `src/environments/` or `src/stagings/`:
 
    ```tsx
    // src/materials/chrome.tsx
@@ -80,6 +81,8 @@ Each preset is one file. Its `params` define the editor's controls, so the panel
 3. For an environment, convert its HDRI to a gain map first (for example with the free [Gain map creator](https://gainmap-creator.monogrid.com): WebP output, 4096 × 2048) and put `sdr.webp`, `gainmap.webp` and `metadata.json` in `apps/3d/public/env/<name>/`; the preset then sets `files: gainMapFiles("<name>")`. A plain `.hdr` path works too, but weighs about 30 times as much.
 
 A param is a `number` (slider), a `color` (color picker) or a `boolean` (switch). Mark it `fixed: true` to keep it at its default: the editor hides it and the renderer ignores other values, so a look that needs another value becomes its own preset instead of another slider. An effect also names its `stage`: `"scene"` effects run on the linear frame before tone mapping, which glow needs; `"display"` effects run on the finished image, background included, which a vignette or grain needs.
+
+A staging (`defineStaging`) has no params. It sets the camera `view` and the key `light`, both in degrees around and above the shape, plus the light's intensity; optionally an `object` transform (`position` in scene units, `rotation` in degrees); and optionally a `floor`: the `gap` under the shape, and the shadow's `opacity` and `blur` in scene units. Oblique stays first in `src/stagings/index.ts`, since files without a staging id get it.
 
 ## Credits
 

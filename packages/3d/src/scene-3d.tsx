@@ -19,14 +19,22 @@ import {
 import * as THREE from "three"
 
 import { Backdrop } from "./backdrop"
-import { environmentControls, stagingControls } from "./controls"
+import { CameraView } from "./camera-view"
+import {
+  environmentControls,
+  motionControls,
+  stagingControls,
+} from "./controls"
 import { effects as effectPresets } from "./effects"
 import { environments } from "./environments"
+import { FloorShadow } from "./floor-shadow"
 import { buildShapeGeometry } from "./geometry"
+import { HoverMotion } from "./hover-motion"
 import { materials } from "./materials"
 import { resolveValues } from "./params"
-import { findPreset, type EffectPreset } from "./registry"
+import { findPreset, type EffectPreset, type StagingPreset } from "./registry"
 import type { SceneV1 } from "./schema"
+import { stagings } from "./stagings"
 
 /** The editor at 3d.zyx.tw serves the environment maps, with CORS open to other sites. */
 export const DEFAULT_ENV_BASE_URL = "https://3d.zyx.tw/env/"
@@ -34,11 +42,11 @@ export const DEFAULT_ENV_BASE_URL = "https://3d.zyx.tw/env/"
 /** Radians per second when autoRotate turns the shape. */
 const SPIN_SPEED = 0.4
 
-/** Where the camera starts, in degrees: around the shape and above it. */
+/** Where the camera looks from, in degrees: around the shape and above it. */
 export type SceneView = { azimuth: number; elevation: number }
 
-/** From the left and above, so the depth and bevel show at a glance. */
-export const DEFAULT_VIEW: SceneView = { azimuth: -30, elevation: 30 }
+/** Oblique's view, the first staging's: from the left and above, so the depth and bevel show at a glance. */
+export const DEFAULT_VIEW: SceneView = stagings[0].view
 
 const CAMERA_DISTANCE = 6
 
@@ -51,7 +59,10 @@ export type Scene3DProps = {
   controls?: boolean
   /** Turn the shape slowly about its vertical axis, with or without controls. */
   autoRotate?: boolean
-  /** The starting camera angle; read once, when the canvas mounts. */
+  /**
+   * The camera angle, in place of the one the scene's staging sets. Either
+   * way, the camera swings over when it changes.
+   */
   view?: SceneView
 }
 
@@ -62,11 +73,13 @@ export function Scene3D({
   className,
   controls = true,
   autoRotate = false,
-  view = DEFAULT_VIEW,
+  view: viewOverride,
 }: Scene3DProps) {
+  const view = viewOverride ?? stagingOf(scene).view
   return (
     <Canvas
       className={className}
+      // Read once, when the canvas mounts; CameraView takes over from there.
       camera={{
         position: onSphere(view.azimuth, view.elevation, CAMERA_DISTANCE),
         fov: 35,
@@ -76,6 +89,7 @@ export function Scene3D({
       gl={{ antialias: false }}
     >
       <FitCamera />
+      <CameraView azimuth={view.azimuth} elevation={view.elevation} />
       <SceneContents
         scene={scene}
         envBaseUrl={envBaseUrl}
@@ -132,6 +146,11 @@ function SceneContents({
     findPreset(environments, scene.environment.id) ?? environments[0]
   const env = resolveValues(environmentControls, scene.environment)
   const staging = resolveValues(stagingControls, scene.staging)
+  const stage = stagingOf(scene)
+  const motion = resolveValues(motionControls, scene.motion)
+  const placed = useRef<THREE.Group>(null)
+  const placement = usePlacement(stage.object)
+  const floorCenter = useFloorCenter(geometry, placement, stage.floor)
   const envFiles = useMemo(
     () =>
       typeof environment.files === "string"
@@ -179,22 +198,38 @@ function SceneContents({
         </Suspense>
       </EnvironmentBoundary>
       <directionalLight
-        position={onSphere(staging.lightAzimuth, staging.lightElevation, 10)}
-        intensity={staging.lightIntensity}
+        position={onSphere(stage.light.azimuth, stage.light.elevation, 10)}
+        intensity={stage.light.intensity}
       />
-      <group ref={spin}>
-        {geometry && (
-          <mesh geometry={geometry}>
-            {/* Keyed so switching presets starts from a fresh material
-                instead of inheriting the last preset's settings. */}
-            <Fragment key={material.id}>
-              {material.render(
-                resolveValues(material.params, scene.material.params)
-              )}
-            </Fragment>
-          </mesh>
-        )}
+      <group
+        ref={placed}
+        position={placement.position}
+        quaternion={placement.quaternion}
+      >
+        <HoverMotion enabled={motion.hover}>
+          <group ref={spin}>
+            {geometry && (
+              <mesh geometry={geometry}>
+                {/* Keyed so switching presets starts from a fresh material
+                    instead of inheriting the last preset's settings. */}
+                <Fragment key={material.id}>
+                  {material.render(
+                    resolveValues(material.params, scene.material.params)
+                  )}
+                </Fragment>
+              </mesh>
+            )}
+          </group>
+        </HoverMotion>
       </group>
+      {stage.floor && floorCenter && (
+        <FloorShadow
+          target={placed}
+          center={floorCenter}
+          opacity={stage.floor.opacity}
+          blur={stage.floor.blur}
+        />
+      )}
       {/* three.js tone maps only when it draws straight to the screen, and
           it never tone maps a plain background color. With the composer in
           between, the chain does both jobs itself, in that order: glow on
@@ -409,6 +444,51 @@ function tryBuild(shape: SceneV1["shape"]) {
   } catch {
     return null
   }
+}
+
+/** The scene's staging preset; an unknown id gets the first. */
+function stagingOf(scene: SceneV1) {
+  return findPreset(stagings, scene.staging.id) ?? stagings[0]
+}
+
+type Placement = { position: THREE.Vector3; quaternion: THREE.Quaternion }
+
+/** Where the staging puts the shape. */
+function usePlacement(object: StagingPreset["object"]): Placement {
+  const [x = 0, y = 0, z = 0] = object?.position ?? []
+  const [turnX = 0, turnY = 0, turnZ = 0] = object?.rotation ?? []
+  return useMemo(() => {
+    const turn = new THREE.Euler(
+      THREE.MathUtils.degToRad(turnX),
+      THREE.MathUtils.degToRad(turnY),
+      THREE.MathUtils.degToRad(turnZ)
+    )
+    return {
+      position: new THREE.Vector3(x, y, z),
+      quaternion: new THREE.Quaternion().setFromEuler(turn),
+    }
+  }, [x, y, z, turnX, turnY, turnZ])
+}
+
+/** The middle of the staging's floor: under the shape as placed, its gap below the lowest point. */
+function useFloorCenter(
+  geometry: THREE.BufferGeometry | null,
+  { position, quaternion }: Placement,
+  floor: StagingPreset["floor"]
+) {
+  const gap = floor?.gap
+  return useMemo(() => {
+    // buildShapeGeometry centres the shape, which leaves its bounds computed.
+    const bounds = geometry?.boundingBox
+    if (!bounds || gap === undefined) return null
+    const placed = new THREE.Matrix4().compose(
+      position,
+      quaternion,
+      new THREE.Vector3(1, 1, 1)
+    )
+    const lowest = bounds.clone().applyMatrix4(placed).min.y
+    return new THREE.Vector3(position.x, lowest - gap, position.z)
+  }, [geometry, position, quaternion, gap])
 }
 
 /** Degrees in, a point on a sphere around the shape out. */

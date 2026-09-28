@@ -60,33 +60,12 @@ export const environmentControls = {
   background: { type: "boolean", label: "Show as background", default: false },
 } satisfies ParamDefs
 
+/** The camera and key light come from the staging preset; this is the rest. */
 export const stagingControls = {
   background: { type: "color", label: "Background", default: "#0a0a0a" },
-  lightAzimuth: {
-    type: "number",
-    fixed: true,
-    label: "Light direction",
-    min: 0,
-    max: 360,
-    step: 1,
-    default: 40,
-  },
-  lightElevation: {
-    type: "number",
-    fixed: true,
-    label: "Light height",
-    min: 0,
-    max: 90,
-    step: 1,
-    default: 35,
-  },
-  lightIntensity: {
-    type: "number",
-    fixed: true,
-    label: "Light intensity",
-    min: 0,
-    max: 5,
-    step: 0.01,
-    default: 2,
-  },
+} satisfies ParamDefs
+
+/** Hover leans the shape toward a mouse over the canvas and grows it a little under the pointer. */
+export const motionControls = {
+  hover: { type: "boolean", label: "Hover", default: true },
 } satisfies ParamDefs
