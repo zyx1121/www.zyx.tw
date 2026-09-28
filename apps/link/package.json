@@ -24,7 +24,6 @@
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
-    "@supabase/supabase-js": "^2.105.1",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "^26",
     "@types/react": "^19.2.10",

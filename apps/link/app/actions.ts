@@ -42,28 +42,28 @@ export async function createShortLink(
     return { ok: false, error: "Only http/https URLs, please." }
   }
 
-  const sql = db()
-
-  const [existing] = await sql`
-    select short_code from link.redirects where url = ${url} limit 1
-  `
-
-  if (existing) {
-    const shortCode = existing.short_code as string
-    const shortUrl = `https://link.zyx.tw/${shortCode}`
-    return { ok: true, shortCode, shortUrl }
-  }
-
-  const shortCode = generateShortCode()
-
   try {
+    const sql = db()
+
+    const [existing] = await sql`
+      select short_code from link.redirects where url = ${url} limit 1
+    `
+
+    if (existing) {
+      const shortCode = existing.short_code as string
+      const shortUrl = `https://link.zyx.tw/${shortCode}`
+      return { ok: true, shortCode, shortUrl }
+    }
+
+    const shortCode = generateShortCode()
+
     await sql`
       insert into link.redirects (short_code, url) values (${shortCode}, ${url})
     `
+
+    const shortUrl = `https://link.zyx.tw/${shortCode}`
+    return { ok: true, shortCode, shortUrl }
   } catch {
     return { ok: false, error: "Database said no. Try again?" }
   }
-
-  const shortUrl = `https://link.zyx.tw/${shortCode}`
-  return { ok: true, shortCode, shortUrl }
 }
