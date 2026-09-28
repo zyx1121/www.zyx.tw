@@ -1,17 +1,19 @@
 "use client"
 
-import { useDeferredValue, useEffect, useState } from "react"
+import { useDeferredValue, useEffect, useRef, useState } from "react"
 
 import {
   checkSvg,
   createScene,
   safeParseScene,
   Scene3D,
+  type Scene3DHandle,
   type SceneV1,
 } from "@workspace/3d"
 
 import { Dock } from "@/components/dock"
 import { useShapeSource } from "@/components/shape-source"
+import { download } from "@/lib/download"
 import { ZYX_SVG } from "@/lib/zyx-svg"
 
 const STORAGE_KEY = "3d:scene:v1"
@@ -37,6 +39,8 @@ export function Editor() {
   // Rebuilding the mesh can take a frame or two; this keeps the sliders
   // responsive while the preview catches up.
   const preview = useDeferredValue(scene)
+  const view = useRef<Scene3DHandle>(null)
+  const stage = useRef<HTMLElement>(null)
 
   useEffect(() => {
     try {
@@ -82,17 +86,12 @@ export function Editor() {
     const blob = new Blob([`${JSON.stringify(scene, null, 2)}\n`], {
       type: "application/json",
     })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement("a")
-    link.href = url
-    link.download = "scene.json"
-    link.click()
-    // Safari cancels the download when the URL is revoked in the same task.
-    setTimeout(() => URL.revokeObjectURL(url), 1000)
+    download(blob, "scene.json")
   }
 
   return (
     <main
+      ref={stage}
       className="relative h-dvh w-dvw overflow-hidden"
       onDragOver={(event) => event.preventDefault()}
       onDrop={(event) => {
@@ -101,13 +100,15 @@ export function Editor() {
         if (file) void openFile(file)
       }}
     >
-      <Scene3D scene={preview} envBaseUrl="/env/" />
+      <Scene3D ref={view} scene={preview} envBaseUrl="/env/" />
       <Dock
         scene={scene}
         source={source.props}
         onChange={setScene}
         onOpenFile={(file) => void openFile(file)}
-        onExport={exportScene}
+        onExportScene={exportScene}
+        view={view}
+        stage={stage}
         error={error}
       />
     </main>
