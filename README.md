@@ -60,7 +60,7 @@ Plain `bun dev` boots turbo across all 7 apps at once. `--filter=<app>` (or `cd 
 | Framework | Next.js 16.1 (App Router + Turbopack) |
 | UI | React 19, Tailwind CSS v4, shadcn/ui (`base-nova`, Base UI) + the [ui.zyx.tw](https://ui.zyx.tw) theme |
 | Language | TypeScript 5.9, strict + `noUncheckedIndexedAccess` |
-| Backend | Neon (`link`), Supabase (`1909`) |
+| Backend | Supabase (`1909`, `link`) |
 | 3D | three.js, React Three Fiber, drei and postprocessing (`good`, `3d`) |
 | Observability | `@workspace/otel`, shared bootstrap shipping logs to Sensorium |
 | Tooling | Bun 1.3 workspaces + Turbo 2 |
