@@ -34,6 +34,31 @@ Turns an SVG into a 3D object and renders it from one `scene.json`. The editor a
 
 `<Scene3D>` fills its parent, so give the parent a size. `autoRotate` turns the shape itself, so it works with `controls` off. `view` sets the starting camera angle in degrees; the default, `DEFAULT_VIEW`, looks from 30° to the left and 30° above. Environment maps load from `https://3d.zyx.tw/env/`, which sends `Access-Control-Allow-Origin: *`; pass `envBaseUrl` to serve them from somewhere else.
 
+## Export an image
+
+A ref on `<Scene3D>` (a plain prop in React 19) captures the view as it is on screen, at another size, as a PNG or JPEG:
+
+```tsx
+const view = useRef<Scene3DHandle>(null)
+
+async function save() {
+  const handle = view.current
+  if (!handle) return
+  const size = handle.captureSize(3840, 2160)
+  const blob = await handle.capture({ ...size, type: "image/png" })
+  // Download it, upload it, ...
+}
+
+return <Scene3D ref={view} scene={scene} />
+```
+
+- `width` and `height` are in pixels. At the canvas's aspect ratio the image frames the shape exactly as the screen does; another ratio frames it as a canvas of that shape would.
+- `type` is `"image/png"` or `"image/jpeg"`, and `quality` (0 to 1) sets the JPEG quality.
+- `transparent: true` leaves the background color out of a PNG: its alpha is the shape's coverage, antialiased edges included, and glow outside the shape drops out rather than darkening the edge. It does nothing while the environment is the background. Glass still refracts the background color, since three.js fills its transmission buffer with the renderer's clear color.
+- A size beyond the GPU shrinks to fit, keeping its aspect ratio: within `MAX_TEXTURE_SIZE`, `MAX_RENDERBUFFER_SIZE` and `MAX_VIEWPORT_DIMS`, and within 1.25 GB for the full-size buffers (the canvas and the composer's two half-float buffers), enough for an 8K frame of a 16:10 canvas. `captureSize(width, height)` returns the size `capture` will render, so you can say so before capturing. Multisampling steps down first as the frame grows, so an 8K frame renders without it.
+- Effects keep their look at any size. Bloom's glow and glass refraction render at the canvas's own resolution, so the glow reaches as far across the frame as on screen; tone mapping, the background and Vignette work per pixel.
+- The canvas is resized, drawn, read and restored in one task, so the page never paints the export frame, and the drawing buffer needn't be preserved.
+
 ## scene.json v1
 
 | Field | What it holds |

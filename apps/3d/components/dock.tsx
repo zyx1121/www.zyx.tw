@@ -15,6 +15,7 @@ import {
   useState,
   type Dispatch,
   type ReactNode,
+  type RefObject,
   type SetStateAction,
 } from "react"
 
@@ -29,6 +30,7 @@ import {
   stagingControls,
   type EffectPreset,
   type ParamValue,
+  type Scene3DHandle,
   type SceneV1,
 } from "@workspace/3d"
 import { Button } from "@workspace/ui/components/ui/button"
@@ -42,6 +44,7 @@ import {
 import { Separator } from "@workspace/ui/components/ui/separator"
 import { Switch } from "@workspace/ui/components/ui/switch"
 
+import { DEFAULT_EXPORT, ExportPanel } from "@/components/export-panel"
 import { ParamGroup } from "@/components/param-control"
 import { PresetSelect } from "@/components/preset-select"
 import { ShapeSource, type ShapeSourceProps } from "@/components/shape-source"
@@ -51,7 +54,11 @@ type DockProps = {
   source: ShapeSourceProps
   onChange: Dispatch<SetStateAction<SceneV1>>
   onOpenFile: (file: File) => void
-  onExport: () => void
+  onExportScene: () => void
+  /** The rendered view, which exports images. */
+  view: RefObject<Scene3DHandle | null>
+  /** The element the view fills. */
+  stage: RefObject<HTMLElement | null>
   error: string | null
 }
 
@@ -61,13 +68,16 @@ export function Dock({
   source,
   onChange,
   onOpenFile,
-  onExport,
+  onExportScene,
+  view,
+  stage,
   error,
 }: DockProps) {
   const fileInput = useRef<HTMLInputElement>(null)
   // One section open at a time, by label.
   const [open, setOpen] = useState<string | null>(null)
   useCloseOnCanvasPress(setOpen)
+  const [exportSettings, setExportSettings] = useState(DEFAULT_EXPORT)
   const section = (label: string) => ({
     label,
     open: open === label,
@@ -230,16 +240,16 @@ export function Dock({
           <FolderOpen />
           <span className="hidden sm:inline">Open</span>
         </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="rounded-full"
-          aria-label="Export scene.json"
-          onClick={onExport}
-        >
-          <Download />
-          <span className="hidden sm:inline">Export</span>
-        </Button>
+        <Section icon={<Download />} {...section("Export")}>
+          <ExportPanel
+            view={view}
+            stage={stage}
+            settings={exportSettings}
+            onSettingsChange={setExportSettings}
+            environmentBackground={scene.environment.background}
+            onExportScene={onExportScene}
+          />
+        </Section>
         <input
           ref={fileInput}
           type="file"

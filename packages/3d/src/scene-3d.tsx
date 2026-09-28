@@ -4,7 +4,11 @@ import { GainMapLoader } from "@monogrid/gainmap-js"
 import { Environment, OrbitControls, useEnvironment } from "@react-three/drei"
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber"
 import { EffectComposer, ToneMapping } from "@react-three/postprocessing"
-import { RenderPass, ToneMappingMode } from "postprocessing"
+import {
+  RenderPass,
+  ToneMappingMode,
+  type EffectComposer as EffectComposerImpl,
+} from "postprocessing"
 import {
   Component,
   Fragment,
@@ -15,10 +19,13 @@ import {
   useMemo,
   useRef,
   type ReactNode,
+  type Ref,
+  type RefObject,
 } from "react"
 import * as THREE from "three"
 
 import { Backdrop } from "./backdrop"
+import { fitDistance, SceneCapture, type Scene3DHandle } from "./capture"
 import { environmentControls, stagingControls } from "./controls"
 import { effects as effectPresets } from "./effects"
 import { environments } from "./environments"
@@ -53,6 +60,8 @@ export type Scene3DProps = {
   autoRotate?: boolean
   /** The starting camera angle; read once, when the canvas mounts. */
   view?: SceneView
+  /** Captures the view as an image; see Scene3DHandle. */
+  ref?: Ref<Scene3DHandle>
 }
 
 /** Renders a scene.json. Use it from a client component; it fills its parent. */
@@ -63,7 +72,9 @@ export function Scene3D({
   controls = true,
   autoRotate = false,
   view = DEFAULT_VIEW,
+  ref,
 }: Scene3DProps) {
+  const composer = useRef<EffectComposerImpl>(null)
   return (
     <Canvas
       className={className}
@@ -80,6 +91,7 @@ export function Scene3D({
         scene={scene}
         envBaseUrl={envBaseUrl}
         autoRotate={autoRotate}
+        composer={composer}
       />
       {controls && (
         <OrbitControls
@@ -89,6 +101,7 @@ export function Scene3D({
           maxDistance={20}
         />
       )}
+      <SceneCapture ref={ref} composer={composer} />
     </Canvas>
   )
 }
@@ -104,7 +117,7 @@ function FitCamera() {
   const aspect = useThree((state) => state.size.width / state.size.height)
   const applied = useRef(1)
   useLayoutEffect(() => {
-    const fit = 1 / Math.min(1, aspect)
+    const fit = fitDistance(aspect)
     camera.position.multiplyScalar(fit / applied.current)
     applied.current = fit
   }, [camera, aspect])
@@ -115,10 +128,12 @@ function SceneContents({
   scene,
   envBaseUrl,
   autoRotate,
+  composer,
 }: {
   scene: SceneV1
   envBaseUrl: string
   autoRotate: boolean
+  composer: RefObject<EffectComposerImpl | null>
 }) {
   const geometry = useShapeGeometry(scene.shape)
   const spin = useRef<THREE.Group>(null)
@@ -201,6 +216,7 @@ function SceneContents({
           the linear frame, ACES as three would apply it, then the
           background color untouched, then effects on the finished image. */}
       <EffectComposer
+        ref={composer}
         // The render pass is fixed when a composer is made, so each mode
         // gets its own. Clearing is the render pass's job; three's own
         // clear would paint the frame opaque.

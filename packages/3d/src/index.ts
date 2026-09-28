@@ -1,3 +1,4 @@
+export type { CaptureOptions, CaptureSize, Scene3DHandle } from "./capture"
 export { environmentControls, shapeControls, stagingControls } from "./controls"
 export { effects } from "./effects"
 export { environments } from "./environments"
