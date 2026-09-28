@@ -1,4 +1,9 @@
-export { environmentControls, shapeControls, stagingControls } from "./controls"
+export {
+  environmentControls,
+  motionControls,
+  shapeControls,
+  stagingControls,
+} from "./controls"
 export { effects } from "./effects"
 export { environments } from "./environments"
 export { buildShapeGeometry, checkSvg, SHAPE_SIZE } from "./geometry"
@@ -18,6 +23,7 @@ export {
   defineEffect,
   defineEnvironment,
   defineMaterial,
+  defineStaging,
   findPreset,
   gainMapFiles,
 } from "./registry"
@@ -26,6 +32,7 @@ export type {
   EnvironmentPreset,
   MaterialPreset,
   Registry,
+  StagingPreset,
 } from "./registry"
 export { DEFAULT_ENV_BASE_URL, DEFAULT_VIEW, Scene3D } from "./scene-3d"
 export type { Scene3DProps, SceneView } from "./scene-3d"
@@ -38,3 +45,4 @@ export {
   sceneSchema,
 } from "./schema"
 export type { ParseSceneResult, SceneV1 } from "./schema"
+export { stagings } from "./stagings"

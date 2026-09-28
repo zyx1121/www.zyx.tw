@@ -2,6 +2,7 @@ import type {} from "@react-three/fiber"
 import type { ReactElement } from "react"
 
 import type { ParamDefs, ValuesOf } from "./params"
+import type { SceneView } from "./scene-3d"
 
 export type MaterialPreset<P extends ParamDefs = ParamDefs> = {
   id: string
@@ -35,6 +36,30 @@ export type EnvironmentPreset = {
   files: string | readonly [string, string, string]
 }
 
+/** How the shape is shot: where the camera looks from and where the key light comes from. */
+export type StagingPreset = {
+  id: string
+  label: string
+  /** The camera's angle, in degrees, unless <Scene3D> is given a view. */
+  view: SceneView
+  /** The key light's direction in degrees, measured like the view, and its intensity. */
+  light: { azimuth: number; elevation: number; intensity: number }
+  /** Moves the shape, in scene units, and turns it, in degrees about x, y and z. */
+  object?: {
+    position?: readonly [number, number, number]
+    rotation?: readonly [number, number, number]
+  }
+  /** An invisible floor under the shape, seen only through its soft shadow. */
+  floor?: {
+    /** Between the shape's lowest point and the floor, in scene units. */
+    gap: number
+    /** How dark the shadow is where the shape comes closest, from 0 to 1. */
+    opacity: number
+    /** How far the shadow spreads past the shape's outline, in scene units. */
+    blur: number
+  }
+}
+
 /** A registry always has a first entry, which stands in for unknown ids. */
 export type Registry<T> = readonly [T, ...T[]]
 
@@ -51,6 +76,10 @@ export function defineEffect<const P extends ParamDefs>(
 }
 
 export function defineEnvironment(preset: EnvironmentPreset) {
+  return preset
+}
+
+export function defineStaging(preset: StagingPreset) {
   return preset
 }
 

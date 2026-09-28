@@ -2,6 +2,7 @@
 
 import {
   Box,
+  Camera,
   Download,
   FolderOpen,
   PaintBucket,
@@ -25,8 +26,10 @@ import {
   environments,
   findPreset,
   materials,
+  motionControls,
   shapeControls,
   stagingControls,
+  stagings,
   type EffectPreset,
   type ParamValue,
   type SceneV1,
@@ -77,6 +80,7 @@ export function Dock({
   const material = findPreset(materials, scene.material.id) ?? materials[0]
   const environment =
     findPreset(environments, scene.environment.id) ?? environments[0]
+  const staging = findPreset(stagings, scene.staging.id) ?? stagings[0]
 
   return (
     // The row spans the width so it can centre the bar; only the bar and
@@ -175,6 +179,31 @@ export function Dock({
               onChange((current) => ({
                 ...current,
                 staging: { ...current.staging, [key]: value },
+              }))
+            }
+          />
+        </Section>
+
+        <Section icon={<Camera />} {...section("Staging")}>
+          <PresetSelect
+            label="Staging"
+            presets={stagings}
+            value={staging.id}
+            onChange={(id) =>
+              onChange((current) => ({
+                ...current,
+                staging: { ...current.staging, id },
+              }))
+            }
+          />
+          <ParamGroup
+            id="motion"
+            defs={motionControls}
+            values={scene.motion}
+            onChange={(key, value) =>
+              onChange((current) => ({
+                ...current,
+                motion: { ...current.motion, [key]: value },
               }))
             }
           />

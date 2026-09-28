@@ -1,11 +1,17 @@
 import { z } from "zod"
 
-import { environmentControls, shapeControls, stagingControls } from "./controls"
+import {
+  environmentControls,
+  motionControls,
+  shapeControls,
+  stagingControls,
+} from "./controls"
 import { effects } from "./effects"
 import { environments } from "./environments"
 import { materials } from "./materials"
 import { defaultValues, resolveValues } from "./params"
 import { findPreset } from "./registry"
+import { stagings } from "./stagings"
 
 export const SCENE_VERSION = "v1"
 
@@ -16,9 +22,9 @@ const paramValues = z.record(
 
 /**
  * scene.json, version 1. Numbers outside a control's range are clamped when
- * rendered. An unknown material or environment id falls back to the first
- * preset and an unknown effect is skipped, so older files keep working as
- * presets come and go.
+ * rendered. An unknown material, environment or staging id falls back to the
+ * first preset and an unknown effect is skipped, so older files keep working
+ * as presets come and go.
  */
 export const sceneSchema = z.object({
   version: z.literal(SCENE_VERSION),
@@ -42,11 +48,14 @@ export const sceneSchema = z.object({
     background: z.boolean(),
   }),
   staging: z.object({
+    // Files saved before staging presets have no id, and their light
+    // settings are dropped: Oblique is the look they had.
+    id: z.string().default("oblique"),
     background: z.string(),
-    lightAzimuth: z.number(),
-    lightElevation: z.number(),
-    lightIntensity: z.number(),
   }),
+  motion: z
+    .object({ hover: z.boolean().default(motionControls.hover.default) })
+    .prefault({}),
   effects: z.array(z.object({ id: z.string(), params: paramValues })),
 })
 
@@ -77,6 +86,7 @@ export function normalizeScene(scene: SceneV1): SceneV1 {
   const material = findPreset(materials, scene.material.id) ?? materials[0]
   const environment =
     findPreset(environments, scene.environment.id) ?? environments[0]
+  const staging = findPreset(stagings, scene.staging.id) ?? stagings[0]
   return {
     version: SCENE_VERSION,
     shape: {
@@ -92,7 +102,11 @@ export function normalizeScene(scene: SceneV1): SceneV1 {
       id: environment.id,
       ...resolveValues(environmentControls, scene.environment),
     },
-    staging: resolveValues(stagingControls, scene.staging),
+    staging: {
+      id: staging.id,
+      ...resolveValues(stagingControls, scene.staging),
+    },
+    motion: resolveValues(motionControls, scene.motion),
     effects: effects.flatMap((preset) => {
       const stored = scene.effects.find((effect) => effect.id === preset.id)
       return stored
@@ -111,12 +125,14 @@ export function normalizeScene(scene: SceneV1): SceneV1 {
 export function createScene(svg: string): SceneV1 {
   const [material] = materials
   const [environment] = environments
+  const [staging] = stagings
   return {
     version: SCENE_VERSION,
     shape: { svg, ...defaultValues(shapeControls) },
     material: { id: material.id, params: defaultValues(material.params) },
     environment: { id: environment.id, ...defaultValues(environmentControls) },
-    staging: defaultValues(stagingControls),
+    staging: { id: staging.id, ...defaultValues(stagingControls) },
+    motion: defaultValues(motionControls),
     effects: [],
   }
 }
