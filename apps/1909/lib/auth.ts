@@ -19,11 +19,15 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
+  // Pages can't refresh the cookie (only actions can), so a long lifetime keeps
+  // read-only visitors signed in the way Supabase's refresh tokens did.
+  session: { expiresIn: 60 * 60 * 24 * 90 },
   databaseHooks: {
     user: {
       create: {
-        // Only the flatmates listed in app_1909.members get an account.
+        // Only verified flatmate emails (app_1909.members) get an account.
         before: async (user) => {
+          if (!user.emailVerified) return false
           const [member] = await db()`
             select 1 from app_1909.members where email = ${user.email}
           `
