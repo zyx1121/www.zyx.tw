@@ -27,6 +27,7 @@ import { materials } from "./materials"
 import { resolveValues } from "./params"
 import { findPreset, type EffectPreset } from "./registry"
 import type { SceneV1 } from "./schema"
+import { DEFAULT_TEXTURE_BASE_URL, TextureBaseUrl } from "./textures"
 
 /** The editor at 3d.zyx.tw serves the environment maps, with CORS open to other sites. */
 export const DEFAULT_ENV_BASE_URL = "https://3d.zyx.tw/env/"
@@ -46,6 +47,8 @@ export type Scene3DProps = {
   scene: SceneV1
   /** Where environment files live; a preset's file paths are appended to it. */
   envBaseUrl?: string
+  /** Where material textures live, the same way. */
+  textureBaseUrl?: string
   className?: string
   /** Orbit, zoom and turn with pointer or touch. */
   controls?: boolean
@@ -59,6 +62,7 @@ export type Scene3DProps = {
 export function Scene3D({
   scene,
   envBaseUrl = DEFAULT_ENV_BASE_URL,
+  textureBaseUrl = DEFAULT_TEXTURE_BASE_URL,
   className,
   controls = true,
   autoRotate = false,
@@ -76,11 +80,13 @@ export function Scene3D({
       gl={{ antialias: false }}
     >
       <FitCamera />
-      <SceneContents
-        scene={scene}
-        envBaseUrl={envBaseUrl}
-        autoRotate={autoRotate}
-      />
+      <TextureBaseUrl value={textureBaseUrl}>
+        <SceneContents
+          scene={scene}
+          envBaseUrl={envBaseUrl}
+          autoRotate={autoRotate}
+        />
+      </TextureBaseUrl>
       {controls && (
         <OrbitControls
           enablePan={false}

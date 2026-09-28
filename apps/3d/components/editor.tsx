@@ -97,7 +97,11 @@ export function Editor() {
         if (file) void openFile(file)
       }}
     >
-      <Scene3D scene={preview} envBaseUrl="/env/" />
+      <Scene3D
+        scene={preview}
+        envBaseUrl="/env/"
+        textureBaseUrl="/textures/"
+      />
       <Dock
         scene={scene}
         onChange={setScene}

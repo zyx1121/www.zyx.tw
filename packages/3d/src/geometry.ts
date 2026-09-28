@@ -25,7 +25,7 @@ const LID_GROUP = 0
 export function buildShapeGeometry(
   shape: SceneV1["shape"]
 ): THREE.BufferGeometry {
-  const { shapes, scale } = readShapes(shape.svg)
+  const { shapes, scale, bounds } = readShapes(shape.svg)
 
   const { depth, bevel, bevelSegments, curveSegments } = resolveValues(
     shapeControls,
@@ -40,6 +40,7 @@ export function buildShapeGeometry(
     bevelThickness: bevel / scale,
     bevelSegments: Math.round(bevelSegments),
     curveSegments: Math.round(curveSegments),
+    UVGenerator: shapeUVs(bounds),
   })
   // toCreasedNormals finds shared vertices on a 0.01 grid. At scene size the
   // bevel's rings sit about 0.004 apart, so it would merge neighbours and
@@ -59,8 +60,12 @@ export function buildShapeGeometry(
   return geometry
 }
 
-/** The SVG's outlines, and the factor that brings its longer side to SHAPE_SIZE. */
-function readShapes(svg: string): { shapes: THREE.Shape[]; scale: number } {
+/** The SVG's outlines, their bounds, and the factor that brings the longer side to SHAPE_SIZE. */
+function readShapes(svg: string): {
+  shapes: THREE.Shape[]
+  scale: number
+  bounds: THREE.Box2
+} {
   const { paths } = new SVGLoader().parse(svg)
   // A path with fill="none" is a stroke, not an area. Use those only when
   // nothing is filled, so a line-art SVG still becomes something.
@@ -79,7 +84,42 @@ function readShapes(svg: string): { shapes: THREE.Shape[]; scale: number } {
   const size = bounds.getSize(new THREE.Vector2())
   const longest = Math.max(size.x, size.y)
   if (!(longest > 0)) throw new Error("The SVG's shapes have no area")
-  return { shapes, scale: SHAPE_SIZE / longest }
+  return { shapes, scale: SHAPE_SIZE / longest, bounds }
+}
+
+/**
+ * ExtrudeGeometry's own UVs are the vertices' coordinates in SVG units, so a
+ * texture would repeat hundreds of times across the shape. These measure the
+ * same projections in lengths of the shape's longer side, from its top left
+ * corner: a texture spans every shape once, lids and walls at the same scale.
+ * The lids project straight on; each wall, as in three's own generator, along
+ * the axis it runs closest to and down the depth.
+ */
+function shapeUVs(bounds: THREE.Box2): THREE.UVGenerator {
+  const size = bounds.getSize(new THREE.Vector2())
+  const unit = 1 / Math.max(size.x, size.y)
+  // Across and up the shape; SVG's y axis points down, a texture's v up.
+  const across = (x: number) => (x - bounds.min.x) * unit
+  const up = (y: number) => (bounds.max.y - y) * unit
+  const point = (vertices: number[], i: number) =>
+    new THREE.Vector3().fromArray(vertices, i * 3)
+  return {
+    generateTopUV(_geometry, vertices, a, b, c) {
+      return [a, b, c].map((i) => {
+        const { x, y } = point(vertices, i)
+        return new THREE.Vector2(across(x), up(y))
+      })
+    },
+    generateSideWallUV(_geometry, vertices, a, b, c, d) {
+      // a to b runs along the outline.
+      const run = point(vertices, b).sub(point(vertices, a))
+      const alongX = Math.abs(run.x) > Math.abs(run.y)
+      return [a, b, c, d].map((i) => {
+        const { x, y, z } = point(vertices, i)
+        return new THREE.Vector2(alongX ? across(x) : up(y), z * unit)
+      })
+    },
+  }
 }
 
 /**

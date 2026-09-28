@@ -34,6 +34,8 @@ Turns an SVG into a 3D object and renders it from one `scene.json`. The editor a
 
 `<Scene3D>` fills its parent, so give the parent a size. `autoRotate` turns the shape itself, so it works with `controls` off. `view` sets the starting camera angle in degrees; the default, `DEFAULT_VIEW`, looks from 30° to the left and 30° above. Environment maps load from `https://3d.zyx.tw/env/`, which sends `Access-Control-Allow-Origin: *`; pass `envBaseUrl` to serve them from somewhere else.
 
+Material textures load the same way, from `https://3d.zyx.tw/textures/`; pass `textureBaseUrl` to move them.
+
 ## scene.json v1
 
 | Field | What it holds |
@@ -54,12 +56,12 @@ Each preset is one file. Its `params` define the editor's controls, so the panel
 1. Create the file in `src/materials/`, `src/effects/` or `src/environments/`:
 
    ```tsx
-   // src/materials/chrome.tsx
+   // src/materials/satin.tsx
    import { defineMaterial } from "../registry"
 
-   export const chrome = defineMaterial({
-     id: "chrome",
-     label: "Chrome",
+   export const satin = defineMaterial({
+     id: "satin",
+     label: "Satin",
      params: {
        roughness: {
          type: "number",
@@ -67,7 +69,7 @@ Each preset is one file. Its `params` define the editor's controls, so the panel
          min: 0,
          max: 1,
          step: 0.01,
-         default: 0.05,
+         default: 0.4,
        },
      },
      render: ({ roughness }) => (
@@ -80,6 +82,8 @@ Each preset is one file. Its `params` define the editor's controls, so the panel
 3. For an environment, convert its HDRI to a gain map first (for example with the free [Gain map creator](https://gainmap-creator.monogrid.com): WebP output, 4096 × 2048) and put `sdr.webp`, `gainmap.webp` and `metadata.json` in `apps/3d/public/env/<name>/`; the preset then sets `files: gainMapFiles("<name>")`. A plain `.hdr` path works too, but weighs about 30 times as much.
 
 A param is a `number` (slider), a `color` (color picker) or a `boolean` (switch). Mark it `fixed: true` to keep it at its default: the editor hides it and the renderer ignores other values, so a look that needs another value becomes its own preset instead of another slider. An effect also names its `stage`: `"scene"` effects run on the linear frame before tone mapping, which glow needs; `"display"` effects run on the finished image, background included, which a vignette or grain needs.
+
+A material can take image maps too: put them in `apps/3d/public/textures/<name>/` as WebP, 2048 px for the color map and 1024 px for the rest, and render `<TexturedMaterial>` from `src/textures.tsx`, naming each file by the material prop it fills. Its `average` is the color map's mean color, which shows until the files load or if they can't. The shape's UVs span its longer side once, on the lids and the walls alike. Wood and Marble use Poly Haven's Oak Veneer 01 by Jenelle van Heerden and Marble Rock 02 by Amal Kumar, both CC0.
 
 ## Credits
 
