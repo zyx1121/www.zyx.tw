@@ -22,6 +22,9 @@ export type TextOutline = {
 /** The font couldn't be fetched or read. */
 export class FontLoadError extends Error {}
 
+/** The family has none of the characters, so there is no subset to fetch. */
+class NoGlyphsError extends FontLoadError {}
+
 const CSS_API = "https://fonts.googleapis.com/css2"
 
 /**
@@ -57,7 +60,14 @@ export async function textToSvg(
   const chars = [...new Set(lines.join(""))].sort()
   if (chars.length === 0) return { svg: null, missing: [] }
 
-  const face = await loadFace(font, chars)
+  const face = await loadFace(font, chars).catch((error: unknown) => {
+    if (error instanceof NoGlyphsError) return null
+    throw error
+  })
+  if (!face) {
+    const typed = [...new Set(lines.join(""))]
+    return { svg: null, missing: typed.filter((char) => char.trim()) }
+  }
   const { placements, missing } = setLines(
     face,
     lines,
@@ -112,7 +122,17 @@ async function fetchFace(font: TextFont, chars: string[]): Promise<Font> {
     const css = await (await request(`${CSS_API}?${query}`)).text()
     const url = /url\((https:\/\/fonts\.gstatic\.com\/[^)\s]+)\)/.exec(css)?.[1]
     if (!url) throw new FontLoadError(`The stylesheet lists no file`)
-    const bytes = new Uint8Array(await (await request(url)).arrayBuffer())
+    const file = await fetch(url).catch(() => null)
+    if (!file?.ok) {
+      // For a family with none of the characters, Google answers the file
+      // with a 400 that has no CORS headers, which fetch reports as a network
+      // error. The stylesheet just came through, so online that's the reason.
+      const empty = file ? file.status === 400 : navigator.onLine
+      throw empty
+        ? new NoGlyphsError(`${font.label} has none of the characters`)
+        : new FontLoadError(`${new URL(url).host} gave no file`)
+    }
+    const bytes = new Uint8Array(await file.arrayBuffer())
     // fontkit reads any byte array; its types ask for a Node Buffer.
     const face = create(bytes as unknown as Buffer)
     if (!("layout" in face)) throw new FontLoadError(`Not a single font`)

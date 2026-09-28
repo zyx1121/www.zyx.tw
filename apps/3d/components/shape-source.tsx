@@ -152,6 +152,8 @@ export function useShapeSource(
       setClamped(next.value !== typed)
       // A key past the limit changes nothing to convert.
       if (next.value === draft.value) return
+      // What was said about the last text doesn't hold for this one.
+      setStatus({ kind: "idle" })
       clearTimeout(typing.current)
       typing.current = setTimeout(() => convert(next), TYPING_PAUSE)
     },
