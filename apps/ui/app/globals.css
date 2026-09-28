@@ -4,8 +4,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* The shared corners (TopCorners, BottomCorners) from @workspace/ui. */
+/* The shared corners (TopCorners, BottomCorners) and their tips from @workspace/ui. */
 @source "../../../packages/ui/src/components/corners.tsx";
+@source "../../../packages/ui/src/components/corner-tip.tsx";
+@source "../../../packages/ui/src/components/ui/tooltip.tsx";
 @source "../../../packages/ui/src/components/zyx-mark.tsx";
 
 @theme inline {
