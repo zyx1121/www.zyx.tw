@@ -7,6 +7,7 @@ import {
   Suspense,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   type ReactNode,
 } from "react"
@@ -86,21 +87,25 @@ function LoadedMaterial({
     THREE.TextureLoader,
     files.map((file) => file.url)
   )
-  const filled = useMemo(() => {
+  const filled = useMemo(
+    () =>
+      Object.fromEntries(
+        files.map(({ slot }, index) => [slot, textures[index]])
+      ),
+    [files, textures]
+  )
+  // Set up before the first frame draws, and so before three uploads them.
+  useLayoutEffect(() => {
     // Sharper at grazing angles, which is how the walls are seen.
     const anisotropy = Math.min(8, gl.capabilities.getMaxAnisotropy())
-    return Object.fromEntries(
-      files.map(({ slot }, index) => {
-        const texture = textures[index]
-        if (texture) {
-          // The bevel and walls reach a little past the lids' 0 to 1.
-          texture.wrapS = texture.wrapT = THREE.RepeatWrapping
-          texture.anisotropy = anisotropy
-          if (slot === "map") texture.colorSpace = THREE.SRGBColorSpace
-        }
-        return [slot, texture]
-      })
-    )
+    files.forEach(({ slot }, index) => {
+      const texture = textures[index]
+      if (!texture) return
+      // The bevel and walls reach a little past the lids' 0 to 1.
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+      texture.anisotropy = anisotropy
+      if (slot === "map") texture.colorSpace = THREE.SRGBColorSpace
+    })
   }, [files, textures, gl])
   // The loader keeps the images for the next time the preset is picked;
   // only their GPU copies are freed, and three uploads them again on use.
