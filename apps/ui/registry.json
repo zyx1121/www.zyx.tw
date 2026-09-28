@@ -25,7 +25,7 @@
       "name": "shimmering-text",
       "type": "registry:ui",
       "title": "Shimmering Text",
-      "description": "Text with a shimmer sweeping across it — loading and streaming states. CSS-only, zero dependencies, respects reduced motion.",
+      "description": "Text with a shimmer sweeping across it, for loading and streaming states. CSS-only, zero dependencies, respects reduced motion.",
       "files": [
         {
           "path": "registry/ui/shimmering-text.tsx",
@@ -47,7 +47,7 @@
       "name": "theme-toggle",
       "type": "registry:ui",
       "title": "Theme Toggle",
-      "description": "Light/dark switcher for next-themes — hydration-safe icon, ghost icon button.",
+      "description": "Light/dark switcher for next-themes: a ghost icon button with a hydration-safe icon.",
       "dependencies": ["next-themes", "lucide-react"],
       "registryDependencies": ["button"],
       "files": [
@@ -56,6 +56,126 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "scramble-text",
+      "type": "registry:ui",
+      "title": "Scramble Text",
+      "description": "Random glyphs resolve into the final text from left to right, 50ms per character by default, on mount or in view. The text itself never leaves the flow, so the element keeps its display, line breaks and size; glyphs are aria-hidden and unselectable, and reduced motion shows the text at once. Zero dependencies.",
+      "files": [
+        {
+          "path": "registry/ui/scramble-text.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@keyframes scramble-text-hold": {
+          "0%, 100%": {
+            "opacity": "0"
+          }
+        }
+      }
+    },
+    {
+      "name": "rotating-text",
+      "type": "registry:ui",
+      "title": "Rotating Text",
+      "description": "Cycles through words every 3.2s with a scramble or fade, controlled or uncontrolled. Reserves the widest word's box so the layout never shifts, pauses while the tab is hidden or on demand, and never auto-advances under reduced motion.",
+      "registryDependencies": ["https://ui.zyx.tw/r/scramble-text.json"],
+      "files": [
+        {
+          "path": "registry/ui/rotating-text.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@keyframes rotating-text-fade": {
+          "from": {
+            "opacity": "0"
+          },
+          "to": {
+            "opacity": "1"
+          }
+        }
+      }
+    },
+    {
+      "name": "mask-reveal",
+      "type": "registry:ui",
+      "title": "Mask Reveal",
+      "description": "Reveals its children from left to right with a smoothstep-feathered gradient mask, after a 1s delay over 5s. The mask exists only while the keyframes play, so rings and shadows are intact afterwards. CSS only; reduced motion shows the content at once.",
+      "files": [
+        {
+          "path": "registry/ui/mask-reveal.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@keyframes mask-reveal": {
+          "from": {
+            "mask-image": "linear-gradient(90deg, #000 33.333%, rgb(0 0 0 / 0.926) 38.889%, rgb(0 0 0 / 0.741) 44.444%, rgb(0 0 0 / 0.5) 50%, rgb(0 0 0 / 0.259) 55.556%, rgb(0 0 0 / 0.074) 61.111%, transparent 66.667%)",
+            "mask-size": "300% 100%",
+            "mask-repeat": "no-repeat",
+            "mask-position": "100% 0"
+          },
+          "to": {
+            "mask-image": "linear-gradient(90deg, #000 33.333%, rgb(0 0 0 / 0.926) 38.889%, rgb(0 0 0 / 0.741) 44.444%, rgb(0 0 0 / 0.5) 50%, rgb(0 0 0 / 0.259) 55.556%, rgb(0 0 0 / 0.074) 61.111%, transparent 66.667%)",
+            "mask-size": "300% 100%",
+            "mask-repeat": "no-repeat",
+            "mask-position": "0 0"
+          }
+        }
+      }
+    },
+    {
+      "name": "ask-ai",
+      "type": "registry:ui",
+      "title": "Ask AI",
+      "description": "An Ask AI pill that opens the page in ChatGPT, Claude or Google AI Mode with a prompt, copies the prompt for any other AI, and copies or opens a Markdown version of the page. Sends the canonical URL, never the query or fragment. Composes the stock dropdown-menu and button.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button", "dropdown-menu"],
+      "files": [
+        {
+          "path": "registry/ui/ask-ai.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "hdr-highlight",
+      "type": "registry:ui",
+      "title": "HDR Highlight",
+      "description": "Text that glows brighter than SDR white on HDR displays in dark mode, from a 309-byte PQ BT.2020 AVIF clipped to its own glyphs. No layout change anywhere; SDR screens render a plain span. Optional hover mode fades back over 2s.",
+      "files": [
+        {
+          "path": "registry/ui/hdr-highlight.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@media (dynamic-range: high)": {
+          ".dark [data-slot=\"hdr-highlight\"]": {
+            "background-size": "100% 100%",
+            "-webkit-background-clip": "text",
+            "background-clip": "text"
+          },
+          ".dark [data-slot=\"hdr-highlight\"]:not([data-hover]), .dark [data-slot=\"hdr-highlight\"][data-hover]:hover, .dark :is(a, button, label, summary, [role=\"button\"], [role=\"link\"], [role=\"menuitem\"], [role=\"tab\"]):is(:hover, :focus-visible) [data-slot=\"hdr-highlight\"][data-hover]": {
+            "background-image": "url(data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUEAAAD4bWV0YQAAAAAAAAAhaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAAAAAAAOcGl0bQAAAAAAAQAAAB5pbG9jAAAAAEQAAAEAAQAAAAEAAAEgAAAAFQAAAChpaW5mAAAAAAABAAAAGmluZmUCAAAAAAEAAGF2MDFDb2xvcgAAAAB3aXBycAAAAFdpcGNvAAAAFGlzcGUAAAAAAAAACAAAAAgAAAAQcGl4aQAAAAADCgoKAAAADGF2MUOBIEAAAAAAE2NvbHJuY2x4AAkAEAAJgAAAAAxjbGxpAywDLAAAABhpcG1hAAAAAAAAAAEAAQUBAoMEBQAAAB1tZGF0EgAKBTgIv+aQMgoQAAAAD/iOhW1A), linear-gradient(currentcolor, currentcolor)",
+            "-webkit-text-fill-color": "transparent"
+          }
+        },
+        "@media (dynamic-range: high) and (prefers-reduced-motion: no-preference)": {
+          "@supports (transition-behavior: allow-discrete)": {
+            ".dark [data-slot=\"hdr-highlight\"][data-hover]": {
+              "transition": "-webkit-text-fill-color 2s cubic-bezier(0.4, 0, 0.2, 1), background-image 0s 2s allow-discrete"
+            },
+            ".dark [data-slot=\"hdr-highlight\"][data-hover]:hover, .dark :is(a, button, label, summary, [role=\"button\"], [role=\"link\"], [role=\"menuitem\"], [role=\"tab\"]):is(:hover, :focus-visible) [data-slot=\"hdr-highlight\"][data-hover]": {
+              "transition-duration": "0s",
+              "transition-delay": "0s"
+            }
+          }
+        }
+      }
     }
   ]
 }
