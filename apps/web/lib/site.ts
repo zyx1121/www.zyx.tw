@@ -1,13 +1,22 @@
 import type { Metadata, MetadataRoute } from "next"
 
-import { OG_ALT, OG_SIZE } from "@workspace/ui/components/og-image"
+import {
+  OG_ALT,
+  OG_CONTENT_TYPE,
+  OG_SIZE,
+} from "@workspace/ui/components/og-image"
 import { EMAIL } from "@workspace/ui/lib/profile"
 
 import site from "./site.json"
 
 // app/opengraph-image.tsx. Pages restate openGraph (see pageMetadata), which
 // drops the root file's image, so they point at it themselves.
-const OG_IMAGE = { url: "/opengraph-image", ...OG_SIZE, alt: OG_ALT }
+const OG_IMAGE = {
+  url: "/opengraph-image",
+  ...OG_SIZE,
+  type: OG_CONTENT_TYPE,
+  alt: OG_ALT,
+}
 
 export { EMAIL }
 
