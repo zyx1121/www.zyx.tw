@@ -113,7 +113,7 @@ export default async function About() {
                 </span>
                 {/* At most 16rem wide from sm, so a long name wraps in
                     its own column instead of squeezing the one beside it. */}
-                <span className="col-start-2 text-muted-foreground text-pretty sm:col-start-auto sm:text-right">
+                <span className="col-start-2 text-pretty text-muted-foreground sm:col-start-auto sm:text-right">
                   <Value text={where} href={href} />
                 </span>
               </li>
