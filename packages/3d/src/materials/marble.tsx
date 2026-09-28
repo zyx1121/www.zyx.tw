@@ -1,7 +1,9 @@
 import { defineMaterial } from "../registry"
-import { TexturedMaterial } from "../textures"
+import { TexturedMaterial, type TextureMaps } from "../textures"
 
 /** Poly Haven "Marble Rock 02 by Amal Kumar", CC0. */
+const MAPS: TextureMaps = { map: "marble_rock_02/diffuse.webp" }
+
 export const marble = defineMaterial({
   id: "marble",
   label: "Marble",
@@ -19,18 +21,17 @@ export const marble = defineMaterial({
     clearcoat: {
       type: "number",
       fixed: true,
-      label: "Polish",
+      label: "Clearcoat",
       min: 0,
       max: 1,
       step: 0.01,
       default: 0.6,
     },
-    alt: { type: "boolean", fixed: true, label: "TUNE alt", default: false },
   },
-  render: ({ color, roughness, clearcoat, alt }) => (
+  render: ({ color, roughness, clearcoat }) => (
     <TexturedMaterial
-      maps={{ map: `${alt ? "marble_cliff_05" : "marble_rock_02"}/diffuse.webp` }}
-      average={alt ? "#958e86" : "#c7b49c"}
+      maps={MAPS}
+      average="#c7b49c"
       color={color}
       metalness={0}
       roughness={roughness}

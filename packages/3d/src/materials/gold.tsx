@@ -4,7 +4,7 @@ export const gold = defineMaterial({
   id: "gold",
   label: "Gold",
   params: {
-    color: { type: "color", label: "Color", default: "#f2c057" },
+    color: { type: "color", label: "Color", default: "#e8b04a" },
     roughness: {
       type: "number",
       fixed: true,
@@ -12,7 +12,7 @@ export const gold = defineMaterial({
       min: 0,
       max: 1,
       step: 0.01,
-      default: 0.18,
+      default: 0.2,
     },
   },
   render: ({ color, roughness }) => (

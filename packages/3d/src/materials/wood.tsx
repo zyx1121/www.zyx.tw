@@ -1,7 +1,12 @@
 import { defineMaterial } from "../registry"
-import { TexturedMaterial } from "../textures"
+import { TexturedMaterial, type TextureMaps } from "../textures"
 
 /** Poly Haven "Oak Veneer 01 by Jenelle van Heerden", CC0. */
+const MAPS: TextureMaps = {
+  map: "oak_veneer_01/diffuse.webp",
+  normalMap: "oak_veneer_01/normal.webp",
+}
+
 export const wood = defineMaterial({
   id: "wood",
   label: "Wood",
@@ -25,7 +30,7 @@ export const wood = defineMaterial({
       step: 0.01,
       default: 0.3,
     },
-    normal: {
+    grain: {
       type: "number",
       fixed: true,
       label: "Grain depth",
@@ -34,21 +39,17 @@ export const wood = defineMaterial({
       step: 0.01,
       default: 1,
     },
-    alt: { type: "boolean", fixed: true, label: "TUNE alt", default: false },
   },
-  render: ({ color, roughness, clearcoat, normal, alt }) => (
+  render: ({ color, roughness, clearcoat, grain }) => (
     <TexturedMaterial
-      maps={{
-        map: `${alt ? "teak_veneer" : "oak_veneer_01"}/diffuse.webp`,
-        normalMap: `${alt ? "teak_veneer" : "oak_veneer_01"}/normal.webp`,
-      }}
-      average={alt ? "#b08257" : "#a27f59"}
+      maps={MAPS}
+      average="#a27f59"
       color={color}
       metalness={0}
       roughness={roughness}
       clearcoat={clearcoat}
       clearcoatRoughness={0.2}
-      normalScale={[normal, normal]}
+      normalScale={[grain, grain]}
     />
   ),
 })

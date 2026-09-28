@@ -18,20 +18,27 @@ export const DEFAULT_TEXTURE_BASE_URL = "https://3d.zyx.tw/textures/"
 /** Where texture files live; <Scene3D> provides its textureBaseUrl. */
 export const TextureBaseUrl = createContext(DEFAULT_TEXTURE_BASE_URL)
 
-/** The material props an image can fill. */
-type TextureSlot = "map" | "normalMap" | "roughnessMap"
+/** Image files by the material prop each one fills, as paths below the texture base URL. */
+export type TextureMaps = Partial<
+  Record<"map" | "normalMap" | "roughnessMap", string>
+>
 
-type TexturedMaterialProps = Omit<
+type MaterialProps = Omit<
   ThreeElements["meshPhysicalMaterial"],
-  TextureSlot | "color"
+  keyof TextureMaps | "color"
 > & {
-  /** Paths below the texture base URL, by the material prop each one fills. */
-  maps: Partial<Record<TextureSlot, string>>
-  /** The color map's average, drawn until the files arrive or if they can't. */
-  average: string
   /** Multiplies the color map. */
   color: string
 }
+
+type TexturedMaterialProps = MaterialProps & {
+  /** Hoisted by the preset, so the files are only looked up once. */
+  maps: TextureMaps
+  /** The color map's mean color, drawn until the files arrive or if they can't. */
+  average: string
+}
+
+type TextureFile = { slot: string; url: string }
 
 /**
  * A physical material with image maps. Until they load, or if they can't be,
@@ -44,8 +51,14 @@ export function TexturedMaterial({
   ...props
 }: TexturedMaterialProps) {
   const baseUrl = useContext(TextureBaseUrl)
-  const slots = Object.keys(maps) as TextureSlot[]
-  const urls = slots.map((slot) => baseUrl + maps[slot])
+  const files = useMemo(
+    () =>
+      Object.entries(maps).map(([slot, path]) => ({
+        slot,
+        url: baseUrl + path,
+      })),
+    [maps, baseUrl]
+  )
   const plain = (
     <meshPhysicalMaterial
       {...props}
@@ -54,31 +67,34 @@ export function TexturedMaterial({
   )
   return (
     // Keyed by URL, so other files get another try after a failed load.
-    <TextureBoundary key={String(urls)} fallback={plain}>
+    <TextureBoundary
+      key={files.map((file) => file.url).join()}
+      fallback={plain}
+    >
       <Suspense fallback={plain}>
-        <LoadedMaterial slots={slots} urls={urls} {...props} />
+        <LoadedMaterial files={files} {...props} />
       </Suspense>
     </TextureBoundary>
   )
 }
 
 function LoadedMaterial({
-  slots,
-  urls,
+  files,
   ...props
-}: Omit<TexturedMaterialProps, "maps" | "average"> & {
-  slots: TextureSlot[]
-  urls: string[]
-}) {
+}: MaterialProps & { files: TextureFile[] }) {
   const gl = useThree((state) => state.gl)
-  const textures = useLoader(THREE.TextureLoader, urls)
+  const textures = useLoader(
+    THREE.TextureLoader,
+    files.map((file) => file.url)
+  )
   const filled = useMemo(() => {
     // Sharper at grazing angles, which is how the walls are seen.
     const anisotropy = Math.min(8, gl.capabilities.getMaxAnisotropy())
     return Object.fromEntries(
-      slots.map((slot, index) => {
+      files.map(({ slot }, index) => {
         const texture = textures[index]
         if (texture) {
+          // The bevel and walls reach a little past the lids' 0 to 1.
           texture.wrapS = texture.wrapT = THREE.RepeatWrapping
           texture.anisotropy = anisotropy
           if (slot === "map") texture.colorSpace = THREE.SRGBColorSpace
@@ -86,9 +102,9 @@ function LoadedMaterial({
         return [slot, texture]
       })
     )
-  }, [slots, textures, gl])
+  }, [files, textures, gl])
   // The loader keeps the images for the next time the preset is picked;
-  // only their GPU copies are freed. three uploads them again when needed.
+  // only their GPU copies are freed, and three uploads them again on use.
   useEffect(
     () => () => {
       for (const texture of textures) texture.dispose()
@@ -98,6 +114,7 @@ function LoadedMaterial({
   return <meshPhysicalMaterial {...props} {...filled} />
 }
 
+/** A missing or blocked texture shows the fallback rather than taking the scene down. */
 class TextureBoundary extends Component<
   { fallback: ReactNode; children: ReactNode },
   { failed: boolean }

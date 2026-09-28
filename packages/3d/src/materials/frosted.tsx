@@ -12,8 +12,10 @@ export const frosted = defineMaterial({
       min: 0,
       max: 1,
       step: 0.01,
-      default: 0.45,
+      default: 0.5,
     },
+    // Under 1, so a little light scatters back and the glass reads milky
+    // over a dark background instead of vanishing into it.
     transmission: {
       type: "number",
       fixed: true,
@@ -21,7 +23,7 @@ export const frosted = defineMaterial({
       min: 0,
       max: 1,
       step: 0.01,
-      default: 1,
+      default: 0.9,
     },
     thickness: {
       type: "number",
@@ -30,7 +32,7 @@ export const frosted = defineMaterial({
       min: 0,
       max: 2,
       step: 0.01,
-      default: 1,
+      default: 1.5,
     },
     ior: {
       type: "number",
@@ -41,17 +43,8 @@ export const frosted = defineMaterial({
       step: 0.001,
       default: 1.5,
     },
-    sheen: {
-      type: "number",
-      fixed: true,
-      label: "Sheen",
-      min: 0,
-      max: 1,
-      step: 0.01,
-      default: 0,
-    },
   },
-  render: ({ color, roughness, transmission, thickness, ior, sheen }) => (
+  render: ({ color, roughness, transmission, thickness, ior }) => (
     <meshPhysicalMaterial
       color={color}
       metalness={0}
@@ -59,9 +52,6 @@ export const frosted = defineMaterial({
       transmission={transmission}
       thickness={thickness}
       ior={ior}
-      sheen={sheen}
-      sheenRoughness={0.6}
-      sheenColor="#ffffff"
     />
   ),
 })

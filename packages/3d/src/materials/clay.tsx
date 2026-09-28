@@ -4,7 +4,7 @@ export const clay = defineMaterial({
   id: "clay",
   label: "Clay",
   params: {
-    color: { type: "color", label: "Color", default: "#d8cfc4" },
+    color: { type: "color", label: "Color", default: "#a65a3a" },
     roughness: {
       type: "number",
       fixed: true,
@@ -12,7 +12,7 @@ export const clay = defineMaterial({
       min: 0,
       max: 1,
       step: 0.01,
-      default: 0.9,
+      default: 1,
     },
   },
   render: ({ color, roughness }) => (
