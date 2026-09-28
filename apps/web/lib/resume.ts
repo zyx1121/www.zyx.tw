@@ -1,11 +1,12 @@
 import { EMAIL, GITHUB_USER } from "@workspace/ui/lib/profile"
 
 /**
- * The about page's resume, as data so /about and /about.md say the same
- * thing. Every entry is checked against a record: the degrees, the
- * internship, the award and the coaching against school and employer
- * documents, each paper against its DOI or its camera-ready copy, each
- * project against its repository or report. Client work stays off.
+ * The about page's CV, as data so /about and /about.md say the same thing.
+ * Entries come from a record or from Loki himself: the degrees, the award
+ * and the coaching from school documents, each paper from its DOI or its
+ * PDF, each project from its repository or report, and the MediaTek
+ * course, the TANET paper and the internship's end from Loki. Other
+ * client work stays off.
  */
 
 /** A labelled fact; one with `href` renders as a link. */
@@ -27,15 +28,29 @@ export type Entry = {
   what: string
   where: string
   href?: string
+  /** A muted line under `what`, such as the author position of a paper. */
+  note?: string
 }
 
-export type Section = { id: string; title: string; entries: Entry[] }
+/** A run of a section's lead; one with `href` renders as a link. */
+export type LeadRun = { text: string; href?: string }
 
-/** The resume's lists in page order, newest entry first in each. */
+export type Section = {
+  id: string
+  title: string
+  /** One muted line under the heading. */
+  lead?: LeadRun[]
+  entries: Entry[]
+}
+
+/**
+ * The resume's lists in page order, by kind as a CV sorts them, newest
+ * entry first in each.
+ */
 export const SECTIONS: Section[] = [
   {
-    id: "timeline",
-    title: "Timeline",
+    id: "education",
+    title: "Education",
     entries: [
       {
         when: "2025–now",
@@ -44,25 +59,31 @@ export const SECTIONS: Section[] = [
         href: "https://www.winlab.tw",
       },
       {
-        when: "2024",
-        what: "Intern in SONiC switch test automation",
-        where: "Clounix",
-      },
-      {
-        when: "2022–2024",
-        what: "Volunteer coach for the vocational skills competition",
-        where: "Shalu Vocational High School",
-      },
-      {
         when: "2021–2025",
         what: "B.S. Electronic Engineering",
         where: "NTUST",
         href: "https://www.ntust.edu.tw",
       },
+    ],
+  },
+  {
+    id: "experience",
+    title: "Experience",
+    entries: [
       {
-        when: "2020",
-        what: "1st place in computer repair",
-        where: "National Vocational High School Skills Competition",
+        when: "2026",
+        what: "Taught a Claude Code course",
+        where: "MediaTek",
+      },
+      {
+        when: "2024–2025",
+        what: "Intern in SONiC switch test automation",
+        where: "Clounix",
+      },
+      {
+        when: "2022–2024",
+        what: "Volunteer coach for the skills competition",
+        where: "Shalu Vocational High School",
       },
     ],
   },
@@ -73,11 +94,19 @@ export const SECTIONS: Section[] = [
       {
         when: "2026",
         what: "An Automated and Optimized Framework for 6 GHz Wi-Fi AFC Compliance Verification",
+        note: "First author",
         where: "APWCS 2026",
+      },
+      {
+        when: "2025",
+        what: "6 GHz Wi-Fi 自動頻率協調系統之 DUT 測試環境自動化改良",
+        note: "First author",
+        where: "TANET 2025",
       },
       {
         when: "2024",
         what: "Exploring Automated Frequency Coordination System for 6 GHz Wi-Fi in Taiwan",
+        note: "Co-author",
         where: "ICS 2024",
         href: "https://doi.org/10.1109/ICS64339.2024.00032",
       },
@@ -86,6 +115,11 @@ export const SECTIONS: Section[] = [
   {
     id: "projects",
     title: "Projects",
+    lead: [
+      { text: "Code and research. The live sites are on " },
+      { text: "Works", href: "/works" },
+      { text: "." },
+    ],
     entries: [
       {
         when: "2026",
@@ -133,6 +167,17 @@ export const SECTIONS: Section[] = [
         what: "WebRTC live streaming site",
         where: "ntust.live",
         href: "https://github.com/zyx1121/ntust.live",
+      },
+    ],
+  },
+  {
+    id: "awards",
+    title: "Awards",
+    entries: [
+      {
+        when: "2020",
+        what: "1st place in computer repair",
+        where: "National Vocational High School Skills Competition",
       },
     ],
   },

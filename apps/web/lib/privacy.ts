@@ -69,7 +69,7 @@ export const PRIVACY: {
         ],
         [
           {
-            text: "The Latest list and the GitHub activity on About are fetched by the server from the GitHub API. Your browser does not contact GitHub for them.",
+            text: "The GitHub activity on About is fetched by the server from the GitHub API. Your browser does not contact GitHub for it.",
           },
         ],
       ],
