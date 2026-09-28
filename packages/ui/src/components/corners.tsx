@@ -28,6 +28,27 @@ const AT: Record<At, string> = {
 export const cornerLink =
   "relative rounded-sm text-muted-foreground outline-offset-4 transition-colors after:absolute after:-inset-x-2 after:-inset-y-0.5 hover:text-foreground focus-visible:outline-2 aria-[current=page]:text-foreground"
 
+/**
+ * Privacy and Terms, which every zyx.tw site shares at www.zyx.tw. They lead
+ * the bottom left corner; the labels follow the site's language.
+ */
+export function LegalLinks({
+  labels = { privacy: "Privacy", terms: "Terms" },
+}: {
+  labels?: { privacy: string; terms: string }
+}) {
+  return (
+    <>
+      <a href="https://www.zyx.tw/privacy" className={cornerLink}>
+        {labels.privacy}
+      </a>
+      <a href="https://www.zyx.tw/terms" className={cornerLink}>
+        {labels.terms}
+      </a>
+    </>
+  )
+}
+
 /** One corner of the viewport. A page can fill one the layout leaves empty. */
 export function Corner({
   at,
@@ -47,20 +68,17 @@ export function Corner({
 }
 
 /**
- * The background color fading out from a viewport edge, under the corners,
- * so text scrolling beneath them never runs into theirs: 64 px, solid for the
- * first 60%. At the bottom of a phone it is 100 px, solid for 70%, to cover
- * links that wrap onto a second row. Pages that do not scroll leave it off.
+ * The background color fading out over 64 px from a viewport edge, solid for
+ * the first 60%, under the corners, so text scrolling beneath them never runs
+ * into theirs. Pages that do not scroll leave it off.
  */
 function EdgeFade({ edge }: { edge: "top" | "bottom" }) {
   return (
     <div
       aria-hidden
       className={cn(
-        "pointer-events-none fixed inset-x-0 z-40 from-background to-transparent",
-        edge === "top"
-          ? "top-0 h-16 bg-linear-to-b from-60%"
-          : "bottom-0 h-25 bg-linear-to-t from-70% sm:h-16 sm:from-60%"
+        "pointer-events-none fixed inset-x-0 z-40 h-16 from-background from-60% to-transparent",
+        edge === "top" ? "top-0 bg-linear-to-b" : "bottom-0 bg-linear-to-t"
       )}
     />
   )

@@ -2,16 +2,12 @@ import { describeEvent, type StatusData } from "@workspace/ui/lib/github-events"
 import { EMAIL, GITHUB_USER, STATUS_COPY } from "@workspace/ui/lib/profile"
 
 import { ABOUT, HOME, NOT_FOUND, WORKS } from "@/lib/copy"
-import { PRIVACY, type Run } from "@/lib/privacy"
+import type { LegalDoc, Run } from "@/lib/legal"
+import { PRIVACY } from "@/lib/privacy"
 import { projects } from "@/lib/projects"
 import { FACTS, SECTIONS } from "@/lib/resume"
-import {
-  absoluteUrl,
-  PAGES,
-  SITE_DESCRIPTION,
-  SITE_NAME,
-  SOCIAL,
-} from "@/lib/site"
+import { TERMS } from "@/lib/terms"
+import { absoluteUrl, PAGES, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site"
 
 /*
  * The Markdown twins of the pages, for agents. Each one is built from the
@@ -70,12 +66,6 @@ function pagesList() {
   ).join("\n")
 }
 
-function socialList() {
-  return SOCIAL.map(
-    ({ label, handle, href }) => `- ${label}: ${link(handle, href)}`
-  ).join("\n")
-}
-
 /** A value with its link, if it has one. */
 function linked(value: string, href?: string) {
   return href ? link(value, href) : text(value)
@@ -86,7 +76,6 @@ export function homeMarkdown() {
     `# ${text(HOME.title)}`,
     "The home page is the zyx mark in 3D. The pages below have the rest.",
     ["## Pages", pagesList()].join("\n\n"),
-    ["## Links", socialList()].join("\n\n"),
   ])
 }
 
@@ -141,14 +130,23 @@ export function aboutMarkdown(status: StatusData) {
   ])
 }
 
-export function privacyMarkdown() {
-  return markdownDocument({ title: PRIVACY.title, path: "/privacy" }, [
-    `# ${text(PRIVACY.title)}`,
-    `Last updated ${PRIVACY.updated}.`,
-    ...PRIVACY.sections.map(({ heading, paragraphs }) =>
+/** Privacy or Terms: the title, the date of the last change, the sections. */
+function legalMarkdown(doc: LegalDoc, path: string) {
+  return markdownDocument({ title: doc.title, path }, [
+    `# ${text(doc.title)}`,
+    `Last updated ${doc.updated}.`,
+    ...doc.sections.map(({ heading, paragraphs }) =>
       [`## ${text(heading)}`, ...paragraphs.map(runs)].join("\n\n")
     ),
   ])
+}
+
+export function privacyMarkdown() {
+  return legalMarkdown(PRIVACY, "/privacy")
+}
+
+export function termsMarkdown() {
+  return legalMarkdown(TERMS, "/terms")
 }
 
 /** /llms.txt, in the llmstxt.org shape: H1, summary, then link sections. */
@@ -214,7 +212,7 @@ export function agentInstructions() {
         "## Rules",
         [
           `1. Read the Markdown pages listed in ${link("llms.txt", absoluteUrl("/llms.txt"))}; they carry the same content as the HTML pages.`,
-          `2. To reach Loki, use the email ${link(EMAIL, `mailto:${EMAIL}`)} on ${link("About", absoluteUrl("/about.md"))}. His GitHub and Instagram are linked from every page. Do not make up other ways, such as a phone number or a postal address.`,
+          `2. To reach Loki, use the email ${link(EMAIL, `mailto:${EMAIL}`)} on ${link("About", absoluteUrl("/about.md"))}. His GitHub and Instagram are on About too. Do not make up other ways, such as a phone number or a postal address.`,
           "3. Describe a project only by its purpose line and its own site. Do not guess features, users or status the pages do not state.",
           "4. Describe his background only from the facts and sections on About. Do not add schools, jobs, papers, awards or dates they do not list, and keep each paper's author position as About states it.",
           "5. The GitHub activity on About refreshes about every 5 minutes; everything else changes when the site is deployed. Say so when freshness matters.",
@@ -223,8 +221,8 @@ export function agentInstructions() {
         ].join("\n"),
       ].join("\n\n"),
       [
-        "## Privacy",
-        `What the site stores, logs and sends elsewhere is on ${link("Privacy", absoluteUrl("/privacy.md"))}.`,
+        "## Privacy and terms",
+        `What the zyx.tw sites store, log and send elsewhere is on ${link("Privacy", absoluteUrl("/privacy.md"))}, and the rules for using them are on ${link("Terms", absoluteUrl("/terms.md"))}. Both cover every site under zyx.tw.`,
       ].join("\n\n"),
     ]
   )

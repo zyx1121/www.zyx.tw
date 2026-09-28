@@ -31,7 +31,15 @@
       "path": "/privacy",
       "label": "Privacy",
       "markdown": "/privacy.md",
-      "summary": "what the site stores, logs and sends elsewhere",
+      "summary": "what the zyx.tw sites store, log and send elsewhere",
+      "changeFrequency": "yearly",
+      "priority": 0.3
+    },
+    {
+      "path": "/terms",
+      "label": "Terms",
+      "markdown": "/terms.md",
+      "summary": "the rules for using the zyx.tw sites",
       "changeFrequency": "yearly",
       "priority": 0.3
     }
