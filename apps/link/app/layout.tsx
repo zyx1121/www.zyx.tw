@@ -22,8 +22,6 @@ export const metadata: Metadata = {
   authors: [{ name: "Loki", url: "https://zyx.tw" }],
   creator: "Loki",
   keywords: ["url shortener", "short link", "zyx"],
-  robots: { index: true, follow: true },
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "en_US",
