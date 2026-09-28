@@ -168,12 +168,6 @@ export const SECTIONS: Section[] = [
       },
       {
         when: "2026",
-        what: "Git-driven deploys for LXC on Proxmox",
-        where: "keel",
-        href: "https://github.com/zyx1121/keel",
-      },
-      {
-        when: "2026",
         what: "A Pokémon trail behind the cursor",
         where: "cursormon",
         href: "https://github.com/zyx1121/cursormon",
