@@ -32,7 +32,7 @@ type MaterialProps = Omit<
 }
 
 type TexturedMaterialProps = MaterialProps & {
-  /** Hoisted by the preset, so the files are only looked up once. */
+  /** Keep it outside render, so the files aren't resolved again every render. */
   maps: TextureMaps
   /** The color map's mean color, drawn until the files arrive or if they can't. */
   average: string
@@ -53,10 +53,9 @@ export function TexturedMaterial({
   const baseUrl = useContext(TextureBaseUrl)
   const files = useMemo(
     () =>
-      Object.entries(maps).map(([slot, path]) => ({
-        slot,
-        url: baseUrl + path,
-      })),
+      Object.entries(maps).flatMap(([slot, path]) =>
+        path ? [{ slot, url: baseUrl + path }] : []
+      ),
     [maps, baseUrl]
   )
   const plain = (

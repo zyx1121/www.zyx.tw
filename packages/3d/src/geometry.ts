@@ -88,12 +88,13 @@ function readShapes(svg: string): {
 }
 
 /**
- * ExtrudeGeometry's own UVs are the vertices' coordinates in SVG units, so a
- * texture would repeat hundreds of times across the shape. These measure the
- * same projections in lengths of the shape's longer side, from its top left
- * corner: a texture spans every shape once, lids and walls at the same scale.
- * The lids project straight on; each wall, as in three's own generator, along
- * the axis it runs closest to and down the depth.
+ * ExtrudeGeometry's own UVs are coordinates in SVG units, so a texture would
+ * tile once per unit, thousands of times on a large drawing. These measure
+ * the same projections in lengths of the shape's longer side, from its bottom
+ * left corner: an image spans every shape once and lands upright on the
+ * front, lids and walls at the same scale. The lids project straight on; each
+ * wall, as in three's own generator, along the axis it runs closest to and
+ * down the depth.
  */
 function shapeUVs(bounds: THREE.Box2): THREE.UVGenerator {
   const size = bounds.getSize(new THREE.Vector2())
