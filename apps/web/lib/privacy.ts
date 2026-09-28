@@ -16,7 +16,7 @@ export const PRIVACY: LegalDoc = {
       paragraphs: [
         [
           {
-            text: "This policy covers every site under zyx.tw, all run by Loki (詹詠翔): www.zyx.tw and the apps ui, 3d, link, time and good; 1909, a private tool for three flatmates; the previews test, ui.test and 3d.test; and the hosts kitbash, sensorium, serverscope, derp and data.",
+            text: "This policy covers every site under zyx.tw, all run by Loki (詹詠翔): www.zyx.tw and the apps ui, 3d, link, time and good; 1909, a private tool for three flatmates; the previews test, ui.test and 3d.test; and the hosts kitbash, sensorium, derp and data.",
           },
         ],
       ],
