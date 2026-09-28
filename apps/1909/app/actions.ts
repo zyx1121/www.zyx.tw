@@ -1,54 +1,38 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
+import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 
-import { createClient } from "@/lib/supabase/server"
+import { auth } from "@/lib/auth"
+import { db } from "@/lib/db"
+import { requireMember } from "@/lib/member"
+
+// The database has no RLS: every action checks the flatmate here first.
 
 export async function addExpense(formData: FormData) {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) redirect("/auth/login")
+  const member = await requireMember()
 
   const title = formData.get("title") as string
   const amount = parseInt(formData.get("amount") as string, 10)
 
   if (!title || !amount || amount <= 0) return
 
-  const { data: member } = await supabase
-    .from("members")
-    .select("id")
-    .eq("email", user.email!)
-    .single()
-
-  if (!member) return
-
-  await supabase.from("expenses").insert({
-    member_id: member.id,
-    title,
-    amount,
-  })
+  await db()`
+    insert into app_1909.expenses (member_id, title, amount)
+    values (${member.id}, ${title}, ${amount})
+  `
 
   revalidatePath("/")
 }
 
 export async function toggleSettle(expenseId: number) {
-  const supabase = await createClient()
+  await requireMember()
 
-  const { data: expense } = await supabase
-    .from("expenses")
-    .select("settled")
-    .eq("id", expenseId)
-    .single()
-
-  if (!expense) return
-
-  await supabase
-    .from("expenses")
-    .update({ settled: !expense.settled })
-    .eq("id", expenseId)
+  await db()`
+    update app_1909.expenses set settled = not coalesce(settled, false)
+    where id = ${expenseId}
+  `
 
   revalidatePath("/")
 }
@@ -58,23 +42,25 @@ export async function updateExpense(
   title: string,
   amount: number
 ) {
-  const supabase = await createClient()
+  await requireMember()
 
-  await supabase.from("expenses").update({ title, amount }).eq("id", expenseId)
+  await db()`
+    update app_1909.expenses set title = ${title}, amount = ${amount}
+    where id = ${expenseId}
+  `
 
   revalidatePath("/")
 }
 
 export async function deleteExpense(expenseId: number) {
-  const supabase = await createClient()
+  await requireMember()
 
-  await supabase.from("expenses").delete().eq("id", expenseId)
+  await db()`delete from app_1909.expenses where id = ${expenseId}`
 
   revalidatePath("/")
 }
 
 export async function signOut() {
-  const supabase = await createClient()
-  await supabase.auth.signOut()
+  await auth.api.signOut({ headers: await headers() })
   redirect("/auth/login")
 }

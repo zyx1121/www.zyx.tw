@@ -1,9 +1,22 @@
-import type { NextRequest } from "next/server"
+import { getSessionCookie } from "better-auth/cookies"
+import { NextResponse, type NextRequest } from "next/server"
 
-import { updateSession } from "@/lib/supabase/middleware"
-
+// Only checks that a session cookie exists; pages and actions verify the
+// session itself through requireMember().
 export async function proxy(request: NextRequest) {
-  return await updateSession(request)
+  const { pathname } = request.nextUrl
+  const isPublic =
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/auth") ||
+    pathname.startsWith("/api/auth")
+
+  if (!isPublic && !getSessionCookie(request)) {
+    const url = request.nextUrl.clone()
+    url.pathname = "/auth/login"
+    return NextResponse.redirect(url)
+  }
+
+  return NextResponse.next()
 }
 
 export const config = {

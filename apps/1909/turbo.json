@@ -5,10 +5,7 @@
     "build": {
       "env": [
         "NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN",
-        "NEXT_PUBLIC_SUPABASE_URL",
-        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-        "GITHUB_TOKEN",
-        "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
+        "GITHUB_TOKEN"
       ]
     }
   }
