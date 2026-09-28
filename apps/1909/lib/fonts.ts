@@ -8,7 +8,8 @@ import localFont from "next/font/local"
 // Inter 4.1 from rsms/inter, subset to Latin (../fonts/README.md has the
 // command). The Google Fonts build of Inter lacks the ss01 (open digits) and
 // zero (slashed zero) features that the theme turns on, so it is self-hosted.
-// Characters outside the subset fall back to the metric-adjusted Arial face.
+// Latin Extended letters render in whatever fallback the platform has (Arial,
+// Noto Sans JP or the system font); static site content has none.
 export const inter = localFont({
   src: "../fonts/InterVariable.woff2",
   weight: "100 900",
@@ -47,9 +48,9 @@ export const notoSansTc = Noto_Sans_TC({
   variable: "--font-noto-sans-tc",
 })
 
-// Code only.
+// Code only, so it is not preloaded.
 export const geistMono = Geist_Mono({
-  subsets: ["latin"],
+  preload: false,
   variable: "--font-geist-mono",
 })
 

@@ -15,4 +15,4 @@ for f in InterVariable InterVariable-Italic; do
 done
 ```
 
-Result: `InterVariable.woff2` 109,564 bytes, `InterVariable-Italic.woff2` 120,056 bytes. Characters outside the subset, such as Latin Extended, fall back to the metric-adjusted Arial face that next/font generates for Inter.
+Result: `InterVariable.woff2` 109,564 bytes, `InterVariable-Italic.woff2` 120,056 bytes. Latin Extended letters render in whatever fallback the platform has (Arial, Noto Sans JP or the system font); static site content has none.

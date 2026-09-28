@@ -23,7 +23,7 @@ export default async function RootLayout({
     <html
       lang="zh-TW"
       suppressHydrationWarning
-      className={cn("antialiased", fontVariables, "font-sans")}
+      className={cn("dark", "antialiased", fontVariables, "font-sans")}
     >
       <body>
         <ThemeProvider>{children}</ThemeProvider>

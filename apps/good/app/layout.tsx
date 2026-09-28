@@ -51,7 +51,7 @@ export default async function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontVariables, "font-sans")}
+      className={cn("dark", "antialiased", fontVariables, "font-sans")}
     >
       <head>
         <link

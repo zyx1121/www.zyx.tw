@@ -190,7 +190,9 @@ export default function Home() {
       </div>
 
       <div className="fixed right-6 bottom-6 z-50">
-        <span className="font-mono text-base text-foreground/50">© 2026</span>
+        <span className="text-base text-foreground/50 tabular-nums">
+          © 2026
+        </span>
       </div>
 
       <main>

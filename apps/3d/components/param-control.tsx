@@ -53,7 +53,7 @@ function ParamControl({ id, def, value, onChange }: ParamControlProps) {
         <div className="space-y-2.5">
           <div className="flex items-center justify-between">
             <Label id={`${id}-label`}>{def.label}</Label>
-            <span className="font-mono text-xs text-muted-foreground tabular-nums">
+            <span className="text-xs text-muted-foreground tabular-nums">
               {formatNumber(number, def.step)}
             </span>
           </div>
