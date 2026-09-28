@@ -59,13 +59,13 @@ export const TERMS: LegalDoc = {
       heading: "Code and content",
       paragraphs: [
         [
-          { text: "The source code is open under the MIT License at " },
+          { text: "The source code in " },
           {
             text: "github.com/zyx1121/www.zyx.tw",
             href: "https://github.com/zyx1121/www.zyx.tw",
           },
           {
-            text: ". The zyx mark, the writing and the images are Loki's unless a page says otherwise.",
+            text: " is open under the MIT License. Fonts and other third-party files in it keep their own licenses. The zyx mark, the writing and the images are Loki's unless a page says otherwise. Other names and logos belong to their owners.",
           },
         ],
       ],

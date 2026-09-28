@@ -26,7 +26,7 @@ export const PRIVACY: LegalDoc = {
       paragraphs: [
         [
           {
-            text: "No site runs analytics or tracking scripts. None sets cookies, except 1909, whose sign-in keeps its members signed in with Supabase session cookies.",
+            text: "No site runs analytics or tracking scripts. None sets cookies, except 1909, whose sign-in sets cookies that keep its members signed in.",
           },
         ],
         [
@@ -61,7 +61,7 @@ export const PRIVACY: LegalDoc = {
         ],
         [
           {
-            text: "When one of those sites renders a request on the server (all but ui.zyx.tw, which is static files), it records the request with OpenTelemetry and sends the record to Loki's own monitoring service, sensorium.zyx.tw. A record can hold the method, the path and query string, the status and timing, your user agent and referrer, your IP address, and the city, region and country Vercel derives from it. Server errors are recorded with the same details. Records are deleted after 30 days.",
+            text: "When www, link, time, good or 1909 renders a request on the server, it records the request with OpenTelemetry and sends the record to Loki's own monitoring service, sensorium.zyx.tw. A record can hold the method, the path and query string, the status and timing, your user agent and referrer, your IP address, and the city, region and country Vercel derives from it. Server errors are recorded with the same details. Records are deleted after 30 days.",
           },
         ],
         [
@@ -86,17 +86,37 @@ export const PRIVACY: LegalDoc = {
       paragraphs: [
         [
           {
-            text: "link.zyx.tw keeps each URL you shorten, with its short code and the time it was made, in a database hosted by Neon. It does not keep who made it, and anyone with a short link can open it.",
+            text: "link.zyx.tw keeps each URL you shorten, with its short code and the time it was made. It does not keep who made it, and anyone with a short link can open it.",
           },
         ],
         [
           {
-            text: "1909 signs its members in with Google through Supabase, which keeps their Google account identity, and keeps their names, emails and shared expenses in Supabase.",
+            text: "1909 signs its members in with Google and asks only for their name, email address and profile picture. Only an email on its member list can make an account. It keeps that profile and the tokens Google returns. Each sign-in lasts 90 days and records the IP address and browser it came from. It also keeps the members' names, emails and shared expenses, which only signed-in members can see.",
           },
         ],
         [
           {
-            text: "No other site keeps anything about you. Hosts under kitbash.zyx.tw run Loki's own experiments and are not public services.",
+            text: "1909 uses Google data only to sign its members in and to know whose expenses are whose. It does not sell it, share it or use it for ads, and it follows the ",
+          },
+          {
+            text: "Google API Services User Data Policy",
+            href: "https://developers.google.com/terms/api-services-user-data-policy",
+          },
+          { text: "." },
+        ],
+        [
+          {
+            text: "Both sites keep their data in one database hosted by Neon, under the ",
+          },
+          {
+            text: "Neon privacy policy",
+            href: "https://neon.com/privacy-policy",
+          },
+          { text: "." },
+        ],
+        [
+          {
+            text: "Apart from the logs above, no other site keeps anything about you. Hosts under kitbash.zyx.tw run Loki's own experiments and are not public services.",
           },
         ],
       ],
