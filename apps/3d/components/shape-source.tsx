@@ -56,7 +56,10 @@ export type ShapeSourceProps = {
   /** The last edit went past the length limit and was cut. */
   clamped: boolean
   changeMode: (mode: Mode) => void
-  changeText: (value: string) => void
+  /** `composing`: an input method's characters aren't chosen yet, so they wait. */
+  changeText: (value: string, composing?: boolean) => void
+  /** An input method committed its characters. */
+  commitText: (value: string) => void
   changeFont: (id: string) => void
 }
 
@@ -145,8 +148,8 @@ export function useShapeSource(
         shape: { ...current.shape, svg, text: undefined },
       }))
     },
-    changeText(value) {
-      const typed = value.replace(/\r\n?/g, "\n").replace(/\t/g, " ")
+    changeText(value, composing = false) {
+      const typed = tidyText(value)
       const next = { ...draft, value: clampText(typed) }
       setDraft(next)
       setClamped(next.value !== typed)
@@ -154,6 +157,15 @@ export function useShapeSource(
       if (next.value === draft.value) return
       // What was said about the last text doesn't hold for this one.
       setStatus({ kind: "idle" })
+      clearTimeout(typing.current)
+      if (!composing) {
+        typing.current = setTimeout(() => convert(next), TYPING_PAUSE)
+      }
+    },
+    commitText(value) {
+      // Always converts: the committed text can match the last composed one.
+      const next = { ...draft, value: clampText(tidyText(value)) }
+      setDraft(next)
       clearTimeout(typing.current)
       typing.current = setTimeout(() => convert(next), TYPING_PAUSE)
     },
@@ -192,6 +204,10 @@ function readText(text: ShapeText | undefined): ShapeText {
   }
 }
 
+function tidyText(value: string) {
+  return value.replace(/\r\n?/g, "\n").replace(/\t/g, " ")
+}
+
 function clampText(value: string) {
   return value
     .split("\n")
@@ -208,7 +224,12 @@ async function outline(value: string, font: TextFont): Promise<Outline> {
     failed: `Couldn't load ${font.label}. Check the connection; the shape is unchanged.`,
   }
   const converter = await import("@/lib/text-to-svg").catch(() => null)
-  if (!converter) return unreachable
+  // A chunk that failed to load isn't fetched again until the page reloads.
+  if (!converter) {
+    return {
+      failed: "Couldn't load the text tools. Reload the page to try again.",
+    }
+  }
   try {
     return await converter.textToSvg(value, font)
   } catch (error) {
@@ -243,6 +264,7 @@ export function ShapeSource({
   clamped,
   changeMode,
   changeText,
+  commitText,
   changeFont,
 }: ShapeSourceProps) {
   const font = findPreset(fonts, draft.font) ?? fonts[0]
@@ -267,7 +289,13 @@ export function ShapeSource({
           rows={3}
           spellCheck={false}
           autoComplete="off"
-          onChange={(event) => changeText(event.target.value)}
+          onChange={(event) =>
+            changeText(
+              event.target.value,
+              (event.nativeEvent as InputEvent).isComposing
+            )
+          }
+          onCompositionEnd={(event) => commitText(event.currentTarget.value)}
         />
         <PresetSelect
           label="Font"

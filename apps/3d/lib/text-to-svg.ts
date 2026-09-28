@@ -126,8 +126,14 @@ async function fetchFace(font: TextFont, chars: string[]): Promise<Font> {
     if (!file?.ok) {
       // For a family with none of the characters, Google answers the file
       // with a 400 that has no CORS headers, which fetch reports as a network
-      // error. The stylesheet just came through, so online that's the reason.
-      const empty = file ? file.status === 400 : navigator.onLine
+      // error. A no-cors request tells the two apart: it only fails when the
+      // server can't be reached.
+      const empty = file
+        ? file.status === 400
+        : await fetch(url, { mode: "no-cors" }).then(
+            () => true,
+            () => false
+          )
       throw empty
         ? new NoGlyphsError(`${font.label} has none of the characters`)
         : new FontLoadError(`${new URL(url).host} gave no file`)
