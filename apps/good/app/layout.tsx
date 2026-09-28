@@ -22,8 +22,6 @@ export const metadata: Metadata = {
   authors: [{ name: "Loki", url: "https://zyx.tw" }],
   creator: "Loki",
   keywords: ["乖乖", "digital amulet", "電子護符", "zyx"],
-  robots: { index: true, follow: true },
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "zh_TW",
