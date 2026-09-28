@@ -84,3 +84,5 @@ A param is a `number` (slider), a `color` (color picker) or a `boolean` (switch)
 ## Credits
 
 Environment maps from [Poly Haven](https://polyhaven.com), CC0, converted to 4096 × 2048 gain maps: Studio Small 03, Potsdamer Platz and Shanghai Bund by Greg Zaal; Wooden Studio 10 and Wooden Studio 14 by Alexander Scholten; Ferndale Studio 05 and Pretville Cinema by Dimitrios Savva and Jarod Guest; Ferndale Studio 06 by Dimitrios Savva and Greg Zaal; The Sky Is On Fire by Greg Zaal and Rico Cilliers; Kloofendal 48d Partly Cloudy (Pure Sky) by Greg Zaal and Jarod Guest.
+
+Pink castle, Crystal cave, Dream garden, Vaporwave, Aurora and Underwater were generated with OpenAI image generation (via Codex) and upscaled with [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN). Each was made to wrap seamlessly, upscaled 4× and resized to 4096 × 2048, smoothed at the zenith and nadir, and lifted to HDR by brightening only its near-white highlights, keeping their hue, before the same gain map conversion.
