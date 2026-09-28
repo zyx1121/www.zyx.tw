@@ -50,7 +50,7 @@ export const SECTIONS: Section[] = [
       },
       {
         when: "2022–2024",
-        what: "Coach for the national skills competition",
+        what: "Volunteer coach for the vocational skills competition",
         where: "Shalu Vocational High School",
       },
       {
@@ -62,7 +62,7 @@ export const SECTIONS: Section[] = [
       {
         when: "2020",
         what: "1st place in computer repair",
-        where: "National Skills Competition",
+        where: "National Vocational High School Skills Competition",
       },
     ],
   },
@@ -89,27 +89,21 @@ export const SECTIONS: Section[] = [
     entries: [
       {
         when: "2026",
-        what: "An operating system for AI agents",
-        where: "kitbash",
-        href: "https://github.com/zyx1121/kitbash",
-      },
-      {
-        when: "2026",
         what: "A local model host for agents on Windows",
         where: "aias",
         href: "https://github.com/zyx1121/aias",
+      },
+      {
+        when: "2026",
+        what: "An operating system for AI agents",
+        where: "kitbash",
+        href: "https://github.com/zyx1121/kitbash",
       },
       {
         when: "2024",
         what: "Find My item locations as an API",
         where: "findmy-api",
         href: "https://github.com/zyx1121/findmy-api",
-      },
-      {
-        when: "2024",
-        what: "A terminal client for Jenkins",
-        where: "jenkins-terminal",
-        href: "https://pypi.org/project/jenkins-terminal",
       },
       {
         when: "2024",
@@ -122,6 +116,12 @@ export const SECTIONS: Section[] = [
         what: "Experimental AFC on OpenWiFi",
         where: "openwifi-afc",
         href: "https://github.com/zyx1121/openwifi-afc",
+      },
+      {
+        when: "2024",
+        what: "A terminal client for Jenkins",
+        where: "jenkins-terminal",
+        href: "https://pypi.org/project/jenkins-terminal",
       },
       {
         when: "2023–2024",

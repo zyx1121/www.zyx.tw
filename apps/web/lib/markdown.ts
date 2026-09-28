@@ -4,13 +4,12 @@ import {
   daysAlive,
   EMAIL,
   GITHUB_USER,
-  type IntroRun,
   STATUS_COPY,
 } from "@workspace/ui/lib/profile"
 
 import { ABOUT, CONTACT, HOME, LATEST, NOT_FOUND, WORKS } from "@/lib/copy"
 import type { Change } from "@/lib/latest"
-import { PRIVACY } from "@/lib/privacy"
+import { PRIVACY, type Run } from "@/lib/privacy"
 import { projects } from "@/lib/projects"
 import { FACTS, SECTIONS } from "@/lib/resume"
 import {
@@ -36,8 +35,8 @@ function link(label: string, href: string) {
   return `[${text(label)}](${href})`
 }
 
-/** Text runs with optional links, such as the intro line, as Markdown. */
-function runs(parts: readonly IntroRun[]) {
+/** Text runs with optional links, such as a privacy paragraph, as Markdown. */
+function runs(parts: readonly Run[]) {
   return parts
     .map(({ text: value, href }) => (href ? link(value, href) : text(value)))
     .join("")
