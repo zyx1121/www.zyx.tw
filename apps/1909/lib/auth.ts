@@ -1,12 +1,18 @@
-import { Pool } from "@neondatabase/serverless"
+import { attachDatabasePool } from "@vercel/functions"
 import { betterAuth } from "better-auth"
 import { nextCookies } from "better-auth/next-js"
+import { Pool } from "pg"
 
 import { db } from "@/lib/db"
 
+// node-postgres with attachDatabasePool, as Neon recommends on Vercel Fluid
+// compute: idle clients are released before the function suspends.
+const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+attachDatabasePool(pool)
+
 // Reads BETTER_AUTH_SECRET and BETTER_AUTH_URL from the environment.
 export const auth = betterAuth({
-  database: new Pool({ connectionString: process.env.DATABASE_URL }),
+  database: pool,
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
