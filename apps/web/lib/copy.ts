@@ -9,8 +9,6 @@ export const WORKS = { title: "Works" } as const
 
 export const ABOUT = { title: "About" } as const
 
-export const CONTACT = { title: "Contact" } as const
-
 export const NOT_FOUND = {
   title: "Not found.",
   lead: "These pages exist:",

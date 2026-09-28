@@ -28,15 +28,6 @@
       "priority": 0.8
     },
     {
-      "path": "/contact",
-      "label": "Contact",
-      "markdown": "/contact.md",
-      "summary": "his email",
-      "nav": true,
-      "changeFrequency": "yearly",
-      "priority": 0.5
-    },
-    {
       "path": "/privacy",
       "label": "Privacy",
       "markdown": "/privacy.md",

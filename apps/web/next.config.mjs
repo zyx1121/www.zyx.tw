@@ -17,6 +17,13 @@ const wantsMarkdown = {
 const nextConfig = {
   transpilePackages: ["@workspace/3d", "@workspace/otel", "@workspace/ui"],
   serverExternalPackages: ["exifr"],
+  // Contact was its own page until 2026-09-28; the email is on About now.
+  async redirects() {
+    return [
+      { source: "/contact", destination: "/about", permanent: true },
+      { source: "/contact.md", destination: "/about.md", permanent: true },
+    ]
+  },
   // Content negotiation in the router, so no function runs for it: a page
   // asked for as Markdown is served its twin, and a Markdown request for a
   // path that does not exist gets the Markdown 404.

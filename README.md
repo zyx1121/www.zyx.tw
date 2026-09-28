@@ -45,7 +45,7 @@ Plain `bun dev` boots turbo across all 7 apps at once. `--filter=<app>` (or `cd 
 
 | App | Live at | What it does |
 |-----|---------|---------------|
-| `web` | [zyx.tw](https://zyx.tw) | the site itself: a 3D home, works, a resume and contact |
+| `web` | [zyx.tw](https://zyx.tw) | the site itself: a 3D home, works and a resume |
 | `link` | [link.zyx.tw](https://link.zyx.tw) | your URLs, but shorter |
 | `time` | [time.zyx.tw](https://time.zyx.tw) | what time is it? |
 | `good` | [good.zyx.tw](https://good.zyx.tw) | a digital 乖乖, the snack engineers tape onto servers |

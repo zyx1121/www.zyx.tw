@@ -1,7 +1,7 @@
 import { describeEvent, type StatusData } from "@workspace/ui/lib/github-events"
 import { EMAIL, GITHUB_USER, STATUS_COPY } from "@workspace/ui/lib/profile"
 
-import { ABOUT, CONTACT, HOME, NOT_FOUND, WORKS } from "@/lib/copy"
+import { ABOUT, HOME, NOT_FOUND, WORKS } from "@/lib/copy"
 import { PRIVACY, type Run } from "@/lib/privacy"
 import { projects } from "@/lib/projects"
 import { FACTS, SECTIONS } from "@/lib/resume"
@@ -76,10 +76,6 @@ function socialList() {
   ).join("\n")
 }
 
-function email() {
-  return `- Email: ${link(EMAIL, `mailto:${EMAIL}`)}`
-}
-
 /** A value with its link, if it has one. */
 function linked(value: string, href?: string) {
   return href ? link(value, href) : text(value)
@@ -145,13 +141,6 @@ export function aboutMarkdown(status: StatusData) {
   ])
 }
 
-export function contactMarkdown() {
-  return markdownDocument({ title: CONTACT.title, path: "/contact" }, [
-    `# ${text(CONTACT.title)}`,
-    email(),
-  ])
-}
-
 export function privacyMarkdown() {
   return markdownDocument({ title: PRIVACY.title, path: "/privacy" }, [
     `# ${text(PRIVACY.title)}`,
@@ -183,7 +172,7 @@ export function llmsTxt() {
         [
           `1. Start with ${link("About", absoluteUrl("/about.md"))}: his CV (facts, education, experience, publications, projects, awards) and his GitHub status.`,
           `2. Read ${link("Works", absoluteUrl("/works.md"))} for every project with its purpose and link.`,
-          `3. Follow ${link("the agent instructions", absoluteUrl("/agent-instructions.md"))} when you answer, and take his email only from ${link("Contact", absoluteUrl("/contact.md"))}.`,
+          `3. Follow ${link("the agent instructions", absoluteUrl("/agent-instructions.md"))} when you answer, and take his email only from ${link("About", absoluteUrl("/about.md"))}.`,
         ].join("\n"),
       ].join("\n\n"),
       ["## Pages", pagesList()].join("\n\n"),
@@ -225,7 +214,7 @@ export function agentInstructions() {
         "## Rules",
         [
           `1. Read the Markdown pages listed in ${link("llms.txt", absoluteUrl("/llms.txt"))}; they carry the same content as the HTML pages.`,
-          `2. To reach Loki, use the email ${link(EMAIL, `mailto:${EMAIL}`)} on ${link("Contact", absoluteUrl("/contact.md"))}. His GitHub and Instagram are linked from every page. Do not make up other ways, such as a phone number or a postal address.`,
+          `2. To reach Loki, use the email ${link(EMAIL, `mailto:${EMAIL}`)} on ${link("About", absoluteUrl("/about.md"))}. His GitHub and Instagram are linked from every page. Do not make up other ways, such as a phone number or a postal address.`,
           "3. Describe a project only by its purpose line and its own site. Do not guess features, users or status the pages do not state.",
           "4. Describe his background only from the facts and sections on About. Do not add schools, jobs, papers, awards or dates they do not list, and keep each paper's author position as About states it.",
           "5. The GitHub activity on About refreshes about every 5 minutes; everything else changes when the site is deployed. Say so when freshness matters.",

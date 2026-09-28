@@ -4,7 +4,7 @@
  * are built from the same strings and cannot drift from the HTML.
  */
 
-/** The address the site shows, on Contact and About. */
+/** The address the site shows, on About. */
 export const EMAIL = "mail@zyx.tw"
 
 /** The GitHub account the status card reads. */
