@@ -33,9 +33,16 @@ export type Scene3DHandle = {
 }
 
 /**
+ * Chrome shrinks a WebGL canvas past 5760 x 5760 pixels of area, an 8K UHD
+ * frame's worth, to avoid running out of memory, so a capture asks for no
+ * more: 8K fits a 16:9 canvas, and a squarer one shrinks.
+ */
+const MAX_CAPTURE_AREA = 5760 * 5760
+
+/**
  * Browsers don't say how much GPU memory is free, so an export's full-size
- * buffers stay under this many bytes: an 8K frame of a 16:10 canvas fits
- * without multisampling, and a squarer one shrinks.
+ * buffers stay under this many bytes, multisamples included: a 16:10 4K
+ * frame keeps 4 of them, and 8K renders without.
  */
 const CAPTURE_MEMORY = 1.25e9
 
@@ -73,7 +80,7 @@ export function SceneCapture({
   return null
 }
 
-/** Scales the size down, keeping its aspect ratio, until the GPU's limits and CAPTURE_MEMORY allow it. */
+/** Scales the size down, keeping its aspect ratio, until the GPU's and the browser's limits allow it. */
 function fitCapture(
   gl: THREE.WebGLRenderer,
   width: number,
@@ -94,6 +101,7 @@ function fitCapture(
     1,
     Math.min(side, maxWidth) / width,
     Math.min(side, maxHeight) / height,
+    Math.sqrt(MAX_CAPTURE_AREA / (width * height)),
     Math.sqrt(CAPTURE_MEMORY / (width * height * bytesPerPixel(0)))
   )
   return {
@@ -136,7 +144,9 @@ function capture(
       context.drawingBufferWidth !== width ||
       context.drawingBufferHeight !== height
     ) {
-      throw new Error(`This browser can't draw ${width} x ${height}`)
+      throw new Error(
+        `This browser draws at most ${context.drawingBufferWidth} x ${context.drawingBufferHeight} here; pick a smaller size`
+      )
     }
     composer.multisampling = samplesFor(width * height, samples)
     composer.setSize(width, height, false)

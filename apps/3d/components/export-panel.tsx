@@ -149,7 +149,7 @@ export function ExportPanel({
         </ToggleGroup>
         {output && isClamped(output) && (
           <p className="text-xs text-muted-foreground">
-            {`Shrunk from ${output.asked.width} × ${output.asked.height} to fit this device's GPU.`}
+            {`Shrunk from ${output.asked.width} × ${output.asked.height} to fit this browser's WebGL limits.`}
           </p>
         )}
       </div>
