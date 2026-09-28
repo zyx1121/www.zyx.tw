@@ -21,10 +21,12 @@ const AT: Record<At, string> = {
 
 /**
  * Text links in a corner: muted, lit on hover and for the current page. The
- * hit area reaches 8 px past the text on every side without moving it.
+ * hit area reaches 8 px past the text to either side and 2 px above and
+ * below, so it is 24 px tall and meets, but never covers, its neighbours in
+ * the 16 px gaps and on a wrapped row 4 px down.
  */
 export const cornerLink =
-  "relative rounded-sm text-muted-foreground outline-offset-4 transition-colors after:absolute after:-inset-2 hover:text-foreground focus-visible:outline-2 aria-[current=page]:text-foreground"
+  "relative rounded-sm text-muted-foreground outline-offset-4 transition-colors after:absolute after:-inset-x-2 after:-inset-y-0.5 hover:text-foreground focus-visible:outline-2 aria-[current=page]:text-foreground"
 
 /** One corner of the viewport. A page can fill one the layout leaves empty. */
 export function Corner({
@@ -151,7 +153,15 @@ export function BottomCorners({
         </Corner>
       )}
       <Corner at="bottom-right" className={className} style={style}>
-        <p className="text-muted-foreground tabular-nums">© {year}</p>
+        {/* A prerendered page keeps the year it was built in; a client
+            render in a later year leaves that text rather than tearing the
+            tree down over one number. */}
+        <p
+          className="text-muted-foreground tabular-nums"
+          suppressHydrationWarning
+        >
+          © {year}
+        </p>
       </Corner>
     </footer>
   )
