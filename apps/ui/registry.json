@@ -7,12 +7,15 @@
       "name": "theme",
       "type": "registry:theme",
       "title": "Theme",
-      "description": "The zyx.tw theme on top of stock shadcn/ui — full grayscale palette, radius raised to 1rem. Init with the base preset and neutral color, then add this.",
+      "description": "The zyx.tw theme on top of stock shadcn/ui: full grayscale palette, stock radius, pure black dark mode, muted text at 4.5:1 on every surface in both themes. Init with the base preset and neutral color, then add this.",
       "cssVars": {
         "light": {
-          "radius": "1rem"
+          "radius": "0.625rem",
+          "muted-foreground": "oklch(0.54 0 0)"
         },
         "dark": {
+          "background": "oklch(0 0 0)",
+          "muted-foreground": "oklch(0.65 0 0)",
           "sidebar-primary": "oklch(0.922 0 0)",
           "sidebar-primary-foreground": "oklch(0.205 0 0)"
         }

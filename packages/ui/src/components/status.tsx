@@ -225,7 +225,7 @@ export function Status({ data }: { data: StatusData }) {
                     recomputes it. The client value is the right one; suppress
                     the text-mismatch warning instead of forcing a match. */}
                 <span
-                  className="shrink-0 font-mono text-xs text-muted-foreground/70 tabular-nums"
+                  className="shrink-0 text-xs text-muted-foreground/70 tabular-nums"
                   suppressHydrationWarning
                 >
                   {timeAgo(e.created_at)}

@@ -48,14 +48,14 @@ export function DaysAlive() {
     <Tooltip>
       <TooltipTrigger
         render={
-          <span className="fixed bottom-4 left-4 z-50 cursor-default font-mono text-sm text-muted-foreground tabular-nums" />
+          <span className="fixed bottom-4 left-4 z-50 cursor-default text-sm text-muted-foreground tabular-nums" />
         }
       >
         {days === null ? "" : days.toLocaleString()}
       </TooltipTrigger>
       <TooltipContent side="top">
         <span>
-          <span className="font-mono tabular-nums">
+          <span className="tabular-nums">
             {now === null ? "—" : formatBreakdown(birthDate, new Date(now))}
           </span>
           <br />

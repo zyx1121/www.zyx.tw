@@ -71,7 +71,9 @@ Shared packages: `packages/ui` (design system + components) · `packages/3d` (sc
 
 ## Design system
 
-Every app follows [`apps/ui/DESIGN.md`](./apps/ui/DESIGN.md): stock shadcn/ui on the `base-nova` preset (Base UI primitives, so `asChild` is the `render` prop), the grayscale ui.zyx.tw theme with `--radius: 1rem`, Geist for text and Geist Mono for code and numbers. Base components are never forked; the CLI owns `components/ui/`.
+Every app follows [`apps/ui/DESIGN.md`](./apps/ui/DESIGN.md): stock shadcn/ui on the `base-nova` preset (Base UI primitives, so `asChild` is the `render` prop) and the grayscale ui.zyx.tw theme with the stock `--radius: 0.625rem`. Apps start dark on a pure black background, whatever the OS prefers. Text is Inter (self-hosted, with open digits and a slashed zero), then Noto Sans JP and Noto Sans TC for CJK; Geist Mono is for code only, and numbers use Inter's `tabular-nums`. Base components are never forked; the CLI owns `components/ui/`.
+
+Apps on `@workspace/ui` load the fonts from `packages/ui/src/lib/fonts.ts` and put its `fontVariables` on `<html>`.
 
 Shared components live in `packages/ui`. Add a stock component there with the shadcn CLI:
 
@@ -92,7 +94,7 @@ zyx components (`theme-toggle`, `shimmering-text`) come from the registry, alrea
 bunx --bun shadcn@latest add @zyx1121/theme-toggle
 ```
 
-The theme tokens in `packages/ui/src/styles/globals.css` must match `apps/ui/app/globals.css` and the `theme` item in `apps/ui/registry.json`. CI runs the check; run it locally with:
+The theme tokens in `packages/ui/src/styles/globals.css` and `apps/1909/app/globals.css` must match `apps/ui/app/globals.css` and the `theme` item in `apps/ui/registry.json`. CI runs the check; run it locally with:
 
 ```bash
 bun run theme:check
