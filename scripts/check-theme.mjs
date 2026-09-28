@@ -6,7 +6,11 @@
 //   1. every cssVar in the `theme` item of apps/ui/registry.json is present,
 //      with the same value, in apps/ui/app/globals.css, and
 //   2. every consumer stylesheet below declares exactly the same :root and
-//      .dark custom properties as apps/ui/app/globals.css, no more, no less.
+//      .dark custom properties as apps/ui/app/globals.css, no more, no less,
+//      and
+//   3. the `css` rules of the `theme` item (the frosted overlays) appear, the
+//      same apart from whitespace and comments, in apps/ui/app/globals.css
+//      and every consumer stylesheet.
 //
 // Usage: node scripts/check-theme.mjs
 
@@ -55,6 +59,29 @@ function normalize(value) {
   return value.replace(/\s+/g, " ").trim()
 }
 
+// CSS with comments and optional whitespace and semicolons dropped, so two
+// spellings of the same rules compare equal.
+function flatten(css) {
+  return css
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/\s+/g, " ")
+    .replace(/\s*([{};:,])\s*/g, "$1")
+    .replace(/;}/g, "}")
+    .trim()
+}
+
+// A registry item's `css` object ({ at-rule: { selector: { prop: value } } })
+// as CSS text.
+function serialize(rules) {
+  return Object.entries(rules)
+    .map(([key, value]) =>
+      typeof value === "string"
+        ? `${key}:${value};`
+        : `${key}{${serialize(value)}}`
+    )
+    .join("")
+}
+
 const errors = []
 const source = parseTokens(SOURCE)
 
@@ -101,6 +128,18 @@ for (const path of CONSUMERS) {
           `${path} ${selector} ${name}: not part of the ui.zyx.tw theme`
         )
       }
+    }
+  }
+}
+
+// 3. registry theme css -> source and every consumer
+if (theme?.css) {
+  const rules = flatten(serialize(theme.css))
+  for (const path of [SOURCE, ...CONSUMERS]) {
+    if (!flatten(read(path)).includes(rules)) {
+      errors.push(
+        `${path}: missing the registry theme's css rules, or they differ`
+      )
     }
   }
 }

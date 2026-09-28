@@ -274,3 +274,18 @@
     }
   }
 }
+
+/* Overlays behind a dialog, alert dialog, sheet or drawer: transparent with a
+   frosted blur instead of stock's 10% black. Unlayered, so it wins over the
+   stock components' utility classes without forking them. Browsers without
+   backdrop-filter keep the stock tint. */
+@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0)) {
+  [data-slot="dialog-overlay"],
+  [data-slot="alert-dialog-overlay"],
+  [data-slot="sheet-overlay"],
+  [data-slot="drawer-overlay"] {
+    background-color: transparent;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+}
