@@ -5,10 +5,9 @@ import { usePathname } from "next/navigation"
 
 import { BottomCorners, cornerLink } from "@workspace/ui/components/corners"
 
-import { MarkdownLink } from "@/components/markdown-link"
 import { enter, ENTER, enterDelay } from "@/lib/layout"
-import { SOCIAL } from "@/lib/site"
 
+/** The bottom corners: Privacy and Terms, which cover every zyx.tw site. */
 export function SiteFooter() {
   const pathname = usePathname()
   const home = pathname === "/"
@@ -27,18 +26,13 @@ export function SiteFooter() {
           >
             Privacy
           </Link>
-          {SOCIAL.map(({ label, href }) => (
-            <a
-              key={href}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cornerLink}
-            >
-              {label}
-            </a>
-          ))}
-          <MarkdownLink className={cornerLink} />
+          <Link
+            href="/terms"
+            aria-current={pathname === "/terms" ? "page" : undefined}
+            className={cornerLink}
+          >
+            Terms
+          </Link>
         </>
       }
     />

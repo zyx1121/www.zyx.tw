@@ -1,6 +1,10 @@
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
 
-import { BottomCorners, TopCorners } from "@workspace/ui/components/corners"
+import {
+  BottomCorners,
+  LegalLinks,
+  TopCorners,
+} from "@workspace/ui/components/corners"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -31,7 +35,10 @@ export default async function RootLayout({
         <ThemeProvider>
           <TopCorners fade />
           {children}
-          <BottomCorners fade />
+          <BottomCorners
+            fade
+            links={<LegalLinks labels={{ privacy: "隱私權", terms: "條款" }} />}
+          />
         </ThemeProvider>
       </body>
     </html>

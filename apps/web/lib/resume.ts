@@ -1,4 +1,6 @@
-import { EMAIL, GITHUB_USER } from "@workspace/ui/lib/profile"
+import { EMAIL } from "@workspace/ui/lib/profile"
+
+import { SOCIAL } from "@/lib/site"
 
 /**
  * The about page's CV, as data so /about and /about.md say the same thing.
@@ -15,11 +17,7 @@ export type Fact = { label: string; value: string; href?: string }
 export const FACTS: Fact[] = [
   { label: "From", value: "Changhua" },
   { label: "Email", value: EMAIL, href: `mailto:${EMAIL}` },
-  {
-    label: "GitHub",
-    value: `@${GITHUB_USER}`,
-    href: `https://github.com/${GITHUB_USER}`,
-  },
+  ...SOCIAL.map(({ label, handle, href }) => ({ label, value: handle, href })),
 ]
 
 /** A row of a resume list: when, what, and where, linked when it has an address. */

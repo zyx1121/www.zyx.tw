@@ -1,24 +1,15 @@
-import { BottomCorners, cornerLink } from "@workspace/ui/components/corners";
+import { BottomCorners, LegalLinks } from "@workspace/ui/components/corners";
 
 import { ENTER, enter, enterAfter } from "@/lib/layout";
-import { MARKDOWN_PATH, SOURCE_URL } from "@/lib/site";
 
+// Privacy and Terms, shared by every zyx.tw site at www.zyx.tw.
 export function SiteFooter() {
   return (
     <BottomCorners
       fade
       className={enter}
       style={enterAfter(ENTER.footer)}
-      links={
-        <>
-          <a href={SOURCE_URL} className={cornerLink}>
-            GitHub
-          </a>
-          <a href={MARKDOWN_PATH} className={cornerLink}>
-            Markdown
-          </a>
-        </>
-      }
+      links={<LegalLinks />}
     />
   );
 }

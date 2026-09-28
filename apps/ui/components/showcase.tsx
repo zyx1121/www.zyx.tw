@@ -711,7 +711,8 @@ export function Showcase({
         <>
           <div className="flex flex-wrap items-center gap-6">
             <Avatar>
-              <AvatarImage src="https://github.com/zyx1121.png" alt="Loki" />
+              {/* Served from this site, so the demo makes no request to GitHub. */}
+              <AvatarImage src="/avatar.jpg" alt="Loki" />
               <AvatarFallback>ZY</AvatarFallback>
             </Avatar>
             <KbdGroup>
