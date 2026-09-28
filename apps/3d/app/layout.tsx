@@ -2,8 +2,7 @@ import type { Metadata } from "next"
 
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
 import "@workspace/ui/globals.css"
-import { Brand } from "@workspace/ui/components/brand"
-import { Copyright } from "@workspace/ui/components/copyright"
+import { BottomCorners, TopCorners } from "@workspace/ui/components/corners"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 import { fontVariables } from "@workspace/ui/lib/fonts"
@@ -56,9 +55,9 @@ export default async function RootLayout({
       <body>
         <ThemeProvider>
           <TooltipProvider>
-            <Brand />
+            <TopCorners />
             {children}
-            <Copyright />
+            <BottomCorners />
           </TooltipProvider>
         </ThemeProvider>
       </body>

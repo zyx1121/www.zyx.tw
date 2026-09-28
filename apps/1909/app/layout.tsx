@@ -1,5 +1,7 @@
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
 
+import { BottomCorners, TopCorners } from "@workspace/ui/components/corners"
+
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { fontVariables } from "@/lib/fonts"
@@ -26,7 +28,11 @@ export default async function RootLayout({
       className={cn("dark", "antialiased", fontVariables, "font-sans")}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <TopCorners fade />
+          {children}
+          <BottomCorners fade />
+        </ThemeProvider>
       </body>
     </html>
   )

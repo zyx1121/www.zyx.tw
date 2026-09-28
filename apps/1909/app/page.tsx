@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation"
 
+import { Corner } from "@workspace/ui/components/corners"
+
 import { createClient } from "@/lib/supabase/server"
 import { calculateDebts } from "@/lib/calc"
 import type { Member, Expense } from "@/lib/types"
@@ -34,14 +36,12 @@ export default async function Page() {
   const debts = calculateDebts(unsettled, members ?? [])
 
   return (
-    <div className="mx-auto flex min-h-svh max-w-2xl flex-col gap-6 p-6">
-      <div className="flex items-center justify-between">
-        <h1 className="font-medium">1909</h1>
-        <div className="flex items-center gap-3">
-          <ExpenseForm />
-          <UserNav name={currentMember.name} />
-        </div>
-      </div>
+    <div className="mx-auto flex min-h-svh max-w-2xl flex-col gap-6 px-6 pt-20 pb-25">
+      <Corner at="top-right">
+        <ExpenseForm />
+        <UserNav name={currentMember.name} />
+      </Corner>
+      <h1 className="font-medium">1909</h1>
 
       <section className="flex flex-col gap-2">
         <h2 className="text-sm text-muted-foreground">欠款摘要</h2>

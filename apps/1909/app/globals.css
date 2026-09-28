@@ -4,6 +4,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* The shared corners (TopCorners, BottomCorners, Corner) from @workspace/ui. */
+@source "../../../packages/ui/src/components/corners.tsx";
+@source "../../../packages/ui/src/components/zyx-mark.tsx";
+
 @theme inline {
   /*
    * Fonts: Inter, then Noto Sans JP and Noto Sans TC for CJK, then the system
