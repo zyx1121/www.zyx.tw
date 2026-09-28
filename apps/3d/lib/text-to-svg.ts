@@ -318,9 +318,8 @@ function union(rings: Path64[]): PolyTree64 {
 
 /**
  * One path per outline with its holes, so three.js pairs them without
- * searching. Outlines wind with positive area and holes with negative, the
- * pairing three.js reads for the nonzero rule and the one ExtrudeGeometry
- * checks and reorders its holes by.
+ * searching the whole text. Outlines wind with positive area and holes with
+ * negative, which is how three.js tells them apart by the nonzero rule.
  */
 function toSvg(tree: PolyTree64): string | null {
   const paths: string[] = []
