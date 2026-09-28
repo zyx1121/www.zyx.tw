@@ -56,12 +56,6 @@ const PROJECTS: Project[] = [
     preview: "https://opengraph.githubassets.com/1/zyx1121/scriptorium",
   },
   {
-    name: "temp.zyx.tw",
-    description: "Anonymous shared notepad — one URL, one pad, no account.",
-    href: "https://temp.zyx.tw",
-    preview: "/previews/temp.zyx.tw.webp",
-  },
-  {
     name: "link.zyx.tw",
     description: "URL shortener — paste a long one, get a short one back.",
     href: "https://link.zyx.tw",

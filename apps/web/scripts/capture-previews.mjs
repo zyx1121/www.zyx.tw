@@ -20,7 +20,6 @@ const SITES = [
   "ai.winlab.tw",
   "www.winlab.tw",
   "gallery.winlab.tw",
-  "temp.zyx.tw",
   "link.zyx.tw",
   "time.zyx.tw",
 ]
