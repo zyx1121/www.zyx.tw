@@ -1,34 +1,29 @@
-import { Background } from "@workspace/ui/components/background"
-import { Contact } from "@workspace/ui/components/contact"
-import { Intro } from "@workspace/ui/components/intro"
-import { MapBlock } from "@workspace/ui/components/map-block"
-import { Projects } from "@workspace/ui/components/projects"
-import { Status } from "@workspace/ui/components/status"
+import { HomeStage } from "@/components/home-stage"
+import { HOME } from "@/lib/copy"
+import sceneFile from "@/lib/home-scene.json"
+import { pageMetadata } from "@/lib/site"
 
-import { getGithubStatus } from "@/lib/github"
-
-// GitHub status is fetched on the server and the page regenerated in the
-// background every 5 minutes (ISR), so the SSR HTML carries real events
-// instead of "Loading…". force-static keeps the route prerendered even though
-// the GitHub fetch carries an Authorization header, which Next would
-// otherwise read as a dynamic signal.
-export const revalidate = 300
 export const dynamic = "force-static"
 
-export default async function Home() {
-  const status = await getGithubStatus()
+// The home's canonical and Markdown alternate live here, not in the root
+// layout, so the not-found page does not inherit them.
+export const metadata = pageMetadata({ path: "/" })
 
+/**
+ * The home is the 3D mark alone, on a stage that fills the viewport under
+ * the corners. Everything else about Loki is on About.
+ */
+export default function Home() {
   return (
-    <main className="flex flex-col items-center">
-      <Background />
-      <section className="h-dvh w-dvw" aria-label="Hero" />
-      <Intro />
-      <Status data={status} />
-      <Projects />
-      <MapBlock
-        accessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ?? ""}
-      />
-      <Contact />
+    // The scene's background, which also shows while the scene loads. The
+    // root layout paints the scrollbar gutter beside it the same color.
+    <main
+      data-stage
+      className="fixed inset-0"
+      style={{ background: sceneFile.staging.background }}
+    >
+      <h1 className="sr-only">{HOME.title}</h1>
+      <HomeStage />
     </main>
   )
 }

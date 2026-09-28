@@ -2,13 +2,12 @@ import type {
   GhEvent,
   Heatmap,
   StatusData,
-} from "@workspace/ui/components/status"
-
-const USER = "zyx1121"
-const GH_API = "https://api.github.com"
+} from "@workspace/ui/lib/github-events"
+import { GITHUB_USER as USER } from "@workspace/ui/lib/profile"
+export const GH_API = "https://api.github.com"
 const GRAPHQL_URL = `${GH_API}/graphql`
 const TOKEN = process.env.GITHUB_TOKEN
-const REVALIDATE_SECONDS = 300
+export const REVALIDATE_SECONDS = 300
 
 const HEATMAP_QUERY = `
   query($login: String!) {
@@ -42,7 +41,8 @@ const RELEVANT_TYPES = [
 
 type RawEvent = GhEvent & { public?: boolean }
 
-const headers: Record<string, string> = {
+/** REST headers for api.github.com, with GITHUB_TOKEN when it is set. */
+export const GITHUB_HEADERS: Record<string, string> = {
   Accept: "application/vnd.github+json",
   "X-GitHub-Api-Version": "2022-11-28",
   ...(TOKEN ? { Authorization: `bearer ${TOKEN}` } : {}),
@@ -53,7 +53,7 @@ async function fetchEvents(): Promise<GhEvent[]> {
   // /events/orgs/{org} would catch private-org events but needs read:org scope.
   const res = await fetch(
     `${GH_API}/users/${USER}/events/public?per_page=100`,
-    { headers, next: { revalidate: REVALIDATE_SECONDS } }
+    { headers: GITHUB_HEADERS, next: { revalidate: REVALIDATE_SECONDS } }
   )
   if (!res.ok) return []
   const events = (await res.json()) as RawEvent[]

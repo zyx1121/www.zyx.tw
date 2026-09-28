@@ -1,0 +1,101 @@
+[
+  {
+    "slug": "good",
+    "name": "good.zyx.tw",
+    "href": "https://good.zyx.tw",
+    "purpose": "a digital 乖乖 taped onto servers",
+    "preview": {
+      "image": "/previews/good.webp",
+      "dither": "/previews/good-dither.webp",
+      "focus": "50% 50%"
+    }
+  },
+  {
+    "slug": "3d",
+    "name": "3d.zyx.tw",
+    "href": "https://3d.zyx.tw",
+    "purpose": "an SVG, extruded into 3D",
+    "preview": {
+      "image": "/previews/3d.webp",
+      "dither": "/previews/3d-dither.webp",
+      "focus": "50% 50%"
+    }
+  },
+  {
+    "slug": "ui",
+    "name": "ui.zyx.tw",
+    "href": "https://ui.zyx.tw",
+    "purpose": "zyx.tw's component registry",
+    "preview": {
+      "image": "/previews/ui.webp",
+      "dither": "/previews/ui-dither.webp",
+      "focus": "50% 0%"
+    }
+  },
+  {
+    "slug": "ai",
+    "name": "ai.winlab.tw",
+    "href": "https://ai.winlab.tw",
+    "purpose": "NYCU's Office of AI Affairs",
+    "preview": {
+      "image": "/previews/ai.webp",
+      "dither": "/previews/ai-dither.webp",
+      "focus": "50% 0%"
+    }
+  },
+  {
+    "slug": "winlab",
+    "name": "winlab.tw",
+    "href": "https://winlab.tw",
+    "purpose": "Chien-Chao Tseng's lab at NYCU CS",
+    "preview": {
+      "image": "/previews/winlab.webp",
+      "dither": "/previews/winlab-dither.webp",
+      "focus": "50% 0%"
+    }
+  },
+  {
+    "slug": "gallery",
+    "name": "gallery.winlab.tw",
+    "href": "https://gallery.winlab.tw",
+    "purpose": "art from NYCU WinLab",
+    "preview": {
+      "image": "/previews/gallery.webp",
+      "dither": "/previews/gallery-dither.webp",
+      "focus": "50% 25%"
+    }
+  },
+  {
+    "slug": "link",
+    "name": "link.zyx.tw",
+    "href": "https://link.zyx.tw",
+    "purpose": "your URLs, but shorter",
+    "preview": {
+      "image": "/previews/link.webp",
+      "dither": "/previews/link-dither.webp",
+      "focus": "50% 50%"
+    }
+  },
+  {
+    "slug": "time",
+    "name": "time.zyx.tw",
+    "href": "https://time.zyx.tw",
+    "purpose": "what time is it?",
+    "preview": {
+      "image": "/previews/time.webp",
+      "dither": "/previews/time-dither.webp",
+      "focus": "50% 50%"
+    }
+  },
+  {
+    "slug": "scriptorium",
+    "name": "scriptorium",
+    "href": "https://github.com/zyx1121/scriptorium",
+    "purpose": "a self-evolving agent layer",
+    "preview": {
+      "image": "/previews/scriptorium.webp",
+      "dither": "/previews/scriptorium-dither.webp",
+      "focus": "50% 50%"
+    }
+  }
+]

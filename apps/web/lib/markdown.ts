@@ -1,0 +1,301 @@
+import { describeEvent, type StatusData } from "@workspace/ui/lib/github-events"
+import {
+  BIRTHDAY,
+  daysAlive,
+  EMAIL,
+  GITHUB_USER,
+  INTRO,
+  type IntroRun,
+  PHOTO,
+  STATUS_COPY,
+} from "@workspace/ui/lib/profile"
+
+import { ABOUT, CONTACT, HOME, LATEST, NOT_FOUND, WORKS } from "@/lib/copy"
+import type { Change } from "@/lib/latest"
+import { PRIVACY } from "@/lib/privacy"
+import { projects } from "@/lib/projects"
+import { FACTS, TIMELINE } from "@/lib/resume"
+import {
+  absoluteUrl,
+  PAGES,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SOCIAL,
+} from "@/lib/site"
+
+/*
+ * The Markdown twins of the pages, for agents. Each one is built from the
+ * data its HTML page renders (lib/copy.ts, lib/projects.json, lib/privacy.ts,
+ * lib/site.json and packages/ui/src/lib), so the two cannot drift.
+ */
+
+/** Plain text that Markdown shows as written. */
+function text(value: string) {
+  return value.replace(/[\\`*_[\]<>]/g, "\\$&")
+}
+
+function link(label: string, href: string) {
+  return `[${text(label)}](${href})`
+}
+
+/** Text runs with optional links, such as the intro line, as Markdown. */
+function runs(parts: readonly IntroRun[]) {
+  return parts
+    .map(({ text: value, href }) => (href ? link(value, href) : text(value)))
+    .join("")
+}
+
+/** YAML front matter; JSON strings are valid YAML scalars. */
+function frontMatter(fields: Record<string, string>) {
+  return [
+    "---",
+    ...Object.entries(fields).map(
+      ([key, value]) => `${key}: ${JSON.stringify(value)}`
+    ),
+    "---",
+  ].join("\n")
+}
+
+/** A page: front matter, then blocks separated by blank lines. */
+function markdownDocument(
+  fields: { title: string; path?: string },
+  blocks: (string | false | null | undefined)[]
+) {
+  const { title, path } = fields
+  const head = frontMatter({
+    site: SITE_NAME,
+    title,
+    description: SITE_DESCRIPTION,
+    ...(path ? { url: absoluteUrl(path) } : {}),
+  })
+  return [head, ...blocks.filter(Boolean)].join("\n\n") + "\n"
+}
+
+const day = (iso: string) => iso.slice(0, 10)
+
+function pagesList() {
+  return PAGES.map(
+    (page) =>
+      `- ${link(page.label, absoluteUrl(page.markdown))}: ${text(page.summary)}`
+  ).join("\n")
+}
+
+function socialList() {
+  return SOCIAL.map(
+    ({ label, handle, href }) => `- ${label}: ${link(handle, href)}`
+  ).join("\n")
+}
+
+function email() {
+  return `- Email: ${link(EMAIL, `mailto:${EMAIL}`)}`
+}
+
+/** A value with its link, if it has one. */
+function linked(value: string, href?: string) {
+  return href ? link(value, href) : text(value)
+}
+
+export function homeMarkdown() {
+  return markdownDocument({ title: SITE_NAME, path: "/" }, [
+    `# ${text(HOME.title)}`,
+    "The home page is the zyx mark in 3D. The pages below have the rest.",
+    ["## Pages", pagesList()].join("\n\n"),
+    ["## Links", socialList()].join("\n\n"),
+  ])
+}
+
+export function worksMarkdown() {
+  return markdownDocument({ title: WORKS.title, path: "/works" }, [
+    `# ${text(WORKS.title)}`,
+    projects
+      .map(
+        ({ name, href, purpose }) => `- ${link(name, href)}: ${text(purpose)}`
+      )
+      .join("\n"),
+  ])
+}
+
+export function aboutMarkdown(
+  status: StatusData,
+  latest: Change[] | null,
+  now: number
+) {
+  const { heatmap, events } = status
+  const github = link(`@${GITHUB_USER}`, `https://github.com/${GITHUB_USER}`)
+  return markdownDocument({ title: ABOUT.title, path: "/about" }, [
+    `# ${text(HOME.title)}`,
+    runs(INTRO),
+    `![${text(PHOTO.alt)}](${absoluteUrl(PHOTO.src)})`,
+    [
+      ...FACTS.map(
+        ({ label, value, href }) => `- ${label}: ${linked(value, href)}`
+      ),
+      `- Alive: ${daysAlive(now).toLocaleString("en-US")} days, since ${BIRTHDAY}`,
+    ].join("\n"),
+    [
+      `## ${text(ABOUT.timeline)}`,
+      TIMELINE.map(
+        ({ when, what, where, href }) =>
+          `- ${text(when)}: ${text(what)}, ${linked(where, href)}`
+      ).join("\n"),
+    ].join("\n\n"),
+    [
+      `## ${text(STATUS_COPY.title)}`,
+      heatmap
+        ? `${github} on GitHub, ${heatmap.totalContributions.toLocaleString("en-US")} contributions this year.`
+        : `${github} on GitHub.`,
+      events.length
+        ? events
+            .map((event) => {
+              const { text: what } = describeEvent(event)
+              const repo = link(
+                event.repo.name,
+                `https://github.com/${event.repo.name}`
+              )
+              return `- ${text(what)} in ${repo}, ${day(event.created_at)}`
+            })
+            .join("\n")
+        : text(STATUS_COPY.empty),
+    ].join("\n\n"),
+    latest &&
+      latest.length > 0 &&
+      [
+        `## ${LATEST.title}`,
+        latest
+          .map(
+            ({ subject, site, date }) =>
+              `- ${link(subject, site.href)}: ${text(site.name)}, ${day(date)}`
+          )
+          .join("\n"),
+      ].join("\n\n"),
+  ])
+}
+
+export function contactMarkdown() {
+  return markdownDocument({ title: CONTACT.title, path: "/contact" }, [
+    `# ${text(CONTACT.title)}`,
+    email(),
+  ])
+}
+
+export function privacyMarkdown() {
+  return markdownDocument({ title: PRIVACY.title, path: "/privacy" }, [
+    `# ${text(PRIVACY.title)}`,
+    `Last updated ${PRIVACY.updated}.`,
+    ...PRIVACY.sections.map(({ heading, paragraphs }) =>
+      [`## ${text(heading)}`, ...paragraphs.map(runs)].join("\n\n")
+    ),
+  ])
+}
+
+/** /llms.txt, in the llmstxt.org shape: H1, summary, then link sections. */
+export function llmsTxt() {
+  const names = projects.map((project) => project.name).join(", ")
+  return (
+    [
+      `# ${SITE_NAME}`,
+      `> ${text(SITE_DESCRIPTION)}`,
+      `${absoluteUrl("/")} is Loki's personal site. Every page has a Markdown version, linked below, and the HTML pages return it to requests that send \`Accept: text/markdown\`.`,
+      [
+        "## When to use this site",
+        [
+          "- To learn who Loki (詹詠翔, zyx1121 on GitHub) is: his studies, his timeline and what he builds.",
+          `- To find what one of his projects is for and where it lives: ${text(names)}.`,
+          "- To see what shipped lately in his public apps.",
+          "- To get in touch with him.",
+        ].join("\n"),
+      ].join("\n\n"),
+      [
+        "## How an agent should read it",
+        [
+          `1. Start with ${link("About", absoluteUrl("/about.md"))}: his resume (facts, timeline), his GitHub status and his latest shipped changes.`,
+          `2. Read ${link("Works", absoluteUrl("/works.md"))} for every project with its purpose and link.`,
+          `3. Follow ${link("the agent instructions", absoluteUrl("/agent-instructions.md"))} when you answer, and take his email only from ${link("Contact", absoluteUrl("/contact.md"))}.`,
+        ].join("\n"),
+      ].join("\n\n"),
+      ["## Pages", pagesList()].join("\n\n"),
+      [
+        "## For agents",
+        `- ${link("Agent instructions", absoluteUrl("/agent-instructions.md"))}: what to use this site for and how to answer from it`,
+      ].join("\n\n"),
+      [
+        "## Optional",
+        `- ${link("Sitemap", absoluteUrl("/sitemap.xml"))}: the HTML pages`,
+      ].join("\n\n"),
+    ].join("\n\n") + "\n"
+  )
+}
+
+export function agentInstructions() {
+  return markdownDocument(
+    { title: "Agent instructions", path: "/agent-instructions.md" },
+    [
+      "# Agent instructions",
+      `${absoluteUrl("/")} is the personal site of Loki (詹詠翔), a CS grad student at NYCU WinLab. Follow these rules when you answer questions from it.`,
+      [
+        "## Use it for",
+        [
+          "- Who Loki is: his studies, his timeline and what he builds.",
+          "- What each of his projects is for, and its link.",
+          "- What shipped lately in his public apps, and his recent GitHub activity.",
+          "- How to reach him.",
+        ].join("\n"),
+      ].join("\n\n"),
+      [
+        "## Do not use it for",
+        [
+          "- Facts about NYCU, WinLab or other people beyond what the pages say.",
+          "- Offers, prices or availability: the site sells nothing and lists no services.",
+        ].join("\n"),
+      ].join("\n\n"),
+      [
+        "## Rules",
+        [
+          `1. Read the Markdown pages listed in ${link("llms.txt", absoluteUrl("/llms.txt"))}; they carry the same content as the HTML pages.`,
+          `2. To reach Loki, use the email ${link(EMAIL, `mailto:${EMAIL}`)} on ${link("Contact", absoluteUrl("/contact.md"))}. His GitHub and Instagram are linked from every page. Do not make up other ways, such as a phone number or a postal address.`,
+          "3. Describe a project only by its purpose line and its own site. Do not guess features, users or status the pages do not state.",
+          "4. Describe his background only from the facts and the timeline on About. Do not add schools, jobs or dates they do not list.",
+          "5. The Latest list and the GitHub activity on About refresh about every 5 minutes; everything else changes when the site is deployed. Say so when freshness matters.",
+          "6. Link to the page an answer comes from.",
+          "7. To help someone write to Loki, draft the message and leave sending it to them.",
+        ].join("\n"),
+      ].join("\n\n"),
+      [
+        "## Privacy",
+        `What the site stores, logs and sends elsewhere is on ${link("Privacy", absoluteUrl("/privacy.md"))}.`,
+      ].join("\n\n"),
+    ]
+  )
+}
+
+/** The Markdown 404, for requests that ask for Markdown. */
+export function notFoundMarkdown() {
+  return markdownDocument({ title: NOT_FOUND.title }, [
+    `# ${text(NOT_FOUND.title)}`,
+    text(NOT_FOUND.lead),
+    pagesList(),
+    [
+      `## ${NOT_FOUND.agents}`,
+      `- ${link("llms.txt", absoluteUrl("/llms.txt"))}: ${text(NOT_FOUND.llms)}`,
+    ].join("\n\n"),
+  ])
+}
+
+const TYPES = {
+  markdown: "text/markdown; charset=utf-8",
+  text: "text/plain; charset=utf-8",
+} as const
+
+/** A route handler's response for one of the documents above. */
+export function markdownResponse(
+  body: string,
+  {
+    status = 200,
+    type = "markdown",
+  }: { status?: number; type?: keyof typeof TYPES } = {}
+) {
+  return new Response(body, {
+    status,
+    headers: { "Content-Type": TYPES[type] },
+  })
+}

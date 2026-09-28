@@ -1,71 +1,50 @@
-"use client"
-
+import { Fragment } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import * as m from "motion/react-m"
 
-import { useInView } from "@workspace/ui/hooks/use-in-view"
+import { INTRO, PHOTO } from "@workspace/ui/lib/profile"
+import { cn } from "@workspace/ui/lib/utils"
 
-const spring = { type: "spring" as const, stiffness: 200, damping: 20 }
+const LINK =
+  "underline underline-offset-4 transition-colors hover:text-foreground"
 
-export function Intro() {
-  const { ref, inView } = useInView()
-
+/** The one-line intro; About shows it under the name. */
+export function IntroLine() {
   return (
-    <section
-      ref={ref as React.RefObject<HTMLElement>}
-      aria-label="About"
-      className="flex h-dvh w-dvw flex-col items-center justify-center gap-6 px-6 text-center"
-    >
-      <m.h1
-        initial={{ opacity: 0, y: 16 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={spring}
-        className="text-2xl font-medium sm:text-3xl"
-      >
-        loki — 詹詠翔.
-      </m.h1>
-      <m.p
-        initial={{ opacity: 0, y: 16 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ ...spring, delay: 0.1 }}
-        className="text-sm text-muted-foreground"
-      >
-        cs grad @{" "}
-        <Link
-          href="https://www.cs.nycu.edu.tw"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline underline-offset-4 transition-colors hover:text-foreground"
-        >
-          nycu
-        </Link>
-        ,{" "}
-        <Link
-          href="https://www.winlab.tw"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline underline-offset-4 transition-colors hover:text-foreground"
-        >
-          winlab
-        </Link>
-        . i build things.
-      </m.p>
-      <m.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={inView ? { opacity: 1, scale: 1 } : {}}
-        transition={{ ...spring, delay: 0.2 }}
-        className="overflow-hidden rounded-3xl border border-border"
-      >
-        <Image
-          src="/me.webp"
-          alt="Ralph Wiggum waving"
-          width={240}
-          height={240}
-          className="w-full max-w-[200px] sm:max-w-[240px]"
-          unoptimized
-        />
-      </m.div>
-    </section>
+    <>
+      {INTRO.map(({ text, href }, index) => (
+        <Fragment key={index}>
+          {href ? (
+            <Link
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={LINK}
+            >
+              {text}
+            </Link>
+          ) : (
+            text
+          )}
+        </Fragment>
+      ))}
+    </>
+  )
+}
+
+/** The photo, 240 px square at most, in a 10 px rounded frame. */
+export function Intro({ className }: { className?: string }) {
+  return (
+    <Image
+      src={PHOTO.src}
+      alt={PHOTO.alt}
+      width={240}
+      height={240}
+      className={cn(
+        "aspect-square w-full max-w-[200px] rounded-lg sm:max-w-[240px]",
+        className
+      )}
+      unoptimized
+    />
   )
 }

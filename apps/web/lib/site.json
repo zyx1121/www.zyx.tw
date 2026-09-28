@@ -1,0 +1,48 @@
+{
+  "url": "https://www.zyx.tw",
+  "pages": [
+    {
+      "path": "/",
+      "label": "Home",
+      "markdown": "/index.md",
+      "summary": "the zyx mark in 3D, and a link to every page",
+      "changeFrequency": "monthly",
+      "priority": 1
+    },
+    {
+      "path": "/works",
+      "label": "Works",
+      "markdown": "/works.md",
+      "summary": "every project with its purpose and link",
+      "nav": true,
+      "changeFrequency": "monthly",
+      "priority": 0.8
+    },
+    {
+      "path": "/about",
+      "label": "About",
+      "markdown": "/about.md",
+      "summary": "his resume: facts, timeline, GitHub status and the latest shipped changes",
+      "nav": true,
+      "changeFrequency": "daily",
+      "priority": 0.8
+    },
+    {
+      "path": "/contact",
+      "label": "Contact",
+      "markdown": "/contact.md",
+      "summary": "his email",
+      "nav": true,
+      "changeFrequency": "yearly",
+      "priority": 0.5
+    },
+    {
+      "path": "/privacy",
+      "label": "Privacy",
+      "markdown": "/privacy.md",
+      "summary": "what the site stores, logs and sends elsewhere",
+      "changeFrequency": "yearly",
+      "priority": 0.3
+    }
+  ]
+}

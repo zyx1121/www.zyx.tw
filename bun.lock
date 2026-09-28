@@ -186,6 +186,7 @@
       "name": "web",
       "version": "0.0.1",
       "dependencies": {
+        "@workspace/3d": "workspace:*",
         "@workspace/otel": "workspace:*",
         "@workspace/ui": "workspace:*",
         "exifr": "^7.1.3",

@@ -85,6 +85,46 @@
       transform: translateX(-50%);
     }
   }
+
+  /* scramble-text and mask-reveal (ui.zyx.tw registry) */
+  @keyframes scramble-text-hold {
+    0%,
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes mask-reveal {
+    from {
+      mask-image: linear-gradient(
+        90deg,
+        #000 33.333%,
+        rgb(0 0 0 / 0.926) 38.889%,
+        rgb(0 0 0 / 0.741) 44.444%,
+        rgb(0 0 0 / 0.5) 50%,
+        rgb(0 0 0 / 0.259) 55.556%,
+        rgb(0 0 0 / 0.074) 61.111%,
+        transparent 66.667%
+      );
+      mask-size: 300% 100%;
+      mask-repeat: no-repeat;
+      mask-position: 100% 0;
+    }
+    to {
+      mask-image: linear-gradient(
+        90deg,
+        #000 33.333%,
+        rgb(0 0 0 / 0.926) 38.889%,
+        rgb(0 0 0 / 0.741) 44.444%,
+        rgb(0 0 0 / 0.5) 50%,
+        rgb(0 0 0 / 0.259) 55.556%,
+        rgb(0 0 0 / 0.074) 61.111%,
+        transparent 66.667%
+      );
+      mask-size: 300% 100%;
+      mask-repeat: no-repeat;
+      mask-position: 0 0;
+    }
+  }
 }
 
 /*
@@ -204,20 +244,20 @@
   max-width: none !important;
   padding: 0 !important;
   margin: 0 !important;
-  background: rgba(0, 0, 0, 0.25) !important;
-  backdrop-filter: blur(0);
-  -webkit-backdrop-filter: blur(0);
+  /* A solid backdrop, bg-background/90, fading in with the photo: no blur */
+  background: transparent !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   cursor: default;
-  transition:
-    backdrop-filter var(--duration-slow) ease-out,
-    -webkit-backdrop-filter var(--duration-slow) ease-out;
+  transition: background-color var(--duration-slow) ease-out;
 }
 .map-fullscreen-popup.map-fullscreen-popup-visible .mapboxgl-popup-content {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: color-mix(
+    in oklab,
+    var(--background) 90%,
+    transparent
+  ) !important;
 }
 .map-fullscreen-popup-content {
   width: 100%;
@@ -239,4 +279,23 @@
 }
 .map-fullscreen-popup.map-fullscreen-popup-visible .map-fullscreen-popup-img {
   transform: scale(1);
+}
+
+/*
+ * Reduced motion covers every animation (apps/ui/DESIGN.md, Motion): our own
+ * sit behind motion-safe:, but stock components animate through
+ * tw-animate-css without it, and components/ui/ is CLI-owned. 1ms rather than
+ * 0 keeps the end events Base UI waits for.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
+  }
 }
