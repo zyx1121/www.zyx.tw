@@ -33,6 +33,17 @@
     }
   },
   {
+    "slug": "sensorium",
+    "name": "sensorium.zyx.tw",
+    "href": "https://sensorium.zyx.tw",
+    "purpose": "observability for agents",
+    "preview": {
+      "image": "/previews/sensorium.webp",
+      "dither": "/previews/sensorium-dither.webp",
+      "focus": "50% 50%"
+    }
+  },
+  {
     "slug": "ai",
     "name": "ai.winlab.tw",
     "href": "https://ai.winlab.tw",
