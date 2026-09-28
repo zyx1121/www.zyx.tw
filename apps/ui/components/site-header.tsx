@@ -26,10 +26,11 @@ export function SiteHeader() {
           </CornerTip>
           {/* The tip's trigger props land on the span, so they never replace
               the toggle's own onClick. -m-2 takes the 32px button's 8px inset
-              back on every side, so the corner, and the tip, see only its
-              16px icon and the row stays 20px. */}
+              back on every side, so the corner sees only its 16px icon, and
+              the 20px span keeps the row, and the tip, where the links'
+              are. */}
           <CornerTip tip="Toggle theme">
-            <span className="flex">
+            <span className="flex h-5 items-center">
               <ThemeToggle className="-m-2 text-muted-foreground hover:text-foreground" />
             </span>
           </CornerTip>

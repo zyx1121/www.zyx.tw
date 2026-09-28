@@ -33,7 +33,7 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
 - **4px grid**: every spacing, size and line height is a multiple of 4px (Tailwind's `--spacing` is 0.25rem). Half steps of 2px are for optical corrections and the inside of controls only, such as a pill's 10px padding or a 6px icon gap.
 - **20px module**: spacing between page parts is a multiple of 20px: gutters `px-5` (20px), corner insets (20px), demos `gap-15` (60px), groups `gap-20` (80px), hero to content `pb-25` (100px), the top of the page to the title `pt-30` (120px). Inside a part, the 4px grid rules (12px from a title to its subtitle).
 - **Four corners**: the chrome of every app is four fixed corners, 20px in from the viewport's corners, with 16px between items. Top left is always the zyx mark (to www.zyx.tw; to `/` on www.zyx.tw itself), which mirrors itself left to right on hover. Top right holds the page nav and the page's function buttons. Bottom left is Privacy and Terms and nothing else: every app shares them at www.zyx.tw (`LegalLinks`, labelled in the app's language). Bottom right is the copyright. All four set `text-sm` on 20px lines (14px at every width), so they share one size and one row height. They come from `@workspace/ui/components/corners` (`TopCorners`, `BottomCorners`, `Corner`, `CornerTip`, `cornerLink`, `LegalLinks`); an app leaves a corner empty rather than filling it with something else. An app's own working surface is content, not chrome: the 3d editor's dock of editing controls stays at the bottom center of its canvas.
-- **Corner tips**: an item in a corner can carry a tip, the stock tooltip on hover or keyboard focus, which says what its label leaves out: where the mark goes, whose the copyright is, what a page holds, which sites a policy covers. A tip never restates a text label, and an item whose label says it all has none; an icon's tip is its name. Tips open at once, toward the page (below the top corners, above the bottom ones) and lined up with the item's outer edge, so they never leave the viewport. Touch never opens them, so nothing depends on one. Wrap the item in `CornerTip`, and the corner it sits in sets the side; the mark, the copyright and `LegalLinks` bring their own (`markTip`, `copyrightTip`, `tips`).
+- **Corner tips**: an item in a corner can carry a tip, the stock tooltip on hover (and on keyboard focus for a link or button), which says what its label leaves out: where the mark goes, whose the copyright is, what a page holds, which sites a policy covers. A tip never restates a text label, and an item whose label says it all has none; an icon's tip says what it does or where it goes. Tips open at once, toward the page (below the top corners, above the bottom ones) and lined up with the item's outer edge, so they never leave the viewport. Touch never opens them, so nothing depends on one. Wrap the item in `CornerTip`, and the corner it sits in sets the side; the mark, the copyright and `LegalLinks` bring their own (`markTip`, `copyrightTip`, `tips`), and www.zyx.tw's own Privacy and Terms reuse `LEGAL_TIPS`.
 - **One column**: `mx-auto w-full max-w-xl px-5 lg:max-w-3xl 2xl:max-w-5xl`, so 576, 768 and 1024px wide with 20px gutters (`column` in `lib/layout.ts`). Content sits in it and the corners sit outside it. Long-form prose narrows further, to at most `max-w-[65ch]`.
 - **Skeleton**:
 
@@ -79,17 +79,17 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
 - **CSS first**: keyframes and transitions, no animation library. A script drives an animation only where CSS cannot express it, such as the per-character glyphs of `scramble-text` and the word timing of `rotating-text`.
 - **Inventory**:
 
-  | Motion                 | Timing                                                      | Where                             |
-  | ---------------------- | ----------------------------------------------------------- | --------------------------------- |
-  | Enter fade             | opacity 0 to 1 over 300ms, `ease-out`, rows 25ms apart      | page rows, through tw-animate-css |
-  | Scramble               | one character every 50ms, left to right (12 in about 600ms) | `scramble-text`, the page title   |
-  | Rotating word          | a new word every 3.2s                                       | `rotating-text`                   |
-  | Mask sweep             | starts after 1s, runs 5s, `cubic-bezier(.16,1,.3,1)`        | `mask-reveal`                     |
-  | Mark mirror            | flips left to right over 300ms, stock easing                | the zyx mark, on hover            |
-  | Shimmer                | a 2s linear loop                                            | `shimmering-text`                 |
-  | HDR fade back          | 2s after hover or focus ends                                | `hdr-highlight`                   |
-  | Breakpoints            | width and text size over 300ms                              | the column, `<body>`              |
-  | Menus, dialogs, sheets | the stock tw-animate-css timings                            | stock components, corner tips     |
+  | Motion                       | Timing                                                      | Where                             |
+  | ---------------------------- | ----------------------------------------------------------- | --------------------------------- |
+  | Enter fade                   | opacity 0 to 1 over 300ms, `ease-out`, rows 25ms apart      | page rows, through tw-animate-css |
+  | Scramble                     | one character every 50ms, left to right (12 in about 600ms) | `scramble-text`, the page title   |
+  | Rotating word                | a new word every 3.2s                                       | `rotating-text`                   |
+  | Mask sweep                   | starts after 1s, runs 5s, `cubic-bezier(.16,1,.3,1)`        | `mask-reveal`                     |
+  | Mark mirror                  | flips left to right over 300ms, stock easing                | the zyx mark, on hover            |
+  | Shimmer                      | a 2s linear loop                                            | `shimmering-text`                 |
+  | HDR fade back                | 2s after hover or focus ends                                | `hdr-highlight`                   |
+  | Breakpoints                  | width and text size over 300ms                              | the column, `<body>`              |
+  | Menus, dialogs, sheets, tips | the stock tw-animate-css timings                            | stock components                  |
 
 - **Stagger**: rows fade in 25ms apart in document order, counting the top corners as row 0: the title at 25ms, the subtitle at 50ms, then each group heading and each demo. The bottom corners come in at 375ms. Delays go through tw-animate-css's `--tw-animation-delay` (`enterDelay` in `lib/layout.ts`), never `delay-*`, which would also delay transitions.
 - **Easing**: `ease-out` for entrances, the stock `cubic-bezier(.4,0,.2,1)` for state changes, `cubic-bezier(.16,1,.3,1)` for the mask sweep.
