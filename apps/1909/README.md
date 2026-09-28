@@ -9,7 +9,7 @@
 
 # 1909
 
-Hsinchu Science Park, Run Long Bldg A, Unit 19F-9 — a shared-expense dashboard for three flatmates.
+A shared-expense dashboard for three flatmates.
 
 ## Tech Stack
 

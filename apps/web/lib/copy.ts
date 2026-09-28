@@ -9,7 +9,7 @@ export const LATEST = { title: "Latest" } as const
 
 export const WORKS = { title: "Works" } as const
 
-export const ABOUT = { title: "About", timeline: "Timeline" } as const
+export const ABOUT = { title: "About" } as const
 
 export const CONTACT = { title: "Contact" } as const
 

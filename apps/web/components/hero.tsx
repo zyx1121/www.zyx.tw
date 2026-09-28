@@ -15,34 +15,24 @@ export function HeroTitle({ children }: { children: React.ReactNode }) {
 export function Hero({
   title,
   subtitle,
-  aside,
   className,
 }: {
   title: React.ReactNode
   subtitle?: React.ReactNode
-  /** Beside the title and subtitle, on the column's right edge. */
-  aside?: React.ReactNode
   className?: string
 }) {
   return (
-    <div className={cn("flex items-start justify-between gap-5", className)}>
-      <div>
-        <div className={enter} style={enterRow(1)}>
-          {title}
-        </div>
-        {subtitle && (
-          <p
-            className={cn("mt-3 text-muted-foreground", enter)}
-            style={enterRow(2)}
-          >
-            {subtitle}
-          </p>
-        )}
+    <div className={className}>
+      <div className={enter} style={enterRow(1)}>
+        {title}
       </div>
-      {aside && (
-        <div className={enter} style={enterRow(1)}>
-          {aside}
-        </div>
+      {subtitle && (
+        <p
+          className={cn("mt-3 text-muted-foreground", enter)}
+          style={enterRow(2)}
+        >
+          {subtitle}
+        </p>
       )}
     </div>
   )

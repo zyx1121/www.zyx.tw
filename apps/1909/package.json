@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "private": true,
-  "description": "1909 — Hsinchu Science Park, Run Long Bldg A, Unit 19F-9, a shared-expense dashboard for three flatmates.",
+  "description": "1909: a shared-expense dashboard for three flatmates.",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

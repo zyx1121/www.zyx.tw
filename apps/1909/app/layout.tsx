@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 
 export const metadata = {
   title: "1909",
-  description: "竹科潤隆 A 棟 19 樓之 9",
+  description: "三個室友的共同支出",
 }
 
 export default async function RootLayout({

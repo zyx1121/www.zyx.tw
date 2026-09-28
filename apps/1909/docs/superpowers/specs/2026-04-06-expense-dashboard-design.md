@@ -1,6 +1,6 @@
 # 1909 Expense Dashboard Design
 
-竹科潤隆 A 棟 19 樓之 9 — 三人合租帳務 Dashboard
+三人合租帳務 Dashboard
 
 ## Overview
 

@@ -22,7 +22,7 @@
       "path": "/about",
       "label": "About",
       "markdown": "/about.md",
-      "summary": "his resume: facts, timeline, GitHub status and the latest shipped changes",
+      "summary": "his resume: facts, timeline, publications, projects, GitHub status and the latest shipped changes",
       "nav": true,
       "changeFrequency": "daily",
       "priority": 0.8
