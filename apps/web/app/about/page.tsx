@@ -1,5 +1,4 @@
 import { DaysAlive } from "@workspace/ui/components/days-alive"
-import { Intro, IntroLine } from "@workspace/ui/components/intro"
 import { Status } from "@workspace/ui/components/status"
 import { ScrambleText } from "@workspace/ui/components/ui/scramble-text"
 import { cn } from "@workspace/ui/lib/utils"
@@ -10,7 +9,7 @@ import { ABOUT, HOME } from "@/lib/copy"
 import { getGithubStatus } from "@/lib/github"
 import { getLatestChanges } from "@/lib/latest"
 import { column, enter, enterRow, page } from "@/lib/layout"
-import { FACTS, TIMELINE } from "@/lib/resume"
+import { FACTS, SECTIONS } from "@/lib/resume"
 import { pageMetadata } from "@/lib/site"
 
 export const metadata = pageMetadata({ title: ABOUT.title, path: "/about" })
@@ -48,8 +47,9 @@ function Value({ text, href }: { text: string; href?: string }) {
 }
 
 /**
- * About reads as a resume: who, the facts, a timeline, then what he is doing
- * now (GitHub status) and what shipped lately.
+ * About reads as a resume: who, the facts, the timeline, publications and
+ * projects, then what he is doing now (GitHub status) and what shipped
+ * lately.
  */
 export default async function About() {
   const [status, latest] = await Promise.all([
@@ -63,8 +63,6 @@ export default async function About() {
         title={
           <ScrambleText element="h1" text={HOME.title} className="text-3xl" />
         }
-        subtitle={<IntroLine />}
-        aside={<Intro className="w-16 max-w-16 shrink-0 sm:max-w-16" />}
         className="pb-25"
       />
 
@@ -90,40 +88,47 @@ export default async function About() {
         </div>
       </dl>
 
-      <section
-        aria-labelledby="timeline-heading"
-        className={cn("mt-20", enter)}
-        style={block(2)}
-      >
-        <h2 id="timeline-heading" className={HEADING}>
-          {ABOUT.timeline}
-        </h2>
-        <ol className="mt-5 flex flex-col gap-y-3">
-          {TIMELINE.map(({ when, what, where, href }) => (
-            <li
-              key={`${when} ${what}`}
-              className="grid grid-cols-[7rem_1fr] gap-x-5 sm:grid-cols-[7rem_1fr_auto]"
-            >
-              <span className="whitespace-nowrap text-muted-foreground tabular-nums">
-                {when}
-              </span>
-              <span className="text-pretty">{what}</span>
-              <span className="col-start-2 text-muted-foreground sm:col-start-auto sm:text-right">
-                <Value text={where} href={href} />
-              </span>
-            </li>
-          ))}
-        </ol>
-      </section>
+      {SECTIONS.map(({ id, title, entries }, index) => (
+        <section
+          key={id}
+          aria-labelledby={`${id}-heading`}
+          className={cn("mt-20", enter)}
+          style={block(2 + index)}
+        >
+          <h2 id={`${id}-heading`} className={HEADING}>
+            {title}
+          </h2>
+          <ol className="mt-5 flex flex-col gap-y-3">
+            {entries.map(({ when, what, where, href }) => (
+              <li
+                key={`${when} ${what}`}
+                className="grid grid-cols-[7rem_1fr] gap-x-5 sm:grid-cols-[7rem_1fr_auto]"
+              >
+                <span className="whitespace-nowrap text-muted-foreground tabular-nums">
+                  {when}
+                </span>
+                <span className="text-pretty">{what}</span>
+                <span className="col-start-2 text-muted-foreground sm:col-start-auto sm:text-right">
+                  <Value text={where} href={href} />
+                </span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))}
 
-      <Status data={status} className={cn("mt-20", enter)} style={block(3)} />
+      <Status
+        data={status}
+        className={cn("mt-20", enter)}
+        style={block(2 + SECTIONS.length)}
+      />
 
       {latest && latest.changes.length > 0 && (
         <LatestList
           changes={latest.changes}
           renderedAt={latest.fetchedAt}
           className={cn("mt-20", enter)}
-          style={block(4)}
+          style={block(3 + SECTIONS.length)}
         />
       )}
     </main>

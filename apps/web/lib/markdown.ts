@@ -4,9 +4,7 @@ import {
   daysAlive,
   EMAIL,
   GITHUB_USER,
-  INTRO,
   type IntroRun,
-  PHOTO,
   STATUS_COPY,
 } from "@workspace/ui/lib/profile"
 
@@ -14,7 +12,7 @@ import { ABOUT, CONTACT, HOME, LATEST, NOT_FOUND, WORKS } from "@/lib/copy"
 import type { Change } from "@/lib/latest"
 import { PRIVACY } from "@/lib/privacy"
 import { projects } from "@/lib/projects"
-import { FACTS, TIMELINE } from "@/lib/resume"
+import { FACTS, SECTIONS } from "@/lib/resume"
 import {
   absoluteUrl,
   PAGES,
@@ -124,21 +122,23 @@ export function aboutMarkdown(
   const github = link(`@${GITHUB_USER}`, `https://github.com/${GITHUB_USER}`)
   return markdownDocument({ title: ABOUT.title, path: "/about" }, [
     `# ${text(HOME.title)}`,
-    runs(INTRO),
-    `![${text(PHOTO.alt)}](${absoluteUrl(PHOTO.src)})`,
     [
       ...FACTS.map(
         ({ label, value, href }) => `- ${label}: ${linked(value, href)}`
       ),
       `- Alive: ${daysAlive(now).toLocaleString("en-US")} days, since ${BIRTHDAY}`,
     ].join("\n"),
-    [
-      `## ${text(ABOUT.timeline)}`,
-      TIMELINE.map(
-        ({ when, what, where, href }) =>
-          `- ${text(when)}: ${text(what)}, ${linked(where, href)}`
-      ).join("\n"),
-    ].join("\n\n"),
+    ...SECTIONS.map(({ title, entries }) =>
+      [
+        `## ${text(title)}`,
+        entries
+          .map(
+            ({ when, what, where, href }) =>
+              `- ${text(when)}: ${text(what)}, ${linked(where, href)}`
+          )
+          .join("\n"),
+      ].join("\n\n")
+    ),
     [
       `## ${text(STATUS_COPY.title)}`,
       heatmap
@@ -199,7 +199,7 @@ export function llmsTxt() {
       [
         "## When to use this site",
         [
-          "- To learn who Loki (詹詠翔, zyx1121 on GitHub) is: his studies, his timeline and what he builds.",
+          "- To learn who Loki (詹詠翔, zyx1121 on GitHub) is: his studies, papers, projects and what he builds.",
           `- To find what one of his projects is for and where it lives: ${text(names)}.`,
           "- To see what shipped lately in his public apps.",
           "- To get in touch with him.",
@@ -208,7 +208,7 @@ export function llmsTxt() {
       [
         "## How an agent should read it",
         [
-          `1. Start with ${link("About", absoluteUrl("/about.md"))}: his resume (facts, timeline), his GitHub status and his latest shipped changes.`,
+          `1. Start with ${link("About", absoluteUrl("/about.md"))}: his resume (facts, timeline, publications, projects), his GitHub status and his latest shipped changes.`,
           `2. Read ${link("Works", absoluteUrl("/works.md"))} for every project with its purpose and link.`,
           `3. Follow ${link("the agent instructions", absoluteUrl("/agent-instructions.md"))} when you answer, and take his email only from ${link("Contact", absoluteUrl("/contact.md"))}.`,
         ].join("\n"),
@@ -254,7 +254,7 @@ export function agentInstructions() {
           `1. Read the Markdown pages listed in ${link("llms.txt", absoluteUrl("/llms.txt"))}; they carry the same content as the HTML pages.`,
           `2. To reach Loki, use the email ${link(EMAIL, `mailto:${EMAIL}`)} on ${link("Contact", absoluteUrl("/contact.md"))}. His GitHub and Instagram are linked from every page. Do not make up other ways, such as a phone number or a postal address.`,
           "3. Describe a project only by its purpose line and its own site. Do not guess features, users or status the pages do not state.",
-          "4. Describe his background only from the facts and the timeline on About. Do not add schools, jobs or dates they do not list.",
+          "4. Describe his background only from the facts, timeline, publications and projects on About. Do not add schools, jobs, papers or dates they do not list.",
           "5. The Latest list and the GitHub activity on About refresh about every 5 minutes; everything else changes when the site is deployed. Say so when freshness matters.",
           "6. Link to the page an answer comes from.",
           "7. To help someone write to Loki, draft the message and leave sending it to them.",

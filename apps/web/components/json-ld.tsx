@@ -46,7 +46,6 @@ export function SiteJsonLd() {
               name: "National Taiwan University of Science and Technology",
               url: "https://www.ntust.edu.tw",
             },
-            homeLocation: { "@type": "Place", name: "Hsinchu, Taiwan" },
             sameAs: SOCIAL.map(({ href }) => href),
           },
           {
