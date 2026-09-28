@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.6.1",
+    "@neondatabase/serverless": "^1.1.0",
     "@workspace/otel": "workspace:*",
     "@workspace/ui": "workspace:*",
     "js-confetti": "^0.11.0",
