@@ -5,8 +5,6 @@
  */
 export const HOME = { title: "loki, 詹詠翔." } as const
 
-export const LATEST = { title: "Latest" } as const
-
 export const WORKS = { title: "Works" } as const
 
 export const ABOUT = { title: "About" } as const

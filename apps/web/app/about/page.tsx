@@ -1,29 +1,26 @@
-import { DaysAlive } from "@workspace/ui/components/days-alive"
 import { Status } from "@workspace/ui/components/status"
 import { ScrambleText } from "@workspace/ui/components/ui/scramble-text"
 import { cn } from "@workspace/ui/lib/utils"
 
 import { Hero } from "@/components/hero"
-import { LatestList } from "@/components/latest-list"
 import { ABOUT, HOME } from "@/lib/copy"
 import { getGithubStatus } from "@/lib/github"
-import { getLatestChanges } from "@/lib/latest"
 import { column, enter, enterRow, page } from "@/lib/layout"
-import { FACTS, SECTIONS } from "@/lib/resume"
+import { FACTS, type LeadRun, SECTIONS } from "@/lib/resume"
 import { pageMetadata } from "@/lib/site"
 
 export const metadata = pageMetadata({ title: ABOUT.title, path: "/about" })
 
-// The GitHub status and the Latest list are fetched on the server and the
-// page regenerated in the background every 5 minutes (ISR), so the SSR HTML
-// carries real data instead of "Loading…". force-static keeps the route
-// prerendered even though the GitHub fetch carries an Authorization header,
-// which Next would otherwise read as a dynamic signal.
+// The GitHub status is fetched on the server and the page regenerated in the
+// background every 5 minutes (ISR), so the SSR HTML carries real events
+// instead of "Loading…". force-static keeps the route prerendered even though
+// the GitHub fetch carries an Authorization header, which Next would
+// otherwise read as a dynamic signal.
 export const revalidate = 300
 export const dynamic = "force-static"
 
-// Content blocks enter one row apart after the hero's two: step 1 is row 3.
-const block = (step: number) => enterRow(2 + step)
+// Content blocks enter one row apart after the title: step 1 is row 2.
+const block = (step: number) => enterRow(1 + step)
 
 const LINK =
   "rounded-sm underline decoration-muted-foreground/40 underline-offset-4 outline-offset-2 transition-colors hover:decoration-foreground focus-visible:outline-2"
@@ -46,16 +43,23 @@ function Value({ text, href }: { text: string; href?: string }) {
   )
 }
 
+function Lead({ runs }: { runs: LeadRun[] }) {
+  return (
+    <p className="mt-3 text-muted-foreground">
+      {runs.map(({ text, href }, index) =>
+        href ? <Value key={index} text={text} href={href} /> : text
+      )}
+    </p>
+  )
+}
+
 /**
- * About reads as a resume: who, the facts, the timeline, publications and
- * projects, then what he is doing now (GitHub status) and what shipped
- * lately.
+ * About reads as a CV: the name, a few facts, then Education, Experience,
+ * Publications, Projects and Awards, each newest first, and last what he is
+ * doing now on GitHub.
  */
 export default async function About() {
-  const [status, latest] = await Promise.all([
-    getGithubStatus(),
-    getLatestChanges(),
-  ])
+  const status = await getGithubStatus()
 
   return (
     <main className={cn(column, page, "flex-1")}>
@@ -79,16 +83,9 @@ export default async function About() {
             </dd>
           </div>
         ))}
-        <div className="contents">
-          <dt className="text-muted-foreground">Alive</dt>
-          {/* Holds its line while the count mounts, so nothing below moves. */}
-          <dd className="min-h-[1lh]">
-            <DaysAlive className="text-foreground" /> days
-          </dd>
-        </div>
       </dl>
 
-      {SECTIONS.map(({ id, title, entries }, index) => (
+      {SECTIONS.map(({ id, title, lead, entries }, index) => (
         <section
           key={id}
           aria-labelledby={`${id}-heading`}
@@ -98,17 +95,25 @@ export default async function About() {
           <h2 id={`${id}-heading`} className={HEADING}>
             {title}
           </h2>
+          {lead && <Lead runs={lead} />}
           <ol className="mt-5 flex flex-col gap-y-3">
-            {entries.map(({ when, what, where, href }) => (
+            {entries.map(({ when, what, note, where, href }) => (
               <li
                 key={`${when} ${what}`}
-                className="grid grid-cols-[7rem_1fr] gap-x-5 sm:grid-cols-[7rem_1fr_auto]"
+                className="grid grid-cols-[7rem_1fr] gap-x-5 sm:grid-cols-[7rem_1fr_fit-content(16rem)]"
               >
                 <span className="whitespace-nowrap text-muted-foreground tabular-nums">
                   {when}
                 </span>
-                <span className="text-pretty">{what}</span>
-                <span className="col-start-2 text-muted-foreground sm:col-start-auto sm:text-right">
+                <span className="text-pretty">
+                  {what}
+                  {note && (
+                    <span className="block text-muted-foreground">{note}</span>
+                  )}
+                </span>
+                {/* At most 16rem wide from sm, so a long name wraps in
+                    its own column instead of squeezing the one beside it. */}
+                <span className="col-start-2 text-muted-foreground text-pretty sm:col-start-auto sm:text-right">
                   <Value text={where} href={href} />
                 </span>
               </li>
@@ -122,15 +127,6 @@ export default async function About() {
         className={cn("mt-20", enter)}
         style={block(2 + SECTIONS.length)}
       />
-
-      {latest && latest.changes.length > 0 && (
-        <LatestList
-          changes={latest.changes}
-          renderedAt={latest.fetchedAt}
-          className={cn("mt-20", enter)}
-          style={block(3 + SECTIONS.length)}
-        />
-      )}
     </main>
   )
 }
