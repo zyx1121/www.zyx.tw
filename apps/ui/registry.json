@@ -19,6 +19,15 @@
           "sidebar-primary": "oklch(0.922 0 0)",
           "sidebar-primary-foreground": "oklch(0.205 0 0)"
         }
+      },
+      "css": {
+        "@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))": {
+          "[data-slot=\"dialog-overlay\"], [data-slot=\"alert-dialog-overlay\"], [data-slot=\"sheet-overlay\"], [data-slot=\"drawer-overlay\"]": {
+            "background-color": "transparent",
+            "-webkit-backdrop-filter": "blur(12px)",
+            "backdrop-filter": "blur(12px)"
+          }
+        }
       }
     },
     {
