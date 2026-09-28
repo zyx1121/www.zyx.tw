@@ -8,7 +8,7 @@ This file is the design contract for the zyx.tw apps: the theme and the componen
 
 The previous registry maintained its own copies of every primitive (button, input, dialog, ...) on base-ui. That meant owning variants, edge cases, and dark mode for 20+ components. Rebuilt 2026-08: base components now come from stock shadcn/ui (`base-nova` preset) and the CLI owns them. This registry ships exactly two kinds of things:
 
-- **The theme**: full grayscale palette, stock radius, pure black dark mode. One `registry:theme` item.
+- **The theme**: full grayscale palette, stock radius, pure black dark mode, frosted overlays. One `registry:theme` item.
 - **zyx components**: things shadcn/ui doesn't have (`shimmering-text`, `theme-toggle`, `scramble-text`, `rotating-text`, `mask-reveal`, `ask-ai`, `hdr-highlight`). One concept per file.
 
 If shadcn/ui ships a component, we do not re-ship it. If a component needs restyling, that pressure goes into the theme tokens, never into a forked copy.
@@ -25,7 +25,7 @@ If shadcn/ui ships a component, we do not re-ship it. If a component needs resty
 - **Japanese forms first**: Noto Sans JP comes before Noto Sans TC, so Han characters take Japanese glyph shapes and punctuation. Noto Sans TC fills the characters JP lacks (such as 值 and 夠), so they stay in the same Source Han design instead of falling back to a system font. Both load from `next/font/google` as unicode-range slices (124 for JP, 105 for TC) with `preload: false`, so a page downloads only the slices its text uses.
 - **OpenType features**: `--default-font-feature-settings: "liga" 1, "calt" 1, "ss01" 1, "zero" 1` turns on Inter's open digits and slashed zero on every page. Geist Mono and the Noto fonts have neither feature, so they render unchanged.
 
-The same color and radius values ship to consumers as the `theme` registry item. The `:root` and `.dark` tokens in `app/globals.css`, `packages/ui/src/styles/globals.css`, `apps/1909/app/globals.css` and the `theme` item in `registry.json` must match; `bun run theme:check` enforces it in CI. Fonts are not in the registry item: apps load them with next/font from `packages/ui/src/lib/fonts.ts` (this app and `apps/1909` keep their own `lib/fonts.ts`).
+The same color and radius values, and the overlay rule, ship to consumers as the `theme` registry item. The `:root` and `.dark` tokens and the overlay rule in `app/globals.css`, `packages/ui/src/styles/globals.css`, `apps/1909/app/globals.css` and the `theme` item in `registry.json` must match; `bun run theme:check` enforces it in CI. Fonts are not in the registry item: apps load them with next/font from `packages/ui/src/lib/fonts.ts` (this app and `apps/1909` keep their own `lib/fonts.ts`).
 
 ## Layout
 
