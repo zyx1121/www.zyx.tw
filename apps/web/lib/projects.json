@@ -33,6 +33,28 @@
     }
   },
   {
+    "slug": "kitbash",
+    "name": "kitbash.zyx.tw",
+    "href": "https://kitbash.zyx.tw",
+    "purpose": "an OS for AI agents",
+    "preview": {
+      "image": "/previews/kitbash.webp",
+      "dither": "/previews/kitbash-dither.webp",
+      "focus": "50% 50%"
+    }
+  },
+  {
+    "slug": "sensorium",
+    "name": "sensorium.zyx.tw",
+    "href": "https://sensorium.zyx.tw",
+    "purpose": "observability for agents",
+    "preview": {
+      "image": "/previews/sensorium.webp",
+      "dither": "/previews/sensorium-dither.webp",
+      "focus": "50% 50%"
+    }
+  },
+  {
     "slug": "ai",
     "name": "ai.winlab.tw",
     "href": "https://ai.winlab.tw",
@@ -52,6 +74,28 @@
       "image": "/previews/winlab.webp",
       "dither": "/previews/winlab-dither.webp",
       "focus": "50% 0%"
+    }
+  },
+  {
+    "slug": "portal",
+    "name": "portal.winlab.tw",
+    "href": "https://portal.winlab.tw",
+    "purpose": "WinLab's member portal",
+    "preview": {
+      "image": "/previews/portal.webp",
+      "dither": "/previews/portal-dither.webp",
+      "focus": "50% 50%"
+    }
+  },
+  {
+    "slug": "video",
+    "name": "video.winlab.tw",
+    "href": "https://video.winlab.tw",
+    "purpose": "WinLab's video library",
+    "preview": {
+      "image": "/previews/video.webp",
+      "dither": "/previews/video-dither.webp",
+      "focus": "50% 50%"
     }
   },
   {

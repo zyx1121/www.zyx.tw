@@ -17,8 +17,8 @@ export type Project = {
 }
 
 /**
- * The single project list: /works with its preview stage, /works.md, the
- * Latest list's site names and the preview capture script all read
- * lib/projects.json, so adding a project is one edit there.
+ * The single project list: /works with its preview stage, its Markdown twin
+ * and llms.txt (lib/markdown.ts), the JSON-LD and the preview capture script
+ * all read lib/projects.json, so adding a project is one edit there.
  */
 export const projects: Project[] = data
