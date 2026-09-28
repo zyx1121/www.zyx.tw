@@ -6,6 +6,7 @@ import { NextResponse, type NextRequest } from "next/server"
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const isPublic =
+    pathname === "/robots.txt" ||
     pathname.startsWith("/login") ||
     pathname.startsWith("/auth") ||
     pathname.startsWith("/api/auth")

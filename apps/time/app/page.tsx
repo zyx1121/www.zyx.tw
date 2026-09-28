@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react"
 
+import { SITE_DESC, SITE_NAME } from "@/lib/site"
+
 function formatTime(date: Date): string {
   return date.toLocaleTimeString("zh-TW", {
     hour: "2-digit",
@@ -36,6 +38,8 @@ export default function Page() {
 
   return (
     <div className="flex min-h-dvh w-dvw items-center justify-center">
+      <h1 className="sr-only">{SITE_NAME}</h1>
+      <p className="sr-only">{SITE_DESC}</p>
       <span className="text-[clamp(3rem,12vw,18rem)] font-bold tabular-nums">
         {time ?? "—"}
       </span>

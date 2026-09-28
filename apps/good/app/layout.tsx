@@ -12,13 +12,11 @@ import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 import { fontVariables } from "@workspace/ui/lib/fonts"
 import { cn } from "@workspace/ui/lib/utils"
 
-const SITE_NAME = "乖乖"
-const SITE_DESC =
-  "Digital 乖乖 — the snack engineers tape onto servers for luck."
+import { SITE_DESC, SITE_NAME, SITE_TITLE } from "@/lib/site"
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://good.zyx.tw"),
-  title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
+  title: { default: SITE_TITLE, template: `%s | ${SITE_NAME}` },
   description: SITE_DESC,
   applicationName: SITE_NAME,
   authors: [{ name: "Loki", url: "https://zyx.tw" }],
@@ -31,12 +29,12 @@ export const metadata: Metadata = {
     locale: "zh_TW",
     url: "/",
     siteName: SITE_NAME,
-    title: SITE_NAME,
+    title: SITE_TITLE,
     description: SITE_DESC,
   },
   twitter: {
     card: "summary_large_image",
-    title: SITE_NAME,
+    title: SITE_TITLE,
     description: SITE_DESC,
   },
 }
