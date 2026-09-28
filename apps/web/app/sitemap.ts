@@ -1,12 +1,13 @@
 import type { MetadataRoute } from "next"
 
+import { absoluteUrl, PAGES } from "@/lib/site"
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    {
-      url: "https://www.zyx.tw",
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-  ]
+  const lastModified = new Date()
+  return PAGES.map(({ path, changeFrequency, priority }) => ({
+    url: absoluteUrl(path),
+    lastModified,
+    changeFrequency,
+    priority,
+  }))
 }

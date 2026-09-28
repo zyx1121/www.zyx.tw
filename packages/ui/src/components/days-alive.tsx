@@ -7,9 +7,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/ui/tooltip"
-
-const MS_PER_DAY = 86_400_000
-const BIRTHDAY = "2002-11-21"
+import { BIRTHDAY, daysAlive } from "@workspace/ui/lib/profile"
+import { cn } from "@workspace/ui/lib/utils"
 
 // Anniversary-based breakdown — leap-year safe.
 function formatBreakdown(birthday: Date, now: Date) {
@@ -29,7 +28,8 @@ function formatBreakdown(birthday: Date, now: Date) {
   return `${years}y ${days}d ${h}h ${m}m ${s}s`
 }
 
-export function DaysAlive() {
+/** Days since the birthday; the tooltip breaks it down to the second. */
+export function DaysAlive({ className }: { className?: string }) {
   const [now, setNow] = useState<number | null>(null)
 
   useEffect(() => {
@@ -40,15 +40,18 @@ export function DaysAlive() {
   }, [])
 
   const birthDate = new Date(BIRTHDAY)
-  const elapsedMs = now === null ? null : now - birthDate.getTime()
-  const days =
-    elapsedMs === null ? null : Math.max(0, Math.floor(elapsedMs / MS_PER_DAY))
+  const days = now === null ? null : daysAlive(now)
 
   return (
     <Tooltip>
       <TooltipTrigger
         render={
-          <span className="fixed bottom-4 left-4 z-50 cursor-default text-sm text-muted-foreground tabular-nums" />
+          <span
+            className={cn(
+              "cursor-default text-muted-foreground tabular-nums",
+              className
+            )}
+          />
         }
       >
         {days === null ? "" : days.toLocaleString()}
@@ -56,7 +59,7 @@ export function DaysAlive() {
       <TooltipContent side="top">
         <span>
           <span className="tabular-nums">
-            {now === null ? "—" : formatBreakdown(birthDate, new Date(now))}
+            {now === null ? "" : formatBreakdown(birthDate, new Date(now))}
           </span>
           <br />
           <span className="text-background/60">since {BIRTHDAY}</span>

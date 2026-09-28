@@ -1,28 +1,86 @@
-export function JsonLd() {
-  const data = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Zhan Yong Xiang",
-    alternateName: ["Loki", "詹詠翔"],
-    url: "https://www.zyx.tw",
-    email: "mail@zyx.tw",
-    jobTitle: "MS student in Computer Science",
-    affiliation: {
-      "@type": "EducationalOrganization",
-      name: "National Yang Ming Chiao Tung University",
-      url: "https://www.nycu.edu.tw",
-    },
-    sameAs: [
-      "https://github.com/zyx1121",
-      "https://www.instagram.com/__zyx1121__",
-    ],
-  }
+import type { Project } from "@/lib/projects"
+import {
+  EMAIL,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+  SOCIAL,
+} from "@/lib/site"
+
+const PERSON = `${SITE_URL}/#person`
+
+function JsonLd({ data }: { data: object }) {
   return (
     <script
       type="application/ld+json"
-      // Build-time literal — no user input ever flows in.
+      // Build-time data only; "<" is escaped so no string can end the tag.
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(data).replace(/</g, "\\u003c"),
+      }}
+    />
+  )
+}
 
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+/** Who the site is by and what it is: on every page. */
+export function SiteJsonLd() {
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": PERSON,
+            name: "Zhan Yong Xiang",
+            alternateName: ["Loki", "詹詠翔"],
+            url: SITE_URL,
+            email: EMAIL,
+            jobTitle: "MS student in Computer Science",
+            affiliation: {
+              "@type": "EducationalOrganization",
+              name: "National Yang Ming Chiao Tung University",
+              url: "https://www.nycu.edu.tw",
+            },
+            alumniOf: {
+              "@type": "CollegeOrUniversity",
+              name: "National Taiwan University of Science and Technology",
+              url: "https://www.ntust.edu.tw",
+            },
+            homeLocation: { "@type": "Place", name: "Hsinchu, Taiwan" },
+            sameAs: SOCIAL.map(({ href }) => href),
+          },
+          {
+            "@type": "WebSite",
+            "@id": `${SITE_URL}/#website`,
+            url: `${SITE_URL}/`,
+            name: SITE_NAME,
+            description: SITE_DESCRIPTION,
+            inLanguage: "en",
+            author: { "@id": PERSON },
+            publisher: { "@id": PERSON },
+          },
+        ],
+      }}
+    />
+  )
+}
+
+/** The works page's list, one ListItem per project. */
+export function ProjectsJsonLd({ projects }: { projects: Project[] }) {
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: "Works",
+        itemListElement: projects.map(({ name, href, purpose }, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name,
+          url: href,
+          description: purpose,
+        })),
+      }}
     />
   )
 }

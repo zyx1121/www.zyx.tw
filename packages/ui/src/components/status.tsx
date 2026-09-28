@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import * as m from "motion/react-m"
 import { SiGithub } from "react-icons/si"
 import {
   VscGitCommit,
@@ -14,39 +13,25 @@ import {
 } from "react-icons/vsc"
 import type { IconType } from "react-icons"
 
-import { useInView } from "@workspace/ui/hooks/use-in-view"
+import {
+  describeEvent,
+  type EventKind,
+  type Heatmap,
+  type HeatmapDay,
+  type StatusData,
+} from "@workspace/ui/lib/github-events"
+import { GITHUB_USER, STATUS_COPY } from "@workspace/ui/lib/profile"
+import { timeAgo } from "@workspace/ui/lib/time-ago"
 import { cn } from "@workspace/ui/lib/utils"
 
-const spring = { type: "spring" as const, stiffness: 200, damping: 20 }
-
-export type GhEvent = {
-  id: string
-  type: string
-  repo: { name: string; url: string }
-  payload: Record<string, unknown>
-  created_at: string
-}
-
-type HeatmapDay = {
-  date: string
-  contributionCount: number
-  contributionLevel:
-    | "NONE"
-    | "FIRST_QUARTILE"
-    | "SECOND_QUARTILE"
-    | "THIRD_QUARTILE"
-    | "FOURTH_QUARTILE"
-}
-
-export type Heatmap = {
-  totalContributions: number
-  weeks: { contributionDays: HeatmapDay[] }[]
-}
-
-export type StatusData = {
-  user: string
-  events: GhEvent[]
-  heatmap: Heatmap | null
+const ICON: Record<EventKind, IconType> = {
+  commit: VscGitCommit,
+  "pull-request": VscGitPullRequest,
+  issue: VscIssues,
+  star: VscStarFull,
+  fork: VscRepoForked,
+  repo: VscRepo,
+  tag: VscTag,
 }
 
 const LEVEL_CLASS: Record<HeatmapDay["contributionLevel"], string> = {
@@ -63,54 +48,6 @@ const dateFmt = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
 })
 
-function timeAgo(iso: string) {
-  const diff = (Date.now() - new Date(iso).getTime()) / 1000
-  if (diff < 60) return `${Math.floor(diff)}s ago`
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`
-  if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`
-  return `${Math.floor(diff / 604800)}w ago`
-}
-
-function describe(e: GhEvent): { icon: IconType; text: string } {
-  switch (e.type) {
-    case "PushEvent": {
-      const ref = (e.payload.ref as string) ?? ""
-      const branch = ref.replace(/^refs\/heads\//, "") || "a branch"
-      return { icon: VscGitCommit, text: `Pushed to ${branch}` }
-    }
-    case "PullRequestEvent": {
-      const action = (e.payload.action as string) ?? "updated"
-      return { icon: VscGitPullRequest, text: `${cap(action)} a PR` }
-    }
-    case "IssuesEvent": {
-      const action = (e.payload.action as string) ?? "updated"
-      return { icon: VscIssues, text: `${cap(action)} an issue` }
-    }
-    case "WatchEvent":
-      return { icon: VscStarFull, text: "Starred" }
-    case "ForkEvent":
-      return { icon: VscRepoForked, text: "Forked" }
-    case "CreateEvent": {
-      const refType = (e.payload.ref_type as string) ?? "ref"
-      return { icon: VscRepo, text: `Created ${refType}` }
-    }
-    case "ReleaseEvent": {
-      const tag =
-        ((e.payload.release as { tag_name?: string })?.tag_name as string) ?? ""
-      return { icon: VscTag, text: `Released ${tag}`.trim() }
-    }
-    case "PublicEvent":
-      return { icon: VscRepo, text: "Made public" }
-    default:
-      return { icon: VscRepo, text: e.type }
-  }
-}
-
-function cap(s: string) {
-  return s.charAt(0).toUpperCase() + s.slice(1)
-}
-
 function HeatmapGrid({ heatmap }: { heatmap: Heatmap }) {
   const days = heatmap.weeks.flatMap((w) => w.contributionDays)
   return (
@@ -123,7 +60,7 @@ function HeatmapGrid({ heatmap }: { heatmap: Heatmap }) {
       {days.map((day) => (
         <div
           key={day.date}
-          title={`${dateFmt.format(new Date(day.date))} — ${day.contributionCount} contribution${
+          title={`${dateFmt.format(new Date(day.date))}: ${day.contributionCount} contribution${
             day.contributionCount === 1 ? "" : "s"
           }`}
           className={cn(
@@ -136,49 +73,37 @@ function HeatmapGrid({ heatmap }: { heatmap: Heatmap }) {
   )
 }
 
-export function Status({ data }: { data: StatusData }) {
-  const { ref, inView } = useInView()
-
+export function Status({
+  data,
+  className,
+  style,
+}: {
+  data: StatusData
+  className?: string
+  style?: React.CSSProperties
+}) {
   return (
     <section
-      ref={ref as React.RefObject<HTMLElement>}
-      aria-label="Status"
-      className="flex h-dvh w-dvw flex-col items-center justify-center gap-6 px-6 text-center"
+      aria-labelledby="status-heading"
+      className={className}
+      style={style}
     >
-      <m.h2
-        initial={{ opacity: 0, y: 16 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={spring}
-        className="text-2xl font-medium sm:text-3xl"
-      >
-        Status.
-      </m.h2>
-      <m.p
-        initial={{ opacity: 0, y: 16 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ ...spring, delay: 0.1 }}
-        className="max-w-md text-sm text-muted-foreground"
-      >
-        A peek at what I&apos;ve been messing with lately.
-      </m.p>
-      <m.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={inView ? { opacity: 1, scale: 1 } : {}}
-        transition={{ ...spring, delay: 0.2 }}
-        className="w-full max-w-2xl rounded-3xl border border-border bg-card p-6 text-left"
-      >
+      <h2 id="status-heading" className="text-2xl">
+        {STATUS_COPY.title}
+      </h2>
+      <div className="mt-5 rounded-lg bg-card p-5">
         <div className="flex items-center justify-between gap-4">
           <Link
-            href="https://github.com/zyx1121"
+            href={`https://github.com/${GITHUB_USER}`}
             target="_blank"
             rel="noopener noreferrer"
             className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <SiGithub className="h-4 w-4" aria-hidden="true" />
-            <span>@zyx1121</span>
+            <span>@{GITHUB_USER}</span>
           </Link>
           {data.heatmap && (
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-muted-foreground tabular-nums">
               {data.heatmap.totalContributions.toLocaleString()} contributions
               this year
             </span>
@@ -194,11 +119,12 @@ export function Status({ data }: { data: StatusData }) {
         <ul className="mt-5 space-y-3">
           {data.events.length === 0 && (
             <li className="text-sm text-muted-foreground">
-              No public activity in the last few days.
+              {STATUS_COPY.empty}
             </li>
           )}
           {data.events.map((e) => {
-            const { icon: Icon, text } = describe(e)
+            const { kind, text } = describeEvent(e)
+            const Icon = ICON[kind]
             return (
               <li
                 key={e.id}
@@ -225,7 +151,7 @@ export function Status({ data }: { data: StatusData }) {
                     recomputes it. The client value is the right one; suppress
                     the text-mismatch warning instead of forcing a match. */}
                 <span
-                  className="shrink-0 text-xs text-muted-foreground/70 tabular-nums"
+                  className="shrink-0 text-xs text-muted-foreground tabular-nums"
                   suppressHydrationWarning
                 >
                   {timeAgo(e.created_at)}
@@ -234,7 +160,7 @@ export function Status({ data }: { data: StatusData }) {
             )
           })}
         </ul>
-      </m.div>
+      </div>
     </section>
   )
 }

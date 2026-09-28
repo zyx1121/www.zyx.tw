@@ -2,33 +2,24 @@ import type { Metadata } from "next"
 
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
 import "@workspace/ui/globals.css"
-import { Brand } from "@workspace/ui/components/brand"
-import { Copyright } from "@workspace/ui/components/copyright"
-import { DaysAlive } from "@workspace/ui/components/days-alive"
+import { MotionProvider } from "@workspace/ui/components/motion-provider"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
-import { ThemeToggle } from "@workspace/ui/components/ui/theme-toggle"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@workspace/ui/components/ui/tooltip"
+import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 import { fontVariables } from "@workspace/ui/lib/fonts"
 import { cn } from "@workspace/ui/lib/utils"
-import { MotionProvider } from "@workspace/ui/components/motion-provider"
 
-import { JsonLd } from "@/components/json-ld"
-
-const SITE_NAME = "zyx"
-const SITE_DESCRIPTION =
-  "Loki (詹詠翔), CS grad student at NYCU WinLab. Side projects, lab work, GitHub activity, and places I have photographed."
+import { SiteJsonLd } from "@/components/json-ld"
+import { SiteFooter } from "@/components/site-footer"
+import { SiteHeader } from "@/components/site-header"
+import sceneFile from "@/lib/home-scene.json"
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.zyx.tw"),
+  metadataBase: new URL(SITE_URL),
   title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
-  authors: [{ name: "Loki", url: "https://www.zyx.tw" }],
+  authors: [{ name: "Loki", url: SITE_URL }],
   creator: "Loki",
   keywords: [
     "Loki",
@@ -39,23 +30,7 @@ export const metadata: Metadata = {
     "WinLab",
     "software engineer",
     "machine learning",
-    "photography",
   ],
-  robots: { index: true, follow: true },
-  alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "/",
-    siteName: SITE_NAME,
-    title: SITE_NAME,
-    description: SITE_DESCRIPTION,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: SITE_NAME,
-    description: SITE_DESCRIPTION,
-  },
 }
 
 export default async function RootLayout({
@@ -71,30 +46,29 @@ export default async function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("dark", "antialiased", fontVariables, "font-sans")}
+      // A stable gutter keeps the centered column from moving when a page
+      // gains or loses its scrollbar. One edge only, so the left corners stay
+      // 20 px from the window's edge on every page and every site. Under the
+      // home's 3D stage the gutter takes the scene's background, so the stage
+      // meets the window's edge in either theme.
+      style={{ "--stage": sceneFile.staging.background } as React.CSSProperties}
+      className={cn(
+        "dark",
+        "antialiased [scrollbar-gutter:stable] has-[main[data-stage]]:bg-(--stage)",
+        fontVariables,
+        "font-sans"
+      )}
     >
-      <body>
-        <JsonLd />
+      {/* Body and nav text is 20px on phones and 16px from `sm`, easing
+          between the two. Pages fill the viewport so the footer sits low. */}
+      <body className="flex min-h-dvh flex-col text-xl motion-safe:transition-[font-size] motion-safe:duration-300 sm:text-base">
+        <SiteJsonLd />
         <ThemeProvider>
           <TooltipProvider>
             <MotionProvider>
-              <Brand />
-              {/* Placement lives here, the registry component stays stock. */}
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <span className="fixed top-2.5 right-2.5 z-50 flex" />
-                  }
-                >
-                  <ThemeToggle className="text-muted-foreground" />
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  Toggle theme (press d)
-                </TooltipContent>
-              </Tooltip>
+              <SiteHeader />
               {children}
-              <DaysAlive />
-              <Copyright />
+              <SiteFooter />
             </MotionProvider>
           </TooltipProvider>
         </ThemeProvider>

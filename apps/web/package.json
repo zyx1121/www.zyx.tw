@@ -12,9 +12,10 @@
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
-    "previews": "node scripts/capture-previews.mjs"
+    "previews": "uv run scripts/previews.py"
   },
   "dependencies": {
+    "@workspace/3d": "workspace:*",
     "@workspace/otel": "workspace:*",
     "@workspace/ui": "workspace:*",
     "exifr": "^7.1.3",
