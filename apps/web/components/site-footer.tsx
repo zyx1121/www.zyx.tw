@@ -3,7 +3,12 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-import { BottomCorners, cornerLink } from "@workspace/ui/components/corners"
+import {
+  BottomCorners,
+  cornerLink,
+  CornerTip,
+  LEGAL_TIPS,
+} from "@workspace/ui/components/corners"
 
 import { enter, ENTER, enterDelay } from "@/lib/layout"
 
@@ -19,20 +24,24 @@ export function SiteFooter() {
       style={enterDelay(ENTER.footer)}
       links={
         <>
-          <Link
-            href="/privacy"
-            aria-current={pathname === "/privacy" ? "page" : undefined}
-            className={cornerLink}
-          >
-            Privacy
-          </Link>
-          <Link
-            href="/terms"
-            aria-current={pathname === "/terms" ? "page" : undefined}
-            className={cornerLink}
-          >
-            Terms
-          </Link>
+          <CornerTip tip={LEGAL_TIPS.privacy}>
+            <Link
+              href="/privacy"
+              aria-current={pathname === "/privacy" ? "page" : undefined}
+              className={cornerLink}
+            >
+              Privacy
+            </Link>
+          </CornerTip>
+          <CornerTip tip={LEGAL_TIPS.terms}>
+            <Link
+              href="/terms"
+              aria-current={pathname === "/terms" ? "page" : undefined}
+              className={cornerLink}
+            >
+              Terms
+            </Link>
+          </CornerTip>
         </>
       }
     />

@@ -4,7 +4,11 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 import { ActiveMark } from "@workspace/ui/components/active-mark"
-import { cornerLink, TopCorners } from "@workspace/ui/components/corners"
+import {
+  cornerLink,
+  CornerTip,
+  TopCorners,
+} from "@workspace/ui/components/corners"
 
 import { enter } from "@/lib/layout"
 import { PAGES } from "@/lib/site"
@@ -26,17 +30,19 @@ export function SiteHeader() {
       nav={
         <nav aria-label="Main">
           <ul className="flex gap-4">
-            {NAV.map(({ path, label }) => {
+            {NAV.map(({ path, label, tip }) => {
               const current = pathname === path
               return (
                 <li key={path} className="relative flex">
-                  <Link
-                    href={path}
-                    aria-current={current ? "page" : undefined}
-                    className={cornerLink}
-                  >
-                    {label}
-                  </Link>
+                  <CornerTip tip={tip}>
+                    <Link
+                      href={path}
+                      aria-current={current ? "page" : undefined}
+                      className={cornerLink}
+                    >
+                      {label}
+                    </Link>
+                  </CornerTip>
                   {/* Springs to the new page's item on navigation. */}
                   {current && (
                     <ActiveMark

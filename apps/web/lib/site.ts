@@ -23,6 +23,8 @@ export const SOCIAL = [
 export type Page = {
   path: string
   label: string
+  /** The corner tip on its link: what the label leaves out. */
+  tip?: string
   /** Its Markdown twin, served to agents (app/<name>.md/route.ts). */
   markdown: string
   /** What an agent finds there, for llms.txt and the 404 pages. */

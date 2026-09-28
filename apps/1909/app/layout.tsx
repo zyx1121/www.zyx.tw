@@ -37,7 +37,15 @@ export default async function RootLayout({
           {children}
           <BottomCorners
             fade
-            links={<LegalLinks labels={{ privacy: "隱私權", terms: "條款" }} />}
+            links={
+              <LegalLinks
+                labels={{ privacy: "隱私權", terms: "條款" }}
+                tips={{
+                  privacy: "zyx.tw 各站儲存與記錄的資料",
+                  terms: "zyx.tw 各站的使用規則",
+                }}
+              />
+            }
           />
         </ThemeProvider>
       </body>

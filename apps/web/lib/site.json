@@ -12,6 +12,7 @@
     {
       "path": "/works",
       "label": "Works",
+      "tip": "Every project and its link",
       "markdown": "/works.md",
       "summary": "every project with its purpose and link",
       "nav": true,
@@ -21,6 +22,7 @@
     {
       "path": "/about",
       "label": "About",
+      "tip": "CV and GitHub status",
       "markdown": "/about.md",
       "summary": "his CV: facts, education, experience, publications, projects, awards and GitHub status",
       "nav": true,

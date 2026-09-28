@@ -1,6 +1,10 @@
 import Link from "next/link";
 
-import { cornerLink, TopCorners } from "@workspace/ui/components/corners";
+import {
+  cornerLink,
+  CornerTip,
+  TopCorners,
+} from "@workspace/ui/components/corners";
 
 import { enter, enterDelay } from "@/lib/layout";
 import { ThemeToggle } from "@/registry/ui/theme-toggle";
@@ -15,12 +19,20 @@ export function SiteHeader() {
       style={enterDelay(0)}
       nav={
         <nav aria-label="Main" className="flex items-center gap-4">
-          <Link href="/#components" className={cornerLink}>
-            Components
-          </Link>
-          {/* -m-2 takes the 32px button's 8px inset back on every side, so
-              the corner sees only its 16px icon and keeps its 20px row. */}
-          <ThemeToggle className="-m-2 text-muted-foreground hover:text-foreground" />
+          <CornerTip tip="What shadcn/ui does not have">
+            <Link href="/#components" className={cornerLink}>
+              Components
+            </Link>
+          </CornerTip>
+          {/* The tip's trigger props land on the span, so they never replace
+              the toggle's own onClick. -m-2 takes the 32px button's 8px inset
+              back on every side, so the corner, and the tip, see only its
+              16px icon and the row stays 20px. */}
+          <CornerTip tip="Toggle theme">
+            <span className="flex">
+              <ThemeToggle className="-m-2 text-muted-foreground hover:text-foreground" />
+            </span>
+          </CornerTip>
         </nav>
       }
     />
