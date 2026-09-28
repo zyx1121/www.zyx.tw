@@ -13,7 +13,7 @@
 
 > Every idea that outgrows a scratch file gets its own subdomain here: one Turborepo, seven apps, one shared design system.
 
-`nextjs` · `turborepo` · `tailwind` · `shadcn` · `neon`
+`nextjs` · `turborepo` · `tailwind` · `shadcn` · `supabase`
 
 [![CI](https://github.com/zyx1121/www.zyx.tw/actions/workflows/ci.yml/badge.svg)](https://github.com/zyx1121/www.zyx.tw/actions) &nbsp;[![Live](https://img.shields.io/badge/live-zyx.tw-111111)](https://zyx.tw) &nbsp;[![version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzyx1121%2Fwww.zyx.tw%2Fmain%2Fpackage.json&query=%24.version&label=version&color=111111)](package.json) &nbsp;[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](#license)
 
@@ -60,7 +60,7 @@ Plain `bun dev` boots turbo across all 7 apps at once. `--filter=<app>` (or `cd 
 | Framework | Next.js 16.1 (App Router + Turbopack) |
 | UI | React 19, Tailwind CSS v4, shadcn/ui (`base-nova`, Base UI) + the [ui.zyx.tw](https://ui.zyx.tw) theme |
 | Language | TypeScript 5.9, strict + `noUncheckedIndexedAccess` |
-| Backend | Neon (`1909`, `link`) |
+| Backend | Supabase (`1909`, `link`) |
 | 3D | three.js, React Three Fiber, drei and postprocessing (`good`, `3d`) |
 | Observability | `@workspace/otel`, shared bootstrap shipping logs to Sensorium |
 | Tooling | Bun 1.3 workspaces + Turbo 2 |
