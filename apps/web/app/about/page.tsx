@@ -6,7 +6,7 @@ import { Hero } from "@/components/hero"
 import { ABOUT, HOME } from "@/lib/copy"
 import { getGithubStatus } from "@/lib/github"
 import { column, enter, enterRow, page } from "@/lib/layout"
-import { FACTS, type LeadRun, SECTIONS } from "@/lib/resume"
+import { FACTS, SECTIONS } from "@/lib/resume"
 import { pageMetadata } from "@/lib/site"
 
 export const metadata = pageMetadata({ title: ABOUT.title, path: "/about" })
@@ -53,16 +53,6 @@ function Value({ text, href }: { text: string; href?: string }) {
   )
 }
 
-function Lead({ runs }: { runs: LeadRun[] }) {
-  return (
-    <p className="mt-3 text-muted-foreground">
-      {runs.map(({ text, href }, index) =>
-        href ? <Value key={index} text={text} href={href} /> : text
-      )}
-    </p>
-  )
-}
-
 /**
  * About reads as a CV: the name, a few facts, then Education, Experience,
  * Publications, Projects and Awards, each newest first, and last what he is
@@ -95,7 +85,7 @@ export default async function About() {
         ))}
       </dl>
 
-      {SECTIONS.map(({ id, title, lead, entries }, index) => (
+      {SECTIONS.map(({ id, title, entries }, index) => (
         <section
           key={id}
           aria-labelledby={`${id}-heading`}
@@ -105,7 +95,6 @@ export default async function About() {
           <h2 id={`${id}-heading`} className={HEADING}>
             {title}
           </h2>
-          {lead && <Lead runs={lead} />}
           <ol className="mt-5 flex flex-col gap-y-3">
             {entries.map(({ when, what, note, where, href }) => (
               <li

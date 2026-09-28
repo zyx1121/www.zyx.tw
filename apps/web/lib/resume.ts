@@ -32,14 +32,9 @@ export type Entry = {
   note?: string
 }
 
-/** A run of a section's lead; one with `href` renders as a link. */
-export type LeadRun = { text: string; href?: string }
-
 export type Section = {
   id: string
   title: string
-  /** One muted line under the heading. */
-  lead?: LeadRun[]
   entries: Entry[]
 }
 
@@ -96,12 +91,21 @@ export const SECTIONS: Section[] = [
         what: "An Automated and Optimized Framework for 6 GHz Wi-Fi AFC Compliance Verification",
         note: "First author",
         where: "APWCS 2026",
+        href: "https://apwcs2026.org",
       },
       {
         when: "2025",
         what: "6 GHz Wi-Fi 自動頻率協調系統之 DUT 測試環境自動化改良",
         note: "First author",
         where: "TANET 2025",
+        href: "https://tanet2025.niu.edu.tw",
+      },
+      {
+        when: "2025",
+        what: "CodedMyRoute: Design and Implementation of Software Defined Reliable Routing Scheme for Satellite IoTs",
+        note: "Co-author",
+        where: "APWCS 2025",
+        href: "https://doi.org/10.1109/APWCS67981.2025.11151927",
       },
       {
         when: "2024",
@@ -115,11 +119,6 @@ export const SECTIONS: Section[] = [
   {
     id: "projects",
     title: "Projects",
-    lead: [
-      { text: "Code and research. The live sites are on " },
-      { text: "Works", href: "/works" },
-      { text: "." },
-    ],
     entries: [
       {
         when: "2026",
