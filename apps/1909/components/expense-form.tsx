@@ -1,5 +1,7 @@
 "use client"
 
+import { cornerLink } from "@workspace/ui/components/corners"
+
 import { useExpenseForm } from "@/hooks/use-expense-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -16,7 +18,7 @@ export function ExpenseForm() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button variant="ghost" size="sm" />}>
+      <DialogTrigger render={<button type="button" className={cornerLink} />}>
         新增支出
       </DialogTrigger>
       <DialogContent>
