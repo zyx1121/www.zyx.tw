@@ -41,12 +41,14 @@ export function ProjectList({ className }: { className?: string }) {
               if (event.pointerType === "mouse") release(index)
             }}
           >
-            {/* The link stretches over the whole row. */}
+            {/* The link stretches over the whole row, and on phones over
+                half the gap on each side, so a tap between rows still lands
+                on one (36 px per row instead of 24). */}
             <a
               href={project.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-sm decoration-muted-foreground underline-offset-4 outline-offset-4 transition-colors after:absolute after:inset-0 hover:underline focus-visible:outline-2 max-sm:text-muted-foreground max-sm:group-data-active:text-foreground"
+              className="rounded-sm decoration-muted-foreground underline-offset-4 outline-offset-4 transition-colors after:absolute after:inset-0 hover:underline focus-visible:outline-2 max-sm:text-muted-foreground max-sm:group-data-active:text-foreground max-sm:after:-inset-y-1.5"
               onFocus={(event) => {
                 if (event.currentTarget.matches(":focus-visible")) engage(index)
               }}
