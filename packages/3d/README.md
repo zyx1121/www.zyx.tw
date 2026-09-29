@@ -32,7 +32,7 @@ Turns an SVG into a 3D object and renders it from one `scene.json`. The editor a
    }
    ```
 
-`<Scene3D>` fills its parent, so give the parent a size. `autoRotate` turns the shape itself, so it works with `controls` off. The camera angle comes from the scene's staging; `view` overrides it, in degrees (`DEFAULT_VIEW` is Oblique's: 30° to the left and 30° above), and when either changes the camera swings over. The scene's `motion.hover` needs nothing on your side: the shape leans toward a mouse over the canvas and grows a little under it. Environment maps load from `https://3d.zyx.tw/env/`, which sends `Access-Control-Allow-Origin: *`; pass `envBaseUrl` to serve them from somewhere else.
+`<Scene3D>` fills its parent, so give the parent a size. `autoRotate` turns the shape itself, so it works with `controls` off. The camera angle comes from the scene's staging; `view` overrides it, in degrees (`DEFAULT_VIEW` is Oblique's: 30° to the left and 30° above), and when either changes the camera swings over. The scene's `motion.hover` needs nothing on your side: the shape leans toward a mouse over the canvas, up to 18° at its edge, and grows a little under it. With `deviceTilt`, a touch screen's turns stand in for the mouse: the shape holds still in the room while the device turns around it, up to the same 18°, and faces front again once the device rests. iOS lets a page read the device's orientation only after the visitor allows it, and asks only on a tap, so the first tap on the canvas asks; the answer holds for the rest of the session. Environment maps load from `https://3d.zyx.tw/env/`, which sends `Access-Control-Allow-Origin: *`; pass `envBaseUrl` to serve them from somewhere else.
 
 ## scene.json v1
 

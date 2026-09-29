@@ -64,6 +64,13 @@ export type Scene3DProps = {
    * way, the camera swings over when it changes.
    */
   view?: SceneView
+  /**
+   * On a touch screen, the device's turns stand in for the mouse of the
+   * scene's hover motion: the shape holds still in the room while the device
+   * turns around it. iOS asks the visitor first, on their first tap on the
+   * canvas.
+   */
+  deviceTilt?: boolean
 }
 
 /** Renders a scene.json. Use it from a client component; it fills its parent. */
@@ -74,6 +81,7 @@ export function Scene3D({
   controls = true,
   autoRotate = false,
   view: viewOverride,
+  deviceTilt = false,
 }: Scene3DProps) {
   const view = viewOverride ?? stagingOf(scene).view
   return (
@@ -94,6 +102,7 @@ export function Scene3D({
         scene={scene}
         envBaseUrl={envBaseUrl}
         autoRotate={autoRotate}
+        deviceTilt={deviceTilt}
       />
       {controls && (
         <OrbitControls
@@ -129,10 +138,12 @@ function SceneContents({
   scene,
   envBaseUrl,
   autoRotate,
+  deviceTilt,
 }: {
   scene: SceneV1
   envBaseUrl: string
   autoRotate: boolean
+  deviceTilt: boolean
 }) {
   const geometry = useShapeGeometry(scene.shape)
   const spin = useRef<THREE.Group>(null)
@@ -206,7 +217,7 @@ function SceneContents({
         position={placement.position}
         quaternion={placement.quaternion}
       >
-        <HoverMotion enabled={motion.hover}>
+        <HoverMotion enabled={motion.hover} deviceTilt={deviceTilt}>
           <group ref={spin}>
             {geometry && (
               <mesh geometry={geometry}>

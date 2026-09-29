@@ -87,6 +87,7 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
   | Rotating word                | a new word every 3.2s                                       | `rotating-text`                   |
   | Mask sweep                   | starts after 1s, runs 5s, `cubic-bezier(.16,1,.3,1)`        | `mask-reveal`                     |
   | Mark mirror                  | flips left to right over 300ms, stock easing                | the zyx mark, on hover            |
+  | 3D lean                      | settles in about 500ms, at most 18°                         | the home's 3D mark                |
   | Shimmer                      | a 2s linear loop                                            | `shimmering-text`                 |
   | HDR fade back                | 2s after hover or focus ends                                | `hdr-highlight`                   |
   | Breakpoints                  | width and text size over 300ms                              | the column, `<body>`              |
@@ -96,7 +97,7 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
 - **Easing**: `ease-out` for entrances, the stock `cubic-bezier(.4,0,.2,1)` for state changes, `cubic-bezier(.16,1,.3,1)` for the mask sweep.
 - **Pages do not animate out**: a new page replaces the old one and its rows fade in.
 - **Entrances never move layout**: entrances and running animations change opacity, masks, transforms and color only. `rotating-text` reserves its widest word and `scramble-text` keeps its final text in flow, so CLS stays 0. The breakpoint transitions are the only motion of ours that reflows the page.
-- **Reduced motion covers every animation**: our CSS animations and movement transitions sit behind `motion-safe:` (or `prefers-reduced-motion: no-preference`), and scripted ones read `prefers-reduced-motion` before they start. Under `reduce`, content shows at once in its final state: no fade, no mask, no scramble, no auto-rotation, no breakpoint easing, and the mark mirrors without turning. Stock components animate through tw-animate-css without `motion-safe:`, and `components/ui/` is CLI-owned, so the site's `globals.css` also cuts every animation and transition to 1ms under `prefers-reduced-motion: reduce` (1ms rather than 0 keeps the end events Base UI waits for). That guard is also what stops the unprefixed color transitions on links.
+- **Reduced motion covers every animation**: our CSS animations and movement transitions sit behind `motion-safe:` (or `prefers-reduced-motion: no-preference`), and scripted ones read `prefers-reduced-motion` before they start. Under `reduce`, content shows at once in its final state: no fade, no mask, no scramble, no auto-rotation, no breakpoint easing, no 3D lean, and the mark mirrors without turning. Stock components animate through tw-animate-css without `motion-safe:`, and `components/ui/` is CLI-owned, so the site's `globals.css` also cuts every animation and transition to 1ms under `prefers-reduced-motion: reduce` (1ms rather than 0 keeps the end events Base UI waits for). That guard is also what stops the unprefixed color transitions on links.
 
 ## Typography
 
