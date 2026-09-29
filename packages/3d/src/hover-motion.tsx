@@ -95,10 +95,13 @@ export function HoverMotion({
     const state = motion.current
     if (!held) {
       const aim = enabled ? at : null
+      // The device's rest keeps easing under a mouse too, so the lean it
+      // hands back once the mouse leaves is current.
+      const turned = leanAgainst(turn.current, delta, state)
       if (aim) {
         state.targetYaw = aim.x * MAX_TILT
         state.targetPitch = -aim.y * MAX_TILT
-      } else if (!leanAgainst(turn.current, delta, state)) {
+      } else if (!turned) {
         state.targetYaw = 0
         state.targetPitch = 0
       }
@@ -244,7 +247,11 @@ function useDeviceTurn(enabled: boolean) {
     const current = turn.current
     const onReading = (event: DeviceOrientationEvent) => {
       if (event.beta === null || event.gamma === null) return
-      const angle = screen.orientation?.angle ?? 0
+      // screen.orientation came in iOS 16.4; before it, window.orientation.
+      const angle =
+        screen.orientation?.angle ??
+        (window as { orientation?: number }).orientation ??
+        0
       const radians = THREE.MathUtils.degToRad
       const now = current.now ?? new THREE.Quaternion()
       // The device in the room (alpha, beta and gamma turn it about Z, X'
@@ -287,13 +294,16 @@ function useDeviceTurn(enabled: boolean) {
           if (live && state === "granted") listen()
         }
       )
-    const onTap = () => {
-      ask().catch(() => {})
-    }
-    // Without a tap, iOS refuses a question not yet answered.
-    ask().catch(() => {
+    // Without a tap, iOS refuses a question not yet answered, and it refuses
+    // the same way a tap it did not count; either way the next tap asks.
+    // An answer of no is not refused, so it is never asked again.
+    const wait = () => {
       if (live) element.addEventListener("click", onTap, { once: true })
-    })
+    }
+    const onTap = () => {
+      ask().catch(wait)
+    }
+    ask().catch(wait)
     return () => {
       live = false
       window.removeEventListener("deviceorientation", onReading)
