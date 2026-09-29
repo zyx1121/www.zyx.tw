@@ -7,11 +7,12 @@ import { enter, enterRow } from "@/lib/layout"
 
 /**
  * One row per project: the name on the left and its purpose in muted text on
- * the right, sharing the nav's right edge. When both do not fit on one line
- * (phones), the purpose wraps below the name, left-aligned; the name never
- * truncates. The project on the stage marks its row by turning the purpose
- * foreground. Hovering a row or focusing its link from the keyboard puts that
- * project on the stage.
+ * the right, sharing the nav's right edge. When both do not fit on one line,
+ * the purpose wraps below the name, left-aligned; the name never truncates.
+ * The project on the stage marks its row by turning the purpose foreground.
+ * Phones show the names alone, muted, and the name on the stage turns
+ * foreground instead; the purpose stays for screen readers. Hovering a row
+ * or focusing its link from the keyboard puts that project on the stage.
  */
 export function ProjectList({ className }: { className?: string }) {
   const { projects, active, engage, release } = useShowcase()
@@ -45,7 +46,7 @@ export function ProjectList({ className }: { className?: string }) {
               href={project.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-sm decoration-muted-foreground underline-offset-4 outline-offset-4 after:absolute after:inset-0 hover:underline focus-visible:outline-2"
+              className="rounded-sm decoration-muted-foreground underline-offset-4 outline-offset-4 transition-colors after:absolute after:inset-0 hover:underline focus-visible:outline-2 max-sm:text-muted-foreground max-sm:group-data-active:text-foreground"
               onFocus={(event) => {
                 if (event.currentTarget.matches(":focus-visible")) engage(index)
               }}
@@ -53,7 +54,7 @@ export function ProjectList({ className }: { className?: string }) {
             >
               {project.name}
             </a>
-            <span className="text-muted-foreground transition-colors group-data-active:text-foreground">
+            <span className="text-muted-foreground transition-colors group-data-active:text-foreground max-sm:sr-only">
               {project.purpose}
             </span>
           </li>
