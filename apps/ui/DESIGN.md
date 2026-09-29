@@ -49,8 +49,9 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
 - **The corners stay put**: they are fixed, so they stay in the corners while the page scrolls. Where content scrolls under them, the background color fades out over 64px from the top and bottom edges (`fade`), so no text runs into theirs. Pages that fill the viewport without scrolling (link, time, good, 3d and the www.zyx.tw home) leave the fade off.
 - **No menu button**: the nav stays short enough to fit a 320px viewport beside the mark, so phones show it as it is, with no hamburger and no drawer. Privacy and Terms go bottom left.
 - **Stable gutter**: the site's own `<html>` sets `scrollbar-gutter: stable`, so the centered column stays put when a page gains or loses its scrollbar. One edge only: a left gutter would put the left corners 20px in from the gutter instead of from the window's edge. Tool apps that fill the viewport (`w-dvw`, `fixed inset-0`) leave it off.
-- **Breakpoint transitions**: the column's width eases between breakpoints (`motion-safe:transition-[max-width] motion-safe:duration-300`), and so does the body text size (`motion-safe:transition-[font-size] motion-safe:duration-300` on `<body>`). They are the only motion of ours that reflows the page, for 300ms when the viewport crosses a breakpoint.
-- **Mobile size-up**: below `sm`, body text is 20px on 28px lines (`text-xl`) instead of 16px on 24px (`sm:text-base`), and icon buttons such as the theme toggle stay 32px at every width. Corner text stays 14px at every width. Spacing is the same at every width.
+- **Breakpoint transitions**: the column's width eases between breakpoints (`motion-safe:transition-[max-width] motion-safe:duration-300`). It is the only motion of ours that reflows the page, for 300ms when the viewport crosses a breakpoint.
+- **One text size on every screen**: body text is 16px on 24px lines (`text-base` on `<body>`) at every width, phones included, and corner text is 14px. Body text gets no size-up on phones: at 20px, a two-column row (a CV entry, a project and its purpose) left about 20 characters a line on a 390px screen. Icon buttons such as the theme toggle stay 32px at every width, and spacing is the same at every width.
+- **Secondary columns fold away on phones**: where a list pairs an item with a muted aside that does not fit beside it on a phone, the aside is visually hidden below `sm` (`max-sm:sr-only`, so screen readers still read it) rather than wrapping under the item. Works shows only the project names there, and the name on the stage turns foreground, as the purpose does from `sm`.
 - **Rows are exactly their content's height**: a control alone on its row sits in a flex or block box, never in a line box, where baseline alignment grows a 24px pill's row to 26px.
 
 ## Radius
@@ -90,7 +91,7 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
   | 3D lean                      | settles in about 500ms, at most 18°                         | the home's 3D mark                |
   | Shimmer                      | a 2s linear loop                                            | `shimmering-text`                 |
   | HDR fade back                | 2s after hover or focus ends                                | `hdr-highlight`                   |
-  | Breakpoints                  | width and text size over 300ms                              | the column, `<body>`              |
+  | Breakpoints                  | width over 300ms                                            | the column                        |
   | Menus, dialogs, sheets, tips | the stock tw-animate-css timings                            | stock components                  |
 
 - **Stagger**: rows fade in 25ms apart in document order, counting the top corners as row 0: the title at 25ms, the subtitle at 50ms, then each group heading and each demo. The bottom corners come in at 375ms. Delays go through tw-animate-css's `--tw-animation-delay` (`enterDelay` in `lib/layout.ts`), never `delay-*`, which would also delay transitions.

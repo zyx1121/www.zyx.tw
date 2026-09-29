@@ -59,9 +59,9 @@ export default async function RootLayout({
         "font-sans"
       )}
     >
-      {/* Body and nav text is 20px on phones and 16px from `sm`, easing
-          between the two. Pages fill the viewport so the footer sits low. */}
-      <body className="flex min-h-dvh flex-col text-xl motion-safe:transition-[font-size] motion-safe:duration-300 sm:text-base">
+      {/* Body text is 16px at every width, phones included. Pages fill the
+          viewport so the footer sits low. */}
+      <body className="flex min-h-dvh flex-col text-base">
         <SiteJsonLd />
         <ThemeProvider>
           <TooltipProvider>

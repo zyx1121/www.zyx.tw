@@ -69,7 +69,7 @@ export function CornerTip({
         side={at.startsWith("top") ? "bottom" : "top"}
         align={at.endsWith("left") ? "start" : "end"}
         // flex, not the stock inline-flex: in a line box the bubble would sit
-        // on the page's line height, 3 px low under the 20 px phone text.
+        // on the page's line height and land a few px low.
         className={cn("flex", dark && "dark")}
       >
         {tip}
