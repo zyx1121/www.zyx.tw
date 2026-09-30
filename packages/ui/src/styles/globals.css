@@ -300,8 +300,7 @@
   }
 }
 
-/* Shared frosted backdrops and floating menus. Keep stock components intact.
-   Browsers without backdrop-filter retain the stock surface. */
+/* Shared frosted backdrops, modal panels and floating menus. Tooltips stay opaque. */
 @supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0)) {
   [data-slot="dialog-overlay"],
   [data-slot="alert-dialog-overlay"],
@@ -317,9 +316,21 @@
   [data-slot="menubar-content"],
   [data-slot="menubar-sub-content"],
   [data-slot="hover-card-content"],
-  .bg-popover:has(> div > [data-slot="navigation-menu-content"]) {
+  .bg-popover:has(> div > [data-slot="navigation-menu-content"]),
+  [data-slot="dialog-content"],
+  [data-slot="alert-dialog-content"],
+  [data-slot="sheet-content"],
+  [data-slot="drawer-popup"] {
     background-color: transparent;
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
+  }
+  [data-slot="dialog-footer"],
+  [data-slot="alert-dialog-footer"],
+  [data-slot="dialog-content"] [data-slot="command"] {
+    background-color: transparent;
+  }
+  [data-slot="drawer-popup"] {
+    --drawer-bleed-background: transparent;
   }
 }
