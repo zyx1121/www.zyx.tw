@@ -26,7 +26,6 @@ good.zyx.tw     a digital 乖乖 taped onto servers
 ui.zyx.tw       the component registry every app above imports from
 1909            a shared-expense dashboard for three flatmates
 ```
-
 <sub>One Turborepo, one CI pipeline, seven live apps.</sub>
 
 Every subdomain of zyx.tw used to mean a fresh repo and copying the same eslint config, Tailwind tokens, and OTel bootstrap into it by hand. This monorepo folds the personal site and every side-project subdomain into one Turborepo instead, so a new idea is a new folder under `apps/`, not a new setup decision.
@@ -44,27 +43,27 @@ Plain `bun dev` boots turbo across all 7 apps at once. `--filter=<app>` (or `cd 
 
 ## What it gives you
 
-| App    | Live at                            | What it does                                              |
-| ------ | ---------------------------------- | --------------------------------------------------------- |
-| `web`  | [zyx.tw](https://zyx.tw)           | the site itself: a 3D home, works and a resume            |
-| `link` | [link.zyx.tw](https://link.zyx.tw) | your URLs, but shorter                                    |
-| `time` | [time.zyx.tw](https://time.zyx.tw) | what time is it?                                          |
-| `good` | [good.zyx.tw](https://good.zyx.tw) | a digital 乖乖, the snack engineers tape onto servers     |
-| `3d`   | [3d.zyx.tw](https://3d.zyx.tw)     | an SVG, extruded into 3D, lit and saved as one scene.json |
-| `ui`   | [ui.zyx.tw](https://ui.zyx.tw)     | the shadcn registry every app above pulls components from |
-| `1909` | (private)                          | a shared-expense dashboard for three flatmates            |
+| App | Live at | What it does |
+|-----|---------|---------------|
+| `web` | [zyx.tw](https://zyx.tw) | the site itself: a 3D home, works and a resume |
+| `link` | [link.zyx.tw](https://link.zyx.tw) | your URLs, but shorter |
+| `time` | [time.zyx.tw](https://time.zyx.tw) | what time is it? |
+| `good` | [good.zyx.tw](https://good.zyx.tw) | a digital 乖乖, the snack engineers tape onto servers |
+| `3d` | [3d.zyx.tw](https://3d.zyx.tw) | an SVG, extruded into 3D, lit and saved as one scene.json |
+| `ui` | [ui.zyx.tw](https://ui.zyx.tw) | the shadcn registry every app above pulls components from |
+| `1909` | (private) | a shared-expense dashboard for three flatmates |
 
 ## Tech stack
 
-| Layer         | Choice                                                                                                 |
-| ------------- | ------------------------------------------------------------------------------------------------------ |
-| Framework     | Next.js 16.1 (App Router + Turbopack)                                                                  |
-| UI            | React 19, Tailwind CSS v4, shadcn/ui (`base-nova`, Base UI) + the [ui.zyx.tw](https://ui.zyx.tw) theme |
-| Language      | TypeScript 5.9, strict + `noUncheckedIndexedAccess`                                                    |
-| Backend       | Supabase (`1909`, `link`)                                                                              |
-| 3D            | three.js, React Three Fiber, drei and postprocessing (`good`, `3d`)                                    |
-| Observability | `@workspace/otel`, shared bootstrap shipping logs to Sensorium                                         |
-| Tooling       | Bun 1.3 workspaces + Turbo 2                                                                           |
+| Layer | Choice |
+|-------|--------|
+| Framework | Next.js 16.1 (App Router + Turbopack) |
+| UI | React 19, Tailwind CSS v4, shadcn/ui (`base-nova`, Base UI) + the [ui.zyx.tw](https://ui.zyx.tw) theme |
+| Language | TypeScript 5.9, strict + `noUncheckedIndexedAccess` |
+| Backend | Supabase (`1909`, `link`) |
+| 3D | three.js, React Three Fiber, drei and postprocessing (`good`, `3d`) |
+| Observability | `@workspace/otel`, shared bootstrap shipping logs to Sensorium |
+| Tooling | Bun 1.3 workspaces + Turbo 2 |
 
 Shared packages: `packages/ui` (design system + components) · `packages/3d` (scene.json v1, preset registries, `<Scene3D>`; see [its README](./packages/3d/README.md)) · `packages/otel` (the Sensorium bootstrap) · `packages/eslint-config` (flat config: base / next-js / react-internal) · `packages/typescript-config` (base / nextjs / react-library).
 

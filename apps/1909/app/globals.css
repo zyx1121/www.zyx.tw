@@ -182,7 +182,7 @@
 }
 [data-slot="calendar"] .rdp-weekday,
 [data-slot="calendar"] .rdp-week_number,
-[data-slot="questionnaire-choice"] > span:last-child {
+[data-slot="questionnaire-choice-shortcut"] {
   font-size: 0.75rem;
   line-height: 1rem;
 }
