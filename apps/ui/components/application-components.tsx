@@ -84,7 +84,7 @@ export function ApplicationComponents() {
           <h3 className="pt-5">Resizable panels</h3>
           <ResizablePanelGroup
             orientation="horizontal"
-            className="h-36 rounded-lg border"
+            className="h-36! rounded-lg border"
           >
             <ResizablePanel defaultSize="50%">
               <div className="p-5">Content</div>
