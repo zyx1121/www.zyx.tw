@@ -46,7 +46,7 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
   | Hero to content       | 100px                                              | `pb-25`                       |
   | Content to the bottom | 100px, 60px clear of the bottom corners            | `pb-25` on `<main>`           |
 
-- **The corners stay put**: they are fixed, so they stay in the corners while the page scrolls. Where content scrolls under them, the background color fades out over 64px from the top and bottom edges (`fade`), so no text runs into theirs. Pages that fill the viewport without scrolling (link, time, good, 3d and the www.zyx.tw home) leave the fade off.
+- **The corners stay put**: they are fixed, so they stay in the corners while the page scrolls. Where content scrolls under them, a transparent 12px backdrop blur fades out over 64px from the top and bottom edges (`fade`), so no text runs into theirs. Pages that fill the viewport without scrolling (link, time, good, 3d and the www.zyx.tw home) leave the fade off.
 - **No menu button**: the nav stays short enough to fit a 320px viewport beside the mark, so phones show it as it is, with no hamburger and no drawer. Privacy and Terms go bottom left.
 - **Stable gutter**: the site's own `<html>` sets `scrollbar-gutter: stable`, so the centered column stays put when a page gains or loses its scrollbar. One edge only: a left gutter would put the left corners 20px in from the gutter instead of from the window's edge. Tool apps that fill the viewport (`w-dvw`, `fixed inset-0`) leave it off.
 - **Breakpoint transitions**: the column's width eases between breakpoints (`motion-safe:transition-[max-width] motion-safe:duration-300`). It is the only motion of ours that reflows the page, for 300ms when the viewport crosses a breakpoint.
@@ -184,3 +184,7 @@ The application examples and upstream component index on the home page cover for
 - Component coverage is not a reason to pre-render every component in every app. Installing the library ahead of a meeting removes setup work; import only what the current screen needs.
 
 Application compositions include MarkdownResponse: GFM, safe links, highlighted fenced code with copy, JSON formatting/raw toggle and incomplete streamed blocks. It is an app-level composition using react-markdown, remark-gfm and lowlight; stock primitives remain CLI-owned. Copyright tips say only `Loki` on every site.
+
+Page edge fades use a transparent 12px backdrop blur across 64px, with a mask that is opaque through 35% and fades toward content. They add no background tint. Existing per-page fade visibility stays unchanged; corner tips remain opaque. This treatment also applies to the standalone kitbash and sensorium landing pages.
+
+Chart data tooltips also use transparent 12px blur (`.recharts-tooltip-wrapper > div`); ordinary control and corner Tooltip bubbles remain opaque.
