@@ -185,6 +185,36 @@ export const SECTIONS: Section[] = [
         href: "https://github.com/zyx1121/ditto",
       },
       {
+        when: "2026",
+        what: "Website for NYCU's Office of AI Affairs",
+        where: "ai.winlab.tw",
+        href: "https://github.com/Office-of-AI-Affairs/ai.winlab.tw",
+      },
+      {
+        when: "2025",
+        what: "Meal ordering for NYCU WinLab",
+        where: "bento.winlab.tw",
+        href: "https://github.com/NYCU-WinLab/bento.winlab.tw",
+      },
+      {
+        when: "2025",
+        what: "Personal file search with hybrid retrieval",
+        where: "archive",
+        href: "https://github.com/zyx1121/archive",
+      },
+      {
+        when: "2025",
+        what: "A command-line tool for Google searches",
+        where: "autosearch",
+        href: "https://github.com/zyx1121/autosearch",
+      },
+      {
+        when: "2025",
+        what: "Reliable UDP streaming with Reed-Solomon coding",
+        where: "PerfectSocket",
+        href: "https://github.com/zyx1121/network-final-project",
+      },
+      {
         when: "2024",
         what: "Find My item locations as an API",
         where: "findmy-api",
