@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { FileText, ArrowUp } from "lucide-react";
 
+import { ResponsePreview } from "@/components/response-preview";
 import { Message, MessageContent, MessageGroup } from "@/components/ui/message";
 import { Bubble, BubbleContent } from "@/components/ui/bubble";
 import {
@@ -77,6 +78,7 @@ export function AiPrimitives() {
           </Button>
         </div>
       </form>
+      <ResponsePreview />
     </div>
   );
 }

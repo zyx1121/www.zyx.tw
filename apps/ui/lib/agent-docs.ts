@@ -72,7 +72,7 @@ export function indexMarkdown() {
     "",
     "## Application components",
     "",
-    "The home page previews combobox, calendar, chart, resizable panels, messages, bubbles and attachments. These remain stock shadcn base-nova components; the zyx registry does not re-publish them.",
+    "The home page previews combobox, calendar, chart, resizable panels, messages, bubbles, attachments, plus Markdown/code/JSON response rendering. The primitives remain stock shadcn base-nova components; MarkdownResponse is an app-level composition using react-markdown, remark-gfm and lowlight; the zyx registry does not re-publish them.",
     "",
     ...APPLICATION_PRIMITIVES.map(
       (group) => `- ${group.title}: ${group.items.join(", ")}.`

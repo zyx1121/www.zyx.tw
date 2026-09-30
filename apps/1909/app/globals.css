@@ -149,15 +149,24 @@
   }
 }
 
-/* Overlays behind a dialog, alert dialog, sheet or drawer: transparent with a
-   frosted blur instead of stock's 10% black. Unlayered, so it wins over the
-   stock components' utility classes without forking them. Browsers without
-   backdrop-filter keep the stock tint. */
+/* Shared frosted backdrops and floating menus. Keep stock components intact.
+   Browsers without backdrop-filter retain the stock surface. */
 @supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0)) {
   [data-slot="dialog-overlay"],
   [data-slot="alert-dialog-overlay"],
   [data-slot="sheet-overlay"],
-  [data-slot="drawer-overlay"] {
+  [data-slot="drawer-overlay"],
+  [data-slot="combobox-content"],
+  [data-slot="select-content"],
+  [data-slot="popover-content"],
+  [data-slot="dropdown-menu-content"],
+  [data-slot="dropdown-menu-sub-content"],
+  [data-slot="context-menu-content"],
+  [data-slot="context-menu-sub-content"],
+  [data-slot="menubar-content"],
+  [data-slot="menubar-sub-content"],
+  [data-slot="hover-card-content"],
+  .bg-popover:has(> div > [data-slot="navigation-menu-content"]) {
     background-color: transparent;
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);

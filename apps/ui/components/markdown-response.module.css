@@ -1,0 +1,133 @@
+.markdown {
+  min-width: 0;
+  max-width: 100%;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+.markdown > * + * {
+  margin-top: 1rem;
+}
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4 {
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 1.5rem;
+}
+.markdown h1 {
+  font-size: 1.5rem;
+}
+.markdown h2 {
+  font-size: 1.25rem;
+}
+.markdown h3 {
+  font-size: 1.125rem;
+}
+.markdown ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+.markdown ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+}
+.markdown li + li {
+  margin-top: 0.25rem;
+}
+.markdown li > p + p {
+  margin-top: 0.5rem;
+}
+.markdown li > ul,
+.markdown li > ol {
+  margin-top: 0.25rem;
+}
+.markdown blockquote {
+  border-left: 2px solid var(--border);
+  padding-left: 1rem;
+  color: var(--muted-foreground);
+}
+.markdown a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.markdown :not(pre) > code {
+  border-radius: 0.25rem;
+  background: var(--muted);
+  padding: 0.15rem 0.35rem;
+  font-size: 0.875em;
+}
+.markdown hr {
+  border-color: var(--border);
+}
+.markdown input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+.tableScroll {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.markdown th,
+.markdown td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  min-width: 6rem;
+}
+.markdown th {
+  background: var(--muted);
+  font-weight: 600;
+}
+.markdown tr:last-child td {
+  border-bottom: 0;
+}
+.codeBlock {
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+.codeBlock pre {
+  margin: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  white-space: pre;
+  tab-size: 2;
+}
+.codeBlock code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.codeBlock :global(.hljs-comment),
+.codeBlock :global(.hljs-quote) {
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+.codeBlock :global(.hljs-keyword),
+.codeBlock :global(.hljs-literal),
+.codeBlock :global(.hljs-selector-tag) {
+  color: var(--foreground);
+  font-weight: 700;
+}
+.codeBlock :global(.hljs-string),
+.codeBlock :global(.hljs-number),
+.codeBlock :global(.hljs-attr) {
+  color: color-mix(in oklch, var(--foreground) 75%, var(--muted-foreground));
+}
+.codeBlock :global(.hljs-title),
+.codeBlock :global(.hljs-built_in),
+.codeBlock :global(.hljs-type) {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
