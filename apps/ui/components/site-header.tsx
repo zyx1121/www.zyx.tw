@@ -24,6 +24,11 @@ export function SiteHeader() {
               Components
             </Link>
           </CornerTip>
+          <CornerTip tip="Forms, data and AI primitives">
+            <Link href="/#applications" className={cornerLink}>
+              Apps
+            </Link>
+          </CornerTip>
           {/* The tip's trigger props land on the span, so they never replace
               the toggle's own onClick. -m-2 takes the 32px button's 8px inset
               back on every side, so the corner sees only its 16px icon, and

@@ -1,3 +1,4 @@
+import { APPLICATION_PRIMITIVES } from "@/lib/application-primitives";
 import { COMPONENTS, getItem, ITEMS, type RegistryItem } from "@/lib/registry";
 import {
   addCommand,
@@ -68,6 +69,16 @@ export function indexMarkdown() {
     TAGLINE,
     "",
     "ui.zyx.tw is the design system of the zyx.tw sites, served as a shadcn/ui registry. Base components are stock shadcn/ui on the `base-nova` preset (Base UI primitives), and the shadcn CLI owns them. The registry adds a grayscale theme and the components shadcn/ui does not have. Each item is a JSON file that the shadcn CLI installs.",
+    "",
+    "## Application components",
+    "",
+    "The home page previews combobox, calendar, chart, resizable panels, messages, bubbles, attachments, plus Markdown/code/JSON response rendering. The primitives remain stock shadcn base-nova components; MarkdownResponse is an app-level composition using react-markdown, remark-gfm and lowlight; the zyx registry does not re-publish them.",
+    "",
+    ...APPLICATION_PRIMITIVES.map(
+      (group) => `- ${group.title}: ${group.items.join(", ")}.`
+    ),
+    "",
+    "Data table, date picker, login form and chat are app-level compositions. Install their primitives from shadcn, then compose them at the call site. Keep the four-corner chrome; a sidebar or resizable workspace lives inside the center content area.",
     "",
     "## Get started",
     "",

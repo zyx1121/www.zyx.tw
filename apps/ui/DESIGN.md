@@ -20,7 +20,7 @@ If shadcn/ui ships a component, we do not re-ship it. If a component needs resty
 - **Grayscale everywhere**: the only chroma on screen is `--destructive` and content itself. The stock dark `--sidebar-primary` (blue) is overridden to gray.
 - **Dark first, pure black**: every app server-renders `<html class="dark">` and starts dark (`defaultTheme="dark"`, `enableSystem={false}`), whatever the OS prefers, so the first paint and pages without JavaScript are dark too. Light stays one step away: the toggle on www and ui.zyx.tw, and the `d` hotkey in every app except ui.zyx.tw. Dark `--background` is `oklch(0 0 0)`. Apart from `--muted-foreground` and the gray sidebar primary pair, the other dark tokens stay stock.
 - **Muted text at 4.5:1**: in both themes `--muted-foreground` must reach at least 4.5:1 (WCAG AA) on `--background`, `--card`, `--popover`, `--muted`, `--accent` and `--secondary`; light `oklch(0.54 0 0)` (#6e6f6f) gives 5.04:1 on white and 4.62:1 on #f5f5f5, dark `oklch(0.65 0 0)` (#8f8f8f) gives 6.49:1 on black, 5.54:1 on #171717 and 4.68:1 on #262626.
-- **Frosted overlays**: dialogs, alert dialogs, sheets and drawers sit over a transparent overlay with a 12px backdrop blur instead of stock's 10% black. It is one unlayered rule on the overlays' `data-slot`, in every globals.css and in the registry theme's `css`, so the stock components stay unforked; browsers without `backdrop-filter` keep the stock tint.
+- **Frosted overlays**: dialogs, alert dialogs, sheets and drawers sit over a transparent overlay with a 12px backdrop blur. Floating Combobox, Select, Popover, Dropdown/Context/Menubar menus (including submenus), HoverCard, NavigationMenu popup surfaces also use transparent + 12px blur. Tooltips and corner tips keep their opaque stock surface for readability. It is one unlayered rule on the overlays' `data-slot`, in every globals.css and in the registry theme's `css`, so the stock components stay unforked; browsers without `backdrop-filter` keep the stock tint.
 - **Fonts**: `--font-sans` is Inter, then Noto Sans JP, then Noto Sans TC, then the system stack. Inter 4.1 is self-hosted from rsms/inter with `next/font/local`, because the Google Fonts build lacks `ss01` and `zero`. It is subset to Latin (the Google Fonts `latin` range plus arrows and keyboard symbols; the command is in `packages/ui/src/fonts/README.md`). Latin Extended letters render in whatever fallback the platform has (Arial, Noto Sans JP or the system font); static site content has none. Only the upright Inter file is preloaded; the italic and Geist Mono load on first use. `--font-mono` is Geist Mono, for code only. Numbers use Inter with `tabular-nums`.
 - **Japanese forms first**: Noto Sans JP comes before Noto Sans TC, so Han characters take Japanese glyph shapes and punctuation. Noto Sans TC fills the characters JP lacks (such as 值 and 夠), so they stay in the same Source Han design instead of falling back to a system font. Both load from `next/font/google` as unicode-range slices (124 for JP, 105 for TC) with `preload: false`, so a page downloads only the slices its text uses.
 - **OpenType features**: `--default-font-feature-settings: "liga" 1, "calt" 1, "ss01" 1, "zero" 1` turns on Inter's open digits and slashed zero on every page. Geist Mono and the Noto fonts have neither feature, so they render unchanged.
@@ -38,13 +38,13 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
 - **One column**: `mx-auto w-full max-w-xl px-5 lg:max-w-3xl 2xl:max-w-5xl`, so 576, 768 and 1024px wide with 20px gutters (`column` in `lib/layout.ts`). Content sits in it and the corners sit outside it. Long-form prose narrows further, to at most `max-w-[65ch]`.
 - **Skeleton**:
 
-  | Part                  | Value                                               | Classes                           |
-  | --------------------- | --------------------------------------------------- | --------------------------------- |
-  | Corners               | 20px from each viewport corner, 16px between items  | `TopCorners`, `BottomCorners`     |
-  | Top of page to title  | 120px, 80px under the top corners                   | `pt-30` on `<main>`               |
-  | Title, subtitle       | 12px apart                                          | `mt-3`                            |
-  | Hero to content       | 100px                                               | `pb-25`                           |
-  | Content to the bottom | 100px, 60px clear of the bottom corners | `pb-25` on `<main>` |
+  | Part                  | Value                                              | Classes                       |
+  | --------------------- | -------------------------------------------------- | ----------------------------- |
+  | Corners               | 20px from each viewport corner, 16px between items | `TopCorners`, `BottomCorners` |
+  | Top of page to title  | 120px, 80px under the top corners                  | `pt-30` on `<main>`           |
+  | Title, subtitle       | 12px apart                                         | `mt-3`                        |
+  | Hero to content       | 100px                                              | `pb-25`                       |
+  | Content to the bottom | 100px, 60px clear of the bottom corners            | `pb-25` on `<main>`           |
 
 - **The corners stay put**: they are fixed, so they stay in the corners while the page scrolls. Where content scrolls under them, the background color fades out over 64px from the top and bottom edges (`fade`), so no text runs into theirs. Pages that fill the viewport without scrolling (link, time, good, 3d and the www.zyx.tw home) leave the fade off.
 - **No menu button**: the nav stays short enough to fit a 320px viewport beside the mark, so phones show it as it is, with no hamburger and no drawer. Privacy and Terms go bottom left.
@@ -173,3 +173,14 @@ Only if shadcn/ui doesn't have it:
 - **No CSS-in-JS libraries.** Styling is Tailwind utilities. Inline `style` holds only what is known at runtime: a per-instance value passed as a CSS custom property (`mask-reveal`'s delay and duration), a prop-driven value (`shimmering-text`'s gradient) or a position measured by script (`scramble-text`'s cells).
 - **No color in chrome.** Grayscale palette; color belongs to content.
 - **No header or footer bars, no menu buttons for a short nav, no bold for hierarchy, no `rounded-full` pills.** The chrome is the four corners; the sections above say what to do instead.
+
+## Application prototypes
+
+The application examples and upstream component index on the home page cover forms and sign-in, AI conversations, data/workspaces, and navigation/states. They use stock `base-nova` primitives and the same theme. New upstream components remain CLI-owned; they are not entries in `registry.json`.
+
+- Compose login forms, chat, upload, data tables and date pickers in the consuming app. Keep reusable behavior separate from customer-specific labels and data; no customer workflow is required by this design system.
+- Prefer upstream Message, Bubble, Message Scroller, Attachment and Questionnaire before inventing AI-specific primitives. Streaming, cancellation, citations and real model calls are application behavior. A simulated response must be identified as a preview.
+- Sidebar and Resizable are useful inside the app's working surface. They do not replace the four fixed corners or move the logo, legal links and copyright.
+- Component coverage is not a reason to pre-render every component in every app. Installing the library ahead of a meeting removes setup work; import only what the current screen needs.
+
+Application compositions include MarkdownResponse: GFM, safe links, highlighted fenced code with copy, JSON formatting/raw toggle and incomplete streamed blocks. It is an app-level composition using react-markdown, remark-gfm and lowlight; stock primitives remain CLI-owned. Copyright tips say only `Loki` on every site.

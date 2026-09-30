@@ -167,7 +167,7 @@ export function TopCorners({
  */
 export function BottomCorners({
   links,
-  copyrightTip = "Loki (詹詠翔)",
+  copyrightTip = "Loki",
   fade = false,
   className,
   style,
