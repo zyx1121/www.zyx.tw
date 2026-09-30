@@ -173,3 +173,13 @@ Only if shadcn/ui doesn't have it:
 - **No CSS-in-JS libraries.** Styling is Tailwind utilities. Inline `style` holds only what is known at runtime: a per-instance value passed as a CSS custom property (`mask-reveal`'s delay and duration), a prop-driven value (`shimmering-text`'s gradient) or a position measured by script (`scramble-text`'s cells).
 - **No color in chrome.** Grayscale palette; color belongs to content.
 - **No header or footer bars, no menu buttons for a short nav, no bold for hierarchy, no `rounded-full` pills.** The chrome is the four corners; the sections above say what to do instead.
+
+
+## Application prototypes
+
+The application examples and upstream component index on the home page cover forms and sign-in, AI conversations, data/workspaces, and navigation/states. They use stock `base-nova` primitives and the same theme. New upstream components remain CLI-owned; they are not entries in `registry.json`.
+
+- Compose login forms, chat, upload, data tables and date pickers in the consuming app. Keep reusable behavior separate from customer-specific labels and data; no customer workflow is required by this design system.
+- Prefer upstream Message, Bubble, Message Scroller, Attachment and Questionnaire before inventing AI-specific primitives. Streaming, cancellation, citations and real model calls are application behavior. A simulated response must be identified as a preview.
+- Sidebar and Resizable are useful inside the app's working surface. They do not replace the four fixed corners or move the logo, legal links and copyright.
+- Component coverage is not a reason to pre-render every component in every app. Installing the library ahead of a meeting removes setup work; import only what the current screen needs.

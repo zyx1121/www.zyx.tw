@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronsUpDown, Italic, Underline } from "lucide-react";
 import { toast } from "sonner";
 
+import { ApplicationComponents } from "@/components/application-components";
 import {
   Accordion,
   AccordionContent,
@@ -861,6 +862,8 @@ export function Showcase({
           </Demo>
         ))}
       </Group>
+
+      <ApplicationComponents />
 
       <div className={enter} style={enterDelay(lastRow)}>
         <ScrambleText
