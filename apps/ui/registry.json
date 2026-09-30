@@ -7,7 +7,7 @@
       "name": "theme",
       "type": "registry:theme",
       "title": "Theme",
-      "description": "The zyx.tw theme on top of stock shadcn/ui: full grayscale palette, stock radius, pure black dark mode, muted text at 4.5:1 on every surface in both themes, frosted transparent overlays. Init with the base preset and neutral color, then add this.",
+      "description": "The zyx.tw theme on top of stock shadcn/ui: full grayscale palette, stock radius, pure black dark mode, muted text at 4.5:1 on every surface in both themes, frosted transparent overlays, and a 24/14/12px interface type scale. Init with the base preset and neutral color, then add this.",
       "cssVars": {
         "light": {
           "radius": "0.625rem",
@@ -21,6 +21,38 @@
         }
       },
       "css": {
+        "@theme inline": {
+          "--text-xs": "0.75rem",
+          "--text-xs--line-height": "1rem",
+          "--text-sm": "0.875rem",
+          "--text-sm--line-height": "1.25rem",
+          "--text-base": "0.875rem",
+          "--text-base--line-height": "1.25rem",
+          "--text-lg": "0.875rem",
+          "--text-lg--line-height": "1.25rem",
+          "--text-xl": "0.875rem",
+          "--text-xl--line-height": "1.25rem",
+          "--text-2xl": "1.5rem",
+          "--text-2xl--line-height": "2rem",
+          "--text-3xl": "1.5rem",
+          "--text-3xl--line-height": "2rem",
+          "--text-4xl": "1.5rem",
+          "--text-4xl--line-height": "2rem"
+        },
+        "@layer base": {
+          "body": {
+            "font-size": "0.875rem",
+            "line-height": "1.25rem"
+          }
+        },
+        "[data-slot=\"button\"], [data-slot=\"toggle\"], [data-slot=\"calendar\"]": {
+          "font-size": "0.875rem",
+          "line-height": "1.25rem"
+        },
+        "[data-slot=\"calendar\"] .rdp-weekday, [data-slot=\"calendar\"] .rdp-week_number, [data-slot=\"questionnaire-choice-shortcut\"]": {
+          "font-size": "0.75rem",
+          "line-height": "1rem"
+        },
         "@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))": {
           "[data-slot=\"dialog-overlay\"], [data-slot=\"alert-dialog-overlay\"], [data-slot=\"sheet-overlay\"], [data-slot=\"drawer-overlay\"], [data-slot=\"combobox-content\"], [data-slot=\"select-content\"], [data-slot=\"popover-content\"], [data-slot=\"dropdown-menu-content\"], [data-slot=\"dropdown-menu-sub-content\"], [data-slot=\"context-menu-content\"], [data-slot=\"context-menu-sub-content\"], [data-slot=\"menubar-content\"], [data-slot=\"menubar-sub-content\"], [data-slot=\"hover-card-content\"], .bg-popover:has(> div > [data-slot=\"navigation-menu-content\"]), [data-slot=\"dialog-content\"], [data-slot=\"alert-dialog-content\"], [data-slot=\"sheet-content\"], [data-slot=\"drawer-popup\"], .recharts-tooltip-wrapper > div": {
             "background-color": "transparent",

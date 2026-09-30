@@ -59,7 +59,7 @@ export default function RootLayout({
     >
       {/* Body text is 16px at every width, phones included. The page fills
           the viewport so the footer sits low on short pages. */}
-      <body className="flex min-h-dvh flex-col text-base">
+      <body className="flex min-h-dvh flex-col text-sm">
         <JsonLd />
         <ThemeProvider
           attribute="class"

@@ -9,7 +9,11 @@ export function Hero() {
   return (
     <header className="pb-25">
       <div className={enter} style={enterDelay(1)}>
-        <ScrambleText element="h1" text={SITE_NAME} className="text-3xl" />
+        <ScrambleText
+          element="h1"
+          text={SITE_NAME}
+          className="text-2xl/8 font-medium"
+        />
       </div>
       <p
         className={cn("mt-3 text-muted-foreground", enter)}

@@ -80,14 +80,14 @@ export function Shortener() {
           placeholder="https://your-very-long-url.com/goes/here"
           required
           disabled={isPending}
-          className="h-auto rounded-none border-0 bg-transparent p-0 text-center font-mono text-xl text-foreground focus-visible:ring-0 disabled:bg-transparent md:text-xl dark:bg-transparent dark:disabled:bg-transparent"
+          className="h-auto rounded-none border-0 bg-transparent p-0 text-center font-mono text-sm text-foreground focus-visible:ring-0 disabled:bg-transparent md:text-sm dark:bg-transparent dark:disabled:bg-transparent"
         />
         <Button
           type="submit"
           variant="ghost"
           disabled={isPending}
           aria-label={isPending ? "Shortening URL" : "Shorten URL"}
-          className="h-auto p-0 text-3xl transition-opacity hover:bg-transparent hover:opacity-80 disabled:opacity-40 dark:hover:bg-transparent"
+          className="h-auto p-0 text-sm transition-opacity hover:bg-transparent hover:opacity-80 disabled:opacity-40 dark:hover:bg-transparent"
         >
           <span aria-hidden="true">{isPending ? "⏳" : "🔥"}</span>
         </Button>
@@ -103,7 +103,7 @@ export function Shortener() {
             href={state.shortUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-mono text-xl hover:underline"
+            className="font-mono text-sm hover:underline"
           >
             {state.shortUrl}
           </a>
@@ -111,7 +111,7 @@ export function Shortener() {
             variant="ghost"
             onClick={handleCopy}
             aria-label="Copy short URL"
-            className="h-auto p-0 text-3xl transition-opacity hover:bg-transparent hover:opacity-80 dark:hover:bg-transparent"
+            className="h-auto p-0 text-sm transition-opacity hover:bg-transparent hover:opacity-80 dark:hover:bg-transparent"
           >
             <span aria-hidden="true">📋</span>
           </Button>

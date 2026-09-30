@@ -4,7 +4,7 @@ import { enter, enterRow } from "@/lib/layout"
 
 /** The page title at hero size. Pages without an animated title use this. */
 export function HeroTitle({ children }: { children: React.ReactNode }) {
-  return <h1 className="text-3xl text-pretty">{children}</h1>
+  return <h1 className="text-2xl/8 font-medium text-pretty">{children}</h1>
 }
 
 /**

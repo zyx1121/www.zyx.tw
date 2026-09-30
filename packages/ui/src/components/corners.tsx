@@ -13,8 +13,8 @@ export { CornerTip }
 /*
  * The frame every zyx.tw site shares: the logo top left, the page nav top
  * right, secondary links bottom left and the copyright bottom right. Each
- * corner is fixed 20 px in from the viewport's corner and sets 14 px text on
- * 20 px lines, so all four share one size and one line. An item in a corner
+ * corner is fixed 20 px in from the viewport's corner. Top corners use
+ * 14 px text on 20 px lines; bottom corners use 12 px on 16 px lines. An item in a corner
  * can carry a tip (`CornerTip`), which opens toward the page.
  */
 
@@ -27,12 +27,11 @@ const AT: Record<At, string> = {
 
 /**
  * Text links in a corner: muted, lit on hover and for the current page. The
- * hit area reaches 8 px past the text to either side and 2 px above and
- * below, so it is 24 px tall and meets, but never covers, its neighbours in
- * the 16 px gaps and on a wrapped row 4 px down.
+ * hit area reaches 8 px past the text on either side and stays 24 px tall
+ * for both header and footer text, centered on the text line.
  */
 export const cornerLink =
-  "relative rounded-sm text-muted-foreground outline-offset-4 transition-colors after:absolute after:-inset-x-2 after:-inset-y-0.5 hover:text-foreground focus-visible:outline-2 aria-[current=page]:text-foreground"
+  "relative rounded-sm text-muted-foreground outline-offset-4 transition-colors after:absolute after:-inset-x-2 after:top-1/2 after:h-6 after:-translate-y-1/2 hover:text-foreground focus-visible:outline-2 aria-[current=page]:text-foreground"
 
 /** The tips on Privacy and Terms, which www.zyx.tw's own links share. */
 export const LEGAL_TIPS = {
@@ -78,7 +77,8 @@ export function Corner({
     <CornerScope at={at}>
       <div
         className={cn(
-          "fixed z-50 flex items-center gap-4 text-sm/5 text-foreground",
+          "fixed z-50 flex items-center gap-4 text-foreground",
+          at.startsWith("bottom") ? "text-xs/4" : "text-sm/5",
           AT[at],
           className
         )}

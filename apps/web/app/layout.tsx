@@ -61,7 +61,7 @@ export default async function RootLayout({
     >
       {/* Body text is 16px at every width, phones included. Pages fill the
           viewport so the footer sits low. */}
-      <body className="flex min-h-dvh flex-col text-base">
+      <body className="flex min-h-dvh flex-col text-sm">
         <SiteJsonLd />
         <ThemeProvider>
           <TooltipProvider>

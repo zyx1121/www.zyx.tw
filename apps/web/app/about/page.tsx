@@ -26,7 +26,7 @@ const LINK =
   "rounded-sm underline decoration-muted-foreground/40 underline-offset-4 outline-offset-2 transition-colors hover:decoration-foreground focus-visible:outline-2"
 
 /** The resume's section headings, at group-heading size. */
-const HEADING = "text-2xl"
+const HEADING = "text-sm/5 font-medium"
 
 /**
  * Titles as displayed: "Wi-Fi" keeps its hyphen and "6 GHz" its space on one
@@ -65,7 +65,11 @@ export default async function About() {
     <main className={cn(column, page, "flex-1")}>
       <Hero
         title={
-          <ScrambleText element="h1" text={HOME.title} className="text-3xl" />
+          <ScrambleText
+            element="h1"
+            text={HOME.title}
+            className="text-2xl/8 font-medium"
+          />
         }
         className="pb-25"
       />
@@ -101,7 +105,7 @@ export default async function About() {
                 key={`${when} ${what}`}
                 className="grid grid-cols-[7rem_1fr] gap-x-5 sm:grid-cols-[7rem_1fr_fit-content(16rem)]"
               >
-                <span className="whitespace-nowrap text-muted-foreground tabular-nums">
+                <span className="text-xs whitespace-nowrap text-muted-foreground tabular-nums">
                   {when}
                 </span>
                 <span className="text-pretty">

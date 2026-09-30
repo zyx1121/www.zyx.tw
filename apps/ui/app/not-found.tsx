@@ -16,7 +16,7 @@ const LINK =
 export default function NotFound() {
   return (
     <main className={cn(column, "flex-1 pt-30 pb-25")}>
-      <h1 className={cn("text-3xl", enter)} style={enterDelay(1)}>
+      <h1 className={cn("text-2xl/8 font-medium", enter)} style={enterDelay(1)}>
         Not found
       </h1>
       <ul className={cn("mt-5 space-y-3", enter)} style={enterDelay(2)}>

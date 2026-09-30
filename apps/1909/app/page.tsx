@@ -37,7 +37,7 @@ export default async function Page() {
         <ExpenseForm />
         <UserNav name={currentMember.name} />
       </Corner>
-      <h1 className="font-medium">1909</h1>
+      <h1 className="text-2xl/8 font-medium">1909</h1>
 
       <section className="flex flex-col gap-2">
         <h2 className="text-sm text-muted-foreground">欠款摘要</h2>
