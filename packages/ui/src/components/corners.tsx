@@ -89,17 +89,18 @@ export function Corner({
 }
 
 /**
- * The background color fading out over 64 px from a viewport edge, solid for
- * the first 60%, under the corners, so text scrolling beneath them never runs
- * into theirs. Pages that do not scroll leave it off.
+ * A transparent 12px backdrop blur fading out over 64px at the viewport edge,
+ * under the corners so scrolling content stays behind the shared chrome. Pages that do not scroll leave it off.
  */
 function EdgeFade({ edge }: { edge: "top" | "bottom" }) {
   return (
     <div
       aria-hidden
+      data-slot="corner-edge"
+      data-edge={edge}
       className={cn(
-        "pointer-events-none fixed inset-x-0 z-40 h-16 from-background from-60% to-transparent",
-        edge === "top" ? "top-0 bg-linear-to-b" : "bottom-0 bg-linear-to-t"
+        "pointer-events-none fixed inset-x-0 z-40 h-16",
+        edge === "top" ? "top-0" : "bottom-0"
       )}
     />
   )
