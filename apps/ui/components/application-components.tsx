@@ -44,7 +44,7 @@ export function ApplicationComponents() {
   const [date, setDate] = useState<Date | undefined>();
   return (
     <section id="applications" className="scroll-mt-20 space-y-10">
-      <h2 className="text-2xl">Application components</h2>
+      <h2 className="text-sm/5 font-medium">Application components</h2>
       <p className="text-muted-foreground">
         Stock primitives for forms, data tools and AI interfaces. The theme
         applies without a component fork.

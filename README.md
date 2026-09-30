@@ -26,6 +26,7 @@ good.zyx.tw     a digital 乖乖 taped onto servers
 ui.zyx.tw       the component registry every app above imports from
 1909            a shared-expense dashboard for three flatmates
 ```
+
 <sub>One Turborepo, one CI pipeline, seven live apps.</sub>
 
 Every subdomain of zyx.tw used to mean a fresh repo and copying the same eslint config, Tailwind tokens, and OTel bootstrap into it by hand. This monorepo folds the personal site and every side-project subdomain into one Turborepo instead, so a new idea is a new folder under `apps/`, not a new setup decision.
@@ -43,27 +44,27 @@ Plain `bun dev` boots turbo across all 7 apps at once. `--filter=<app>` (or `cd 
 
 ## What it gives you
 
-| App | Live at | What it does |
-|-----|---------|---------------|
-| `web` | [zyx.tw](https://zyx.tw) | the site itself: a 3D home, works and a resume |
-| `link` | [link.zyx.tw](https://link.zyx.tw) | your URLs, but shorter |
-| `time` | [time.zyx.tw](https://time.zyx.tw) | what time is it? |
-| `good` | [good.zyx.tw](https://good.zyx.tw) | a digital 乖乖, the snack engineers tape onto servers |
-| `3d` | [3d.zyx.tw](https://3d.zyx.tw) | an SVG, extruded into 3D, lit and saved as one scene.json |
-| `ui` | [ui.zyx.tw](https://ui.zyx.tw) | the shadcn registry every app above pulls components from |
-| `1909` | (private) | a shared-expense dashboard for three flatmates |
+| App    | Live at                            | What it does                                              |
+| ------ | ---------------------------------- | --------------------------------------------------------- |
+| `web`  | [zyx.tw](https://zyx.tw)           | the site itself: a 3D home, works and a resume            |
+| `link` | [link.zyx.tw](https://link.zyx.tw) | your URLs, but shorter                                    |
+| `time` | [time.zyx.tw](https://time.zyx.tw) | what time is it?                                          |
+| `good` | [good.zyx.tw](https://good.zyx.tw) | a digital 乖乖, the snack engineers tape onto servers     |
+| `3d`   | [3d.zyx.tw](https://3d.zyx.tw)     | an SVG, extruded into 3D, lit and saved as one scene.json |
+| `ui`   | [ui.zyx.tw](https://ui.zyx.tw)     | the shadcn registry every app above pulls components from |
+| `1909` | (private)                          | a shared-expense dashboard for three flatmates            |
 
 ## Tech stack
 
-| Layer | Choice |
-|-------|--------|
-| Framework | Next.js 16.1 (App Router + Turbopack) |
-| UI | React 19, Tailwind CSS v4, shadcn/ui (`base-nova`, Base UI) + the [ui.zyx.tw](https://ui.zyx.tw) theme |
-| Language | TypeScript 5.9, strict + `noUncheckedIndexedAccess` |
-| Backend | Supabase (`1909`, `link`) |
-| 3D | three.js, React Three Fiber, drei and postprocessing (`good`, `3d`) |
-| Observability | `@workspace/otel`, shared bootstrap shipping logs to Sensorium |
-| Tooling | Bun 1.3 workspaces + Turbo 2 |
+| Layer         | Choice                                                                                                 |
+| ------------- | ------------------------------------------------------------------------------------------------------ |
+| Framework     | Next.js 16.1 (App Router + Turbopack)                                                                  |
+| UI            | React 19, Tailwind CSS v4, shadcn/ui (`base-nova`, Base UI) + the [ui.zyx.tw](https://ui.zyx.tw) theme |
+| Language      | TypeScript 5.9, strict + `noUncheckedIndexedAccess`                                                    |
+| Backend       | Supabase (`1909`, `link`)                                                                              |
+| 3D            | three.js, React Three Fiber, drei and postprocessing (`good`, `3d`)                                    |
+| Observability | `@workspace/otel`, shared bootstrap shipping logs to Sensorium                                         |
+| Tooling       | Bun 1.3 workspaces + Turbo 2                                                                           |
 
 Shared packages: `packages/ui` (design system + components) · `packages/3d` (scene.json v1, preset registries, `<Scene3D>`; see [its README](./packages/3d/README.md)) · `packages/otel` (the Sensorium bootstrap) · `packages/eslint-config` (flat config: base / next-js / react-internal) · `packages/typescript-config` (base / nextjs / react-library).
 
@@ -71,7 +72,7 @@ Shared packages: `packages/ui` (design system + components) · `packages/3d` (sc
 
 Every app follows [`apps/ui/DESIGN.md`](./apps/ui/DESIGN.md): stock shadcn/ui on the `base-nova` preset (Base UI primitives, so `asChild` is the `render` prop) and the grayscale ui.zyx.tw theme with the stock `--radius: 0.625rem`. Apps start dark on a pure black background, whatever the OS prefers. Text is Inter (self-hosted, with open digits and a slashed zero), then Noto Sans JP and Noto Sans TC for CJK; Geist Mono is for code only, and numbers use Inter's `tabular-nums`. Base components are never forked; the CLI owns `components/ui/`.
 
-The same file sets the page rules, which ui.zyx.tw and www.zyx.tw follow and the tool apps adopt when they are next rebuilt: one centered column on a 4px grid with a 20px module, framed by four fixed corners, the stock radius scale with concentric corners, lines only where they carry meaning, optical offsets at the call site, CSS-first motion that honors reduced motion everywhere, weights 400 and 500 only, and English copy with no em dashes. Both sites also serve agents: a Markdown version of each page, `/llms.txt`, `/agent-instructions.md`, `Link` headers and JSON-LD. Every app already shares the corners (`@workspace/ui/components/corners`); until their rebuild, the tool apps take the theme, font and color rules for the rest.
+The same file sets the page rules, which ui.zyx.tw and www.zyx.tw follow and the tool apps adopt when they are next rebuilt: one centered column on a 4px grid with a 20px module, framed by four fixed corners, the stock radius scale with concentric corners, lines only where they carry meaning, optical offsets at the call site, CSS-first motion that honors reduced motion everywhere, a 24/14/12px interface scale (titles, body, captions/footer), weights 400 and 500 only, and English copy with no em dashes. Both sites also serve agents: a Markdown version of each page, `/llms.txt`, `/agent-instructions.md`, `Link` headers and JSON-LD. Every app already shares the corners (`@workspace/ui/components/corners`); until their rebuild, the tool apps take the theme, font and color rules for the rest.
 
 Apps on `@workspace/ui` load the fonts from `packages/ui/src/lib/fonts.ts` and put its `fontVariables` on `<html>`.
 

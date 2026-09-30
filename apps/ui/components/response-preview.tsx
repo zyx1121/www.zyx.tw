@@ -6,7 +6,7 @@ const sample =
 export function ResponsePreview() {
   return (
     <section className="min-w-0 space-y-5">
-      <h2 className="text-2xl">Markdown、程式碼與 JSON</h2>
+      <h2 className="text-sm/5 font-medium">Markdown、程式碼與 JSON</h2>
       <MarkdownResponse content={sample} />
     </section>
   );

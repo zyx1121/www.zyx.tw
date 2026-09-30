@@ -33,7 +33,7 @@ function Paragraph({ runs }: { runs: Run[] }) {
 /** Privacy and Terms: the title, the date of the last change, the sections. */
 export function LegalPage({ doc }: { doc: LegalDoc }) {
   return (
-    <main className={cn(column, page, "flex-1")}>
+    <main className={cn(column, page, "flex-1 text-[1rem]/6")}>
       <Hero
         title={<HeroTitle>{doc.title}</HeroTitle>}
         subtitle={
