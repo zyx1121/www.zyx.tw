@@ -190,7 +190,7 @@ export function agentInstructions() {
     `2. If the project has no components.json, run ${code(INIT_COMMAND)}.`,
     `3. Run ${code(addCommand("theme"))}.`,
     `4. For each item you need, run ${code(ANY_ITEM_COMMAND)}.`,
-    "5. Load the fonts yourself. The theme carries colors and the radius only; DESIGN.md names the fonts.",
+    "5. Load the fonts yourself. The theme carries colors, radius, overlay styles and the 24/14/12px interface scale; DESIGN.md names the fonts.",
     "",
     "## Rules",
     "",
