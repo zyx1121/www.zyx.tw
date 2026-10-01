@@ -171,7 +171,7 @@ function Group({
   return (
     <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-5">
       <div className={enter} style={enterDelay(row)}>
-        <h2 id={`${id}-title`} className="text-sm/5 font-medium">
+        <h2 id={`${id}-title`} className="text-sm/6 font-medium">
           {title}
         </h2>
         <p className="mt-3 text-muted-foreground">{description}</p>

@@ -11,9 +11,7 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <main className="flex h-dvh w-dvw flex-col items-center justify-center">
-      <h1 className="animate-pulse font-mono text-[clamp(4rem,15vw,24rem)] font-bold">
-        404
-      </h1>
+      <h1 className="animate-pulse font-mono text-display font-bold">404</h1>
     </main>
   )
 }

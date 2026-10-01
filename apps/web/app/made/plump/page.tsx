@@ -46,7 +46,7 @@ export default function Plump() {
       </div>
       <div className="mt-10 flex flex-wrap items-end justify-between gap-5">
         <div>
-          <h1 className="text-[64px]/[64px] font-medium tracking-[-0.05em] sm:text-[80px]/[80px]">
+          <h1 className="text-display font-medium tracking-[-0.05em]">
             {PLUMP.name}
           </h1>
           <p className="mt-5 text-2xl/8">{PLUMP.tagline}</p>

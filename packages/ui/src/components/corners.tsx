@@ -77,7 +77,7 @@ export function Corner({
     <CornerScope at={at}>
       <div
         className={cn(
-          "fixed z-50 flex items-center gap-4 text-sm/5 text-foreground",
+          "fixed z-50 flex items-center gap-4 text-sm/6 text-foreground",
           AT[at],
           className
         )}
