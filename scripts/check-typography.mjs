@@ -64,7 +64,16 @@ export function checkSource(path, source, normalized = new Set()) {
         continue
       const tokenValue = value.startsWith("--") ? `var(${value})` : value
       if (legal(tokenValue)) continue
-      if (UPSTREAM.get(path) === match[0] && normalized.has(match[0])) continue
+      const end = match.index + match[0].length
+      const standalone =
+        (match.index === 0 || /\s/.test(text[match.index - 1])) &&
+        (end === text.length || /\s/.test(text[end]))
+      if (
+        standalone &&
+        UPSTREAM.get(path) === match[0] &&
+        normalized.has(match[0])
+      )
+        continue
       report(offset + match.index, match[0])
     }
   }

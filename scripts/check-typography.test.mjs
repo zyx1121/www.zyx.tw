@@ -68,4 +68,13 @@ test("upstream literals require a theme override and cannot spread into app code
   assert.ok(
     checkSource("apps/ui/components/custom.tsx", source, normalized).length
   )
+  for (const utility of ["md:text-[0.8rem]", "text-[0.8rem]/5"]) {
+    assert.ok(
+      checkSource(
+        "apps/ui/components/ui/button.tsx",
+        `const size = "${utility}"`,
+        normalized
+      ).length
+    )
+  }
 })

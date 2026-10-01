@@ -209,7 +209,9 @@
   font-size: 1rem;
   line-height: 1.5rem;
 }
-[data-sonner-toaster] [data-sonner-toast][data-styled="true"] [data-description],
+[data-sonner-toaster]
+  [data-sonner-toast][data-styled="true"]
+  [data-description],
 [data-sonner-toaster] [data-sonner-toast][data-styled="true"] [data-button] {
   font-size: 0.875rem;
   line-height: 1.25rem;
