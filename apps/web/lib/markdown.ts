@@ -5,6 +5,7 @@ import { ABOUT, HOME, NOT_FOUND, WORKS } from "@/lib/copy"
 import type { LegalDoc, Run } from "@/lib/legal"
 import { PRIVACY } from "@/lib/privacy"
 import { projects } from "@/lib/projects"
+import { MADE, PLUMP } from "@/lib/plump"
 import { FACTS, SECTIONS } from "@/lib/resume"
 import { TERMS } from "@/lib/terms"
 import { absoluteUrl, PAGES, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site"
@@ -44,14 +45,14 @@ function frontMatter(fields: Record<string, string>) {
 
 /** A page: front matter, then blocks separated by blank lines. */
 function markdownDocument(
-  fields: { title: string; path?: string },
+  fields: { title: string; path?: string; description?: string },
   blocks: (string | false | null | undefined)[]
 ) {
   const { title, path } = fields
   const head = frontMatter({
     site: SITE_NAME,
     title,
-    description: SITE_DESCRIPTION,
+    description: fields.description ?? SITE_DESCRIPTION,
     ...(path ? { url: absoluteUrl(path) } : {}),
   })
   return [head, ...blocks.filter(Boolean)].join("\n\n") + "\n"
@@ -88,6 +89,45 @@ export function worksMarkdown() {
       )
       .join("\n"),
   ])
+}
+
+export function madeMarkdown() {
+  return markdownDocument(
+    { title: MADE.title, path: "/made", description: MADE.description },
+    [
+      `# ${MADE.title}`,
+      MADE.description,
+      `- ${link(PLUMP.name, absoluteUrl("/made/plump"))}: ${PLUMP.purpose}. ${PLUMP.tagline}`,
+    ]
+  )
+}
+
+export function plumpMarkdown() {
+  return markdownDocument(
+    { title: PLUMP.name, path: "/made/plump", description: PLUMP.description },
+    [
+      `# ${PLUMP.name}`,
+      `${PLUMP.purpose}. ${PLUMP.tagline}`,
+      PLUMP.description,
+      link("Open Plump", PLUMP.href),
+      `## ${PLUMP.idea.title}`,
+      PLUMP.idea.body,
+      `## ${PLUMP.demo.title}`,
+      PLUMP.demo.body,
+      ...PLUMP.steps.map(
+        ({ title, body }, index) => `## ${index + 1}. ${title}\n\n${body}`
+      ),
+      link("Download the sample SVG", absoluteUrl("/made/plump/sample.svg")),
+      "## Details",
+      PLUMP.details
+        .map(({ label, value }) => `- ${label}: ${value}`)
+        .join("\n"),
+      PLUMP.storage,
+      `## ${PLUMP.closing}`,
+      link("Open Plump", PLUMP.href),
+      `${PLUMP.credit} ${link("Meet the maker", absoluteUrl("/about"))}.`,
+    ]
+  )
 }
 
 export function aboutMarkdown(status: StatusData) {
@@ -213,7 +253,7 @@ export function agentInstructions() {
         [
           `1. Read the Markdown pages listed in ${link("llms.txt", absoluteUrl("/llms.txt"))}; they carry the same content as the HTML pages.`,
           `2. To reach Loki, use the email ${link(EMAIL, `mailto:${EMAIL}`)} on ${link("About", absoluteUrl("/about.md"))}. His GitHub and Instagram are on About too. Do not make up other ways, such as a phone number or a postal address.`,
-          "3. Describe a project only by its purpose line and its own site. Do not guess features, users or status the pages do not state.",
+          "3. Describe a project from its purpose line, its Made story (when listed) and its own site. Do not guess features, users or status the pages do not state.",
           "4. Describe his background only from the facts and sections on About. Do not add schools, jobs, papers, awards or dates they do not list, and keep each paper's author position as About states it.",
           "5. The GitHub activity on About refreshes about every 5 minutes; everything else changes when the site is deployed. Say so when freshness matters.",
           "6. Link to the page an answer comes from.",

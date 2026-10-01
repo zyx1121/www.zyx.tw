@@ -74,14 +74,19 @@ export function absoluteUrl(path: string) {
 export function pageMetadata({
   title,
   path,
+  description = SITE_DESCRIPTION,
+  image,
 }: {
   title?: string
   path: string
+  description?: string
+  image?: { url: string; width: number; height: number; alt: string }
 }): Metadata {
   const fullTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME
   const markdown = markdownFor(path)
   return {
     ...(title ? { title } : {}),
+    description,
     // <link rel="alternate" type="text/markdown"> to the Markdown twin.
     alternates: {
       canonical: path,
@@ -93,14 +98,14 @@ export function pageMetadata({
       url: path,
       siteName: SITE_NAME,
       title: fullTitle,
-      description: SITE_DESCRIPTION,
-      images: [OG_IMAGE],
+      description,
+      images: [image ?? OG_IMAGE],
     },
     twitter: {
       card: "summary_large_image",
       title: fullTitle,
-      description: SITE_DESCRIPTION,
-      images: [OG_IMAGE],
+      description,
+      images: [image ?? OG_IMAGE],
     },
   }
 }

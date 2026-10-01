@@ -31,7 +31,8 @@ export function SiteHeader() {
         <nav aria-label="Main">
           <ul className="flex gap-4">
             {NAV.map(({ path, label, tip }) => {
-              const current = pathname === path
+              const current =
+                pathname === path || pathname.startsWith(`${path}/`)
               return (
                 <li key={path} className="relative flex">
                   <CornerTip tip={tip}>

@@ -10,6 +10,24 @@
       "priority": 1
     },
     {
+      "path": "/made",
+      "label": "Made",
+      "tip": "Products by zyx",
+      "markdown": "/made.md",
+      "summary": "selected products made by zyx",
+      "nav": true,
+      "changeFrequency": "monthly",
+      "priority": 0.8
+    },
+    {
+      "path": "/made/plump",
+      "label": "Plump",
+      "markdown": "/made/plump.md",
+      "summary": "Plump: SVG to 3D, a live material demo and the current workflow",
+      "changeFrequency": "monthly",
+      "priority": 0.8
+    },
+    {
       "path": "/works",
       "label": "Works",
       "tip": "Every project and its link",

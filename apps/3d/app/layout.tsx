@@ -4,6 +4,7 @@ import { attributeRootLayoutRequest } from "@workspace/otel/layout"
 import "./globals.css"
 import {
   BottomCorners,
+  cornerLink,
   CornerTip,
   LegalLinks,
   TopCorners,
@@ -65,8 +66,13 @@ export default async function RootLayout({
           <TooltipProvider>
             <TopCorners
               nav={
-                <CornerTip tip="Turn your SVG into a 3D object">
-                  <span className="font-medium">{SITE_NAME}</span>
+                <CornerTip tip="About this product">
+                  <a
+                    href="https://www.zyx.tw/made/plump"
+                    className={cornerLink}
+                  >
+                    {SITE_NAME}
+                  </a>
                 </CornerTip>
               }
             />
