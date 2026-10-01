@@ -22,7 +22,7 @@ zyx.tw          the site itself, home base
 link.zyx.tw     your URLs, but shorter
 time.zyx.tw     what time is it?
 good.zyx.tw     a digital 乖乖 taped onto servers
-plump.zyx.tw    Plump: SVG and text, given dimension
+plump.zyx.tw    Plump: SVG, given dimension
 ui.zyx.tw       the component registry every app above imports from
 1909            a shared-expense dashboard for three flatmates
 ```
@@ -49,7 +49,7 @@ Plain `bun dev` boots turbo across all 7 apps at once. `--filter=<app>` (or `cd 
 | `link` | [link.zyx.tw](https://link.zyx.tw) | your URLs, but shorter |
 | `time` | [time.zyx.tw](https://time.zyx.tw) | what time is it? |
 | `good` | [good.zyx.tw](https://good.zyx.tw) | a digital 乖乖, the snack engineers tape onto servers |
-| `3d` | [Plump](https://plump.zyx.tw) | SVG and text, shaped and lit in 3D, saved as one scene.json |
+| `3d` | [Plump](https://plump.zyx.tw) | SVG, shaped and lit in 3D, saved as one scene.json |
 | `ui` | [ui.zyx.tw](https://ui.zyx.tw) | the shadcn registry every app above pulls components from |
 | `1909` | (private) | a shared-expense dashboard for three flatmates |
 

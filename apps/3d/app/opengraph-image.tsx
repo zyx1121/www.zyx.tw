@@ -6,7 +6,7 @@ import {
   ZyxOgImage,
 } from "@workspace/ui/components/og-image"
 
-export const alt = "Plump by zyx — turn your SVG or text into a 3D object"
+export const alt = "Plump by zyx — turn your SVG into a 3D object"
 export const size = OG_SIZE
 export const contentType = OG_CONTENT_TYPE
 

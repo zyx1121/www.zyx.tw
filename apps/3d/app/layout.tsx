@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   authors: [{ name: "Loki", url: "https://zyx.tw" }],
   creator: "Loki",
-  keywords: ["Plump", "3D", "SVG", "text", "extrude", "three.js", "zyx"],
+  keywords: ["Plump", "3D", "SVG", "extrude", "three.js", "zyx"],
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -65,7 +65,7 @@ export default async function RootLayout({
           <TooltipProvider>
             <TopCorners
               nav={
-                <CornerTip tip="Turn your SVG or text into a 3D object">
+                <CornerTip tip="Turn your SVG into a 3D object">
                   <span className="font-medium">{SITE_NAME}</span>
                 </CornerTip>
               }

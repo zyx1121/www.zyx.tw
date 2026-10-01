@@ -39,7 +39,7 @@ Turns an SVG into a 3D object and renders it from one `scene.json`. The editor a
 | Field | What it holds |
 | --- | --- |
 | `version` | Always `"v1"`. A breaking change becomes `"v2"`. |
-| `shape` | The SVG markup, plus `depth`, `bevel`, `bevelSegments` and `curveSegments`, in scene units where the shape's longer side is 2. A shape typed as text in the editor also keeps `text`: the `value` typed and the editor's `font` id, so it can be edited again. Its outlines are in `svg` like any other shape, so renderers never read `text`. |
+| `shape` | The SVG markup, plus `depth`, `bevel`, `bevelSegments` and `curveSegments`, in scene units where the shape's longer side is 2. Legacy text scenes may also keep optional `text` metadata. Their outlines are already in `svg`, so they still render and can be adjusted in Plump, which now accepts SVG input only. Renderers never read `text`. |
 | `material` | A material preset `id` and its `params`. |
 | `environment` | An environment preset `id`, its `intensity`, `rotation` in degrees, and whether it shows as the `background`. |
 | `staging` | A staging preset `id`, which sets the camera angle, the key light and, for Floor, a soft shadow on an invisible floor; and the `background` color. |
