@@ -26,7 +26,7 @@ const LINK =
   "rounded-sm underline decoration-muted-foreground/40 underline-offset-4 outline-offset-2 transition-colors hover:decoration-foreground focus-visible:outline-2"
 
 /** The resume's section headings, at group-heading size. */
-const HEADING = "text-sm/5 font-medium"
+const HEADING = "text-sm/6 font-medium"
 
 /**
  * Titles as displayed: "Wi-Fi" keeps its hyphen and "6 GHz" its space on one

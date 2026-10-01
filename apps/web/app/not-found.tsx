@@ -38,7 +38,7 @@ export default function NotFound() {
         className={cn("mt-20", enter)}
         style={enterRow(4)}
       >
-        <h2 id="agents-heading" className="text-sm/5 font-medium">
+        <h2 id="agents-heading" className="text-sm/6 font-medium">
           {NOT_FOUND.agents}
         </h2>
         <ul className="mt-5 flex flex-col gap-y-3">

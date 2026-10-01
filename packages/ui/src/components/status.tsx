@@ -88,7 +88,7 @@ export function Status({
       className={className}
       style={style}
     >
-      <h2 id="status-heading" className="text-sm/5 font-medium">
+      <h2 id="status-heading" className="text-sm/6 font-medium">
         {STATUS_COPY.title}
       </h2>
       <div className="mt-5 rounded-lg bg-card p-5">

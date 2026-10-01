@@ -28,6 +28,9 @@ jobs:
       - name: Theme drift check
         run: bun run theme:check
 
+      - name: Typography policy
+        run: bun run typography:check
+
       - name: Lint
         run: bun run lint
 

@@ -37,11 +37,19 @@ export function Clock() {
   }, [])
 
   return (
-    <main className="flex min-h-dvh w-dvw items-center justify-center">
+    <main className="flex min-h-dvh w-dvw items-center justify-center px-5">
       <h1 className="sr-only">{SITE_NAME}</h1>
       <p className="sr-only">{SITE_DESC}</p>
-      <span className="text-[clamp(3rem,12vw,18rem)] font-bold tabular-nums">
-        {time ?? "—"}
+      <span className="max-w-full text-center text-display font-bold tabular-nums">
+        {time
+          ? time.split(":").map((part, index) => (
+              <span key={index} className="inline-block">
+                {part}
+                {index < 2 ? ":" : ""}
+                <wbr />
+              </span>
+            ))
+          : "…"}
       </span>
     </main>
   )

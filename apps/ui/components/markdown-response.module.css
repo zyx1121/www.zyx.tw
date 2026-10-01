@@ -1,7 +1,8 @@
 .markdown {
   min-width: 0;
   max-width: 100%;
-  line-height: 1.75;
+  font-size: 1rem;
+  line-height: 1.5;
   overflow-wrap: anywhere;
 }
 .markdown > * + * {
@@ -10,19 +11,13 @@
 .markdown h1,
 .markdown h2,
 .markdown h3,
-.markdown h4 {
+.markdown h4,
+.markdown h5,
+.markdown h6 {
   font-weight: 600;
-  line-height: 1.4;
-  margin-top: 1.5rem;
-}
-.markdown h1 {
   font-size: 1.5rem;
-}
-.markdown h2 {
-  font-size: 1.25rem;
-}
-.markdown h3 {
-  font-size: 1.125rem;
+  line-height: 2rem;
+  margin-top: 1.5rem;
 }
 .markdown ul {
   list-style: disc;
@@ -55,7 +50,7 @@
   border-radius: 0.25rem;
   background: var(--muted);
   padding: 0.15rem 0.35rem;
-  font-size: 0.875em;
+  font-size: 0.875rem;
 }
 .markdown hr {
   border-color: var(--border);
@@ -72,7 +67,7 @@
 .markdown table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 .markdown th,
 .markdown td {
@@ -101,8 +96,8 @@
   max-width: 100%;
   overflow-x: auto;
   padding: 1rem;
-  font-size: 0.8125rem;
-  line-height: 1.7;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   white-space: pre;
   tab-size: 2;
 }

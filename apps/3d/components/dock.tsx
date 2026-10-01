@@ -87,7 +87,7 @@ export function Dock({
         <p
           role="alert"
           data-slot="floating-notice"
-          className="pointer-events-auto max-w-md rounded-xl border bg-popover px-3 py-2 text-xs/4 whitespace-pre-line text-destructive"
+          className="pointer-events-auto max-w-md rounded-xl border bg-popover px-3 py-2 text-xs/5 whitespace-pre-line text-destructive"
         >
           {error}
         </p>
@@ -98,7 +98,7 @@ export function Dock({
         className="pointer-events-auto flex items-center gap-0.5 rounded-2xl border bg-popover p-1"
       >
         <Section icon={<Box />} {...section("Shape")}>
-          <p className="text-xs/4 text-muted-foreground">
+          <p className="text-xs/5 text-muted-foreground">
             Open an SVG file, or drop one on the page.
           </p>
           <ParamGroup
@@ -253,7 +253,7 @@ export function Dock({
         <Button
           variant="ghost"
           size="sm"
-          className="rounded-xl px-2 text-sm/5 lg:px-2.5"
+          className="rounded-xl px-2 text-sm/6 lg:px-2.5"
           aria-label="Open an SVG or a scene.json"
           onClick={() => fileInput.current?.click()}
         >
@@ -263,7 +263,7 @@ export function Dock({
         <Button
           variant="ghost"
           size="sm"
-          className="rounded-xl px-2 text-sm/5 lg:px-2.5"
+          className="rounded-xl px-2 text-sm/6 lg:px-2.5"
           aria-label="Export scene.json"
           onClick={onExport}
         >
@@ -327,7 +327,7 @@ function Section({
             variant="ghost"
             size="sm"
             aria-label={label}
-            className="rounded-xl px-2 text-sm/5 data-popup-open:bg-muted lg:px-2.5"
+            className="rounded-xl px-2 text-sm/6 data-popup-open:bg-muted lg:px-2.5"
           />
         }
       >

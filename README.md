@@ -71,7 +71,7 @@ Shared packages: `packages/ui` (design system + components) · `packages/3d` (sc
 
 Every app follows [`apps/ui/DESIGN.md`](./apps/ui/DESIGN.md): stock shadcn/ui on the `base-nova` preset (Base UI primitives, so `asChild` is the `render` prop) and the grayscale ui.zyx.tw theme with `--radius: 1rem`. Apps start dark on a pure black background, whatever the OS prefers. Text is Inter (self-hosted, with open digits and a slashed zero), then Noto Sans JP and Noto Sans TC for CJK; Geist Mono is for code only, and numbers use Inter's `tabular-nums`. Plump uses Helvetica Neue, Helvetica and Arial for Latin, with the same CJK and code fonts. Base components are never forked; the CLI owns `components/ui/`.
 
-The same file sets the page rules, which ui.zyx.tw and www.zyx.tw follow and the tool apps adopt when they are next rebuilt: one centered column on a 4px grid with a 20px module, framed by four fixed corners, the shared radius scale with concentric corners, lines only where they carry meaning, optical offsets at the call site, CSS-first motion that honors reduced motion everywhere, a 24/14/12px interface scale (titles, body/chrome, captions), weights 400 and 500 only, and English copy with no em dashes. Both sites also serve agents: a Markdown version of each page, `/llms.txt`, `/agent-instructions.md`, `Link` headers and JSON-LD. Every app already shares the corners (`@workspace/ui/components/corners`); until their rebuild, the tool apps take the theme, font and color rules for the rest.
+The same file sets the page rules, which ui.zyx.tw and www.zyx.tw follow and the tool apps adopt when they are next rebuilt: one centered column on a 4px grid with a 20px module, framed by four fixed corners, the shared radius scale with concentric corners, lines only where they carry meaning, optical offsets at the call site, CSS-first motion that honors reduced motion everywhere, a strict 24/16/14px interface scale (titles, body/chrome, captions) plus 80px display text, weights 400 and 500 only, and English copy with no em dashes. Both sites also serve agents: a Markdown version of each page, `/llms.txt`, `/agent-instructions.md`, `Link` headers and JSON-LD. Every app already shares the corners (`@workspace/ui/components/corners`); until their rebuild, the tool apps take the theme, font and color rules for the rest.
 
 Apps on `@workspace/ui` load the fonts from `packages/ui/src/lib/fonts.ts` and put its `fontVariables` on `<html>`.
 
@@ -98,6 +98,7 @@ The theme tokens in `packages/ui/src/styles/globals.css` and `apps/1909/app/glob
 
 ```bash
 bun run theme:check
+bun run typography:check
 ```
 
 ## Pulling the design system into another project

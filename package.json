@@ -10,7 +10,8 @@
     "format": "turbo format",
     "format:check": "turbo format:check",
     "typecheck": "turbo typecheck",
-    "theme:check": "node scripts/check-theme.mjs"
+    "theme:check": "node scripts/check-theme.mjs",
+    "typography:check": "node --test scripts/check-typography.test.mjs && node scripts/check-typography.mjs"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
