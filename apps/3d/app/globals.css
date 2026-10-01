@@ -1,0 +1,11 @@
+@import "@workspace/ui/globals.css";
+
+/* Plump's Latin type matches INTENTION's Talky specimen. These are local
+ * system fonts; CJK and code keep the shared design system's font stack. */
+@theme inline {
+  --font-sans:
+    "Helvetica Neue", Helvetica, Arial, var(--font-noto-sans-jp),
+    var(--font-noto-sans-tc), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --default-font-feature-settings: "liga" 1, "calt" 1;
+}

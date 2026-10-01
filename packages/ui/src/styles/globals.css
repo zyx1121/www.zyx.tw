@@ -359,6 +359,8 @@
   [data-slot="alert-dialog-content"],
   [data-slot="sheet-content"],
   [data-slot="drawer-popup"],
+  [data-slot="floating-toolbar"],
+  [data-slot="floating-notice"],
   .recharts-tooltip-wrapper > div {
     background-color: transparent;
     -webkit-backdrop-filter: blur(12px);

@@ -9,14 +9,14 @@ import type { LegalDoc } from "@/lib/legal"
  */
 export const PRIVACY: LegalDoc = {
   title: "Privacy",
-  updated: "2026-09-28",
+  updated: "2026-10-01",
   sections: [
     {
       heading: "What this covers",
       paragraphs: [
         [
           {
-            text: "This policy covers every site under zyx.tw, all run by Loki (詹詠翔): www.zyx.tw and the apps ui, 3d, link, time and good; 1909, a private tool for three flatmates; the previews test, ui.test and 3d.test; and the hosts kitbash, sensorium, derp and data.",
+            text: "This policy covers every site under zyx.tw, all run by Loki (詹詠翔): www.zyx.tw and the apps ui, plump (formerly 3d), link, time and good; 1909, a private tool for three flatmates; the previews test, ui.test and 3d.test; and the hosts kitbash, sensorium, derp and data.",
           },
         ],
       ],
@@ -31,17 +31,17 @@ export const PRIVACY: LegalDoc = {
         ],
         [
           {
-            text: "If you switch the theme (the D key, or the toggle on ui.zyx.tw), your choice is saved in your browser's localStorage under the key “theme”. The 3d editor keeps your current scene and your last SVG there too. None of it leaves your device.",
+            text: "If you switch the theme (the D key, or the toggle on ui.zyx.tw), your choice is saved in your browser's localStorage under the key “theme”. Plump keeps your current scene and your last SVG there too. None of it leaves your device. Scenes saved on the old 3d.zyx.tw address remain there; export a scene and open it in Plump to move it to plump.zyx.tw.",
           },
         ],
         [
           {
-            text: "Each site serves its own fonts. The one exception is the 3d editor's Text mode: when you type there, your browser asks Google Fonts for the font you picked, and the request carries the characters you typed.",
+            text: "Each site serves its own fonts. The one exception is Plump's Text mode: when you type there, your browser asks Google Fonts for the font you picked, and the request carries the characters you typed.",
           },
         ],
         [
           {
-            text: "The 3D mark on www.zyx.tw loads its lighting from 3d.zyx.tw, another of these sites.",
+            text: "The 3D mark on www.zyx.tw loads its lighting from plump.zyx.tw, another of these sites.",
           },
         ],
       ],
@@ -51,7 +51,7 @@ export const PRIVACY: LegalDoc = {
       paragraphs: [
         [
           {
-            text: "www, ui, 3d, link, time, good and 1909 are hosted on Vercel, which handles every request and keeps its own logs under the ",
+            text: "www, ui, plump, 3d, link, time, good and 1909 are hosted on Vercel, which handles every request and keeps its own logs under the ",
           },
           {
             text: "Vercel privacy policy",

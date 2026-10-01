@@ -8,14 +8,14 @@ import type { LegalDoc } from "@/lib/legal"
  */
 export const TERMS: LegalDoc = {
   title: "Terms",
-  updated: "2026-09-28",
+  updated: "2026-10-01",
   sections: [
     {
       heading: "What these cover",
       paragraphs: [
         [
           {
-            text: "These terms cover every site under zyx.tw: www.zyx.tw and the apps on its subdomains, such as ui, 3d, link, time and good. Loki (詹詠翔) runs them as personal projects. Using a site means you accept these terms.",
+            text: "These terms cover every site under zyx.tw: www.zyx.tw and the apps on its subdomains, such as ui, plump (formerly 3d), link, time and good. Loki (詹詠翔) runs them as personal projects. Using a site means you accept these terms.",
           },
         ],
       ],

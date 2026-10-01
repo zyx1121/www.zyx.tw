@@ -1,27 +1,28 @@
 import type { Metadata } from "next"
 
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
-import "@workspace/ui/globals.css"
+import "./globals.css"
 import {
   BottomCorners,
+  CornerTip,
   LegalLinks,
   TopCorners,
 } from "@workspace/ui/components/corners"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
-import { fontVariables } from "@workspace/ui/lib/fonts"
+import { geistMono, notoSansJp, notoSansTc } from "@workspace/ui/lib/fonts"
 import { cn } from "@workspace/ui/lib/utils"
 
-import { SITE_DESC, SITE_NAME, SITE_TITLE } from "@/lib/site"
+import { SITE_DESC, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/site"
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://3d.zyx.tw"),
+  metadataBase: new URL(SITE_URL),
   title: { default: SITE_TITLE, template: `%s | ${SITE_NAME}` },
   description: SITE_DESC,
   applicationName: SITE_NAME,
   authors: [{ name: "Loki", url: "https://zyx.tw" }],
   creator: "Loki",
-  keywords: ["3D", "SVG", "extrude", "three.js", "zyx"],
+  keywords: ["Plump", "3D", "SVG", "text", "extrude", "three.js", "zyx"],
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -50,12 +51,25 @@ export default async function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("dark", "antialiased", fontVariables, "font-sans")}
+      className={cn(
+        "dark",
+        "antialiased",
+        notoSansJp.variable,
+        notoSansTc.variable,
+        geistMono.variable,
+        "font-sans"
+      )}
     >
       <body>
         <ThemeProvider>
           <TooltipProvider>
-            <TopCorners />
+            <TopCorners
+              nav={
+                <CornerTip tip="Turn your SVG or text into a 3D object">
+                  <span className="font-medium">{SITE_NAME}</span>
+                </CornerTip>
+              }
+            />
             {children}
             <BottomCorners links={<LegalLinks />} />
           </TooltipProvider>

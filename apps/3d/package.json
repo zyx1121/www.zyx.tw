@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "private": true,
-  "description": "3d.zyx.tw: turn an SVG into a 3D object, saved as one scene.json",
+  "description": "Plump: turn SVG and text into 3D, saved as one editable scene",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
