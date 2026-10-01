@@ -8,7 +8,7 @@ This file is the design contract for the zyx.tw apps: the theme and the componen
 
 The previous registry maintained its own copies of every primitive (button, input, dialog, ...) on base-ui. That meant owning variants, edge cases, and dark mode for 20+ components. Rebuilt 2026-08: base components now come from stock shadcn/ui (`base-nova` preset) and the CLI owns them. This registry ships exactly two kinds of things:
 
-- **The theme**: full grayscale palette, stock radius, pure black dark mode, frosted overlays. One `registry:theme` item.
+- **The theme**: full grayscale palette, a 1rem radius, pure black dark mode, frosted overlays. One `registry:theme` item.
 - **zyx components**: things shadcn/ui doesn't have (`shimmering-text`, `theme-toggle`, `scramble-text`, `rotating-text`, `mask-reveal`, `ask-ai`, `hdr-highlight`). One concept per file.
 
 If shadcn/ui ships a component, we do not re-ship it. If a component needs restyling, that pressure goes into the theme tokens, never into a forked copy.
@@ -16,7 +16,7 @@ If shadcn/ui ships a component, we do not re-ship it. If a component needs resty
 ## Anchor decisions (`app/globals.css`)
 
 - **Base**: shadcn `base-nova` preset (Base UI primitives: the shadcn CLI default, actively maintained by the ex-Radix team) and the `neutral` base color, because the stock palette is already zero-chroma grayscale.
-- **`--radius: 0.625rem`**: stock. The stock multiplier scale derives the rest: `sm` 6px, `md` 8px, `lg` 10px, `xl` 14px, `2xl` 18px.
+- **`--radius: 1rem`**: deliberately rounder than stock. Buttons read soft-pill and surfaces read friendly. The stock multiplier scale derives the rest: `sm` 9.6px, `md` 12.8px, `lg` 16px, `xl` 22.4px, `2xl` 28.8px.
 - **Grayscale everywhere**: the only chroma on screen is `--destructive` and content itself. The stock dark `--sidebar-primary` (blue) is overridden to gray.
 - **Dark first, pure black**: every app server-renders `<html class="dark">` and starts dark (`defaultTheme="dark"`, `enableSystem={false}`), whatever the OS prefers, so the first paint and pages without JavaScript are dark too. Light stays one step away: the toggle on www and ui.zyx.tw, and the `d` hotkey in every app except ui.zyx.tw. Dark `--background` is `oklch(0 0 0)`. Apart from `--muted-foreground` and the gray sidebar primary pair, the other dark tokens stay stock.
 - **Muted text at 4.5:1**: in both themes `--muted-foreground` must reach at least 4.5:1 (WCAG AA) on `--background`, `--card`, `--popover`, `--muted`, `--accent` and `--secondary`; light `oklch(0.54 0 0)` (#6e6f6f) gives 5.04:1 on white and 4.62:1 on #f5f5f5, dark `oklch(0.65 0 0)` (#8f8f8f) gives 6.49:1 on black, 5.54:1 on #171717 and 4.68:1 on #262626.
@@ -57,10 +57,10 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
 
 ## Radius
 
-- **The stock scale only**: `--radius` is 0.625rem; use its steps (`rounded-sm` 6px, `rounded-md` 8px, `rounded-lg` 10px, `rounded-xl` 14px, `rounded-2xl` 18px), not arbitrary radii. Cards are `rounded-lg`.
-- **Concentric**: a surface that wraps rounded children at a small inset takes outer radius = inner radius + padding. The ask-ai menu is `rounded-2xl` (18px) with `p-1` (4px) around `rounded-xl` (14px) items. Once the padding reaches the inner radius, the shapes read as separate and the rule no longer binds, as in a `rounded-lg p-5` card.
+- **The shared scale**: `--radius` is 1rem; use its steps (`rounded-sm` 9.6px, `rounded-md` 12.8px, `rounded-lg` 16px, `rounded-xl` 22.4px, `rounded-2xl` 28.8px). Cards are `rounded-lg`. Tightly nested surfaces may derive their radii from the token and their geometry as below.
+- **Concentric**: a surface that wraps rounded children at a small inset takes outer radius = inner radius + padding. The ask-ai menu caps its item radius at `min(var(--radius-xl), 0.875rem)` (14px, half the minimum item height) and adds its `p-1` (4px) for an 18px outer radius. Once the padding reaches the inner radius, the shapes read as separate and the rule no longer binds, as in a `rounded-lg p-5` card.
 - **An item's radius is at most half its height**: past that the browser scales the corners down and the concentric sum breaks (on a 24px item, 14px becomes 12px). Items with a 14px radius are at least 28px tall (`min-h-7`).
-- **Pills without `rounded-full`**: a pill takes a scale step larger than half its height, which the browser draws as a capsule. The ask-ai pill is `rounded-2xl` (18px) on a 24 or 32px control. Our code never uses `rounded-full` for a pill; true circles inside stock components (avatar, radio, switch thumb) stay as shipped.
+- **Pills without `rounded-full`**: a pill takes a scale step larger than half its height, which the browser draws as a capsule. The ask-ai pill is `rounded-2xl` (28.8px) on a 24 or 32px control. Our code never uses `rounded-full` for a pill; true circles inside stock components (avatar, radio, switch thumb) stay as shipped.
 
 ## Lines
 
@@ -157,7 +157,7 @@ Per item:
 - `scramble-text`: glyphs resolve left to right at `speed` ms per character (50, so 12 characters take about 600ms) on `trigger` `mount` or `in-view`. The element keeps its own display and the final text stays one untouched text node: while running it is painted transparent and an `aria-hidden`, `select-none` overlay draws one cell per character, pinned to that character's measured box before paint. Line breaks, size and the accessible text never change, and afterwards `textContent` holds the text exactly once. The server text is held invisible for at most 1.5s until the client starts; reduced motion shows the text at once.
 - `rotating-text`: advances every `interval` ms (3200) with a `scramble-text` scramble or a `fade`; `index`, `defaultIndex`, `onIndexChange` (once per auto-advance and once per controlled change) and `paused` make it controllable. Every word sits invisible in one grid cell so CLS stays 0, hidden tabs pause, and reduced motion never auto-advances while a controlled change still swaps the word instantly. Screen readers get one stable word, falling back to the current one if `words` shrinks, and a copy gets the word on screen, once.
 - `mask-reveal`: a mask three times the element's width, with alpha 1 - smoothstep over its middle third, moves from 100% to 0% after `delay` (1s) over `duration` (5s) with `cubic-bezier(.16,1,.3,1)`. The mask exists only inside the keyframes (`backwards` fill), so focus rings and shadows are intact afterwards, and reduced motion plays nothing.
-- `ask-ai`: a pill 32px tall (24px from `sm`) composing the stock `dropdown-menu` and `button` through `className` only; the menu is `rounded-2xl` with `p-1` and its items are `rounded-xl` and at least 28px tall, so outer radius = inner radius + 4px at a 0.625rem `--radius`. The default page URL is `link[rel=canonical]`, else origin + pathname, never the query or fragment; prompts are `encodeURIComponent`-ed, links open in a new tab with `rel="noopener noreferrer"`, and copies confirm inline and in a `role="status"` region.
+- `ask-ai`: a pill 32px tall (24px from `sm`) composing the stock `dropdown-menu` and `button` through `className` only; menu items are at least 28px tall and cap their token-derived radius at 14px. The popup adds its 4px padding to that same radius, keeping the corners concentric when the theme radius changes. The default page URL is `link[rel=canonical]`, else origin + pathname, never the query or fragment; prompts are `encodeURIComponent`-ed, links open in a new tab with `rel="noopener noreferrer"`, and copies confirm inline and in a `role="status"` region.
 - `hdr-highlight`: a bare span. Under `@media (dynamic-range: high)` inside `.dark` its own glyphs are filled from a PQ / BT.2020 AVIF data URI through `background-clip: text`, over a `currentcolor` fallback layer. No layout property changes, so SDR pixels, wrapping and text decorations match a plain span; `hover` lights it on hover or focus of itself or an enclosing control and fades back over 2s (motion-safe).
 
 ## Adding a new item

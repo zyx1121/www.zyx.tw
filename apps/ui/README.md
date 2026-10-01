@@ -11,7 +11,7 @@
 
 The zyx.tw design system. Stock shadcn/ui, grayscale palette, plus my own components.
 
-The base components are shadcn/ui as-is: the shadcn CLI owns them, and this registry does not fork them. What this registry ships is the theme (full grayscale, stock radius, pure black dark mode) and the components shadcn doesn't have.
+The base components are shadcn/ui as-is: the shadcn CLI owns them, and this registry does not fork them. What this registry ships is the theme (full grayscale, a 1rem radius, pure black dark mode) and the components shadcn doesn't have.
 
 The rules behind it live in [`DESIGN.md`](DESIGN.md): the theme tokens and fonts, then layout (a 4px grid, a 20px module, one column), radius, lines, optical alignment, motion, typography, color, content, and the surfaces every site offers agents.
 
