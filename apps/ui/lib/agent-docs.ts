@@ -137,7 +137,7 @@ export function llmsText() {
     "## When to use",
     "",
     "- You are building or restyling a zyx.tw site, or a user asks for the ui.zyx.tw look.",
-    "- A shadcn/ui project needs the grayscale theme: pure black dark mode, the stock radius, muted text at 4.5:1.",
+    "- A shadcn/ui project needs the grayscale theme: pure black dark mode, a 1rem radius, muted text at 4.5:1.",
     "- A shadcn/ui project needs one of the components listed under Registry.",
     "",
     "## How an agent should use it",

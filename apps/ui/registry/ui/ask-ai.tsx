@@ -53,10 +53,10 @@ const MARKDOWN =
 // Icons are 16px on small screens and 12px from `sm` up, like the pill.
 const ICON = "size-4 sm:size-3";
 
-// Menu geometry: the popup is rounded-2xl with p-1, items are rounded-xl and at
-// least 28px tall, so the outer radius is exactly the inner radius plus 4px.
+// Cap the item radius at half its 28px minimum height. The popup adds its 4px
+// padding to that same radius, keeping the corners concentric as themes change.
 const ITEM =
-  "min-h-7 gap-2 rounded-xl px-2 py-1.5 text-sm sm:gap-1 sm:px-2.5 sm:text-xs";
+  "min-h-7 gap-2 rounded-(--ask-ai-item-radius) px-2 py-1.5 text-sm sm:gap-1 sm:px-2.5 sm:text-xs";
 
 const DEFAULT_PROMPT =
   "Read {url} and explain what this page covers. Start with a short summary, then answer my questions about it.";
@@ -232,7 +232,7 @@ function AskAi({
             </Button>
           }
         />
-        <DropdownMenuContent className="w-auto rounded-2xl shadow-lg">
+        <DropdownMenuContent className="w-auto rounded-[calc(var(--ask-ai-item-radius)+0.25rem)] shadow-lg [--ask-ai-item-radius:min(var(--radius-xl),0.875rem)]">
           <DropdownMenuGroup>
             {links.map((provider) => (
               <DropdownMenuItem
