@@ -31,12 +31,12 @@ export const PRIVACY: LegalDoc = {
         ],
         [
           {
-            text: "If you switch the theme (the D key, or the toggle on ui.zyx.tw), your choice is saved in your browser's localStorage under the key “theme”. Plump keeps your current scene and your last SVG there too. None of it leaves your device. Scenes saved on the old 3d.zyx.tw address remain there; export a scene and open it in Plump to move it to plump.zyx.tw.",
+            text: "If you switch the theme (the D key, or the toggle on ui.zyx.tw), your choice is saved in your browser's localStorage under the key “theme”. Plump keeps your current scene there too. None of it leaves your device. Scenes saved on the old 3d.zyx.tw address remain there; export a scene and open it in Plump to move it to plump.zyx.tw.",
           },
         ],
         [
           {
-            text: "Each site serves its own fonts. The one exception is Plump's Text mode: when you type there, your browser asks Google Fonts for the font you picked, and the request carries the characters you typed.",
+            text: "Each site serves its own fonts or uses fonts already on your device.",
           },
         ],
         [

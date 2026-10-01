@@ -11,7 +11,6 @@ import {
 } from "@workspace/3d"
 
 import { Dock } from "@/components/dock"
-import { useShapeSource } from "@/components/shape-source"
 import { ZYX_SVG } from "@/lib/zyx-svg"
 
 const STORAGE_KEY = "3d:scene:v1"
@@ -33,7 +32,6 @@ function loadScene(): SceneV1 {
 export function Editor() {
   const [scene, setScene] = useState(loadScene)
   const [error, setError] = useState<string | null>(null)
-  const source = useShapeSource(scene, setScene)
   // Rebuilding the mesh can take a frame or two; this keeps the sliders
   // responsive while the preview catches up.
   const preview = useDeferredValue(scene)
@@ -62,7 +60,6 @@ export function Editor() {
         return
       }
       setScene(result.scene)
-      source.reset(result.scene.shape.text)
     } else {
       const problem = checkSvg(text)
       if (problem) {
@@ -73,7 +70,6 @@ export function Editor() {
         ...current,
         shape: { ...current.shape, svg: text, text: undefined },
       }))
-      source.reset()
     }
     setError(null)
   }
@@ -104,7 +100,6 @@ export function Editor() {
       <Scene3D scene={preview} envBaseUrl="/env/" />
       <Dock
         scene={scene}
-        source={source.props}
         onChange={setScene}
         onOpenFile={(file) => void openFile(file)}
         onExport={exportScene}

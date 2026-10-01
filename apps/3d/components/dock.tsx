@@ -47,11 +47,9 @@ import { Switch } from "@workspace/ui/components/ui/switch"
 
 import { ParamGroup } from "@/components/param-control"
 import { PresetSelect } from "@/components/preset-select"
-import { ShapeSource, type ShapeSourceProps } from "@/components/shape-source"
 
 type DockProps = {
   scene: SceneV1
-  source: ShapeSourceProps
   onChange: Dispatch<SetStateAction<SceneV1>>
   onOpenFile: (file: File) => void
   onExport: () => void
@@ -61,7 +59,6 @@ type DockProps = {
 /** A bar floating along the bottom; each section opens its controls in a popover above it. */
 export function Dock({
   scene,
-  source,
   onChange,
   onOpenFile,
   onExport,
@@ -101,7 +98,9 @@ export function Dock({
         className="pointer-events-auto flex items-center gap-0.5 rounded-2xl border bg-popover p-1"
       >
         <Section icon={<Box />} {...section("Shape")}>
-          <ShapeSource {...source} />
+          <p className="text-xs/4 text-muted-foreground">
+            Open an SVG file, or drop one on the page.
+          </p>
           <ParamGroup
             id="shape"
             defs={shapeControls}
