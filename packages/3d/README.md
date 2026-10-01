@@ -1,6 +1,6 @@
 # @workspace/3d
 
-Turns an SVG into a 3D object and renders it from one `scene.json`. The editor at [3d.zyx.tw](https://3d.zyx.tw) (`apps/3d`) writes the file; any app in this monorepo renders it with `<Scene3D>`.
+Turns an SVG into a 3D object and renders it from one `scene.json`. The editor at [Plump](https://plump.zyx.tw) (`apps/3d`) writes the file; any app in this monorepo renders it with `<Scene3D>`.
 
 ## Render a scene in another app
 
@@ -16,7 +16,7 @@ Turns an SVG into a 3D object and renders it from one `scene.json`. The editor a
    transpilePackages: ["@workspace/3d" /* , ... */]
    ```
 
-2. Export a scene.json from 3d.zyx.tw, keep it next to your component, and render it from a client component:
+2. Export a scene.json from plump.zyx.tw, keep it next to your component, and render it from a client component:
 
    ```tsx
    "use client"
@@ -32,7 +32,7 @@ Turns an SVG into a 3D object and renders it from one `scene.json`. The editor a
    }
    ```
 
-`<Scene3D>` fills its parent, so give the parent a size. `autoRotate` turns the shape itself, so it works with `controls` off. The camera angle comes from the scene's staging; `view` overrides it, in degrees (`DEFAULT_VIEW` is Oblique's: 30° to the left and 30° above), and when either changes the camera swings over. The scene's `motion.hover` needs nothing on your side: the shape leans toward a mouse over the canvas, up to 18° at its edge, and grows a little under it. With `deviceTilt`, a touch screen's turns stand in for the mouse: the shape holds still in the room while the device turns around it, up to the same 18°, and faces front again once the device rests. iOS lets a page read the device's orientation only after the visitor allows it, and asks only on a tap, so the first tap on the canvas asks; the answer holds for the rest of the session. Environment maps load from `https://3d.zyx.tw/env/`, which sends `Access-Control-Allow-Origin: *`; pass `envBaseUrl` to serve them from somewhere else.
+`<Scene3D>` fills its parent, so give the parent a size. `autoRotate` turns the shape itself, so it works with `controls` off. The camera angle comes from the scene's staging; `view` overrides it, in degrees (`DEFAULT_VIEW` is Oblique's: 30° to the left and 30° above), and when either changes the camera swings over. The scene's `motion.hover` needs nothing on your side: the shape leans toward a mouse over the canvas, up to 18° at its edge, and grows a little under it. With `deviceTilt`, a touch screen's turns stand in for the mouse: the shape holds still in the room while the device turns around it, up to the same 18°, and faces front again once the device rests. iOS lets a page read the device's orientation only after the visitor allows it, and asks only on a tap, so the first tap on the canvas asks; the answer holds for the rest of the session. Environment maps load from `https://plump.zyx.tw/env/`, which sends `Access-Control-Allow-Origin: *`; pass `envBaseUrl` to serve them from somewhere else.
 
 ## scene.json v1
 
@@ -89,3 +89,5 @@ A staging (`defineStaging`) has no params. It sets the camera `view` and the key
 Environment maps from [Poly Haven](https://polyhaven.com), CC0, converted to 4096 × 2048 gain maps: Studio Small 03, Potsdamer Platz and Shanghai Bund by Greg Zaal; Wooden Studio 10 and Wooden Studio 14 by Alexander Scholten; Ferndale Studio 05 and Pretville Cinema by Dimitrios Savva and Jarod Guest; Ferndale Studio 06 by Dimitrios Savva and Greg Zaal; The Sky Is On Fire by Greg Zaal and Rico Cilliers; Kloofendal 48d Partly Cloudy (Pure Sky) by Greg Zaal and Jarod Guest.
 
 Pink castle, Crystal cave, Dream garden and Underwater were generated with OpenAI image generation (via Codex) and upscaled with [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) x4plus. Each was made to wrap seamlessly, resized to 4096 × 2048 and smoothed at the zenith and nadir, then lifted to HDR: midtones scaled by 0.9 and near-white highlights brightened, keeping their hue. Their gain maps use linear tone mapping for the SDR image, where the Poly Haven maps use ACES.
+
+The former editor address, `3d.zyx.tw`, remains an alias with working environment maps. Browser storage is per origin: scenes saved there stay there. Export a `scene.json` from the old address and open it in Plump to move it; the scene format and storage keys remain compatible.

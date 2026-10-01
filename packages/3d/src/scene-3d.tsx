@@ -36,8 +36,8 @@ import { findPreset, type EffectPreset, type StagingPreset } from "./registry"
 import type { SceneV1 } from "./schema"
 import { stagings } from "./stagings"
 
-/** The editor at 3d.zyx.tw serves the environment maps, with CORS open to other sites. */
-export const DEFAULT_ENV_BASE_URL = "https://3d.zyx.tw/env/"
+/** The editor at plump.zyx.tw serves the environment maps, with CORS open to other sites. */
+export const DEFAULT_ENV_BASE_URL = "https://plump.zyx.tw/env/"
 
 /** Radians per second when autoRotate turns the shape. */
 const SPIN_SPEED = 0.4

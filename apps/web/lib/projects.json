@@ -12,9 +12,9 @@
   },
   {
     "slug": "3d",
-    "name": "3d.zyx.tw",
-    "href": "https://3d.zyx.tw",
-    "purpose": "SVG to 3D",
+    "name": "Plump",
+    "href": "https://plump.zyx.tw",
+    "purpose": "SVG and text to 3D",
     "preview": {
       "image": "/previews/3d.webp",
       "dither": "/previews/3d-dither.webp",

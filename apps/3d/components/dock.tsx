@@ -89,14 +89,16 @@ export function Dock({
       {error && (
         <p
           role="alert"
-          className="pointer-events-auto max-w-md rounded-xl border bg-background/85 px-3 py-2 font-mono text-xs whitespace-pre-line text-destructive backdrop-blur-md"
+          data-slot="floating-notice"
+          className="pointer-events-auto max-w-md rounded-xl border bg-popover px-3 py-2 text-xs/4 whitespace-pre-line text-destructive"
         >
           {error}
         </p>
       )}
       <nav
-        aria-label="Editor"
-        className="pointer-events-auto flex items-center gap-0.5 rounded-full border bg-background/85 p-1 backdrop-blur-md"
+        aria-label="Plump editor"
+        data-slot="floating-toolbar"
+        className="pointer-events-auto flex items-center gap-0.5 rounded-2xl border bg-popover p-1"
       >
         <Section icon={<Box />} {...section("Shape")}>
           <ShapeSource {...source} />
@@ -252,22 +254,22 @@ export function Dock({
         <Button
           variant="ghost"
           size="sm"
-          className="rounded-full"
+          className="rounded-xl px-2 text-sm/5 lg:px-2.5"
           aria-label="Open an SVG or a scene.json"
           onClick={() => fileInput.current?.click()}
         >
           <FolderOpen />
-          <span className="hidden sm:inline">Open</span>
+          <span className="hidden lg:inline">Open</span>
         </Button>
         <Button
           variant="ghost"
           size="sm"
-          className="rounded-full"
+          className="rounded-xl px-2 text-sm/5 lg:px-2.5"
           aria-label="Export scene.json"
           onClick={onExport}
         >
           <Download />
-          <span className="hidden sm:inline">Export</span>
+          <span className="hidden lg:inline">Export</span>
         </Button>
         <input
           ref={fileInput}
@@ -326,12 +328,12 @@ function Section({
             variant="ghost"
             size="sm"
             aria-label={label}
-            className="rounded-full data-popup-open:bg-muted"
+            className="rounded-xl px-2 text-sm/5 data-popup-open:bg-muted lg:px-2.5"
           />
         }
       >
         {icon}
-        <span className="hidden sm:inline">{label}</span>
+        <span className="hidden lg:inline">{label}</span>
       </PopoverTrigger>
       <PopoverContent side="top" sideOffset={10} className="w-72 gap-4 p-4">
         <PopoverTitle className="text-xs font-medium text-muted-foreground">

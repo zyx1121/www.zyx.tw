@@ -22,7 +22,7 @@ zyx.tw          the site itself, home base
 link.zyx.tw     your URLs, but shorter
 time.zyx.tw     what time is it?
 good.zyx.tw     a digital 乖乖 taped onto servers
-3d.zyx.tw       an SVG, extruded into 3D
+plump.zyx.tw    Plump: SVG and text, given dimension
 ui.zyx.tw       the component registry every app above imports from
 1909            a shared-expense dashboard for three flatmates
 ```
@@ -49,7 +49,7 @@ Plain `bun dev` boots turbo across all 7 apps at once. `--filter=<app>` (or `cd 
 | `link` | [link.zyx.tw](https://link.zyx.tw) | your URLs, but shorter |
 | `time` | [time.zyx.tw](https://time.zyx.tw) | what time is it? |
 | `good` | [good.zyx.tw](https://good.zyx.tw) | a digital 乖乖, the snack engineers tape onto servers |
-| `3d` | [3d.zyx.tw](https://3d.zyx.tw) | an SVG, extruded into 3D, lit and saved as one scene.json |
+| `3d` | [Plump](https://plump.zyx.tw) | SVG and text, shaped and lit in 3D, saved as one scene.json |
 | `ui` | [ui.zyx.tw](https://ui.zyx.tw) | the shadcn registry every app above pulls components from |
 | `1909` | (private) | a shared-expense dashboard for three flatmates |
 
@@ -69,7 +69,7 @@ Shared packages: `packages/ui` (design system + components) · `packages/3d` (sc
 
 ## Design system
 
-Every app follows [`apps/ui/DESIGN.md`](./apps/ui/DESIGN.md): stock shadcn/ui on the `base-nova` preset (Base UI primitives, so `asChild` is the `render` prop) and the grayscale ui.zyx.tw theme with the stock `--radius: 0.625rem`. Apps start dark on a pure black background, whatever the OS prefers. Text is Inter (self-hosted, with open digits and a slashed zero), then Noto Sans JP and Noto Sans TC for CJK; Geist Mono is for code only, and numbers use Inter's `tabular-nums`. Base components are never forked; the CLI owns `components/ui/`.
+Every app follows [`apps/ui/DESIGN.md`](./apps/ui/DESIGN.md): stock shadcn/ui on the `base-nova` preset (Base UI primitives, so `asChild` is the `render` prop) and the grayscale ui.zyx.tw theme with the stock `--radius: 0.625rem`. Apps start dark on a pure black background, whatever the OS prefers. Text is Inter (self-hosted, with open digits and a slashed zero), then Noto Sans JP and Noto Sans TC for CJK; Geist Mono is for code only, and numbers use Inter's `tabular-nums`. Plump uses Helvetica Neue, Helvetica and Arial for Latin, with the same CJK and code fonts. Base components are never forked; the CLI owns `components/ui/`.
 
 The same file sets the page rules, which ui.zyx.tw and www.zyx.tw follow and the tool apps adopt when they are next rebuilt: one centered column on a 4px grid with a 20px module, framed by four fixed corners, the stock radius scale with concentric corners, lines only where they carry meaning, optical offsets at the call site, CSS-first motion that honors reduced motion everywhere, a 24/14/12px interface scale (titles, body, captions/footer), weights 400 and 500 only, and English copy with no em dashes. Both sites also serve agents: a Markdown version of each page, `/llms.txt`, `/agent-instructions.md`, `Link` headers and JSON-LD. Every app already shares the corners (`@workspace/ui/components/corners`); until their rebuild, the tool apps take the theme, font and color rules for the rest.
 

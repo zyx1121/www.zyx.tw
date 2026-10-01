@@ -1,4 +1,5 @@
-export const SITE_NAME = "3D"
-export const SITE_TITLE = "3D | Turn an SVG into a 3D object"
+export const SITE_NAME = "Plump"
+export const SITE_URL = "https://plump.zyx.tw"
+export const SITE_TITLE = "Plump | A little more dimension"
 export const SITE_DESC =
-  "Turn an SVG into a 3D object: pick a material, light it, add effects, and keep it all in one scene.json."
+  "Turn your SVG or text into a 3D object. Shape it, pick a material, light it, and save an editable scene. Made by zyx."
