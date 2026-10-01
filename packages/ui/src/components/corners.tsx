@@ -13,8 +13,8 @@ export { CornerTip }
 /*
  * The frame every zyx.tw site shares: the logo top left, the page nav top
  * right, secondary links bottom left and the copyright bottom right. Each
- * corner is fixed 20 px in from the viewport's corner. Top corners use
- * 14 px text on 20 px lines; bottom corners use 12 px on 16 px lines. An item in a corner
+ * corner is fixed 20 px in from the viewport's corner. All corners use
+ * 14 px text on 20 px lines. An item in a corner
  * can carry a tip (`CornerTip`), which opens toward the page.
  */
 
@@ -77,8 +77,7 @@ export function Corner({
     <CornerScope at={at}>
       <div
         className={cn(
-          "fixed z-50 flex items-center gap-4 text-foreground",
-          at.startsWith("bottom") ? "text-xs/4" : "text-sm/5",
+          "fixed z-50 flex items-center gap-4 text-sm/5 text-foreground",
           AT[at],
           className
         )}
@@ -186,11 +185,11 @@ export function BottomCorners({
     <footer>
       {fade && <EdgeFade edge="bottom" />}
       {links && (
-        // Leaves 116 px for the insets, the copyright and a 20 px gap.
+        // Leaves 124 px for the insets, the copyright and a 20 px gap.
         <Corner
           at="bottom-left"
           className={cn(
-            "max-w-[calc(100%-7.25rem)] flex-wrap gap-y-1",
+            "max-w-[calc(100%-7.75rem)] flex-wrap gap-y-1",
             className
           )}
           style={style}
