@@ -14,7 +14,6 @@ import {
 } from "react"
 
 import { asset, MADE, PRODUCTS, type Product, type ProductId } from "@/lib/made"
-import { PLUMP } from "@/lib/plump"
 
 const Model = dynamic(() => import("@/components/made-scene"), {
   ssr: false,
@@ -78,17 +77,11 @@ function LocalTime() {
 
 function Campaign({
   product,
-  first,
-  detail,
+  onModel,
 }: {
   product: Product
-  first: boolean
-  detail: boolean
+  onModel: (id: ProductId) => void
 }) {
-  const [print, setPrint] = useState(false)
-  const Heading = detail ? "h1" : "h2"
-  const desktop = print ? "-print.webp" : "-hero.webp"
-  const mobile = print ? "-print-portrait.webp" : "-portrait.webp"
   return (
     <section
       className={`made-campaign made-${product.id}`}
@@ -97,81 +90,46 @@ function Campaign({
       aria-labelledby={`${product.id}-headline`}
     >
       <picture className="made-picture">
-        <source media="(max-width: 900px)" srcSet={asset(product.id, mobile)} />
+        <source
+          media="(max-width: 900px)"
+          srcSet={asset(product.id, "-portrait.webp")}
+        />
         <img
-          src={asset(product.id, desktop)}
-          alt={
-            print
-              ? `${product.imageAlt} Rendered in red and black halftone print.`
-              : product.imageAlt
-          }
+          src={asset(product.id, "-hero.webp")}
+          alt={product.imageAlt}
           width={1920}
           height={1080}
-          loading={first ? "eager" : "lazy"}
-          fetchPriority={first ? "high" : "auto"}
+          loading="eager"
+          fetchPriority="high"
         />
       </picture>
       <div className="made-wash" aria-hidden />
-      <div className="made-label">
-        <span>
-          <Mark id={product.id} />
-          {product.name}
-        </span>
-        <span className="made-category">{product.purpose}</span>
+      <div className="made-label" aria-hidden>
+        <Mark id={product.id} />
       </div>
       <div className="made-copy">
-        <Heading id={`${product.id}-headline`}>
-          <span className="sr-only">{product.name}: </span>
-          {product.headline.map((line) => (
-            <span key={line}>{line}</span>
-          ))}
-        </Heading>
-        <p>{product.tagline}</p>
+        <h1 id={`${product.id}-headline`}>{product.name}</h1>
+        <p>{product.purpose}</p>
         <a className="made-cta" href={product.href}>
           Open {product.name}
           <span aria-hidden>↗</span>
         </a>
       </div>
       <div className="made-campaign-bottom">
-        {product.id === "time" ? (
-          <LocalTime />
-        ) : product.id === "link" ? (
-          <div
-            className="made-medium"
-            role="group"
-            aria-label="Link image style"
-          >
-            <button
-              type="button"
-              aria-pressed={!print}
-              onClick={() => setPrint(false)}
-            >
-              Photo
-            </button>
-            <button
-              type="button"
-              aria-pressed={print}
-              onClick={() => setPrint(true)}
-            >
-              Print
-            </button>
-          </div>
-        ) : (
-          <span>Draw it. Drop it. Plump it.</span>
-        )}
-        <a href={detail ? "#story" : "#shapes"}>
-          {detail ? "Explore" : "The shapes"}{" "}
-          <span aria-hidden>{detail ? "↓" : "↑"}</span>
-        </a>
+        <div className="made-campaign-tools">
+          {product.id === "time" && <LocalTime />}
+          <button type="button" onClick={() => onModel(product.id)}>
+            View 3D ↗
+          </button>
+        </div>
+        <Link href="/made">All products ↗</Link>
       </div>
     </section>
   )
 }
 
 export function MadeExperience({ product: selected }: { product?: ProductId }) {
-  const products = selected
-    ? PRODUCTS.filter((p) => p.id === selected)
-    : PRODUCTS
+  const selectedProduct = PRODUCTS.find((product) => product.id === selected)
   const [silhouette, setSilhouette] = useState(false)
   const [model, setModel] = useState<ProductId | null>(null)
   const dialog = useRef<HTMLDialogElement>(null)
@@ -282,119 +240,41 @@ export function MadeExperience({ product: selected }: { product?: ProductId }) {
           <div className="made-grid">
             {PRODUCTS.map((product, index) => (
               <article key={product.id}>
-                <button
-                  className="made-object"
-                  type="button"
-                  aria-label={`Rotate the ${product.name} 3D model`}
-                  onClick={() => setModel(product.id)}
+                <Link
+                  className="made-card"
+                  href={`/made/${product.id}`}
+                  aria-label={`View ${product.name}`}
                 >
-                  <img
-                    className={silhouette ? "made-silhouette" : ""}
-                    src={asset(
-                      product.id,
-                      silhouette ? ".svg" : "-material.webp"
-                    )}
-                    alt={`${product.name}, ${silhouette ? "geometric silhouette" : product.material}`}
-                    width={1024}
-                    height={1024}
-                    loading={index === 0 ? "eager" : "lazy"}
-                  />
-                  <span>Rotate the model ↗</span>
-                </button>
-                <div className="made-identity-name">
-                  <h2>
-                    <Mark id={product.id} />
-                    {product.name}
-                  </h2>
-                  <span>{product.material}</span>
-                </div>
-                <div className="made-item-links">
-                  <a href={`#${product.id}`}>Meet {product.name} ↓</a>
-                  <Link href={`/made/${product.id}`}>The story ↗</Link>
-                </div>
+                  <div className="made-object">
+                    <img
+                      className={silhouette ? "made-silhouette" : ""}
+                      src={asset(
+                        product.id,
+                        silhouette ? ".svg" : "-material.webp"
+                      )}
+                      alt={`${product.name}, ${silhouette ? "geometric silhouette" : product.material}`}
+                      width={1024}
+                      height={1024}
+                      loading={index === 0 ? "eager" : "lazy"}
+                    />
+                  </div>
+                  <div className="made-identity-name">
+                    <h2>
+                      <Mark id={product.id} />
+                      {product.name}
+                    </h2>
+                    <span>{product.purpose}</span>
+                  </div>
+                  <span className="made-item-link">View ↗</span>
+                </Link>
               </article>
             ))}
           </div>
-          <p className="made-family-copy">
-            Three shapes. Three personalities. A little more room to play.
-          </p>
         </section>
       )}
-      {products.map((product) => (
-        <div key={product.id}>
-          <Campaign
-            product={product}
-            first={Boolean(selected)}
-            detail={Boolean(selected)}
-          />
-          <section
-            className="made-note"
-            id={selected ? "story" : undefined}
-            data-made-ink="light"
-            aria-labelledby={`${product.id}-note`}
-          >
-            <p className="made-note-label">
-              {product.name} / 0{PRODUCTS.indexOf(product) + 1}
-            </p>
-            <h2 id={`${product.id}-note`}>{product.note}</h2>
-            <div>
-              <p>{product.body}</p>
-              <div className="made-note-links">
-                <button type="button" onClick={() => setModel(product.id)}>
-                  Pick up the shape ↗
-                </button>
-                {!selected && (
-                  <Link href={`/made/${product.id}`}>The product story ↗</Link>
-                )}
-              </div>
-            </div>
-          </section>
-          {selected && (
-            <section
-              className="made-story"
-              data-made-ink="light"
-              aria-label={`How ${product.name} works`}
-            >
-              <p className="made-description">{product.description}</p>
-              <ol className="made-steps">
-                {product.steps.map((step, index) => (
-                  <li key={step.title}>
-                    <p className="made-eyebrow">0{index + 1}</p>
-                    <h2>{step.title}</h2>
-                    <p>{step.body}</p>
-                  </li>
-                ))}
-              </ol>
-              {product.id === "plump" && (
-                <div className="made-details">
-                  <dl>
-                    {PLUMP.details.map(({ label, value }) => (
-                      <div key={label}>
-                        <dt>{label}</dt>
-                        <dd>{value}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                  <p>{PLUMP.storage}</p>
-                  <a href="/made/plump/sample.svg" download="plump.svg">
-                    Download the sample SVG ↓
-                  </a>
-                </div>
-              )}
-              <div className="made-story-actions">
-                <a className="made-cta" href={product.href}>
-                  Open {product.name} ↗
-                </a>
-                <Link href="/made">All Made products ↗</Link>
-              </div>
-            </section>
-          )}
-        </div>
-      ))}
-      <section className="made-end" data-made-ink="light">
-        <p>Small ideas, out in the world.</p>
-        <Link href="/works">Explore every project ↗</Link>
-      </section>
+      {selectedProduct && (
+        <Campaign product={selectedProduct} onModel={setModel} />
+      )}
       <dialog
         ref={dialog}
         className="made-dialog"

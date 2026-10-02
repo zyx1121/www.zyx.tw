@@ -1,0 +1,28 @@
+{
+  "provider": "OpenRouter",
+  "model": "google/gemini-3.1-flash-image",
+  "generated": "2026-10-02",
+  "images": [
+    {
+      "file": "link-hero.webp",
+      "id": "link-fashion-a",
+      "ratio": "16:9",
+      "references": [
+        "references/link-material.webp",
+        "references/link-reference.png",
+        "references/hearby-direction.jpg"
+      ],
+      "prompt": "Original fashion-editorial campaign for zyx Link. Image 1 is the exact Link identity and material reference: a compact diagonal red silicone double-loop, TWO round openings, thick middle bridge and two padded lobes. Image 2 is its precise flat silhouette. Preserve that geometry and vermilion color. Image 3 is a VISUAL DIRECTION reference only: use its direct-flash photography, fashion casting, confident deadpan attitude, restrained black/white clothing and one strange physical object. Create an ORIGINAL adult model with a different face and hairstyle; do not reproduce the people or composition of Image 3. One photorealistic image, no lettering, typography, watermark, border, interface or extra logos. Treat the person as a professionally cast fashion model, styled and made up for a youth-culture editorial. Beautiful face, art-directed posture, real skin texture and believable anatomy, not a casual souvenir photograph. Neither smiling for a family photo nor romantic posing.\n\nUse case: ads-marketing. Asset: full-bleed 16:9 website hero. A strikingly beautiful adult East Asian female fashion model, age 25, with sharply defined features, precise subtle eyeliner, natural rose lips, sleek long black hair with a deep side part tucked behind one ear. She wears a fitted opaque black sleeveless top, a boxy black leather jacket worn open, and charcoal wide-leg tailored trousers, small silver hoop earrings. Confident relaxed stance, one hip angled, chin slightly lowered, direct steady gaze into camera, lips closed, cool detached expression. She stands in front of a clean off-white tiled urban wall. She holds ONE oversized vermilion silicone Link shape vertically diagonally beside her right shoulder with a natural hand grip at the lower outer edge, like an unusual sculptural accessory. The object is 40cm long, full contour and BOTH holes clearly visible, separate from face and neck. On-camera direct flash, crisp hard shadow to the left, lightly underexposed ambient light, rich vermilion, deep clean blacks, visible leather and silicone texture. 35mm fashion editorial medium shot from mid-thigh up, camera very slightly below eye level, no distortion of face. Person and object occupy LEFT 58%, right 36% is uninterrupted off-white wall for black website text, keep top right and bottom right quiet. Avoid smile, hugging, ordinary plain T-shirt styling, commercial stock photography, glamour soft light, airbrushed plastic skin, or a model simply presenting a product to sell it."
+    },
+    {
+      "file": "link-portrait.webp",
+      "id": "link-fashion-a-portrait",
+      "ratio": "9:16",
+      "references": [
+        "output/imagegen/link-fashion-a.png",
+        "references/link-reference.png"
+      ],
+      "prompt": "Edit the supplied original AI fashion photograph into a matching mobile campaign photograph. Image 1 is the selected source image: preserve this exact adult woman's face, long side-parted black hair, black leather jacket, opaque black top, charcoal trousers, earrings, confident deadpan expression, direct-flash lighting, tiled off-white wall and vermilion silicone double-loop prop. Image 2 is the exact product silhouette; keep TWO round openings, two padded lobes and the connecting bridge. One photorealistic image. No text, lettering, symbols, watermark, interface, border or additional logo.\n\nUse case: identity-preserve. Asset: full-bleed 9:16 mobile website background. Recompose the same scene vertically, like a pulled-back fashion photograph from the same shoot. The same woman stands confidently holding the same red double-loop alongside her torso with a natural hand at the lower edge. Frame her from head to upper shins, body angled slightly, both holes fully visible, entire head and prop in frame, no change to face, hair, outfit, material or lighting. Her head begins around 32 percent down the canvas; her face, upper body and the red shape occupy the central 32 to 73 percent of the image height. Keep the TOP 28 percent as completely empty off-white tiled wall, a clean area reserved for live website typography. Keep bottom 20 percent pale gray concrete floor and wall with minimal detail for website controls. Woman and prop fit inside the central 76 percent of width so narrow mobile crops retain the face and both openings. Strong clean direct flash, crisp shadow, subtle natural skin and leather texture. Preserve original beautiful face and cool, composed styling. Do not add any typography, do not move her head into the top empty wall, do not turn the prop into separate chain links, do not add another person."
+    }
+  ]
+}

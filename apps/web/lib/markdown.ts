@@ -5,7 +5,6 @@ import { ABOUT, HOME, NOT_FOUND, WORKS } from "@/lib/copy"
 import type { LegalDoc, Run } from "@/lib/legal"
 import { PRIVACY } from "@/lib/privacy"
 import { projects } from "@/lib/projects"
-import { PLUMP } from "@/lib/plump"
 import { asset, MADE, PRODUCTS, type ProductId } from "@/lib/made"
 import { FACTS, SECTIONS } from "@/lib/resume"
 import { TERMS } from "@/lib/terms"
@@ -100,7 +99,7 @@ export function madeMarkdown() {
       MADE.description,
       PRODUCTS.map(
         (product) =>
-          `- ${link(product.name, absoluteUrl(`/made/${product.id}`))}: ${product.purpose}. ${product.tagline}`
+          `- ${link(product.name, absoluteUrl(`/made/${product.id}`))}: ${product.purpose}.`
       ).join("\n"),
     ]
   )
@@ -115,33 +114,14 @@ export function productMarkdown(id: ProductId) {
       description: product.description,
     },
     [
-      `# ${product.name}: ${product.headline.join(" ")}`,
-      `${product.purpose}. ${product.tagline}`,
+      `# ${product.name}`,
       product.description,
       link(`Open ${product.name}`, product.href),
-      `## ${product.note}`,
-      product.body,
-      `Identity: ${product.material}. A geometric SVG with an interactive 3D model.`,
-      link("Download the SVG", absoluteUrl(asset(id, ".svg"))),
-      link(
-        "Download the editable scene",
-        absoluteUrl(asset(id, ".scene.json"))
-      ),
-      link("Download the GLB", absoluteUrl(asset(id, ".glb"))),
-      ...product.steps.map(
-        ({ title, body }, index) => `## ${index + 1}. ${title}\n\n${body}`
-      ),
-      id === "time" &&
-        "The page includes a live clock showing the visitor's local time.",
-      id === "link" &&
-        "The campaign switches between photography and red/black halftone print.",
-      id === "plump" &&
-        PLUMP.details
-          .map(({ label, value }) => `- ${label}: ${value}`)
-          .join("\n"),
-      id === "plump" && PLUMP.storage,
-      id === "plump" &&
-        link("Download the sample SVG", absoluteUrl("/made/plump/sample.svg")),
+      "## 3D icon",
+      product.material,
+      link("SVG", absoluteUrl(asset(id, ".svg"))),
+      link("Scene", absoluteUrl(asset(id, ".scene.json"))),
+      link("GLB", absoluteUrl(asset(id, ".glb"))),
       link("All Made products", absoluteUrl("/made")),
     ]
   )
@@ -274,7 +254,7 @@ export function agentInstructions() {
         [
           `1. Read the Markdown pages listed in ${link("llms.txt", absoluteUrl("/llms.txt"))}; they carry the same content as the HTML pages.`,
           `2. To reach Loki, use the email ${link(EMAIL, `mailto:${EMAIL}`)} on ${link("About", absoluteUrl("/about.md"))}. His GitHub and Instagram are on About too. Do not make up other ways, such as a phone number or a postal address.`,
-          "3. Describe a project from its purpose line, its Made story (when listed) and its own site. Do not guess features, users or status the pages do not state.",
+          "3. Describe a project from its purpose line, its Made page (when listed) and its own site. Do not guess features, users or status the pages do not state.",
           "4. Describe his background only from the facts and sections on About. Do not add schools, jobs, papers, awards or dates they do not list, and keep each paper's author position as About states it.",
           "5. The GitHub activity on About refreshes about every 5 minutes; everything else changes when the site is deployed. Say so when freshness matters.",
           "6. Link to the page an answer comes from.",
