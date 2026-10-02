@@ -98,5 +98,99 @@
         "method": 6
       }
     }
+  ],
+  "videos": [
+    {
+      "file": "link-hero-motion.mp4",
+      "provider": "OpenRouter",
+      "model": "kwaivgi/kling-v3.0-pro",
+      "generated": "2026-10-02",
+      "prompt": "A near-still five-second living photograph. Locked-off camera, identical first and last composition. Preserve the reference adult woman's exact identity, face proportions, gaze, neutral closed-mouth expression, seated pose, clothing and lighting. Motion is confined to one delicate natural blink and imperceptibly small breathing. Everything below her shoulders stays perfectly still. No head turn, no smile, no hand or finger movement, no camera movement, no zoom or reframing. Keep the vermilion silicone double-loop sculpture rigid and motionless on her lap. Preserve exactly TWO holes, two padded round lobes, ONE broad connecting bridge, its outline, size, diagonal orientation, satin finish and hand contact point. No separate chain pieces, bending, squeezing, stretching or rotation. Preserve her other hand on the bench, white blouse, charcoal waistcoat, gray trousers, metal and wood bench, pale wall and shadows exactly. Minimal amplitude, an almost frozen photograph, gentle natural micro-motion only, settling into the exact reference frame for a calm continuous loop.",
+      "request": {
+        "duration": 5,
+        "resolution": "720p",
+        "aspect_ratio": "16:9",
+        "generate_audio": false
+      },
+      "first_frame": "link-editorial-hero.png",
+      "last_frame": "link-editorial-hero.png",
+      "reference_sha256": "dc8092e11f3950d679cabbe921e3378cb54b942e9efaea536c67ce808187854c",
+      "postprocess": {
+        "source": "link-kling-raw.mp4",
+        "source_sha256": "c731b5ef43c6a26b4293571a9b13e66d3785efc33a33a668b145d498b9c29660",
+        "output": "link-kling-film.mp4",
+        "frames": 121,
+        "fps": 24.0,
+        "duration": 5.041666666666667,
+        "dimensions": [
+          1936,
+          1080
+        ],
+        "grain_sigma": 0.018,
+        "seed": 20261002,
+        "notes": "Film treatment adapted from approved Made photo grading, with temporal grain and blur scaled to the native video resolution."
+      },
+      "processing_script": "scripts/grade-made-video.py",
+      "processing_script_sha256": "7c9a6b909109afcf084c40249c5f323444a1eca0b91c524fca3486c0c77172ef",
+      "export": {
+        "format": "mp4",
+        "codec": "h264",
+        "pixel_format": "yuv420p",
+        "audio": false,
+        "faststart": true,
+        "crf": 22,
+        "maxrate": "4M",
+        "bufsize": "4M",
+        "bytes": 1478330,
+        "sha256": "a8f6f2ef6a8aae059fa4e2637be7ca423483c9c99b256b792e8e7ef26a27060b"
+      },
+      "loop_note": "Small natural pose changes remain between the first and last frames."
+    },
+    {
+      "file": "link-portrait-motion.mp4",
+      "provider": "OpenRouter",
+      "model": "kwaivgi/kling-v3.0-pro",
+      "generated": "2026-10-02",
+      "prompt": "Preserve the tall vertical framing and quiet empty wall above the woman's head. A near-still five-second living photograph. Locked-off camera, identical first and last composition. Preserve the reference adult woman's exact identity, face proportions, gaze, neutral closed-mouth expression, seated pose, clothing and lighting. Motion is confined to one delicate natural blink and imperceptibly small breathing. Everything below her shoulders stays perfectly still. No head turn, no smile, no hand or finger movement, no camera movement, no zoom or reframing. Keep the vermilion silicone double-loop sculpture rigid and motionless on her lap. Preserve exactly TWO holes, two padded round lobes, ONE broad connecting bridge, its outline, size, diagonal orientation, satin finish and hand contact point. No separate chain pieces, bending, squeezing, stretching or rotation. Preserve her other hand on the bench, white blouse, charcoal waistcoat, gray trousers, metal and wood bench, pale wall and shadows exactly. Minimal amplitude, an almost frozen photograph, gentle natural micro-motion only, settling into the exact reference frame for a calm continuous loop.",
+      "request": {
+        "duration": 5,
+        "resolution": "720p",
+        "aspect_ratio": "9:16",
+        "generate_audio": false
+      },
+      "first_frame": "link-editorial-portrait-clean.png",
+      "last_frame": "link-editorial-portrait-clean.png",
+      "reference_sha256": "3abb8659227b7a10dc0037e43e5aed31dd8364345974725554de354fd7f1113a",
+      "postprocess": {
+        "source": "link-kling-portrait-raw.mp4",
+        "source_sha256": "659d1dc8805322f12e4c427256a8844d462e452d4e1d845b4961a99d109063f8",
+        "output": "link-kling-portrait-film.mp4",
+        "frames": 121,
+        "fps": 24.0,
+        "duration": 5.041666666666667,
+        "dimensions": [
+          1080,
+          1936
+        ],
+        "grain_sigma": 0.018,
+        "seed": 20261002,
+        "notes": "Film treatment adapted from approved Made photo grading, with temporal grain and blur scaled to the native video resolution."
+      },
+      "processing_script": "scripts/grade-made-video.py",
+      "processing_script_sha256": "7c9a6b909109afcf084c40249c5f323444a1eca0b91c524fca3486c0c77172ef",
+      "export": {
+        "format": "mp4",
+        "codec": "h264",
+        "pixel_format": "yuv420p",
+        "audio": false,
+        "faststart": true,
+        "crf": 22,
+        "maxrate": "4M",
+        "bufsize": "4M",
+        "bytes": 1627472,
+        "sha256": "645f5d8405193cceb90326529f44054d72fc47e58e14653df57820b9b6da5945"
+      },
+      "loop_note": "Small natural pose changes remain between the first and last frames."
+    }
   ]
 }

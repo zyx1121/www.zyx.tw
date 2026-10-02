@@ -105,5 +105,99 @@
         "method": 6
       }
     }
+  ],
+  "videos": [
+    {
+      "file": "plump-hero-motion.mp4",
+      "provider": "OpenRouter",
+      "model": "kwaivgi/kling-v3.0-pro",
+      "generated": "2026-10-02",
+      "prompt": "A near-still five-second living photograph. Locked-off camera, identical first and last composition. Preserve the reference adult woman's exact identity, face proportions, gaze, neutral closed-mouth expression, seated pose, clothing and lighting. Motion is confined to one delicate natural blink and imperceptibly small breathing. Everything below her shoulders stays perfectly still. No head turn, no smile, no hand or finger movement, no camera movement, no zoom or reframing. Keep the inflated chrome four-lobed X sculpture rigid and motionless on her lap. Preserve all four rounded lobes, solid center, exact outline, size, orientation, metallic reflections, highlights and both hand contact points. No holes, stretching, pulsing, rotation, inflation or deflation. Preserve her crossed legs, gray trousers, black shoes, chrome stool, wooden floor and white doorway exactly. Minimal amplitude, an almost frozen photograph, gentle natural micro-motion only, settling into the exact reference frame for a calm continuous loop.",
+      "request": {
+        "duration": 5,
+        "resolution": "720p",
+        "aspect_ratio": "16:9",
+        "generate_audio": false
+      },
+      "first_frame": "plump-editorial-hero-clean.png",
+      "last_frame": "plump-editorial-hero-clean.png",
+      "reference_sha256": "b95dbf77f2305b6425af6b2e1d6df6b96183c48e48e20a31b3be19983c180920",
+      "postprocess": {
+        "source": "plump-kling-raw.mp4",
+        "source_sha256": "3dec3a765f4aa41b097b342a065efdfdab5be5bb1868502c9abdc230d4fb1d44",
+        "output": "plump-kling-film.mp4",
+        "frames": 121,
+        "fps": 24.0,
+        "duration": 5.041666666666667,
+        "dimensions": [
+          1936,
+          1080
+        ],
+        "grain_sigma": 0.018,
+        "seed": 20261002,
+        "notes": "Film treatment adapted from approved Made photo grading, with temporal grain and blur scaled to the native video resolution."
+      },
+      "processing_script": "scripts/grade-made-video.py",
+      "processing_script_sha256": "7c9a6b909109afcf084c40249c5f323444a1eca0b91c524fca3486c0c77172ef",
+      "export": {
+        "format": "mp4",
+        "codec": "h264",
+        "pixel_format": "yuv420p",
+        "audio": false,
+        "faststart": true,
+        "crf": 22,
+        "maxrate": "4M",
+        "bufsize": "4M",
+        "bytes": 1400731,
+        "sha256": "52d573e3ae6a75758b380378cd789765fe84769f82f19e6298c735ab415cc9cd"
+      },
+      "loop_note": "Small natural pose changes remain between the first and last frames."
+    },
+    {
+      "file": "plump-portrait-motion.mp4",
+      "provider": "OpenRouter",
+      "model": "kwaivgi/kling-v3.0-pro",
+      "generated": "2026-10-02",
+      "prompt": "Preserve the tall vertical framing and quiet empty wall above the woman's head. A near-still five-second living photograph. Locked-off camera, identical first and last composition. Preserve the reference adult woman's exact identity, face proportions, gaze, neutral closed-mouth expression, seated pose, clothing and lighting. Motion is confined to one delicate natural blink and imperceptibly small breathing. Everything below her shoulders stays perfectly still. No head turn, no smile, no hand or finger movement, no camera movement, no zoom or reframing. Keep the inflated chrome four-lobed X sculpture rigid and motionless on her lap. Preserve all four rounded lobes, solid center, exact outline, size, orientation, metallic reflections, highlights and both hand contact points. No holes, stretching, pulsing, rotation, inflation or deflation. Preserve her crossed legs, gray trousers, black shoes, chrome stool, wooden floor and white doorway exactly. Minimal amplitude, an almost frozen photograph, gentle natural micro-motion only, settling into the exact reference frame for a calm continuous loop.",
+      "request": {
+        "duration": 5,
+        "resolution": "720p",
+        "aspect_ratio": "9:16",
+        "generate_audio": false
+      },
+      "first_frame": "plump-editorial-portrait-clean.png",
+      "last_frame": "plump-editorial-portrait-clean.png",
+      "reference_sha256": "b03667fa61bdc13a174b1f1b25519729e580cf4e04a628d81a7a9dc0756af9d4",
+      "postprocess": {
+        "source": "plump-kling-portrait-raw.mp4",
+        "source_sha256": "826c1d3449457ff5112f5934504a45a3d3534a9d0f8564e2304b3b682a4c93fe",
+        "output": "plump-kling-portrait-film.mp4",
+        "frames": 121,
+        "fps": 24.0,
+        "duration": 5.041666666666667,
+        "dimensions": [
+          1072,
+          1928
+        ],
+        "grain_sigma": 0.018,
+        "seed": 20261002,
+        "notes": "Film treatment adapted from approved Made photo grading, with temporal grain and blur scaled to the native video resolution."
+      },
+      "processing_script": "scripts/grade-made-video.py",
+      "processing_script_sha256": "7c9a6b909109afcf084c40249c5f323444a1eca0b91c524fca3486c0c77172ef",
+      "export": {
+        "format": "mp4",
+        "codec": "h264",
+        "pixel_format": "yuv420p",
+        "audio": false,
+        "faststart": true,
+        "crf": 22,
+        "maxrate": "4M",
+        "bufsize": "4M",
+        "bytes": 1231189,
+        "sha256": "e2abc49b4125a20273574daecd008dbd0e0bab779c6dc83e677eef056bc4ba4b"
+      },
+      "loop_note": "Small natural pose changes remain between the first and last frames."
+    }
   ]
 }
