@@ -130,7 +130,6 @@ function Campaign({
 
 export function MadeExperience({ product: selected }: { product?: ProductId }) {
   const selectedProduct = PRODUCTS.find((product) => product.id === selected)
-  const [silhouette, setSilhouette] = useState(false)
   const [model, setModel] = useState<ProductId | null>(null)
   const dialog = useRef<HTMLDialogElement>(null)
   const main = useRef<HTMLElement>(null)
@@ -214,26 +213,6 @@ export function MadeExperience({ product: selected }: { product?: ProductId }) {
               <p className="made-eyebrow">Products by zyx</p>
               <h1 id="made-title">{MADE.title}</h1>
             </div>
-            <div
-              className="made-switch"
-              role="group"
-              aria-label="Product icon view"
-            >
-              <button
-                type="button"
-                aria-pressed={!silhouette}
-                onClick={() => setSilhouette(false)}
-              >
-                Material
-              </button>
-              <button
-                type="button"
-                aria-pressed={silhouette}
-                onClick={() => setSilhouette(true)}
-              >
-                Shape
-              </button>
-            </div>
           </div>
           <div className="made-grid">
             {PRODUCTS.map((product, index) => (
@@ -245,12 +224,8 @@ export function MadeExperience({ product: selected }: { product?: ProductId }) {
                 >
                   <div className="made-object">
                     <img
-                      className={silhouette ? "made-silhouette" : ""}
-                      src={asset(
-                        product.id,
-                        silhouette ? ".svg" : "-material.webp"
-                      )}
-                      alt={`${product.name}, ${silhouette ? "geometric silhouette" : product.material}`}
+                      src={asset(product.id, "-material.webp")}
+                      alt={`${product.name}, ${product.material}`}
                       width={1024}
                       height={1024}
                       loading={index === 0 ? "eager" : "lazy"}

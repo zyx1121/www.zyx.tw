@@ -57,23 +57,6 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   letter-spacing: -0.06em;
   text-wrap: balance;
 }
-.made-switch {
-  display: flex;
-  flex-shrink: 0;
-  padding: 4px;
-  gap: 4px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-}
-.made-switch button {
-  padding: 8px 16px;
-  border-radius: var(--radius-md);
-  color: var(--muted-foreground);
-}
-.made-switch button[aria-pressed="true"] {
-  background: var(--foreground);
-  color: var(--background);
-}
 .made-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -81,6 +64,7 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
 }
 .made-card {
   display: block;
+  border-radius: var(--radius-lg);
 }
 .made-page .made-card:hover {
   text-decoration: none;
@@ -95,6 +79,7 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   width: 100%;
   aspect-ratio: 1;
   overflow: hidden;
+  border-radius: var(--radius-lg);
   background: var(--color-neutral-200);
   color: var(--color-black);
 }
@@ -103,9 +88,6 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-.made-object img.made-silhouette {
-  padding: 20%;
 }
 .made-identity-name {
   display: flex;
