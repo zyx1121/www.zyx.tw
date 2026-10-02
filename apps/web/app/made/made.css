@@ -393,6 +393,18 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
 .made-campaign-tools button {
   min-height: 44px;
 }
+@media (max-width: 360px) {
+  .made-clock {
+    font-size: 16px;
+    line-height: 24px;
+  }
+  .made-campaign-tools {
+    gap: 12px;
+  }
+  .made-campaign-bottom > a {
+    white-space: nowrap;
+  }
+}
 @media (min-width: 901px) {
   .made-campaign-tools {
     padding: 0 12px;
