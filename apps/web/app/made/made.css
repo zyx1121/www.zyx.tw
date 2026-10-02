@@ -116,7 +116,17 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
 }
 .made-item-link {
   display: block;
+}
+.made-card-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
   margin-top: 12px;
+}
+.made-card-meta > span:last-child {
+  color: var(--muted-foreground);
+  font-size: 14px;
+  line-height: 20px;
 }
 .made-campaign {
   position: relative;
@@ -367,6 +377,11 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   gap: 24px;
 }
 .made-campaign-tools button {
+  min-height: 44px;
+}
+.made-campaign-tools > a {
+  display: inline-flex;
+  align-items: center;
   min-height: 44px;
 }
 @media (max-width: 360px) {

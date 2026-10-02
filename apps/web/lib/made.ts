@@ -2,8 +2,25 @@ import { PLUMP } from "@/lib/plump"
 
 export const MADE = {
   title: "Made",
-  description: "Products by zyx.",
+  description: "Apps and infrastructure by zyx.",
 } as const
+
+export type ProductPlatform = "web" | "ios" | "macos"
+
+type ProductDefinition = {
+  id: string
+  name: string
+  purpose: string
+  description: string
+  href: string
+  material: string
+  kind: "app" | "infrastructure"
+  platforms: readonly ProductPlatform[]
+  motion: boolean
+  model: boolean
+  action: string
+  imageAlt: string
+}
 
 export const PRODUCTS = [
   {
@@ -13,6 +30,11 @@ export const PRODUCTS = [
     description: PLUMP.description,
     href: PLUMP.href,
     material: "Chrome",
+    kind: "app",
+    platforms: ["web"],
+    motion: true,
+    model: true,
+    action: "Open Plump",
     imageAlt:
       "A woman in a white blouse sits on a metal stool in a doorway, holding an oversized four-lobed chrome Plump shape.",
   },
@@ -23,6 +45,11 @@ export const PRODUCTS = [
     description: "A clock showing your local time.",
     href: "https://time.zyx.tw",
     material: "Amber glass",
+    kind: "app",
+    platforms: ["web"],
+    motion: true,
+    model: true,
+    action: "Open Time",
     imageAlt:
       "A woman with long black hair waits in a cool green laundromat beside an amber glass Time ring, with soft focus and film grain.",
   },
@@ -33,12 +60,48 @@ export const PRODUCTS = [
     description: "Paste a URL and copy a short link.",
     href: "https://link.zyx.tw",
     material: "Vermilion silicone",
+    kind: "app",
+    platforms: ["web"],
+    motion: true,
+    model: true,
+    action: "Open Link",
     imageAlt:
       "A woman in a white blouse and gray waistcoat sits on a bench, holding a vermilion double-loop Link shape.",
   },
-] as const
+  {
+    id: "carrel",
+    name: "Carrel",
+    purpose: "Infrastructure through conversation",
+    description:
+      "Describe the machines and connections you need. Carrel gives you a development environment, SSH access and service URLs through MCP.",
+    href: "/made/carrel#get-started",
+    material: "Cobalt ceramic",
+    kind: "infrastructure",
+    platforms: [],
+    motion: true,
+    model: false,
+    action: "Get started",
+    imageAlt:
+      "A woman with a black bob sits at an oak library desk beside a cobalt ceramic arch in soft daylight.",
+  },
+] as const satisfies readonly ProductDefinition[]
 
 export type Product = (typeof PRODUCTS)[number]
 export type ProductId = Product["id"]
+export const getProduct = (id: ProductId) =>
+  PRODUCTS.find((product) => product.id === id)!
+
+const PLATFORM_LABELS: Record<ProductPlatform, string> = {
+  web: "Web",
+  ios: "iOS",
+  macos: "macOS",
+}
+
+export function productCategory(product: Product) {
+  return product.kind === "infrastructure"
+    ? "Infra"
+    : `${product.platforms.map((platform) => PLATFORM_LABELS[platform]).join(" / ")} app`
+}
+
 export const asset = (id: ProductId, suffix: string) =>
   `/made/identities/${id}${suffix}`

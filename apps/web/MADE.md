@@ -1,6 +1,6 @@
 # Publishing a Made product
 
-Made presents selected zyx products through a shared index and individual visual campaigns. Use this guide with the [product brief](./templates/made-product.md) when adding a product or replacing a campaign.
+Made presents selected apps and infrastructure through a shared index and individual product pages. Use this guide with the [product brief](./templates/made-product.md) when adding a product or replacing a campaign.
 
 The [design contract](../ui/DESIGN.md) owns site-wide rules. This guide owns the publishing workflow. The [asset README](./public/made/identities/README.md) and each product's generation JSON preserve the current creative direction, prompts and processing history.
 
@@ -11,10 +11,18 @@ The [design contract](../ui/DESIGN.md) owns site-wide rules. This guide owns the
 | About | Personal background and CV | The layout and typography reference for the site |
 | Works | The full project inventory | Project names, purposes and screenshot previews from `lib/projects.json` |
 | `/made` | A curated product collection | One artwork card per `PRODUCTS` entry, linking to its introduction |
-| `/made/<id>` | A product introduction | Campaign photograph/video, purpose, Open link, 3D viewer and All products link |
-| Product URL | The working application | Open leads here, using the product's `href` |
+| `/made/<id>` | A product introduction | Campaign photograph/video, purpose, primary action, optional 3D viewer and optional story sections |
+| Product URL or setup section | The way to start using the product | The primary action leads here, using the product's `href` and `action` |
 
-Keep the index within the main site's visual system. The individual campaign can express a product's material, color, setting and photography. Made cards lead to introductions; the introduction's Open action leads to the application.
+Keep the index within the main site's visual system. The individual campaign can express a product's material, color, setting and photography. Made cards lead to introductions. The primary action opens an application or reaches setup instructions on the same page.
+
+## Product types and page composition
+
+Keep product type and platform separate: `kind` is `app` or `infrastructure`, while `platforms` can contain `web`, `ios` and `macos`. A product can support multiple platforms. Cards show the resulting category label; only add collection filters when the number of products makes them useful.
+
+Each product has one introduction at `/made/<id>`. A compact product can end after the campaign. A more involved product can pass story content as children to `MadeExperience`, continuing below the hero in the shared column. Choose photographs, screenshots, demonstrations, connection diagrams and setup instructions for that product. Preserve the common type scale, radius, spacing and reduced-motion behavior.
+
+Carrel is the first extended page: [its story component](./components/carrel-story.tsx) alternates editorial images, short text and interactive explanations. [Its content module](./lib/carrel.ts) feeds both HTML and Markdown. The examples explain a workflow and do not run real infrastructure operations. Its primary action reaches MCP setup on the same page. Availability is stated accurately; do not link visitors to a private repository or an unavailable public landing page.
 
 ## Accepted design baseline
 
@@ -50,15 +58,15 @@ Paths in this table are relative to `apps/web/`.
 | [`public/made/identities/`](./public/made/identities/) | Published assets and generation records |
 | [`lib/projects.json`](./lib/projects.json) | Optional corresponding Works entry, with its own screenshot previews |
 
-The index, asset URLs and `ProductId` automatically follow `PRODUCTS`. HTML routes, Markdown routes and `site.json` are currently explicit and must be added. Existing product pages select `PRODUCTS` by array position, so preserve the order when appending; if reordering, update and verify all page metadata. New pages should select their product by ID.
+The index, asset URLs and `ProductId` automatically follow `PRODUCTS`. HTML routes, Markdown routes and `site.json` are currently explicit and must be added. Select products by ID with `getProduct(id)`, including in page metadata, so changing the index order cannot change a page's identity.
 
 ## Product brief
 
 Copy the [brief template](./templates/made-product.md) into the product's task notes. Fill in the product ID, name, one-line purpose, application URL, shape, material, campaign direction and approved references before preparing final assets. Keep the current selection and rejected directions in those notes, so a later session does not regenerate an abandoned design.
 
-The current series uses original adult fashion-editorial subjects, restrained clothing, everyday settings and one oversized geometric object. Plump is a chrome four-lobed form, Time an open amber C-ring, and Link a vermilion double-loop with two holes and one broad bridge. New products should have a distinct silhouette and material while fitting the same photographic series. Record intentional changes to that direction in the brief.
+The current series uses original adult editorial subjects, restrained clothing, everyday settings and one oversized geometric object. Plump is a chrome four-lobed form, Time an open amber C-ring, Link a vermilion double-loop with two holes and one broad bridge, and Carrel a cobalt ceramic squared arch in a library. New products should have a distinct silhouette and material while fitting the same photographic series. Record intentional changes to that direction in the brief.
 
-Product copy stays literal: a name, a short purpose and a clear Open action. Keep interface text out of generated images, including titles, labels, signage and watermarks. Write alt text for the selected photograph, including the subject, object and setting.
+Product copy stays literal: a name, a short purpose and a clear primary action. Extended sections explain real use cases and supported behavior. Keep interface text out of generated images, including titles, labels, signage and watermarks. Render operational labels and controls as accessible HTML. Write alt text for each selected photograph, including the subject, object and setting.
 
 ## Asset contract
 
@@ -67,22 +75,22 @@ Use a stable lowercase, hyphenated product ID. All published files live in `publ
 | Filename | Expected content |
 | --- | --- |
 | `<id>.svg` | Canonical geometric silhouette used by the product mark |
-| `<id>.scene.json` | Plump scene schema `v1`, embedding the matching SVG and material settings |
-| `<id>.glb` | Export of that geometric model for download |
+| `<id>.scene.json` | Required when `model: true`: Plump scene schema `v1`, embedding the matching SVG and material settings |
+| `<id>.glb` | Required when `model: true`: export of that geometric model for download |
 | `<id>-material.webp` | Square 1024 × 1024 material artwork for the index |
 | `<id>-hero.webp` | Graded 1920 × 1080 landscape photograph and video poster |
 | `<id>-portrait.webp` | Separately composed, graded 1080 × 1920 mobile photograph and poster |
-| `<id>-hero-motion.mp4` | Landscape motion clip derived from the approved landscape source |
-| `<id>-portrait-motion.mp4` | Portrait motion clip derived from the approved portrait source |
+| `<id>-hero-motion.mp4` | Required when `motion: true`: landscape motion clip derived from the selected landscape source |
+| `<id>-portrait-motion.mp4` | Required when `motion: true`: portrait motion clip derived from the selected portrait source |
 | `<id>-generation.json` | Generation steps, references, prompts, model, processing settings and export facts |
 
-The current renderer and Markdown downloads expect the SVG, scene and GLB for every product. The current video player expects both MP4s for every product. A photo-only or model-free product requires an explicit component capability change; fallback behavior is not a substitute for completing the asset set.
+Set `model` and `motion` explicitly for every product. `model: false` removes the viewer and scene/GLB download links; `motion: false` does not request either MP4. When a capability is enabled, complete all its assets; failed-file fallback is not a publishing strategy. Carrel has motion and no downloadable 3D model. Extended pages can add named chapter images such as `carrel-workspace.webp`, with alt text and generation records.
 
 Generated material and campaign images interpret the geometric reference. They are not renderer screenshots or evidence of a physical product. Preserve the actual silhouette in the SVG, scene and GLB, even when the photographic rendering differs.
 
 ## Image and motion workflow
 
-1. **Establish the object.** Prepare the canonical SVG, scene and GLB. Use the exact silhouette and chosen material as the reference for the square artwork and campaign. Check holes, connecting bridges, thickness and orientation before selecting an image.
+1. **Establish the object.** Prepare the canonical SVG and, when offering a 3D viewer, its scene and GLB. Use the silhouette and chosen material as the reference for the square artwork and campaign. Check holes, connecting bridges, thickness and orientation before selecting an image.
 2. **Select the landscape photograph.** Keep the subject and object toward the left, with quiet scenery on the right for live text and a clear top edge for navigation. The current image pipeline used OpenRouter `google/gemini-3.1-flash-image`. Model choice may change; record what actually produced the selected image.
 3. **Compose the portrait from the selected source.** Preserve identity, clothes, object, lighting and setting. Leave roughly the upper 27% quiet for the title, keep the subject and object inside the central 80% of the width, and allow low-detail space near the bottom for controls. Treat these as composition targets and verify the real `object-fit: cover` crop at 320px. A center crop of the landscape is not the mobile deliverable.
 4. **Grade after composition is selected.** Retain ungraded source PNGs. Use [`grade-made-photo.py`](../../scripts/grade-made-photo.py) for the established softness, bloom, lifted blacks and seeded grain. Export its graded PNG as WebP with quality 90 and method 6. Never feed an already graded image through the finish again.
@@ -104,8 +112,8 @@ Identical first and last reference images do not guarantee a seamless loop. Reje
 
 ## Wire the product into the site
 
-1. Add the product to `PRODUCTS` with `id`, `name`, `purpose`, `description`, `href`, `material` and `imageAlt`. The array order is the index order. Use the existing `asset(id, suffix)` naming convention.
-2. Add `app/made/<id>/page.tsx`, using an existing product page as the structure. Select the product by ID, export `dynamic = "force-static"`, call `pageMetadata` with the product's path and landscape poster, and render `<MadeExperience product="<id>" />`. Ensure metadata and the rendered product refer to the same ID.
+1. Add the product to `PRODUCTS` with `id`, `name`, `purpose`, `description`, `href`, `action`, `material`, `imageAlt`, `kind`, `platforms`, `motion` and `model`. The array order is the index order. Use the existing `asset(id, suffix)` naming convention.
+2. Add `app/made/<id>/page.tsx`, using an existing product page as the structure. Select the product with `getProduct(id)`, export `dynamic = "force-static"`, call `pageMetadata` with the product's path and landscape poster, and render `<MadeExperience product="<id>" />`. Pass any product-specific story as children, give its root `id="story"` for the Explore anchor, and include that same content in its Markdown twin. Ensure metadata and the rendered product refer to the same ID.
 3. Add `app/made/<id>.md/route.ts`, exporting `GET()` with `markdownResponse(productMarkdown("<id>"))` and `dynamic = "force-static"`. Add one entry to `lib/site.json` with `path: "/made/<id>"`, `markdown: "/made/<id>.md"`, the product name as `label`, a useful summary, `changeFrequency: "monthly"` and `priority: 0.8`. Omit `nav` on the product entry so the fixed corner nav remains short.
 4. Add the complete asset set and generation record. Reuse the shared campaign and player; product-specific CSS should only solve an actual composition or readability problem. If a new aspect ratio changes metadata, update the declared dimensions too.
 5. Add or update the corresponding Works entry when it belongs in the full project inventory. Works uses screenshot previews, not Made campaign images. The existing preview script's capture mode uses Chromium; use Safari captures under Loki's browser preference, then use its `--dither-only` processing mode as needed. Do not run its capture mode without explicit Chromium authorization.
@@ -118,8 +126,8 @@ Use the brief's checklist to attach evidence to the product task or PR. A comple
 | --- | --- |
 | Shared layout | Switch About → Works → Made. Compare title size, left edge, top offset, navigation colors, radius and entrance motion. Verify all cards after adding a row. |
 | Responsive layout | Safari desktop, 1024px and 320px viewports; all artwork loaded, no horizontal overflow, no overlap among title, face, Open, Pause/Play and bottom controls. Also cross the 900px campaign breakpoint. |
-| Interaction | Card → introduction → application, All products return, keyboard focus and download links. Open the 3D viewer and confirm the correct model. |
-| Motion | Observe decoded video frames and advancing `currentTime`, including a loop boundary. Test Pause/Play, hidden-tab behavior, reduced motion and a failed-video fallback. Confirm portrait/landscape requests use the correct product. |
+| Interaction | Card → introduction → application or setup, All products return and keyboard focus. Check story controls, anchors and copy buttons when present. For `model: true`, verify the viewer and all downloads; otherwise confirm no model requests or missing download links. |
+| Motion | For `motion: true`, observe decoded frames and advancing `currentTime`, including a loop boundary. Test Pause/Play, hidden-tab and offscreen pause, reduced motion and failed-video fallback. Confirm orientation requests use the correct product. For `motion: false`, confirm no MP4 request. |
 | Discovery | HTML and Markdown routes, `Accept: text/markdown`, canonical and Open Graph metadata, sitemap and `llms.txt` all identify the new product correctly. |
 | Production media | Images and MP4s return 200 with correct content types and committed hashes; MP4 byte-range requests return 206. Verify the actual production domain and deployment commit. |
 

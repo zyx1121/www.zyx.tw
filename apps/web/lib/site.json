@@ -14,7 +14,7 @@
       "label": "Made",
       "tip": "Products by zyx",
       "markdown": "/made.md",
-      "summary": "selected products made by zyx",
+      "summary": "selected apps and infrastructure made by zyx",
       "nav": true,
       "changeFrequency": "monthly",
       "priority": 0.8
@@ -40,6 +40,14 @@
       "label": "Link",
       "markdown": "/made/link.md",
       "summary": "Link: short links",
+      "changeFrequency": "monthly",
+      "priority": 0.8
+    },
+    {
+      "path": "/made/carrel",
+      "label": "Carrel",
+      "markdown": "/made/carrel.md",
+      "summary": "Carrel: development infrastructure through conversation, deployment workflows and MCP setup",
       "changeFrequency": "monthly",
       "priority": 0.8
     },

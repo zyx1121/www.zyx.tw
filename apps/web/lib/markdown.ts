@@ -2,10 +2,17 @@ import { describeEvent, type StatusData } from "@workspace/ui/lib/github-events"
 import { EMAIL, GITHUB_USER, STATUS_COPY } from "@workspace/ui/lib/profile"
 
 import { ABOUT, HOME, NOT_FOUND, WORKS } from "@/lib/copy"
+import { CARREL } from "@/lib/carrel"
 import type { LegalDoc, Run } from "@/lib/legal"
 import { PRIVACY } from "@/lib/privacy"
 import { projects } from "@/lib/projects"
-import { asset, MADE, PRODUCTS, type ProductId } from "@/lib/made"
+import {
+  asset,
+  MADE,
+  PRODUCTS,
+  productCategory,
+  type ProductId,
+} from "@/lib/made"
 import { FACTS, SECTIONS } from "@/lib/resume"
 import { TERMS } from "@/lib/terms"
 import { absoluteUrl, PAGES, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site"
@@ -99,7 +106,7 @@ export function madeMarkdown() {
       MADE.description,
       PRODUCTS.map(
         (product) =>
-          `- ${link(product.name, absoluteUrl(`/made/${product.id}`))}: ${product.purpose}.`
+          `- ${link(product.name, absoluteUrl(`/made/${product.id}`))}: ${product.purpose}. ${productCategory(product)}.`
       ).join("\n"),
     ]
   )
@@ -116,15 +123,50 @@ export function productMarkdown(id: ProductId) {
     [
       `# ${product.name}`,
       product.description,
-      link(`Open ${product.name}`, product.href),
-      "## 3D icon",
-      product.material,
+      productCategory(product),
+      link(
+        product.action,
+        product.href.startsWith("/") ? absoluteUrl(product.href) : product.href
+      ),
+      ...(id === "carrel" ? carrelBlocks() : []),
+      product.model && "## 3D icon",
+      product.model && product.material,
       link("SVG", absoluteUrl(asset(id, ".svg"))),
-      link("Scene", absoluteUrl(asset(id, ".scene.json"))),
-      link("GLB", absoluteUrl(asset(id, ".glb"))),
+      product.model && link("Scene", absoluteUrl(asset(id, ".scene.json"))),
+      product.model && link("GLB", absoluteUrl(asset(id, ".glb"))),
       link("All Made products", absoluteUrl("/made")),
     ]
   )
+}
+
+function carrelBlocks() {
+  return [
+    `## ${CARREL.introduction.title}`,
+    CARREL.introduction.body,
+    ...CARREL.chapters.flatMap((chapter) => [
+      `## ${chapter.title}`,
+      chapter.body,
+      `![${text(chapter.alt)}](${absoluteUrl(asset("carrel", chapter.image))})`,
+    ]),
+    "## Example workflow",
+    `> ${CARREL.request}`,
+    ...CARREL.workflow.map(
+      (step) =>
+        `### ${step.label}\n\n${step.body}\n\n${step.lines.map((line) => `- ${line}`).join("\n")}`
+    ),
+    "## Connections",
+    ...CARREL.network.map((node) => `- ${node.label}: ${node.detail}`),
+    "## Environment management",
+    ...CARREL.lifecycle.map((item) => `- ${item.label}: ${item.body}`),
+    `## ${CARREL.start.title}`,
+    CARREL.start.body,
+    `MCP endpoint: ${CARREL.start.endpoint}`,
+    ...CARREL.start.clients.map(
+      (client) => `### ${client.name}\n\n\`\`\`sh\n${client.command}\n\`\`\``
+    ),
+    `First request: ${CARREL.start.firstRequest}`,
+    "Your agent can use a saved public SSH key, or ask you for one.",
+  ]
 }
 
 export function plumpMarkdown() {
