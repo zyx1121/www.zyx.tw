@@ -90,5 +90,99 @@
         "method": 6
       }
     }
+  ],
+  "videos": [
+    {
+      "file": "time-hero-motion.mp4",
+      "provider": "OpenRouter",
+      "model": "kwaivgi/kling-v3.0-pro",
+      "generated": "2026-10-02",
+      "prompt": "A near-still five-second living photograph. Locked-off camera, precisely identical first and last composition. The adult woman keeps her exact seated pose, her cheek supported by her left palm and her right hand resting still on the amber sculpture. Her face keeps the same identity, proportions, gaze and neutral expression. Motion is confined to one quick, delicate natural blink and imperceptibly small breathing. Everything below her shoulders stays perfectly still. The amber glass open ring is a solid rigid sculpture: throughout the entire shot preserve the reference's exact outline, circular arc, opening, rounded ends, thickness, size, orientation, glass reflections and contact points. Keep her fingers, hands, clothing, white fabric, washing machines, tiled walls, lights and camera position completely unchanged. Minimal amplitude, an almost frozen photograph, gentle natural micro-motion only, settling into exactly the reference frame for a calm continuous loop.",
+      "request": {
+        "duration": 5,
+        "resolution": "720p",
+        "aspect_ratio": "16:9",
+        "generate_audio": false
+      },
+      "first_frame": "time-dreamy-e-hero.png",
+      "last_frame": "time-dreamy-e-hero.png",
+      "reference_sha256": "bd5e16461c7995884ec9fa0788d418eac9cc1924f26ee3d6982863997e85ff5a",
+      "postprocess": {
+        "source": "time-kling-raw.mp4",
+        "source_sha256": "d92b1375eefc3038de281104bbc1ba3b653b94e9860652f9272de6b5c97f8823",
+        "output": "time-kling-film.mp4",
+        "frames": 121,
+        "fps": 24.0,
+        "duration": 5.041666666666667,
+        "dimensions": [
+          1928,
+          1072
+        ],
+        "grain_sigma": 0.018,
+        "seed": 20261002,
+        "notes": "Film treatment adapted from approved Made photo grading, with temporal grain and blur scaled to the native video resolution."
+      },
+      "processing_script": "scripts/grade-made-video.py",
+      "processing_script_sha256": "7c9a6b909109afcf084c40249c5f323444a1eca0b91c524fca3486c0c77172ef",
+      "export": {
+        "format": "mp4",
+        "codec": "h264",
+        "pixel_format": "yuv420p",
+        "audio": false,
+        "faststart": true,
+        "crf": 22,
+        "maxrate": "4M",
+        "bufsize": "4M",
+        "bytes": 1377661,
+        "sha256": "34ec30152dac7dc1c86ff481610da9b7ae5ea747e72836fb6158584643e6d6ce"
+      },
+      "loop_note": "Small natural pose changes remain between the first and last frames."
+    },
+    {
+      "file": "time-portrait-motion.mp4",
+      "provider": "OpenRouter",
+      "model": "kwaivgi/kling-v3.0-pro",
+      "generated": "2026-10-02",
+      "prompt": "A near-still five-second vertical living photograph. Preserve the tall framing, the full figure and the quiet empty tile wall above her head. Locked-off camera, precisely identical first and last composition. The adult woman keeps her exact seated pose, her cheek supported by her left palm and her right hand resting still on the amber sculpture. Her face keeps the same identity, proportions, gaze and neutral expression. Motion is confined to one quick, delicate natural blink and imperceptibly small breathing. Everything below her shoulders stays perfectly still. The amber glass open ring is a solid rigid sculpture: throughout the entire shot preserve the reference's exact outline, circular arc, opening, rounded ends, thickness, size, orientation, glass reflections and contact points. Keep her fingers, hands, clothing, white fabric, washing machines, tiled walls, lights and camera position completely unchanged. Minimal amplitude, an almost frozen photograph, gentle natural micro-motion only, settling into exactly the reference frame for a calm continuous loop.",
+      "request": {
+        "duration": 5,
+        "resolution": "720p",
+        "aspect_ratio": "9:16",
+        "generate_audio": false
+      },
+      "first_frame": "time-dreamy-e-portrait.png",
+      "last_frame": "time-dreamy-e-portrait.png",
+      "reference_sha256": "399299080247c793588a1145bae7a79e00b0749c41614584754fe083596f7a09",
+      "postprocess": {
+        "source": "time-kling-portrait-raw.mp4",
+        "source_sha256": "061ebbc6be70d57bf02453dd9795b1c3bf977b22811b0e9db542c3175c395bdc",
+        "output": "time-kling-portrait-film.mp4",
+        "frames": 121,
+        "fps": 24.0,
+        "duration": 5.041666666666667,
+        "dimensions": [
+          1080,
+          1936
+        ],
+        "grain_sigma": 0.018,
+        "seed": 20261002,
+        "notes": "Film treatment adapted from approved Made photo grading, with temporal grain and blur scaled to the native video resolution."
+      },
+      "processing_script": "scripts/grade-made-video.py",
+      "processing_script_sha256": "7c9a6b909109afcf084c40249c5f323444a1eca0b91c524fca3486c0c77172ef",
+      "export": {
+        "format": "mp4",
+        "codec": "h264",
+        "pixel_format": "yuv420p",
+        "audio": false,
+        "faststart": true,
+        "crf": 22,
+        "maxrate": "4M",
+        "bufsize": "4M",
+        "bytes": 1277621,
+        "sha256": "bc895631ee76533324bd8a7771bd398fed1d7b742c7de059c58a3c7ce75f5d4b"
+      },
+      "loop_note": "Small natural pose changes remain between the first and last frames."
+    }
   ]
 }

@@ -9,11 +9,95 @@ import {
   useEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type ReactNode,
   type CSSProperties,
 } from "react"
 
 import { asset, MADE, PRODUCTS, type Product, type ProductId } from "@/lib/made"
+import { useReducedMotion } from "@/lib/use-reduced-motion"
+
+const PORTRAIT_QUERY = "(max-width: 900px)"
+
+function subscribePortrait(onChange: () => void) {
+  const query = window.matchMedia(PORTRAIT_QUERY)
+  query.addEventListener("change", onChange)
+  return () => query.removeEventListener("change", onChange)
+}
+
+function CampaignVideo({ portrait }: { portrait: boolean }) {
+  const video = useRef<HTMLVideoElement>(null)
+  const userPaused = useRef(false)
+  const [playing, setPlaying] = useState(false)
+  const [failed, setFailed] = useState(false)
+
+  useEffect(() => {
+    const element = video.current
+    if (!element || failed) return
+    const sync = () => {
+      if (document.hidden) element.pause()
+      else if (!userPaused.current) void element.play().catch(() => {})
+    }
+    element.muted = true
+    sync()
+    document.addEventListener("visibilitychange", sync)
+    return () => {
+      document.removeEventListener("visibilitychange", sync)
+      element.pause()
+    }
+  }, [failed])
+
+  if (failed) return null
+
+  return (
+    <>
+      <video
+        ref={video}
+        className="made-motion-video"
+        src={asset(
+          "time",
+          portrait ? "-portrait-motion.mp4" : "-hero-motion.mp4"
+        )}
+        poster={asset("time", portrait ? "-portrait.webp" : "-hero.webp")}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+        tabIndex={-1}
+        onPlaying={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        onError={() => setFailed(true)}
+      />
+      <button
+        type="button"
+        className="made-cta made-motion-toggle"
+        aria-label={`${playing ? "Pause" : "Play"} background animation`}
+        onClick={() => {
+          const element = video.current
+          if (!element) return
+          userPaused.current = !element.paused
+          if (userPaused.current) element.pause()
+          else void element.play().catch(() => {})
+        }}
+      >
+        {playing ? "Pause" : "Play"}
+      </button>
+    </>
+  )
+}
+
+function CampaignMotion() {
+  const reducedMotion = useReducedMotion()
+  const portrait = useSyncExternalStore(
+    subscribePortrait,
+    () => window.matchMedia(PORTRAIT_QUERY).matches,
+    () => null
+  )
+  if (reducedMotion || portrait === null) return null
+  return <CampaignVideo key={String(portrait)} portrait={portrait} />
+}
 
 const Model = dynamic(() => import("@/components/made-scene"), {
   ssr: false,
@@ -103,6 +187,7 @@ function Campaign({
           fetchPriority="high"
         />
       </picture>
+      {product.id === "time" && <CampaignMotion />}
       <div className="made-wash" aria-hidden />
       <div className="made-label" aria-hidden>
         <Mark id={product.id} />
