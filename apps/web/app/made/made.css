@@ -79,6 +79,16 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
 }
+.made-card {
+  display: block;
+}
+.made-page .made-card:hover {
+  text-decoration: none;
+}
+.made-card:hover .made-item-link {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
 .made-object {
   display: block;
   position: relative;
@@ -96,22 +106,6 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
 }
 .made-object img.made-silhouette {
   padding: 20%;
-}
-.made-object > span {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
-  font-size: 14px;
-  line-height: 20px;
-}
-@media (hover: hover) {
-  .made-object > span {
-    opacity: 0;
-  }
-  .made-object:hover > span,
-  .made-object:focus-visible > span {
-    opacity: 1;
-  }
 }
 .made-identity-name {
   display: flex;
@@ -142,11 +136,8 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   background: currentColor;
   mask: var(--made-mark) center / contain no-repeat;
 }
-.made-item-links {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
+.made-item-link {
+  display: block;
   margin-top: 16px;
 }
 .made-campaign {
@@ -245,12 +236,6 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   font-size: 24px;
   line-height: 32px;
   font-variant-numeric: tabular-nums;
-}
-.made-end {
-  display: flex;
-  justify-content: flex-end;
-  gap: 40px;
-  padding: 60px 60px 100px;
 }
 .made-dialog {
   position: fixed;
@@ -409,11 +394,6 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
       transparent 40%
     );
   }
-  .made-end {
-    padding: 60px 20px 120px;
-    flex-direction: column;
-    gap: 24px;
-  }
 }
 @media (max-width: 440px) {
   .made-identity-head h1 {
@@ -421,11 +401,6 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   }
   .made-campaign {
     min-height: 700px;
-  }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .made-object > span {
-    transition: opacity 200ms ease-out;
   }
 }
 

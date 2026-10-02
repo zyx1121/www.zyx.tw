@@ -34,7 +34,7 @@ export const PRODUCTS = [
     href: "https://link.zyx.tw",
     material: "Vermilion silicone",
     imageAlt:
-      "Two friends lean shoulder to shoulder against a pale wall, holding a red double-loop Link shape.",
+      "A woman in a black leather jacket holds a red double-loop Link shape against an off-white tiled wall.",
   },
 ] as const
 

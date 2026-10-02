@@ -10,4 +10,4 @@ The Plump, Time and Link campaign assets, first published in October 2026.
 
 Approved art direction reference: <https://dev.zyx.tw/made-seeds/index.html>.
 
-Link was regenerated as a shoulder-to-shoulder portrait on October 2, 2026. The desktop and mobile generation prompts are preserved in [link-generation.json](./link-generation.json). The Photo / Print treatment was removed.
+Link was regenerated as a direct-flash fashion portrait on October 2, 2026. The selected direction pairs a black leather jacket with the vermilion double-loop against an off-white tiled wall. The mobile composition preserves the same model, styling and prop, with space above for the page title. Desktop and mobile generation prompts are preserved in [link-generation.json](./link-generation.json). The Photo / Print treatment was removed.
