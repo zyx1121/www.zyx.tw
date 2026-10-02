@@ -2,11 +2,11 @@ import { MadeExperience } from "@/components/made-experience"
 import { asset, PRODUCTS } from "@/lib/made"
 import { pageMetadata } from "@/lib/site"
 
-const product = PRODUCTS[0]
+const product = PRODUCTS[2]
 export const dynamic = "force-static"
 export const metadata = pageMetadata({
   title: `${product.name}, ${product.purpose}`,
-  path: "/made/plump",
+  path: "/made/link",
   description: product.description,
   image: {
     url: asset(product.id, "-hero.webp"),
@@ -17,5 +17,5 @@ export const metadata = pageMetadata({
 })
 
 export default function Page() {
-  return <MadeExperience product="plump" />
+  return <MadeExperience product="link" />
 }

@@ -1,0 +1,33 @@
+{
+  "version": "v1",
+  "shape": {
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\"><path fill=\"#111111\" fill-rule=\"evenodd\" d=\"M 218.7970 103.6710 A94 94 0 1 1 152.3290 37.2030 A22 22 0 0 1 140.9410 79.7037 A50 50 0 1 0 176.2963 115.0590 A22 22 0 0 1 218.7970 103.6710 Z\"/></svg>",
+    "depth": 0.3,
+    "bevel": 0.075,
+    "bevelSegments": 8,
+    "curveSegments": 48
+  },
+  "material": {
+    "id": "glass",
+    "params": {
+      "color": "#ffb52e",
+      "roughness": 0.05,
+      "thickness": 0.6,
+      "ior": 1.5
+    }
+  },
+  "environment": {
+    "id": "studio",
+    "intensity": 1,
+    "rotation": 0,
+    "background": false
+  },
+  "staging": {
+    "id": "oblique",
+    "background": "#e8e8e5"
+  },
+  "motion": {
+    "hover": true
+  },
+  "effects": []
+}

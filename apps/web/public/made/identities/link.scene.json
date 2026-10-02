@@ -1,0 +1,32 @@
+{
+  "version": "v1",
+  "shape": {
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 256 256\"><path fill=\"#111111\" fill-rule=\"evenodd\" d=\"M84 62 C112 62 120 75 128 75 C136 75 144 62 172 62 C208 62 228 88 228 128 C228 168 208 194 172 194 C144 194 136 181 128 181 C120 181 112 194 84 194 C48 194 28 168 28 128 C28 88 48 62 84 62 Z M84 105 C72 105 68 114 68 128 C68 142 72 151 84 151 C96 151 100 142 100 128 C100 114 96 105 84 105 Z M172 105 C160 105 156 114 156 128 C156 142 160 151 172 151 C184 151 188 142 188 128 C188 114 184 105 172 105 Z\" transform=\"rotate(-35 128 128)\"/></svg>",
+    "depth": 0.3,
+    "bevel": 0.075,
+    "bevelSegments": 8,
+    "curveSegments": 48
+  },
+  "material": {
+    "id": "plastic",
+    "params": {
+      "color": "#ef3e26",
+      "roughness": 0.35,
+      "clearcoat": 0.6
+    }
+  },
+  "environment": {
+    "id": "studio",
+    "intensity": 1,
+    "rotation": 0,
+    "background": false
+  },
+  "staging": {
+    "id": "oblique",
+    "background": "#e8e8e5"
+  },
+  "motion": {
+    "hover": true
+  },
+  "effects": []
+}

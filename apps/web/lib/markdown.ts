@@ -5,7 +5,8 @@ import { ABOUT, HOME, NOT_FOUND, WORKS } from "@/lib/copy"
 import type { LegalDoc, Run } from "@/lib/legal"
 import { PRIVACY } from "@/lib/privacy"
 import { projects } from "@/lib/projects"
-import { MADE, PLUMP } from "@/lib/plump"
+import { PLUMP } from "@/lib/plump"
+import { asset, MADE, PRODUCTS, type ProductId } from "@/lib/made"
 import { FACTS, SECTIONS } from "@/lib/resume"
 import { TERMS } from "@/lib/terms"
 import { absoluteUrl, PAGES, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site"
@@ -97,37 +98,57 @@ export function madeMarkdown() {
     [
       `# ${MADE.title}`,
       MADE.description,
-      `- ${link(PLUMP.name, absoluteUrl("/made/plump"))}: ${PLUMP.purpose}. ${PLUMP.tagline}`,
+      PRODUCTS.map(
+        (product) =>
+          `- ${link(product.name, absoluteUrl(`/made/${product.id}`))}: ${product.purpose}. ${product.tagline}`
+      ).join("\n"),
+    ]
+  )
+}
+
+export function productMarkdown(id: ProductId) {
+  const product = PRODUCTS.find((item) => item.id === id)!
+  return markdownDocument(
+    {
+      title: product.name,
+      path: `/made/${id}`,
+      description: product.description,
+    },
+    [
+      `# ${product.name}: ${product.headline.join(" ")}`,
+      `${product.purpose}. ${product.tagline}`,
+      product.description,
+      link(`Open ${product.name}`, product.href),
+      `## ${product.note}`,
+      product.body,
+      `Identity: ${product.material}. A geometric SVG with an interactive 3D model.`,
+      link("Download the SVG", absoluteUrl(asset(id, ".svg"))),
+      link(
+        "Download the editable scene",
+        absoluteUrl(asset(id, ".scene.json"))
+      ),
+      link("Download the GLB", absoluteUrl(asset(id, ".glb"))),
+      ...product.steps.map(
+        ({ title, body }, index) => `## ${index + 1}. ${title}\n\n${body}`
+      ),
+      id === "time" &&
+        "The page includes a live clock showing the visitor's local time.",
+      id === "link" &&
+        "The campaign switches between photography and red/black halftone print.",
+      id === "plump" &&
+        PLUMP.details
+          .map(({ label, value }) => `- ${label}: ${value}`)
+          .join("\n"),
+      id === "plump" && PLUMP.storage,
+      id === "plump" &&
+        link("Download the sample SVG", absoluteUrl("/made/plump/sample.svg")),
+      link("All Made products", absoluteUrl("/made")),
     ]
   )
 }
 
 export function plumpMarkdown() {
-  return markdownDocument(
-    { title: PLUMP.name, path: "/made/plump", description: PLUMP.description },
-    [
-      `# ${PLUMP.name}`,
-      `${PLUMP.purpose}. ${PLUMP.tagline}`,
-      PLUMP.description,
-      link("Open Plump", PLUMP.href),
-      `## ${PLUMP.idea.title}`,
-      PLUMP.idea.body,
-      `## ${PLUMP.demo.title}`,
-      PLUMP.demo.body,
-      ...PLUMP.steps.map(
-        ({ title, body }, index) => `## ${index + 1}. ${title}\n\n${body}`
-      ),
-      link("Download the sample SVG", absoluteUrl("/made/plump/sample.svg")),
-      "## Details",
-      PLUMP.details
-        .map(({ label, value }) => `- ${label}: ${value}`)
-        .join("\n"),
-      PLUMP.storage,
-      `## ${PLUMP.closing}`,
-      link("Open Plump", PLUMP.href),
-      `${PLUMP.credit} ${link("Meet the maker", absoluteUrl("/about"))}.`,
-    ]
-  )
+  return productMarkdown("plump")
 }
 
 export function aboutMarkdown(status: StatusData) {

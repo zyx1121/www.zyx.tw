@@ -16,11 +16,14 @@ import { enter, ENTER, enterDelay } from "@/lib/layout"
 export function SiteFooter() {
   const pathname = usePathname()
   const home = pathname === "/"
+  const made = pathname === "/made" || pathname.startsWith("/made/")
 
   return (
     <BottomCorners
       fade={!home}
-      className={home ? `dark ${enter}` : enter}
+      className={
+        home ? `dark ${enter}` : made ? `made-bottom-corner ${enter}` : enter
+      }
       style={enterDelay(ENTER.footer)}
       links={
         <>

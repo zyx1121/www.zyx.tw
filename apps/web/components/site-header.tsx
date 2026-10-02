@@ -20,13 +20,16 @@ export function SiteHeader() {
   // The home is a dark 3D stage in either theme, so its corners take the
   // dark tokens, and nothing scrolls under them.
   const home = pathname === "/"
+  const made = pathname === "/made" || pathname.startsWith("/made/")
 
   return (
     <TopCorners
       home="/"
       label="zyx, home"
       fade={!home}
-      className={home ? `dark ${enter}` : enter}
+      className={
+        home ? `dark ${enter}` : made ? `made-top-corner ${enter}` : enter
+      }
       nav={
         <nav aria-label="Main">
           <ul className="flex gap-4">
