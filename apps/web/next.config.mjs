@@ -40,32 +40,6 @@ const nextConfig = {
       ],
     }
   },
-  // Pages vary on Accept and point to llms.txt and their twin; each twin
-  // points back to its page as the canonical URL.
-  async headers() {
-    return site.pages.flatMap(({ path, markdown }) => [
-      {
-        source: path,
-        headers: [
-          { key: "Vary", value: "Accept" },
-          {
-            key: "Link",
-            value: `<${site.url}/llms.txt>; rel="describedby", <${site.url}${markdown}>; rel="alternate"; type="text/markdown"`,
-          },
-        ],
-      },
-      {
-        // A literal dot: `source` reads "." as a pattern character.
-        source: markdown.replaceAll(".", "\\."),
-        headers: [
-          {
-            key: "Link",
-            value: `<${new URL(path, site.url)}>; rel="canonical"`,
-          },
-        ],
-      },
-    ])
-  },
 }
 
 export default nextConfig

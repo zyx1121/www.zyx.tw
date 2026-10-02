@@ -1,3 +1,4 @@
+import { T } from "@workspace/ui/components/locale-provider"
 import { cornerLink } from "@workspace/ui/components/corners"
 
 import { signOut } from "@/app/actions"
@@ -9,7 +10,7 @@ export function UserNav({ name }: { name: string }) {
       <span className="text-muted-foreground">{name}</span>
       <form action={signOut} className="flex">
         <button type="submit" className={cornerLink}>
-          登出
+          <T>{"登出"}</T>
         </button>
       </form>
     </>

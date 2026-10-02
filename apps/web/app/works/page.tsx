@@ -1,3 +1,6 @@
+import { T } from "@workspace/ui/components/locale-provider"
+import { localizedMetadata } from "@workspace/ui/lib/i18n-server"
+import { MESSAGES } from "@/lib/messages"
 import { cn } from "@workspace/ui/lib/utils"
 
 import { Hero, HeroTitle } from "@/components/hero"
@@ -10,9 +13,7 @@ import { column, page } from "@/lib/layout"
 import { projects } from "@/lib/projects"
 import { pageMetadata } from "@/lib/site"
 
-export const metadata = pageMetadata({ title: WORKS.title, path: "/works" })
-
-export const dynamic = "force-static"
+const baseMetadata = pageMetadata({ title: WORKS.title, path: "/works" })
 
 export default function Works() {
   return (
@@ -23,7 +24,13 @@ export default function Works() {
     <main className={cn(column, page, "@container flex flex-1 flex-col")}>
       <ProjectsJsonLd projects={projects} />
       <Showcase projects={projects}>
-        <Hero title={<HeroTitle>{WORKS.title}</HeroTitle>} />
+        <Hero
+          title={
+            <HeroTitle>
+              <T>{WORKS.title}</T>
+            </HeroTitle>
+          }
+        />
         {/* No entrance fade: the first dither can be the page's largest
             paint, and Chrome skipped it as LCP while it faded in. */}
         <PreviewStage className="mt-10 mb-5 min-h-[max(12.5rem,45cqw)] flex-1" />
@@ -31,4 +38,8 @@ export default function Works() {
       </Showcase>
     </main>
   )
+}
+
+export async function generateMetadata() {
+  return localizedMetadata(baseMetadata, MESSAGES, "/works")
 }

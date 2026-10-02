@@ -1,0 +1,15 @@
+{
+  "zh-TW": {
+    "Link | URL shortener": "Link｜短網址工具",
+    "URL shortener: paste a long one, get a short one back.": "貼上長網址，取得短連結。",
+    "URL to shorten": "要縮短的網址",
+    "Copy short URL": "複製短網址",
+    "Shortening URL": "正在縮短網址",
+    "Shorten URL": "縮短網址",
+    "Who invited you here?": "請從 Link 的正式網址使用此服務。",
+    "URL cannot be empty, come on.": "請輸入網址。",
+    "That doesn't look like a real URL.": "請輸入有效的網址。",
+    "Only http/https URLs, please.": "僅支援 HTTP 或 HTTPS 網址。",
+    "Database said no. Try again?": "暫時無法建立短網址，請稍後再試。"
+  }
+}

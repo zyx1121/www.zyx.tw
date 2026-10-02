@@ -1,4 +1,5 @@
 "use client"
+import { T, useT, useLocale } from "@workspace/ui/components/locale-provider"
 
 import { useState } from "react"
 
@@ -8,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import {
   Dialog,
   DialogContent,
+  DialogClose,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
@@ -32,6 +34,9 @@ export function ExpenseDetail({
   onDelete: () => void
   onClose: () => void
 }) {
+  const locale = useLocale()
+  const t = useT()
+
   const [title, setTitle] = useState("")
   const [amount, setAmount] = useState("")
 
@@ -49,32 +54,48 @@ export function ExpenseDetail({
         if (!open) onClose()
       }}
     >
-      <DialogContent>
+      <DialogContent showCloseButton={false}>
+        <DialogClose
+          className="absolute top-2 right-2 flex size-8 items-center justify-center rounded-md"
+          aria-label={t("Close")}
+        >
+          <span aria-hidden="true">×</span>
+        </DialogClose>
         <DialogHeader>
-          <DialogTitle>{editing ? "編輯支出" : expense?.title}</DialogTitle>
+          <DialogTitle>
+            {editing ? <T>{"編輯支出"}</T> : expense?.title}
+          </DialogTitle>
         </DialogHeader>
         {expense && !editing && (
           <div className="flex flex-col gap-3 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">付款人</span>
+              <span className="text-muted-foreground">
+                <T>{"付款人"}</T>
+              </span>
               <span>{expense.member?.name}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">金額</span>
+              <span className="text-muted-foreground">
+                <T>{"金額"}</T>
+              </span>
               <span className="tabular-nums">
                 ${expense.amount.toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">日期</span>
+              <span className="text-muted-foreground">
+                <T>{"日期"}</T>
+              </span>
               <span className="tabular-nums">
-                {new Date(expense.created_at).toLocaleDateString("zh-TW")}
+                <T>{new Date(expense.created_at).toLocaleDateString(locale)}</T>
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">狀態</span>
+              <span className="text-muted-foreground">
+                <T>{"狀態"}</T>
+              </span>
               <Badge variant={expense.settled ? "secondary" : "default"}>
-                {expense.settled ? "已核銷" : "未核銷"}
+                <T>{expense.settled ? "已核銷" : "未核銷"}</T>
               </Badge>
             </div>
             {isOwner && (
@@ -84,13 +105,13 @@ export function ExpenseDetail({
                   className="flex-1"
                   onClick={onToggle}
                 >
-                  {expense.settled ? "取消核銷" : "標記已核銷"}
+                  <T>{expense.settled ? "取消核銷" : "標記已核銷"}</T>
                 </Button>
                 <Button variant="outline" onClick={startEdit}>
-                  編輯
+                  <T>{"編輯"}</T>
                 </Button>
                 <Button variant="destructive" onClick={onDelete}>
-                  刪除
+                  <T>{"刪除"}</T>
                 </Button>
               </div>
             )}
@@ -101,20 +122,20 @@ export function ExpenseDetail({
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="項目名稱"
+              placeholder={t("項目名稱")}
               required
             />
             <Input
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="金額"
+              placeholder={t("金額")}
               min={1}
               required
             />
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => onEdit(false)}>
-                取消
+                <T>{"取消"}</T>
               </Button>
               <Button
                 onClick={() => {
@@ -122,7 +143,7 @@ export function ExpenseDetail({
                   if (title && parsed > 0) onUpdate(title, parsed)
                 }}
               >
-                儲存
+                <T>{"儲存"}</T>
               </Button>
             </div>
           </div>

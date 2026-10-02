@@ -1,7 +1,6 @@
-import { madeMarkdown, markdownResponse } from "@/lib/markdown"
+import { getMarkdown } from "@/lib/markdown"
 
-export const dynamic = "force-static"
-
-export function GET() {
+export async function GET() {
+  const { madeMarkdown, markdownResponse } = await getMarkdown()
   return markdownResponse(madeMarkdown())
 }

@@ -1,3 +1,4 @@
+import { T } from "@workspace/ui/components/locale-provider"
 import Link from "next/link"
 
 import { cn } from "@workspace/ui/lib/utils"
@@ -19,7 +20,11 @@ export default function NotFound() {
   return (
     <main className={cn(column, page, "flex-1")}>
       <Hero
-        title={<HeroTitle>{NOT_FOUND.title}</HeroTitle>}
+        title={
+          <HeroTitle>
+            <T>{NOT_FOUND.title}</T>
+          </HeroTitle>
+        }
         subtitle={NOT_FOUND.lead}
         className="pb-25"
       />
@@ -27,9 +32,11 @@ export default function NotFound() {
         {PAGES.map(({ path, label, summary }) => (
           <li key={path} className={ROW}>
             <Link href={path} className={LINK}>
-              {label}
+              <T>{label}</T>
             </Link>
-            <span className="text-muted-foreground">{summary}</span>
+            <span className="text-muted-foreground">
+              <T>{summary}</T>
+            </span>
           </li>
         ))}
       </ul>
@@ -39,22 +46,24 @@ export default function NotFound() {
         style={enterRow(4)}
       >
         <h2 id="agents-heading" className="text-sm/6 font-medium">
-          {NOT_FOUND.agents}
+          <T>{NOT_FOUND.agents}</T>
         </h2>
         <ul className="mt-5 flex flex-col gap-y-3">
           <li className={ROW}>
             <a href="/llms.txt" className={LINK}>
-              /llms.txt
+              <T>{"/llms.txt"}</T>
             </a>
-            <span className="text-muted-foreground">{NOT_FOUND.llms}</span>
+            <span className="text-muted-foreground">
+              <T>{NOT_FOUND.llms}</T>
+            </span>
           </li>
           {PAGES.map(({ markdown, label }) => (
             <li key={markdown} className={ROW}>
               <a href={markdown} className={LINK}>
-                {markdown}
+                <T>{markdown}</T>
               </a>
               <span className="text-muted-foreground">
-                {label} {NOT_FOUND.twin}
+                <T>{label}</T> <T>{NOT_FOUND.twin}</T>
               </span>
             </li>
           ))}

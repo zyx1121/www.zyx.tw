@@ -1,3 +1,5 @@
+import { localizedMetadata } from "@workspace/ui/lib/i18n-server"
+import { MESSAGES } from "@/lib/messages"
 import { CarrelStory } from "@/components/carrel-story"
 import { MadeExperience } from "@/components/made-experience"
 import { asset, getProduct } from "@/lib/made"
@@ -6,8 +8,7 @@ import { pageMetadata } from "@/lib/site"
 import "./carrel.css"
 
 const product = getProduct("carrel")
-export const dynamic = "force-static"
-export const metadata = pageMetadata({
+const baseMetadata = pageMetadata({
   title: `${product.name}, ${product.purpose}`,
   path: "/made/carrel",
   description: product.description,
@@ -25,4 +26,8 @@ export default function Page() {
       <CarrelStory />
     </MadeExperience>
   )
+}
+
+export async function generateMetadata() {
+  return localizedMetadata(baseMetadata, MESSAGES, "/made/carrel")
 }

@@ -1,4 +1,5 @@
 "use client"
+import { T, useT } from "@workspace/ui/components/locale-provider"
 
 /* Native picture sources preserve the separately composed mobile images. */
 /* eslint-disable @next/next/no-img-element */
@@ -38,6 +39,8 @@ function subscribePortrait(onChange: () => void) {
 }
 
 function CampaignVideo({ id, portrait }: { id: ProductId; portrait: boolean }) {
+  const t = useT()
+
   const video = useRef<HTMLVideoElement>(null)
   const userPaused = useRef(false)
   const [playing, setPlaying] = useState(false)
@@ -89,7 +92,7 @@ function CampaignVideo({ id, portrait }: { id: ProductId; portrait: boolean }) {
       <button
         type="button"
         className="made-cta made-motion-toggle"
-        aria-label={`${playing ? "Pause" : "Play"} background animation`}
+        aria-label={t(`${playing ? "Pause" : "Play"} background animation`)}
         onClick={() => {
           const element = video.current
           if (!element) return
@@ -98,7 +101,7 @@ function CampaignVideo({ id, portrait }: { id: ProductId; portrait: boolean }) {
           else void element.play().catch(() => {})
         }}
       >
-        {playing ? "Pause" : "Play"}
+        <T>{playing ? "Pause" : "Play"}</T>
       </button>
     </>
   )
@@ -117,7 +120,11 @@ function CampaignMotion({ id }: { id: ProductId }) {
 
 const Model = dynamic(() => import("@/components/made-scene"), {
   ssr: false,
-  loading: () => <p role="status">Loading model…</p>,
+  loading: () => (
+    <p role="status">
+      <T>{"Loading model…"}</T>
+    </p>
+  ),
 })
 
 class ModelBoundary extends Component<
@@ -131,8 +138,11 @@ class ModelBoundary extends Component<
   render() {
     return this.state.failed ? (
       <p role="status">
-        3D is unavailable in this browser. You can download the scene and open
-        it in Plump.
+        <T>
+          {
+            "3D is unavailable in this browser. You can download the scene and open it in Plump."
+          }
+        </T>
       </p>
     ) : (
       this.props.children
@@ -151,6 +161,8 @@ function Mark({ id }: { id: ProductId }) {
 }
 
 function LocalTime() {
+  const t = useT()
+
   const [now, setNow] = useState<Date | null>(null)
   useEffect(() => {
     const tick = () => {
@@ -168,9 +180,9 @@ function LocalTime() {
     <time
       className="made-clock"
       dateTime={now?.toISOString()}
-      aria-label="Your local time"
+      aria-label={t("Your local time")}
     >
-      {now?.toLocaleTimeString("en-GB", { hour12: false }) ?? "--:--:--"}
+      <T>{now?.toLocaleTimeString("en-GB", { hour12: false }) ?? "--:--:--"}</T>
     </time>
   )
 }
@@ -184,6 +196,8 @@ function Campaign({
   onModel: (id: ProductId) => void
   hasStory: boolean
 }) {
+  const t = useT()
+
   return (
     <section
       className={`made-campaign made-${product.id}`}
@@ -198,7 +212,7 @@ function Campaign({
         />
         <img
           src={asset(product.id, "-hero.webp")}
-          alt={product.imageAlt}
+          alt={t(product.imageAlt)}
           width={1920}
           height={1080}
           loading="eager"
@@ -211,10 +225,14 @@ function Campaign({
         <Mark id={product.id} />
       </div>
       <div className="made-copy">
-        <h1 id={`${product.id}-headline`}>{product.name}</h1>
-        <p>{product.purpose}</p>
+        <h1 id={`${product.id}-headline`}>
+          <T>{product.name}</T>
+        </h1>
+        <p>
+          <T>{product.purpose}</T>
+        </p>
         <a className="made-cta" href={product.href}>
-          {product.action}
+          <T>{product.action}</T>
           <span aria-hidden>↗</span>
         </a>
       </div>
@@ -223,13 +241,19 @@ function Campaign({
           {product.id === "time" && <LocalTime />}
           {product.model ? (
             <button type="button" onClick={() => onModel(product.id)}>
-              View 3D ↗
+              <T>{"View 3D ↗"}</T>
             </button>
           ) : (
-            hasStory && <a href="#story">Explore ↓</a>
+            hasStory && (
+              <a href="#story">
+                <T>{"Explore ↓"}</T>
+              </a>
+            )
           )}
         </div>
-        <Link href="/made">All products ↗</Link>
+        <Link href="/made">
+          <T>{"All products ↗"}</T>
+        </Link>
       </div>
     </section>
   )
@@ -242,6 +266,8 @@ export function MadeExperience({
   product?: ProductId
   children?: ReactNode
 }) {
+  const t = useT()
+
   const selectedProduct = PRODUCTS.find((product) => product.id === selected)
   const [model, setModel] = useState<ProductId | null>(null)
   const dialog = useRef<HTMLDialogElement>(null)
@@ -323,7 +349,7 @@ export function MadeExperience({
                 id="made-title"
                 className="text-2xl/8 font-medium text-pretty"
               >
-                {MADE.title}
+                <T>{MADE.title}</T>
               </h1>
             }
             subtitle="Apps and infrastructure by zyx"
@@ -338,7 +364,7 @@ export function MadeExperience({
                 <Link
                   className="made-card"
                   href={`/made/${product.id}`}
-                  aria-label={`View ${product.name}`}
+                  aria-label={t("View {product}", { product: product.name })}
                 >
                   <div className="made-object">
                     <MaskReveal
@@ -348,7 +374,10 @@ export function MadeExperience({
                     >
                       <img
                         src={asset(product.id, "-material.webp")}
-                        alt={`${product.name}, ${product.material}`}
+                        alt={t("{name}, {material}", {
+                          name: product.name,
+                          material: t(product.material),
+                        })}
                         width={1024}
                         height={1024}
                         loading={index === 0 ? "eager" : "lazy"}
@@ -358,13 +387,19 @@ export function MadeExperience({
                   <div className="made-identity-name">
                     <h2>
                       <Mark id={product.id} />
-                      {product.name}
+                      <T>{product.name}</T>
                     </h2>
-                    <span>{product.purpose}</span>
+                    <span>
+                      <T>{product.purpose}</T>
+                    </span>
                   </div>
                   <div className="made-card-meta">
-                    <span className="made-item-link">View ↗</span>
-                    <span>{productCategory(product)}</span>
+                    <span className="made-item-link">
+                      <T>{"View ↗"}</T>
+                    </span>
+                    <span>
+                      <T>{productCategory(product)}</T>
+                    </span>
                   </div>
                 </Link>
               </article>
@@ -399,14 +434,14 @@ export function MadeExperience({
       >
         <div className="made-model-head">
           <h2 id="made-model-title">
-            {PRODUCTS.find((p) => p.id === model)?.name}
+            <T>{PRODUCTS.find((p) => p.id === model)?.name}</T>
           </h2>
           <button
             type="button"
             onClick={() => dialog.current?.close()}
             autoFocus
           >
-            Close ×
+            <T>{"Close ×"}</T>
           </button>
         </div>
         <div className="made-model-stage">
@@ -417,17 +452,19 @@ export function MadeExperience({
           )}
         </div>
         <div className="made-model-footer">
-          <p>Drag to rotate. Scroll to zoom.</p>
+          <p>
+            <T>{"Drag to rotate. Scroll to zoom."}</T>
+          </p>
           {model && (
             <div>
               <a href={asset(model, ".svg")} download>
-                SVG ↓
+                <T>{"SVG ↓"}</T>
               </a>
               <a href={asset(model, ".scene.json")} download>
-                Scene ↓
+                <T>{"Scene ↓"}</T>
               </a>
               <a href={asset(model, ".glb")} download>
-                GLB ↓
+                <T>{"GLB ↓"}</T>
               </a>
             </div>
           )}

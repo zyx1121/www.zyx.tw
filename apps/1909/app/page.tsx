@@ -1,4 +1,5 @@
-import { Corner } from "@workspace/ui/components/corners"
+import { T, LanguageToggle } from "@workspace/ui/components/locale-provider"
+import { Corner, cornerLink } from "@workspace/ui/components/corners"
 
 import { calculateDebts } from "@/lib/calc"
 import { db } from "@/lib/db"
@@ -36,18 +37,23 @@ export default async function Page() {
       <Corner at="top-right">
         <ExpenseForm />
         <UserNav name={currentMember.name} />
+        <LanguageToggle className={cornerLink} />
       </Corner>
       <h1 className="text-2xl/8 font-medium">1909</h1>
 
       <section className="flex flex-col gap-2">
-        <h2 className="text-sm text-muted-foreground">欠款摘要</h2>
+        <h2 className="text-sm text-muted-foreground">
+          <T>{"欠款摘要"}</T>
+        </h2>
         <BalanceSummary debts={debts} />
       </section>
 
       <Separator />
 
       <section className="flex flex-col gap-2">
-        <h2 className="text-sm text-muted-foreground">支出紀錄</h2>
+        <h2 className="text-sm text-muted-foreground">
+          <T>{"支出紀錄"}</T>
+        </h2>
         <ExpenseList expenses={expenses} currentMemberId={currentMember.id} />
       </section>
     </div>

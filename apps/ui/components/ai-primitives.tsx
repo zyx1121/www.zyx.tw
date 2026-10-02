@@ -1,4 +1,5 @@
 "use client";
+import { T, useT } from "@workspace/ui/components/locale-provider";
 import { useState } from "react";
 import { FileText, ArrowUp } from "lucide-react";
 
@@ -15,16 +16,22 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 export function AiPrimitives() {
+  const t = useT();
+
   const [value, setValue] = useState(""),
-    [message, setMessage] = useState("What should we explore?");
+    [message, setMessage] = useState<string | null>(null);
   return (
     <div className="space-y-5">
-      <h3>Message, bubble and attachment</h3>
+      <h3>
+        <T>{"Message, bubble and attachment"}</T>
+      </h3>
       <MessageGroup>
         <Message align="end">
           <MessageContent>
             <Bubble variant="secondary">
-              <BubbleContent>{message}</BubbleContent>
+              <BubbleContent>
+                {message ?? t("What should we explore?")}
+              </BubbleContent>
             </Bubble>
           </MessageContent>
         </Message>
@@ -32,8 +39,11 @@ export function AiPrimitives() {
           <MessageContent>
             <Bubble variant="ghost">
               <BubbleContent>
-                Messages and files share the same theme. This is an interface
-                preview; no model is connected.
+                <T>
+                  {
+                    "Messages and files share the same theme. This is an interface preview; no model is connected."
+                  }
+                </T>
               </BubbleContent>
             </Bubble>
             <Attachment>
@@ -41,9 +51,11 @@ export function AiPrimitives() {
                 <FileText />
               </AttachmentMedia>
               <AttachmentContent>
-                <AttachmentTitle>Example document.pdf</AttachmentTitle>
+                <AttachmentTitle>
+                  <T>{"Example document.pdf"}</T>
+                </AttachmentTitle>
                 <AttachmentDescription>
-                  Attachment preview
+                  <T>{"Attachment preview"}</T>
                 </AttachmentDescription>
               </AttachmentContent>
             </Attachment>
@@ -63,14 +75,14 @@ export function AiPrimitives() {
         <Textarea
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          aria-label="Preview message"
-          placeholder="Try a message"
+          aria-label={t("Preview message")}
+          placeholder={t("Try a message")}
           maxLength={500}
         />
         <div className="flex justify-end">
           <Button
             type="submit"
-            aria-label="Send preview message"
+            aria-label={t("Send preview message")}
             size="icon"
             disabled={!value.trim()}
           >

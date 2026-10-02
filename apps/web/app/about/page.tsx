@@ -1,3 +1,6 @@
+import { T } from "@workspace/ui/components/locale-provider"
+import { localizedMetadata } from "@workspace/ui/lib/i18n-server"
+import { MESSAGES } from "@/lib/messages"
 import { Status } from "@workspace/ui/components/status"
 import { ScrambleText } from "@workspace/ui/components/ui/scramble-text"
 import { cn } from "@workspace/ui/lib/utils"
@@ -9,7 +12,7 @@ import { column, enter, enterRow, page } from "@/lib/layout"
 import { FACTS, SECTIONS } from "@/lib/resume"
 import { pageMetadata } from "@/lib/site"
 
-export const metadata = pageMetadata({ title: ABOUT.title, path: "/about" })
+const baseMetadata = pageMetadata({ title: ABOUT.title, path: "/about" })
 
 // The GitHub status is fetched on the server and the page regenerated in the
 // background every 5 minutes (ISR), so the SSR HTML carries real events
@@ -17,7 +20,6 @@ export const metadata = pageMetadata({ title: ABOUT.title, path: "/about" })
 // the GitHub fetch carries an Authorization header, which Next would
 // otherwise read as a dynamic signal.
 export const revalidate = 300
-export const dynamic = "force-static"
 
 // Content blocks enter one row apart after the title: step 1 is row 2.
 const block = (step: number) => enterRow(1 + step)
@@ -40,7 +42,12 @@ function unbroken(text: string) {
 
 /** A value that links when it has an address. */
 function Value({ text, href }: { text: string; href?: string }) {
-  if (!href) return <>{text}</>
+  if (!href)
+    return (
+      <>
+        <T>{text}</T>
+      </>
+    )
   const external = href.startsWith("http")
   return (
     <a
@@ -48,7 +55,7 @@ function Value({ text, href }: { text: string; href?: string }) {
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       className={LINK}
     >
-      {text}
+      <T>{text}</T>
     </a>
   )
 }
@@ -81,7 +88,9 @@ export default async function About() {
       >
         {FACTS.map(({ label, value, href }) => (
           <div key={label} className="contents">
-            <dt className="text-muted-foreground">{label}</dt>
+            <dt className="text-muted-foreground">
+              <T>{label}</T>
+            </dt>
             <dd>
               <Value text={value} href={href} />
             </dd>
@@ -97,7 +106,7 @@ export default async function About() {
           style={block(2 + index)}
         >
           <h2 id={`${id}-heading`} className={HEADING}>
-            {title}
+            <T>{title}</T>
           </h2>
           <ol className="mt-5 flex flex-col gap-y-3">
             {entries.map(({ when, what, note, where, href }) => (
@@ -106,12 +115,14 @@ export default async function About() {
                 className="grid grid-cols-[7rem_1fr] gap-x-5 sm:grid-cols-[7rem_1fr_fit-content(16rem)]"
               >
                 <span className="text-xs whitespace-nowrap text-muted-foreground tabular-nums">
-                  {when}
+                  <T>{when}</T>
                 </span>
                 <span className="text-pretty">
-                  {unbroken(what)}
+                  <T>{unbroken(what)}</T>
                   {note && (
-                    <span className="block text-muted-foreground">{note}</span>
+                    <span className="block text-muted-foreground">
+                      <T>{note}</T>
+                    </span>
                   )}
                 </span>
                 {/* At most 16rem wide from sm, so a long name wraps in
@@ -132,4 +143,8 @@ export default async function About() {
       />
     </main>
   )
+}
+
+export async function generateMetadata() {
+  return localizedMetadata(baseMetadata, MESSAGES, "/about")
 }
