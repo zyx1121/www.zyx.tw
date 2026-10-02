@@ -192,10 +192,9 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   transform: translateY(-50%);
 }
 .made-copy :is(h1, h2) {
-  font-size: 80px;
-  line-height: 80px;
+  font-size: 24px;
+  line-height: 32px;
   font-weight: 500;
-  letter-spacing: -0.06em;
 }
 .made-plump .made-copy {
   font-family:
@@ -205,7 +204,7 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
 }
 .made-copy p {
   max-width: 256px;
-  margin-top: 28px;
+  margin-top: 12px;
   text-wrap: balance;
 }
 .made-cta {
@@ -214,7 +213,7 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   align-items: center;
   gap: 40px;
   padding: 12px 20px;
-  margin-top: 32px;
+  margin-top: 20px;
   border: 1px solid currentColor;
   border-radius: var(--radius-lg);
   backdrop-filter: blur(12px);
@@ -321,7 +320,7 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   .made-label {
     left: auto;
     right: 20px;
-    top: 104px;
+    top: 84px;
   }
   .made-copy {
     position: static;
@@ -335,7 +334,7 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   .made-copy p {
     position: absolute;
     left: 20px;
-    top: 180px;
+    top: 128px;
     max-width: 280px;
     margin: 0;
   }

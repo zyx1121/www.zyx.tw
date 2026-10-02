@@ -14,7 +14,7 @@ Copy this template into the product's task notes and fill it in using the [publi
 | Product type and platforms | `app` or `infrastructure`; `web`, `ios`, `macos` as applicable |
 | Primary action and destination | Application, download or an on-page setup section |
 | Motion / 3D viewer | Set `motion` and `model` explicitly |
-| Page sections and demonstrations | One `/made/<id>` page, with sections chosen for the product |
+| Page sections and demonstrations | One `/made/<id>` page; alternate full-bleed `100dvh` images and content sections of at least `100dvh` |
 | Availability and access requirements | |
 | Index order | |
 | Existing or new Works entry | |
@@ -26,8 +26,10 @@ Copy this template into the product's task notes and fill it in using the [publi
 | Field | Decision |
 | --- | --- |
 | Setting, subject and wardrobe | |
+| Casting requirements | Young adult women, Japanese/Korean fashion-editorial styling and youthful energy; verify visually against selected references |
 | Landscape composition and text space | |
 | Portrait composition and text space | |
+| Full-screen chapter compositions | Landscape and portrait sources; meaningful objects survive the actual viewport crop |
 | Selected references and source filenames | |
 | Selection confirmed by and date | |
 | Rejected directions to avoid | |
@@ -53,7 +55,7 @@ Copy this template into the product's task notes and fill it in using the [publi
 - [ ] Identity assets complete: SVG and square material WebP; matching scene `v1` and GLB when `model: true`.
 - [ ] Landscape and portrait complete: selected source, graded WebP, motion MP4 when `motion: true`, any chapter images, inspected exports and generation record.
 - [ ] Site registration complete: `PRODUCTS`, HTML route, Markdown route, `site.json`, metadata and any Works entry.
-- [ ] Sandbox checks and Safari acceptance passed: shared layout, 320px/1024px/desktop, keyboard, navigation, model, motion controls, reduced motion and failure fallback. Attach measurements and any remaining limitations.
+- [ ] Sandbox checks and Safari acceptance passed: shared layout, only 24/16/14px rendered text, 320px/1024px/desktop, keyboard, navigation, model, motion controls, reduced motion and failure fallback. Attach measurements and any remaining limitations.
 - [ ] Published and verified: CI, merged commit, READY production alias, live HTML/Markdown/media and Safari playback. Remove temporary QA and task-owned processes.
 
 ## Release evidence

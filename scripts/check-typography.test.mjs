@@ -2,6 +2,34 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { checkSource } from "./check-typography.mjs"
 
+test("Made keeps only three sizes across CSS, tokens and inline styles", () => {
+  const css = "apps/web/app/made/made.css"
+  const component = "apps/web/components/carrel-story.tsx"
+  assert.deepEqual(
+    checkSource(
+      css,
+      "h1 { font-size: 24px; } p { font-size: 16px; } small { font-size: 14px; }"
+    ),
+    []
+  )
+  for (const value of ["80px", "5rem", "var(--text-display)"])
+    assert.ok(checkSource(css, `h1 { font-size: ${value}; }`).length)
+  for (const utility of [
+    "text-display",
+    "md:text-display",
+    "text-[80px]",
+    "text-(--text-display)",
+  ])
+    assert.ok(
+      checkSource(component, `const title = <h1 className="${utility}" />`)
+        .length
+    )
+  assert.ok(
+    checkSource(component, "const title = <h1 style={{ fontSize: 80 }} />")
+      .length
+  )
+})
+
 test("accepts all four sizes, inherited text and color utilities", () => {
   assert.deepEqual(
     checkSource(
