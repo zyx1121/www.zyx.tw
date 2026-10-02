@@ -1,3 +1,4 @@
+import { T } from "@workspace/ui/components/locale-provider"
 import { Card, CardContent } from "@/components/ui/card"
 import type { Debt } from "@/lib/types"
 
@@ -6,7 +7,7 @@ export function BalanceSummary({ debts }: { debts: Debt[] }) {
     return (
       <Card>
         <CardContent className="py-4 text-center text-sm text-muted-foreground">
-          目前沒有未核銷的欠款
+          <T>{"目前沒有未核銷的欠款"}</T>
         </CardContent>
       </Card>
     )
@@ -19,7 +20,7 @@ export function BalanceSummary({ debts }: { debts: Debt[] }) {
           <CardContent className="flex items-center justify-between px-4 py-2">
             <span className="text-sm">
               <span className="font-medium">{debt.from}</span>
-              {" 欠 "}
+              <T>{" 欠 "}</T>
               <span className="font-medium">{debt.to}</span>
             </span>
             <span className="font-medium tabular-nums">

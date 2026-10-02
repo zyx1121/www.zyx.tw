@@ -1,9 +1,10 @@
+import { localizedMetadata } from "@workspace/ui/lib/i18n-server"
+import { MESSAGES } from "@/lib/messages"
 import { MadeExperience } from "@/components/made-experience"
 import { MADE } from "@/lib/made"
 import { pageMetadata } from "@/lib/site"
 
-export const dynamic = "force-static"
-export const metadata = pageMetadata({
+const baseMetadata = pageMetadata({
   title: "Made",
   path: "/made",
   description: MADE.description,
@@ -11,4 +12,8 @@ export const metadata = pageMetadata({
 
 export default function Made() {
   return <MadeExperience />
+}
+
+export async function generateMetadata() {
+  return localizedMetadata(baseMetadata, MESSAGES, "/made")
 }

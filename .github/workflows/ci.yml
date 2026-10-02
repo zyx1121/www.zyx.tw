@@ -31,6 +31,9 @@ jobs:
       - name: Typography policy
         run: bun run typography:check
 
+      - name: Language contract
+        run: bun run i18n:check
+
       - name: Lint
         run: bun run lint
 

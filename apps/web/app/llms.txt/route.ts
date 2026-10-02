@@ -1,7 +1,6 @@
-import { llmsTxt, markdownResponse } from "@/lib/markdown"
+import { getMarkdown } from "@/lib/markdown"
 
-export const dynamic = "force-static"
-
-export function GET() {
+export async function GET() {
+  const { llmsTxt, markdownResponse } = await getMarkdown("en")
   return markdownResponse(llmsTxt(), { type: "text" })
 }

@@ -1,3 +1,5 @@
+import { getI18n } from "@workspace/ui/lib/i18n-server";
+import { MESSAGES } from "@/lib/messages";
 import {
   AUTHOR,
   SITE_DESCRIPTION,
@@ -37,14 +39,23 @@ const DATA = {
   ],
 };
 
-export function JsonLd() {
+export async function JsonLd() {
+  const { locale, t } = await getI18n(MESSAGES);
+  const data = {
+    ...DATA,
+    "@graph": DATA["@graph"].map((item) => ({
+      ...item,
+      description: t(item.description),
+      inLanguage: locale,
+    })),
+  };
   return (
     <script
       type="application/ld+json"
       // Constants only, but `<` is escaped anyway, as the Next.js JSON-LD
       // guide recommends, so no string can close the script tag.
       dangerouslySetInnerHTML={{
-        __html: JSON.stringify(DATA).replace(/</g, "\\u003c"),
+        __html: JSON.stringify(data).replace(/</g, "\\u003c"),
       }}
     />
   );

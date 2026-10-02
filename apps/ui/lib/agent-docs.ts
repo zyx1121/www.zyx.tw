@@ -1,3 +1,5 @@
+import { translator, type Locale } from "@workspace/ui/lib/i18n";
+import { MESSAGES } from "@/lib/messages";
 import { APPLICATION_PRIMITIVES } from "@/lib/application-primitives";
 import { COMPONENTS, getItem, ITEMS, type RegistryItem } from "@/lib/registry";
 import {
@@ -15,9 +17,7 @@ import {
   TAGLINE,
 } from "@/lib/site";
 
-// The Markdown and text documents for agents, built from registry.json at
-// build time. The route handlers under app/ serve them; the static export
-// writes each one to a file in out/.
+// Page Markdown follows the request locale. Technical agent instructions stay English.
 
 const INDEX_URL = `${SITE_URL}${MARKDOWN_PATH}`;
 const LLMS_URL = `${SITE_URL}${LLMS_PATH}`;
@@ -55,7 +55,92 @@ function itemSection(item: RegistryItem, extra: string[] = []) {
 }
 
 /** /index.md: the home page as Markdown. */
-export function indexMarkdown() {
+export function indexMarkdown(locale: Locale = "zh-TW") {
+  const t = translator(locale, MESSAGES);
+  if (locale === "zh-TW")
+    return lines(
+      "---",
+      `site: ${SITE_NAME}`,
+      `url: ${SITE_URL}/`,
+      `title: ${SITE_NAME}`,
+      `description: ${JSON.stringify(t(SITE_DESCRIPTION))}`,
+      "language: zh-TW",
+      "---",
+      "",
+      `# ${SITE_NAME}`,
+      "",
+      t(TAGLINE),
+      "",
+      "ui.zyx.tw 是 zyx.tw 各站的設計系統，以 shadcn/ui 元件庫提供。基礎元件採用原版 base-nova (Base UI)，由 shadcn CLI 管理；此元件庫提供灰階樣式與額外元件。",
+      "",
+      "## 應用元件",
+      "",
+      "首頁展示選擇框、月曆、圖表、可調整面板、訊息、附件，以及 Markdown、程式碼與 JSON 回覆。基礎元件保持原版；MarkdownResponse 由 react-markdown、remark-gfm 與 lowlight 組成。",
+      "",
+      ...APPLICATION_PRIMITIVES.map(
+        (group) => `- ${t(group.title)}: ${group.items.join(", ")}.`
+      ),
+      "",
+      "資料表、日期選擇器、登入與聊天介面由使用端組合。保留固定四角；側欄與可調整工作區放在中央內容內。",
+      "",
+      "## 開始使用",
+      "",
+      "以 Base UI 初始化專案，再加入樣式：",
+      "",
+      "```bash",
+      INIT_COMMAND,
+      addCommand("theme"),
+      "```",
+      "",
+      "直接從 shadcn/ui 加入基礎元件：",
+      "",
+      "```bash",
+      "bunx shadcn@latest add button dialog tabs",
+      "```",
+      "",
+      "在 components.json 設定元件庫，即可用名稱安裝：",
+      "",
+      "```json",
+      JSON.stringify(
+        { registries: { "@zyx1121": `${SITE_URL}/r/{name}.json` } },
+        null,
+        2
+      ),
+      "```",
+      "",
+      "```bash",
+      "bunx shadcn@latest add @zyx1121/ask-ai",
+      "```",
+      "",
+      "## 元件",
+      "",
+      ...[getItem("theme"), ...COMPONENTS].flatMap((item) => [
+        `### ${item.title} (${code(item.name)})`,
+        "",
+        t(item.description),
+        "",
+        `- 安裝：${code(addCommand(item.name))}`,
+        `- JSON: [${item.name}.json](${itemUrl(item.name)})`,
+        ...(item.dependencies?.length
+          ? [`- npm 相依套件：${item.dependencies.map(code).join(", ")}`]
+          : []),
+        ...(item.registryDependencies?.length
+          ? [
+              `- 元件庫相依項目：${item.registryDependencies.map(code).join(", ")}`,
+            ]
+          : []),
+        "",
+      ]),
+      "字型需另外載入：Inter、Noto Sans JP、Noto Sans TC，以及用於程式碼的 Geist Mono。",
+      "",
+      "## 更多",
+      "",
+      `- [設計規範](${DESIGN_URL})`,
+      `- [Agent 指引（英文）](${INSTRUCTIONS_URL})`,
+      `- [Agent 索引（英文）](${LLMS_URL})`,
+      `- [元件庫索引](${REGISTRY_INDEX_URL})`,
+      `- [原始碼](${SOURCE_URL})`
+    );
   return lines(
     "---",
     `site: ${SITE_NAME}`,

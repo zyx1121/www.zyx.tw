@@ -1,11 +1,14 @@
+import { getLocale } from "@workspace/ui/lib/i18n-server";
 import { indexMarkdown } from "@/lib/agent-docs";
 
-// The home page as Markdown. The static export writes it to out/index.md;
-// vercel.json serves it as text/markdown and links it from "/".
-export const dynamic = "force-static";
-
-export function GET() {
-  return new Response(indexMarkdown(), {
-    headers: { "Content-Type": "text/markdown; charset=utf-8" },
+export async function GET() {
+  const locale = await getLocale();
+  return new Response(indexMarkdown(locale), {
+    headers: {
+      "Content-Type": "text/markdown; charset=utf-8",
+      "Content-Language": locale,
+      "Cache-Control": "private, no-store",
+      Vary: "Accept, Cookie",
+    },
   });
 }

@@ -1,4 +1,5 @@
 "use client"
+import { T } from "@workspace/ui/components/locale-provider"
 
 import { cn } from "@workspace/ui/lib/utils"
 
@@ -20,7 +21,7 @@ export function ProjectList({ className }: { className?: string }) {
   return (
     <section aria-labelledby="projects-heading" className={className}>
       <h2 id="projects-heading" className="sr-only">
-        Projects
+        <T>{"Projects"}</T>
       </h2>
       <ul className="flex flex-col gap-y-3">
         {projects.map((project, index) => (
@@ -54,10 +55,10 @@ export function ProjectList({ className }: { className?: string }) {
               }}
               onBlur={() => release(index)}
             >
-              {project.name}
+              <T>{project.name}</T>
             </a>
             <span className="text-muted-foreground transition-colors group-data-active:text-foreground max-sm:sr-only">
-              {project.purpose}
+              <T>{project.purpose}</T>
             </span>
           </li>
         ))}

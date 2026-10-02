@@ -1,3 +1,4 @@
+import { T } from "@workspace/ui/components/locale-provider"
 import { cn } from "@workspace/ui/lib/utils"
 
 import { enter, enterRow } from "@/lib/layout"
@@ -24,14 +25,14 @@ export function Hero({
   return (
     <div className={className}>
       <div className={enter} style={enterRow(1)}>
-        {title}
+        <T>{title}</T>
       </div>
       {subtitle && (
         <p
           className={cn("mt-3 text-muted-foreground", enter)}
           style={enterRow(2)}
         >
-          {subtitle}
+          <T>{subtitle}</T>
         </p>
       )}
     </div>
