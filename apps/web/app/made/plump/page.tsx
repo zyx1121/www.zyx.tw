@@ -1,8 +1,8 @@
 import { MadeExperience } from "@/components/made-experience"
-import { asset, PRODUCTS } from "@/lib/made"
+import { asset, getProduct } from "@/lib/made"
 import { pageMetadata } from "@/lib/site"
 
-const product = PRODUCTS[0]
+const product = getProduct("plump")
 export const dynamic = "force-static"
 export const metadata = pageMetadata({
   title: `${product.name}, ${product.purpose}`,

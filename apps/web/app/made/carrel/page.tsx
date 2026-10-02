@@ -1,12 +1,15 @@
+import { CarrelStory } from "@/components/carrel-story"
 import { MadeExperience } from "@/components/made-experience"
 import { asset, getProduct } from "@/lib/made"
 import { pageMetadata } from "@/lib/site"
 
-const product = getProduct("time")
+import "./carrel.css"
+
+const product = getProduct("carrel")
 export const dynamic = "force-static"
 export const metadata = pageMetadata({
   title: `${product.name}, ${product.purpose}`,
-  path: "/made/time",
+  path: "/made/carrel",
   description: product.description,
   image: {
     url: asset(product.id, "-hero.webp"),
@@ -17,5 +20,9 @@ export const metadata = pageMetadata({
 })
 
 export default function Page() {
-  return <MadeExperience product="time" />
+  return (
+    <MadeExperience product="carrel">
+      <CarrelStory />
+    </MadeExperience>
+  )
 }

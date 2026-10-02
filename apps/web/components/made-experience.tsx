@@ -19,7 +19,14 @@ import { cn } from "@workspace/ui/lib/utils"
 
 import { Hero } from "@/components/hero"
 import { column, enter, enterRow, ENTER, page } from "@/lib/layout"
-import { asset, MADE, PRODUCTS, type Product, type ProductId } from "@/lib/made"
+import {
+  asset,
+  MADE,
+  PRODUCTS,
+  productCategory,
+  type Product,
+  type ProductId,
+} from "@/lib/made"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 
 const PORTRAIT_QUERY = "(max-width: 900px)"
@@ -39,15 +46,22 @@ function CampaignVideo({ id, portrait }: { id: ProductId; portrait: boolean }) {
   useEffect(() => {
     const element = video.current
     if (!element || failed) return
+    let visible = true
     const sync = () => {
-      if (document.hidden) element.pause()
+      if (document.hidden || !visible) element.pause()
       else if (!userPaused.current) void element.play().catch(() => {})
     }
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry?.isIntersecting ?? false
+      sync()
+    })
+    observer.observe(element)
     element.muted = true
     sync()
     document.addEventListener("visibilitychange", sync)
     return () => {
       document.removeEventListener("visibilitychange", sync)
+      observer.disconnect()
       element.pause()
     }
   }, [failed])
@@ -164,9 +178,11 @@ function LocalTime() {
 function Campaign({
   product,
   onModel,
+  hasStory,
 }: {
   product: Product
   onModel: (id: ProductId) => void
+  hasStory: boolean
 }) {
   return (
     <section
@@ -189,7 +205,7 @@ function Campaign({
           fetchPriority="high"
         />
       </picture>
-      <CampaignMotion id={product.id} />
+      {product.motion && <CampaignMotion id={product.id} />}
       <div className="made-wash" aria-hidden />
       <div className="made-label" aria-hidden>
         <Mark id={product.id} />
@@ -198,16 +214,20 @@ function Campaign({
         <h1 id={`${product.id}-headline`}>{product.name}</h1>
         <p>{product.purpose}</p>
         <a className="made-cta" href={product.href}>
-          Open {product.name}
+          {product.action}
           <span aria-hidden>↗</span>
         </a>
       </div>
       <div className="made-campaign-bottom">
         <div className="made-campaign-tools">
           {product.id === "time" && <LocalTime />}
-          <button type="button" onClick={() => onModel(product.id)}>
-            View 3D ↗
-          </button>
+          {product.model ? (
+            <button type="button" onClick={() => onModel(product.id)}>
+              View 3D ↗
+            </button>
+          ) : (
+            hasStory && <a href="#story">Explore ↓</a>
+          )}
         </div>
         <Link href="/made">All products ↗</Link>
       </div>
@@ -215,7 +235,13 @@ function Campaign({
   )
 }
 
-export function MadeExperience({ product: selected }: { product?: ProductId }) {
+export function MadeExperience({
+  product: selected,
+  children,
+}: {
+  product?: ProductId
+  children?: ReactNode
+}) {
   const selectedProduct = PRODUCTS.find((product) => product.id === selected)
   const [model, setModel] = useState<ProductId | null>(null)
   const dialog = useRef<HTMLDialogElement>(null)
@@ -300,7 +326,7 @@ export function MadeExperience({ product: selected }: { product?: ProductId }) {
                 {MADE.title}
               </h1>
             }
-            subtitle="Products by zyx"
+            subtitle="Apps and infrastructure by zyx"
           />
           <div className="made-grid">
             {PRODUCTS.map((product, index) => (
@@ -336,7 +362,10 @@ export function MadeExperience({ product: selected }: { product?: ProductId }) {
                     </h2>
                     <span>{product.purpose}</span>
                   </div>
-                  <span className="made-item-link">View ↗</span>
+                  <div className="made-card-meta">
+                    <span className="made-item-link">View ↗</span>
+                    <span>{productCategory(product)}</span>
+                  </div>
                 </Link>
               </article>
             ))}
@@ -344,8 +373,13 @@ export function MadeExperience({ product: selected }: { product?: ProductId }) {
         </section>
       )}
       {selectedProduct && (
-        <Campaign product={selectedProduct} onModel={setModel} />
+        <Campaign
+          product={selectedProduct}
+          onModel={setModel}
+          hasStory={Boolean(children)}
+        />
       )}
+      {children}
       <dialog
         ref={dialog}
         className="made-dialog"
