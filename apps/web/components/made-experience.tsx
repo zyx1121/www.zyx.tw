@@ -25,7 +25,7 @@ function subscribePortrait(onChange: () => void) {
   return () => query.removeEventListener("change", onChange)
 }
 
-function CampaignVideo({ portrait }: { portrait: boolean }) {
+function CampaignVideo({ id, portrait }: { id: ProductId; portrait: boolean }) {
   const video = useRef<HTMLVideoElement>(null)
   const userPaused = useRef(false)
   const [playing, setPlaying] = useState(false)
@@ -54,11 +54,8 @@ function CampaignVideo({ portrait }: { portrait: boolean }) {
       <video
         ref={video}
         className="made-motion-video"
-        src={asset(
-          "time",
-          portrait ? "-portrait-motion.mp4" : "-hero-motion.mp4"
-        )}
-        poster={asset("time", portrait ? "-portrait.webp" : "-hero.webp")}
+        src={asset(id, portrait ? "-portrait-motion.mp4" : "-hero-motion.mp4")}
+        poster={asset(id, portrait ? "-portrait.webp" : "-hero.webp")}
         autoPlay
         muted
         loop
@@ -88,7 +85,7 @@ function CampaignVideo({ portrait }: { portrait: boolean }) {
   )
 }
 
-function CampaignMotion() {
+function CampaignMotion({ id }: { id: ProductId }) {
   const reducedMotion = useReducedMotion()
   const portrait = useSyncExternalStore(
     subscribePortrait,
@@ -96,7 +93,7 @@ function CampaignMotion() {
     () => null
   )
   if (reducedMotion || portrait === null) return null
-  return <CampaignVideo key={String(portrait)} portrait={portrait} />
+  return <CampaignVideo key={`${id}-${portrait}`} id={id} portrait={portrait} />
 }
 
 const Model = dynamic(() => import("@/components/made-scene"), {
@@ -187,7 +184,7 @@ function Campaign({
           fetchPriority="high"
         />
       </picture>
-      {product.id === "time" && <CampaignMotion />}
+      <CampaignMotion id={product.id} />
       <div className="made-wash" aria-hidden />
       <div className="made-label" aria-hidden>
         <Mark id={product.id} />
