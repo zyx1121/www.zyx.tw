@@ -16,7 +16,7 @@ import { enter, ENTER, enterDelay } from "@/lib/layout"
 export function SiteFooter() {
   const pathname = usePathname()
   const home = pathname === "/"
-  const made = pathname === "/made" || pathname.startsWith("/made/")
+  const made = pathname.startsWith("/made/")
 
   return (
     <BottomCorners

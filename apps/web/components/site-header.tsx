@@ -20,7 +20,7 @@ export function SiteHeader() {
   // The home is a dark 3D stage in either theme, so its corners take the
   // dark tokens, and nothing scrolls under them.
   const home = pathname === "/"
-  const made = pathname === "/made" || pathname.startsWith("/made/")
+  const made = pathname.startsWith("/made/")
 
   return (
     <TopCorners

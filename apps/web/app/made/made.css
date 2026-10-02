@@ -29,38 +29,17 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   --foreground: var(--made-top-ink, var(--color-black));
   --muted-foreground: var(--made-top-ink, var(--color-black));
 }
-.made-identities {
-  max-width: 1800px;
-  min-height: 100svh;
-  padding: 120px 60px 80px;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 40px;
-}
-.made-identity-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 40px;
-}
-.made-eyebrow {
-  color: var(--muted-foreground);
-  margin-bottom: 20px;
-}
-.made-identity-head h1 {
-  max-width: 720px;
-  font-size: 80px;
-  line-height: 80px;
-  font-weight: 500;
-  letter-spacing: -0.06em;
-  text-wrap: balance;
-}
 .made-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
+  grid-template-columns: 1fr;
+  gap: 60px;
+  margin-top: 40px;
+}
+@media (min-width: 1024px) {
+  .made-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
 }
 .made-card {
   display: block;
@@ -69,7 +48,7 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
 .made-page .made-card:hover {
   text-decoration: none;
 }
-.made-card:hover .made-item-link {
+.made-card:is(:hover, :focus-visible) .made-item-link {
   text-decoration: underline;
   text-underline-offset: 4px;
 }
@@ -89,6 +68,19 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   height: 100%;
   object-fit: cover;
 }
+@media (prefers-reduced-motion: no-preference) {
+  .made-object img {
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .made-card:focus-visible .made-object img {
+    transform: scale(1.025);
+  }
+  @media (hover: hover) {
+    .made-card:hover .made-object img {
+      transform: scale(1.025);
+    }
+  }
+}
 .made-identity-name {
   display: flex;
   flex-wrap: wrap;
@@ -100,9 +92,9 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
 .made-identity-name h2 {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 24px;
-  line-height: 32px;
+  gap: 8px;
+  font-size: 16px;
+  line-height: 24px;
   font-weight: 500;
 }
 .made-identity-name > span {
@@ -118,9 +110,13 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   background: currentColor;
   mask: var(--made-mark) center / contain no-repeat;
 }
+.made-identity-name .made-mark {
+  width: 20px;
+  height: 20px;
+}
 .made-item-link {
   display: block;
-  margin-top: 16px;
+  margin-top: 12px;
 }
 .made-campaign {
   position: relative;
@@ -295,9 +291,6 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   gap: 20px;
 }
 @media (max-width: 1200px) {
-  .made-identities {
-    padding-inline: 40px;
-  }
   .made-copy {
     left: 60%;
     right: 40px;
@@ -312,19 +305,6 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   }
 }
 @media (max-width: 900px) {
-  .made-identities {
-    padding: 100px 20px 80px;
-  }
-  .made-identity-head {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 24px;
-  }
-  .made-grid {
-    grid-template-columns: 1fr;
-    gap: 60px;
-    width: 100%;
-  }
   .made-campaign {
     min-height: 700px;
   }
@@ -376,15 +356,6 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
     line-height: 20px;
   }
 }
-@media (max-width: 440px) {
-  .made-identity-head h1 {
-    max-width: 330px;
-  }
-  .made-campaign {
-    min-height: 700px;
-  }
-}
-
 .made-top-corner:has([aria-label="zyx, home"]) {
   --foreground: var(--made-logo-ink, var(--made-top-ink, var(--color-white)));
 }
