@@ -65,8 +65,9 @@ export async function localizedMetadata(
     : undefined
   return {
     ...source,
-    title,
-    description,
+    // Omitted page fields must keep inheriting their root layout values.
+    ...("title" in source ? { title } : {}),
+    ...("description" in source ? { description } : {}),
     ...(source.openGraph
       ? {
           openGraph: {

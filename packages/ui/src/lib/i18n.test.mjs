@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test"
+import { describe, expect, mock, test } from "bun:test"
 import {
   cookieDomain,
   localeCookie,
@@ -10,7 +10,29 @@ import {
 import { localeProxy } from "./i18n-proxy"
 import { NextRequest } from "next/server"
 
+mock.module("next/headers", () => ({
+  headers: async () => new Headers({ "x-zyx-locale": "zh-TW" }),
+  cookies: async () => ({ get: () => undefined }),
+}))
+const { localizedMetadata } = await import("./i18n-server")
+
 describe("shared language contract", () => {
+  test("page metadata inherits omitted layout fields and preserves explicit overrides", async () => {
+    const page = await localizedMetadata(
+      { alternates: { canonical: "/" } },
+      {},
+      "/"
+    )
+    expect(page).not.toHaveProperty("title")
+    expect(page).not.toHaveProperty("description")
+    expect(page.alternates.canonical).toBe("/")
+    const explicit = await localizedMetadata(
+      { title: "Example", description: null },
+      { "zh-TW": { Example: "範例" } }
+    )
+    expect(explicit.title).toBe("範例")
+    expect(explicit.description).toBeNull()
+  })
   test("explicit supported language wins; otherwise use cookie then Traditional Chinese", () => {
     expect(resolveLocale()).toBe("zh-TW")
     expect(resolveLocale("fr", "en")).toBe("en")
