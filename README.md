@@ -75,6 +75,8 @@ The same file sets the page rules, which ui.zyx.tw and www.zyx.tw follow and the
 
 Apps on `@workspace/ui` load the fonts from `packages/ui/src/lib/fonts.ts` and put its `fontVariables` on `<html>`.
 
+For a new Made product, follow the [product publishing guide](./apps/web/MADE.md) and start with its [brief template](./apps/web/templates/made-product.md). They cover the index and campaign design, identity assets, desktop/mobile photography and motion, route registration, generation records and production acceptance.
+
 Shared components live in `packages/ui`. Add a stock component there with the shadcn CLI:
 
 ```bash

@@ -2,6 +2,8 @@
 
 The Plump, Time and Link campaign assets, first published in October 2026.
 
+For new products, follow the [Made publishing guide](../../../MADE.md) and [product brief](../../../templates/made-product.md). This file and the generation JSON records document the selected assets; the guide owns the repeatable workflow and release checks.
+
 - Each product owns a geometric SVG. The same outline is embedded in its Plump `scene.json` (v1) and exported GLB. The parent zyx mark remains the site signature.
 - Plump uses chrome and volume, Time uses amber glass and light, and Link uses vermilion silicone and connection.
 - Material and campaign WebPs are AI art directed images generated with `google/gemini-3.1-flash-image` through OpenRouter. They interpret the supplied outlines; they are not screenshots of the renderer or photographs of actual products or customers.
