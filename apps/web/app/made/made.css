@@ -226,8 +226,8 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
 }
 .made-plump .made-copy {
   font-family:
-    "Helvetica Neue", Helvetica, Arial, var(--font-noto-jp),
-    var(--font-noto-tc), sans-serif;
+    "Helvetica Neue", Helvetica, Arial, var(--font-noto-sans-jp),
+    var(--font-noto-sans-tc), sans-serif;
   font-feature-settings: normal;
 }
 .made-copy p {
