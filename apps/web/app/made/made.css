@@ -263,15 +263,16 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   font-variant-numeric: tabular-nums;
 }
 .made-link .made-copy {
-  left: 74%;
+  left: 78%;
   right: 3%;
 }
 .made-link .made-wash {
   background: linear-gradient(
     90deg,
     transparent 48%,
-    rgb(244 242 235 / 0.08) 65%,
-    rgb(244 242 235 / 0.3)
+    rgb(244 242 235 / 0.08) 58%,
+    rgb(244 242 235 / 0.88) 70%,
+    rgb(244 242 235 / 0.92)
   );
 }
 .made-medium {
@@ -552,5 +553,16 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   .made-time .made-label > span:first-child {
     color: var(--color-white);
     text-shadow: 0 1px 8px rgb(0 0 0 / 0.5);
+  }
+}
+
+@media (min-width: 901px) {
+  .made-link .made-label > span:first-child,
+  .made-link .made-medium {
+    padding: 8px 12px;
+    border-radius: var(--radius-lg);
+    background: rgb(244 242 235 / 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 }
