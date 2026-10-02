@@ -14,6 +14,11 @@ import {
   type CSSProperties,
 } from "react"
 
+import { MaskReveal } from "@workspace/ui/components/ui/mask-reveal"
+import { cn } from "@workspace/ui/lib/utils"
+
+import { Hero } from "@/components/hero"
+import { column, enter, enterRow, ENTER, page } from "@/lib/layout"
 import { asset, MADE, PRODUCTS, type Product, type ProductId } from "@/lib/made"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 
@@ -217,6 +222,7 @@ export function MadeExperience({ product: selected }: { product?: ProductId }) {
   const main = useRef<HTMLElement>(null)
 
   useEffect(() => {
+    if (!selected) return
     let frame = 0
     const update = () => {
       const sections =
@@ -280,38 +286,48 @@ export function MadeExperience({ product: selected }: { product?: ProductId }) {
   return (
     <main
       ref={main}
-      className="made-page dark"
+      className={cn("made-page", selected ? "dark" : [column, page, "flex-1"])}
       data-made-detail={Boolean(selected)}
     >
       {!selected && (
-        <section
-          className="made-identities"
-          id="shapes"
-          data-made-ink="light"
-          aria-labelledby="made-title"
-        >
-          <div className="made-identity-head">
-            <div>
-              <p className="made-eyebrow">Products by zyx</p>
-              <h1 id="made-title">{MADE.title}</h1>
-            </div>
-          </div>
+        <section id="shapes" aria-labelledby="made-title">
+          <Hero
+            title={
+              <h1
+                id="made-title"
+                className="text-2xl/8 font-medium text-pretty"
+              >
+                {MADE.title}
+              </h1>
+            }
+            subtitle="Products by zyx"
+          />
           <div className="made-grid">
             {PRODUCTS.map((product, index) => (
-              <article key={product.id}>
+              <article
+                key={product.id}
+                className={enter}
+                style={enterRow(index + 3)}
+              >
                 <Link
                   className="made-card"
                   href={`/made/${product.id}`}
                   aria-label={`View ${product.name}`}
                 >
                   <div className="made-object">
-                    <img
-                      src={asset(product.id, "-material.webp")}
-                      alt={`${product.name}, ${product.material}`}
-                      width={1024}
-                      height={1024}
-                      loading={index === 0 ? "eager" : "lazy"}
-                    />
+                    <MaskReveal
+                      delay={(index + 3) * ENTER.row}
+                      duration={600}
+                      className="h-full w-full"
+                    >
+                      <img
+                        src={asset(product.id, "-material.webp")}
+                        alt={`${product.name}, ${product.material}`}
+                        width={1024}
+                        height={1024}
+                        loading={index === 0 ? "eager" : "lazy"}
+                      />
+                    </MaskReveal>
                   </div>
                   <div className="made-identity-name">
                     <h2>
