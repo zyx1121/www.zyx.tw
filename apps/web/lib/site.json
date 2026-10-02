@@ -23,7 +23,7 @@
       "path": "/made/plump",
       "label": "Plump",
       "markdown": "/made/plump.md",
-      "summary": "Plump: SVG to 3D, a chrome identity and the current workflow",
+      "summary": "Plump: SVG to 3D",
       "changeFrequency": "monthly",
       "priority": 0.8
     },
@@ -31,7 +31,7 @@
       "path": "/made/time",
       "label": "Time",
       "markdown": "/made/time.md",
-      "summary": "Time: product story, geometric identity and current workflow",
+      "summary": "Time: your local time",
       "changeFrequency": "monthly",
       "priority": 0.8
     },
@@ -39,7 +39,7 @@
       "path": "/made/link",
       "label": "Link",
       "markdown": "/made/link.md",
-      "summary": "Link: product story, geometric identity and current workflow",
+      "summary": "Link: short links",
       "changeFrequency": "monthly",
       "priority": 0.8
     },

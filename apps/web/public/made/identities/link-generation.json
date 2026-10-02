@@ -1,0 +1,31 @@
+{
+  "provider": "OpenRouter",
+  "model": "google/gemini-3.1-flash-image",
+  "generated": "2026-10-02",
+  "family": "Original zyx Link product campaign. Image 1 is the precise product material and shape reference: one compact diagonal double-loop of vermilion silicone, exactly TWO holes, thick bridge, rounded padded outer lobes. Image 2 is the exact geometric silhouette. Preserve the contour, both openings and proportions. One image, no text, no letters, no logos except the supplied shape, no interface, no border or watermark. Photorealistic direct-flash youth editorial photography with real skin, cotton, tactile silicone. Natural unposed expressions, anatomically correct hands. No cars, no luxury styling, no fantasy environment, no extra objects or repeated icons.",
+  "images": [
+    {
+      "id": "link-hero-v2-a",
+      "kind": "hero",
+      "ratio": "16:9",
+      "references": [
+        "references/link-material.webp",
+        "references/link-reference.png"
+      ],
+      "prompt": "Asset: full-bleed website hero. A candid close medium portrait of two adult East Asian friends, shoulder to shoulder against a pale cool-gray stucco wall outdoors. One wears a cobalt T-shirt, one a plain white T-shirt. One friend rests their chin loosely on the other's shoulder, with a small spontaneous grin. The friend in front holds ONE oversized vermilion Link object upright diagonally at chest height, about 35 cm long, lightly gripped at its lower outer edge, both holes fully visible. This is simply friends having fun in front of a camera, not a product sales pose. Slight wide-angle perspective, eye-level 35mm snapshot, bright direct flash mixed with midday light, honest skin texture and a little film grain. Red object and faces are the visual focus. Composition: people and icon entirely within left 60%, face centers around 40% from top, no cropped heads. Right 35% is uninterrupted pale cool-gray wall with no shadows or props, reserved for black web typography. Keep the very top 12% quiet pale wall across the frame for navigation. No studio seamless look, no hands through the holes, no forced laughter.",
+      "file": "link-hero.webp"
+    },
+    {
+      "id": "link-portrait-v3",
+      "kind": "refinement",
+      "ratio": "9:16",
+      "references": [
+        "output/imagegen/link-hero-v2-a.png",
+        "references/link-material.webp",
+        "references/link-reference.png"
+      ],
+      "prompt": "Use case: identity-preserve. Image 1 is the scene and identity source. Keep these EXACT two adult friends, blue shirt on left and white shirt on right, same faces, shoulder-leaning pose and single red two-hole Link shape held at chest level. Image 2 is material reference, Image 3 is the precise icon outline. Recompose as a vertical 9:16 FULL BODY or three-quarter photograph, by moving the camera further back. CRITICAL LAYOUT: no large blank space above heads. Top of heads at 8% of image height. Faces around 18-25%. Red Link shape around 32-42%, ending BEFORE 48% height. Both people occupy the upper-middle area at a smaller scale than a closeup. The lower half shows the lower parts of their plain casual clothing, a pale concrete wall and ground, low-detail enough for an opaque-free website headline at 68% height. Preserve the same physical moment and lighting. Make the framing wider, not faces larger. No text, no borders, no collage, no extra props or people. Coherent continuous real outdoor photograph, bright natural flash, skin texture and silicone sheen.",
+      "file": "link-portrait.webp"
+    }
+  ]
+}
