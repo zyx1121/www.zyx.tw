@@ -1,9 +1,9 @@
 "use client"
 
-/* The editorial images retain their native composition at every width. */
+/* Full-viewport photographs use separately composed portrait sources. */
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link"
-import { useEffect, useRef, useState, type ReactNode } from "react"
+import { Fragment, useEffect, useRef, useState, type ReactNode } from "react"
 
 import { CARREL } from "@/lib/carrel"
 import { column } from "@/lib/layout"
@@ -172,85 +172,120 @@ function CopyCode({ label, value }: { label: string; value: string }) {
   )
 }
 
+function Photograph({
+  image,
+  portrait,
+  alt,
+  align = "center",
+}: {
+  image: string
+  portrait: string
+  alt: string
+  align?: "center" | "right"
+}) {
+  return (
+    <figure
+      className="carrel-photograph"
+      data-made-ink="dark"
+      data-align={align}
+    >
+      <picture>
+        <source media="(max-width: 900px)" srcSet={asset("carrel", portrait)} />
+        <img
+          src={asset("carrel", image)}
+          alt={alt}
+          width={1920}
+          height={1080}
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
+    </figure>
+  )
+}
+
 export function CarrelStory() {
   return (
-    <div id="story" className={`carrel-story ${column}`}>
-      <Reveal>
-        <section
-          className="carrel-introduction"
-          aria-labelledby="carrel-intro-title"
-        >
-          <p className="carrel-caption">{CARREL.eyebrow}</p>
-          <h2 id="carrel-intro-title">{CARREL.introduction.title}</h2>
-          <p>{CARREL.introduction.body}</p>
-        </section>
-      </Reveal>
-      {CARREL.chapters.map((chapter) => (
-        <section
-          className="carrel-chapter"
-          key={chapter.id}
-          aria-labelledby={`carrel-${chapter.id}-title`}
-        >
+    <div id="story" className="carrel-story">
+      <section className="carrel-content" aria-labelledby="carrel-intro-title">
+        <div className={column}>
           <Reveal>
-            <figure>
-              <div className="carrel-image">
-                <img
-                  src={asset("carrel", chapter.image)}
-                  alt={chapter.alt}
-                  width={1920}
-                  height={1080}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-              <figcaption className="carrel-caption">
-                {chapter.caption}
-              </figcaption>
-            </figure>
-          </Reveal>
-          <Reveal>
-            <div className="carrel-chapter-copy">
-              <div>
-                <p className="carrel-caption">{chapter.number}</p>
-                <h2 id={`carrel-${chapter.id}-title`}>{chapter.title}</h2>
-              </div>
-              <p>{chapter.body}</p>
+            <div className="carrel-introduction">
+              <p className="carrel-caption">{CARREL.eyebrow}</p>
+              <h2 id="carrel-intro-title">{CARREL.introduction.title}</h2>
+              <p>{CARREL.introduction.body}</p>
             </div>
-            {chapter.id === "workspace" && <Workflow />}
-            {chapter.id === "connections" && <Connections />}
-            {chapter.id === "snapshots" && <Lifecycle />}
           </Reveal>
-        </section>
+        </div>
+      </section>
+      {CARREL.chapters.map((chapter) => (
+        <Fragment key={chapter.id}>
+          <Photograph
+            image={chapter.image}
+            portrait={chapter.portrait}
+            alt={chapter.alt}
+          />
+          <section
+            className="carrel-content"
+            aria-labelledby={`carrel-${chapter.id}-title`}
+          >
+            <div className={column}>
+              <Reveal>
+                <p className="carrel-caption">{chapter.caption}</p>
+                <div className="carrel-chapter-copy">
+                  <div>
+                    <p className="carrel-caption">{chapter.number}</p>
+                    <h2 id={`carrel-${chapter.id}-title`}>{chapter.title}</h2>
+                  </div>
+                  <p>{chapter.body}</p>
+                </div>
+                {chapter.id === "workspace" && <Workflow />}
+                {chapter.id === "connections" && <Connections />}
+                {chapter.id === "snapshots" && <Lifecycle />}
+              </Reveal>
+            </div>
+          </section>
+        </Fragment>
       ))}
-      <Reveal>
-        <section
-          id="get-started"
-          className="carrel-start"
-          aria-labelledby="carrel-start-title"
-        >
-          <p className="carrel-caption">Get started</p>
-          <h2 id="carrel-start-title">{CARREL.start.title}</h2>
-          <p className="carrel-start-intro">{CARREL.start.body}</p>
-          <CopyCode label="MCP endpoint" value={CARREL.start.endpoint} />
-          {CARREL.start.clients.map((client) => (
-            <CopyCode
-              key={client.name}
-              label={client.name}
-              value={client.command}
-            />
-          ))}
-          <div className="carrel-first-request">
-            <h3>Your first request</h3>
-            <blockquote>{CARREL.start.firstRequest}</blockquote>
-            <p className="carrel-caption">
-              Your agent can use a saved public SSH key, or ask you for one.
-            </p>
-          </div>
-          <Link href="/made" className="carrel-return">
-            All products ↗
-          </Link>
-        </section>
-      </Reveal>
+      <Photograph
+        image={CARREL.start.image}
+        portrait={CARREL.start.portrait}
+        alt={CARREL.start.alt}
+        align="right"
+      />
+      <section
+        id="get-started"
+        className="carrel-content"
+        aria-labelledby="carrel-start-title"
+      >
+        <div className={column}>
+          <Reveal>
+            <div className="carrel-start">
+              <p className="carrel-caption">Get started</p>
+              <h2 id="carrel-start-title">{CARREL.start.title}</h2>
+              <p className="carrel-start-intro">{CARREL.start.body}</p>
+              <CopyCode label="MCP endpoint" value={CARREL.start.endpoint} />
+              {CARREL.start.clients.map((client) => (
+                <CopyCode
+                  key={client.name}
+                  label={client.name}
+                  value={client.command}
+                />
+              ))}
+              <div className="carrel-first-request">
+                <h3>Your first request</h3>
+                <blockquote>{CARREL.start.firstRequest}</blockquote>
+                <p className="carrel-caption">
+                  Your agent can use a saved public SSH key, or ask you for one.
+                </p>
+              </div>
+              <Link href="/made" className="carrel-return">
+                All products ↗
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+      </section>
     </div>
   )
 }

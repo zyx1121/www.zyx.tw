@@ -82,7 +82,7 @@ export const PRODUCTS = [
     model: false,
     action: "Get started",
     imageAlt:
-      "A woman with a black bob sits at an oak library desk beside a cobalt ceramic arch in soft daylight.",
+      "A young woman with long black hair and a white blouse sits at an oak library desk beside a cobalt ceramic arch.",
   },
 ] as const satisfies readonly ProductDefinition[]
 

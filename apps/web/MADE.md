@@ -20,7 +20,7 @@ Keep the index within the main site's visual system. The individual campaign can
 
 Keep product type and platform separate: `kind` is `app` or `infrastructure`, while `platforms` can contain `web`, `ios` and `macos`. A product can support multiple platforms. Cards show the resulting category label; only add collection filters when the number of products makes them useful.
 
-Each product has one introduction at `/made/<id>`. A compact product can end after the campaign. A more involved product can pass story content as children to `MadeExperience`, continuing below the hero in the shared column. Choose photographs, screenshots, demonstrations, connection diagrams and setup instructions for that product. Preserve the common type scale, radius, spacing and reduced-motion behavior.
+Each product has one introduction at `/made/<id>`. A compact product can end after the campaign. A more involved product can pass story content as children to `MadeExperience`. Alternate a full-bleed photograph occupying `100dvh` and the available viewport width with a separate content section of at least `100dvh`. Only the content section's inner wrapper uses the shared column. Let long content grow on short or narrow screens. Do not inset photographs into that column, round their viewport edges or place copy under an image within the same section. Preserve rounded cards and controls, the common type scale and reduced-motion behavior. Use ordinary document scrolling, without forced snapping.
 
 Carrel is the first extended page: [its story component](./components/carrel-story.tsx) alternates editorial images, short text and interactive explanations. [Its content module](./lib/carrel.ts) feeds both HTML and Markdown. The examples explain a workflow and do not run real infrastructure operations. Its primary action reaches MCP setup on the same page. Availability is stated accurately; do not link visitors to a private repository or an unavailable public landing page.
 
@@ -31,13 +31,13 @@ These decisions were confirmed in October 2026. Apply the current design contrac
 | Concern | Index | Product introduction |
 | --- | --- | --- |
 | Layout | Reuse `column` and `page`: centered 576/768/1024px column, 20px inner gutters, title 120px from the top | Full viewport with separately composed landscape and portrait artwork |
-| Type | 24/32px page title, 16/24px product names, 14/20px supporting text | 80/80px product name, shared interface sizes for copy and controls |
+| Type | 24/32px page title, 16/24px product names, 14/20px supporting text | 24/32px product name, 16/24px prose and controls, 14/20px supporting text |
 | Font | Shared Inter and CJK stack | Same stack, with the established Helvetica Neue exception for Plump campaign copy |
 | Corners | Current page foreground, other links muted; shared top/bottom fade | Image-aware ink for legibility; the zyx mark remains the site signature |
 | Cards | 16px radius, one column below 1024px, three columns from 1024px | Reuse the shared campaign component and controls |
 | Motion | Shared 300ms fade, rows 25ms apart, 600ms `MaskReveal`, 1.025 image scale on hover or keyboard focus | Near-still video, inline, muted and looping, with visible Pause/Play |
 
-The index shows material artwork directly. Keep the Material/Shape and Photo/Print switches removed. The 80px title belongs to the product introduction. Keep the index title, left edge and navigation aligned when moving between Made, Works and About.
+The index shows material artwork directly. Keep the Material/Shape and Photo/Print switches removed. Made uses exactly three font sizes, 24px, 16px and 14px, on both index and product pages. There is no oversized campaign-title exception. Keep the index title, left edge and navigation aligned when moving between Made, Works and About.
 
 Two breakpoints have different jobs: the index grid changes at 1024px, while campaign images and videos select portrait at 900px and below. Do not conflate them.
 
@@ -64,7 +64,7 @@ The index, asset URLs and `ProductId` automatically follow `PRODUCTS`. HTML rout
 
 Copy the [brief template](./templates/made-product.md) into the product's task notes. Fill in the product ID, name, one-line purpose, application URL, shape, material, campaign direction and approved references before preparing final assets. Keep the current selection and rejected directions in those notes, so a later session does not regenerate an abandoned design.
 
-The current series uses original adult editorial subjects, restrained clothing, everyday settings and one oversized geometric object. Plump is a chrome four-lobed form, Time an open amber C-ring, Link a vermilion double-loop with two holes and one broad bridge, and Carrel a cobalt ceramic squared arch in a library. New products should have a distinct silhouette and material while fitting the same photographic series. Record intentional changes to that direction in the brief.
+The current series casts original young adult women with a stylish, attractive Japanese/Korean fashion-editorial look and youthful energy, following the owner's selected references. An unspecified adult subject is not enough. Inspect the actual face, hair, wardrobe, pose and mood against those references; an age written in a prompt is not acceptance evidence. Keep the everyday setting and oversized geometric object. Carrel uses long black hair with wispy bangs, a white blouse and relaxed study styling. Its earlier black bob, gray office shirt and mature corporate-portrait direction was rejected. Preserve each existing product's accepted casting and rejected directions in its brief. Plump is a chrome four-lobed form, Time an open amber C-ring, Link a vermilion double-loop with two holes and one broad bridge, and Carrel a cobalt ceramic squared arch in a library.
 
 Product copy stays literal: a name, a short purpose and a clear primary action. Extended sections explain real use cases and supported behavior. Keep interface text out of generated images, including titles, labels, signage and watermarks. Render operational labels and controls as accessible HTML. Write alt text for each selected photograph, including the subject, object and setting.
 
@@ -84,7 +84,7 @@ Use a stable lowercase, hyphenated product ID. All published files live in `publ
 | `<id>-portrait-motion.mp4` | Required when `motion: true`: portrait motion clip derived from the selected portrait source |
 | `<id>-generation.json` | Generation steps, references, prompts, model, processing settings and export facts |
 
-Set `model` and `motion` explicitly for every product. `model: false` removes the viewer and scene/GLB download links; `motion: false` does not request either MP4. When a capability is enabled, complete all its assets; failed-file fallback is not a publishing strategy. Carrel has motion and no downloadable 3D model. Extended pages can add named chapter images such as `carrel-workspace.webp`, with alt text and generation records.
+Set `model` and `motion` explicitly for every product. `model: false` removes the viewer and scene/GLB download links; `motion: false` does not request either MP4. When a capability is enabled, complete all its assets; failed-file fallback is not a publishing strategy. Carrel has motion and no downloadable 3D model. Extended pages add named chapter images such as `carrel-workspace.webp` and `carrel-workspace-portrait.webp`, with alt text and generation records. Use separately composed portrait sources wherever a landscape crop loses the subject or meaningful objects. Check every full-screen crop and corner contrast in Safari.
 
 Generated material and campaign images interpret the geometric reference. They are not renderer screenshots or evidence of a physical product. Preserve the actual silhouette in the SVG, scene and GLB, even when the photographic rendering differs.
 

@@ -2,7 +2,7 @@
   "provider": "OpenRouter",
   "model": "google/gemini-3.1-flash-image",
   "generated": "2026-10-02",
-  "direction": "Cobalt glazed ceramic squared arch in an oak library study carrel. Original adult editorial subject; chapter still lifes explain workspace, connections and saved versions.",
+  "direction": "Young adult women with Japanese/Korean fashion-editorial styling and youthful energy. Long black hair with wispy bangs, white blouse and relaxed library setting with a cobalt ceramic squared arch. Full-viewport images alternate with separate content sections.",
   "images": [
     {
       "file": "carrel-material.webp",
@@ -48,170 +48,6 @@
         ],
         "bytes": 52952,
         "sha256": "e3f67d8d6324e45b00cc618088245cdf134781c7010601baa11edc1cea205508"
-      }
-    },
-    {
-      "file": "carrel-hero.webp",
-      "ratio": "16:9",
-      "steps": [
-        {
-          "id": "carrel-hero",
-          "references": [
-            {
-              "file": "output/imagegen/carrel-material.png",
-              "sha256": "8142108c3e401764082707b1c52b1ece63156c83a70abf2ee54f82c9e6b280ab"
-            },
-            {
-              "file": "references/series.webp",
-              "sha256": "e88d37fda82c295e8a7dda4321d18faff9364c699ac325c338304008b68e7d9a"
-            }
-          ],
-          "prompt": "Create original photographic artwork for the Carrel infrastructure product, part of the zyx Made series. Contemporary Japanese and Korean editorial photography, natural physical materials, restrained styling, calm ordinary study spaces with one unexpected geometric object. Carrel's object is a cobalt blue glazed ceramic squared arch, shaped like an inverted U with thick rounded edges, two straight vertical legs, one wide horizontal top bridge, and an open rectangular void reaching the floor. Keep this exact silhouette consistent. No text, letters, logos, watermarks, signage, labels, arrows, diagrams, captions, interface, collage, borders or graphic bands. Soft directional daylight, gentle direct flash, subtle lens softness, realistic details. The final images will receive film grain in postproduction, do not exaggerate noise.\n\nUse case: photorealistic-natural. Reference 1 defines the exact cobalt ceramic arch. Reference 2 defines only the series' photographic mood, not the subject identity or setting. Cast a distinct original adult East Asian woman age 27 with a chin-length black bob, natural face and calm direct gaze, wearing a plain pale-gray cotton shirt and charcoal trousers. She sits in a quiet old university library study carrel, on a simple oak chair, casually resting one forearm on a huge cobalt ceramic arch standing on the desk beside her. The arch is about the size of her upper body, its two feet rest naturally on the tabletop and its open bottom is fully visible. Her face and hands are clear and anatomically correct. One closed unmarked cream book on the desk. Photograph from a few meters back with a 35mm lens, environmental portrait. Place the woman and sculpture within the LEFT 57 percent of the frame. The RIGHT 38 percent is uninterrupted softly lit cream plaster wall for website text. Pale quiet top edge. Warm oak table, subtle blue reflections, ordinary library atmosphere, no visible writing on book spines. Make the entire frame one continuous real photograph. No text or UI."
-        }
-      ],
-      "source": "carrel-hero.png",
-      "source_sha256": "e4b536c5757388ab3f59ac5d2367356abdaf1e3dbfb67beec8989281b645f4a3",
-      "reported_usage": {
-        "prompt_tokens": 916,
-        "completion_tokens": 2081,
-        "total_tokens": 2997,
-        "cost": 0,
-        "is_byok": true,
-        "prompt_tokens_details": {
-          "cached_tokens": 0,
-          "cache_write_tokens": 0,
-          "audio_tokens": 0,
-          "video_tokens": 0
-        },
-        "cost_details": {
-          "upstream_inference_cost": 0.102461,
-          "upstream_inference_prompt_cost": 0.000458,
-          "upstream_inference_completions_cost": 0.102003
-        },
-        "completion_tokens_details": {
-          "reasoning_tokens": 0,
-          "image_tokens": 1680
-        }
-      },
-      "postprocess": {
-        "source": "carrel-hero.png",
-        "source_sha256": "e4b536c5757388ab3f59ac5d2367356abdaf1e3dbfb67beec8989281b645f4a3",
-        "output": "carrel-hero-film.png",
-        "size": [
-          1920,
-          1080
-        ],
-        "downsample": [
-          1120,
-          630
-        ],
-        "gaussian_blur": 1.15,
-        "saturation": 0.93,
-        "highlight_bloom": {
-          "threshold": 0.67,
-          "radius": 13,
-          "strength": 0.045
-        },
-        "contrast": 0.94,
-        "lift": 0.007,
-        "luminance_grain_sigma": 0.028,
-        "chroma_grain_sigma": 0.0025,
-        "seed": 20261002
-      },
-      "processing_script": "scripts/grade-made-photo.py",
-      "processing_script_sha256": "67018ea207797ce296b4b072b105cf9a82713e9c2d845a003dbf3eed8c8f4123",
-      "export": {
-        "format": "webp",
-        "quality": 90,
-        "method": 6,
-        "size": [
-          1920,
-          1080
-        ],
-        "bytes": 512256,
-        "sha256": "cb1dbfcc0dc056abdf58c18f0e80fa2875006d168638d9b1dcf3c9954bb0fded"
-      }
-    },
-    {
-      "file": "carrel-portrait.webp",
-      "ratio": "9:16",
-      "steps": [
-        {
-          "id": "carrel-portrait",
-          "references": [
-            {
-              "file": "output/imagegen/carrel-hero.png",
-              "sha256": "e4b536c5757388ab3f59ac5d2367356abdaf1e3dbfb67beec8989281b645f4a3"
-            },
-            {
-              "file": "output/imagegen/carrel-material.png",
-              "sha256": "8142108c3e401764082707b1c52b1ece63156c83a70abf2ee54f82c9e6b280ab"
-            }
-          ],
-          "prompt": "Create original photographic artwork for the Carrel infrastructure product, part of the zyx Made series. Contemporary Japanese and Korean editorial photography, natural physical materials, restrained styling, calm ordinary study spaces with one unexpected geometric object. Carrel's object is a cobalt blue glazed ceramic squared arch, shaped like an inverted U with thick rounded edges, two straight vertical legs, one wide horizontal top bridge, and an open rectangular void reaching the floor. Keep this exact silhouette consistent. No text, letters, logos, watermarks, signage, labels, arrows, diagrams, captions, interface, collage, borders or graphic bands. Soft directional daylight, gentle direct flash, subtle lens softness, realistic details. The final images will receive film grain in postproduction, do not exaggerate noise.\n\nUse case: identity-preserve. Recompose the same photo shoot vertically for mobile. Preserve exactly the adult woman in reference 1, her face, bob haircut, pale-gray shirt, charcoal trousers, oak desk, chair, library, lighting and cobalt ceramic arch. Reference 2 reinforces the sculpture shape. Pull the camera back so her complete head, seated upper body and the full arch fit inside the central 80 percent of the width. Her face starts around 36 percent down. Keep the upper 28 percent as real continuous pale plaster wall, not a graphic panel or added band. Keep the lower 22 percent quiet low-detail floor/desk surroundings for controls. She keeps a neutral calm expression and the same relaxed seated pose, forearm resting on the rigid arch. No text, no signs, no joins."
-        }
-      ],
-      "source": "carrel-portrait.png",
-      "source_sha256": "e4da0aeea859e6447d7f7a4ffe07df9162dc1e5d27467927b7729e7346666809",
-      "reported_usage": {
-        "prompt_tokens": 840,
-        "completion_tokens": 2077,
-        "total_tokens": 2917,
-        "cost": 0,
-        "is_byok": true,
-        "prompt_tokens_details": {
-          "cached_tokens": 0,
-          "cache_write_tokens": 0,
-          "audio_tokens": 0,
-          "video_tokens": 0
-        },
-        "cost_details": {
-          "upstream_inference_cost": 0.102411,
-          "upstream_inference_prompt_cost": 0.00042,
-          "upstream_inference_completions_cost": 0.101991
-        },
-        "completion_tokens_details": {
-          "reasoning_tokens": 0,
-          "image_tokens": 1680
-        }
-      },
-      "postprocess": {
-        "source": "carrel-portrait.png",
-        "source_sha256": "e4da0aeea859e6447d7f7a4ffe07df9162dc1e5d27467927b7729e7346666809",
-        "output": "carrel-portrait-film.png",
-        "size": [
-          1080,
-          1920
-        ],
-        "downsample": [
-          630,
-          1120
-        ],
-        "gaussian_blur": 1.15,
-        "saturation": 0.93,
-        "highlight_bloom": {
-          "threshold": 0.67,
-          "radius": 13,
-          "strength": 0.045
-        },
-        "contrast": 0.94,
-        "lift": 0.007,
-        "luminance_grain_sigma": 0.028,
-        "chroma_grain_sigma": 0.0025,
-        "seed": 20261002
-      },
-      "processing_script": "scripts/grade-made-photo.py",
-      "processing_script_sha256": "67018ea207797ce296b4b072b105cf9a82713e9c2d845a003dbf3eed8c8f4123",
-      "export": {
-        "format": "webp",
-        "quality": 90,
-        "method": 6,
-        "size": [
-          1080,
-          1920
-        ],
-        "bytes": 511646,
-        "sha256": "f8b352cb43c2f58370d9a20259374b9f5f9777c39af67034c6391efe30142790"
       }
     },
     {
@@ -459,6 +295,556 @@
         "bytes": 516232,
         "sha256": "c65e641a745d412ba6f4c4fc6c9102c3d1f96cb7e906e9945ff0efe4a7533be5"
       }
+    },
+    {
+      "file": "carrel-hero.webp",
+      "ratio": "16:9",
+      "steps": [
+        {
+          "id": "carrel-hero",
+          "references": [
+            {
+              "file": "references/casting-style.png",
+              "sha256": "c1cc3c16c9a7109190e29babd0edb10f5b0ae2c1c8164ca7c71f162554ccf56e"
+            },
+            {
+              "file": "references/carrel-material.png",
+              "sha256": "8142108c3e401764082707b1c52b1ece63156c83a70abf2ee54f82c9e6b280ab"
+            }
+          ],
+          "prompt": "Original editorial campaign for Carrel infrastructure, Japanese/Korean contemporary fashion photography, youthful and lively but cool, candid direct-flash character, airy pale walls and pale oak study furniture. Photorealistic physical materials, soft daylight, slight lens softness. No text, typography, logos, watermarks, signs, borders, graphic bands or UI. The cobalt glazed ceramic object is a squared inverted U arch with two straight thick legs, a broad horizontal top bridge, gently rounded edges and an open bottom. Preserve its silhouette. Film softness and grain will be added afterwards.\n\nUse case: photorealistic-natural. Image 1 is a casting and fashion mood reference only, do not copy its person or scene. Image 2 is the exact cobalt ceramic arch material/silhouette reference. Create an original beautiful 22-year-old adult female fashion model with an unmistakably youthful early-twenties look, long straight jet-black hair past her chest and soft wispy bangs, fresh dewy skin, light natural makeup and a lively direct gaze, styled like a contemporary Tokyo/Seoul independent fashion editorial. She wears a crisp white short-sleeved blouse, a charcoal pleated skirt, white crew socks and simple black loafers, not an office shirt or business trousers. At a sunlit pale-oak library study desk, she sits casually sideways on a wooden chair, one hand relaxed on the desk, the other resting naturally in her lap. The large cobalt ceramic arch stands securely on the desk beside her, separate from her hands. Slight informal posture, relaxed confident expression. Medium-wide environmental fashion portrait, whole seated pose visible, not a stiff corporate headshot. Subject and arch together occupy the left 56 percent, subject face around x=38%, y=37%. The right 40 percent is an empty pale plaster wall for live headline. Keep top edge quiet and bright, do not crop head or arch. Soft cool daylight mixed with gentle direct flash, clear facial features, no harsh age-accentuating shadows."
+        }
+      ],
+      "source": "carrel-hero.png",
+      "source_sha256": "685ef73b853ebacf8de75bcda4b9b85d3722566e33503863214e27a3aa5d7c52",
+      "reported_usage": {
+        "prompt_tokens": 925,
+        "completion_tokens": 2063,
+        "total_tokens": 2988,
+        "cost": 0,
+        "is_byok": true,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.1024115,
+          "upstream_inference_prompt_cost": 0.0004625,
+          "upstream_inference_completions_cost": 0.101949
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 1680
+        }
+      },
+      "postprocess": {
+        "source": "carrel-hero.png",
+        "source_sha256": "685ef73b853ebacf8de75bcda4b9b85d3722566e33503863214e27a3aa5d7c52",
+        "output": "carrel-hero-film.png",
+        "size": [
+          1920,
+          1080
+        ],
+        "downsample": [
+          1120,
+          630
+        ],
+        "gaussian_blur": 1.15,
+        "saturation": 0.93,
+        "highlight_bloom": {
+          "threshold": 0.67,
+          "radius": 13,
+          "strength": 0.045
+        },
+        "contrast": 0.94,
+        "lift": 0.007,
+        "luminance_grain_sigma": 0.028,
+        "chroma_grain_sigma": 0.0025,
+        "seed": 20261002
+      },
+      "processing_script": "scripts/grade-made-photo.py",
+      "processing_script_sha256": "67018ea207797ce296b4b072b105cf9a82713e9c2d845a003dbf3eed8c8f4123",
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6,
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 506462,
+        "sha256": "d8b02dd1a7ede428a8a36436c09faa414919e0a1c9c12d6329c510843bdcaf11"
+      }
+    },
+    {
+      "file": "carrel-portrait.webp",
+      "ratio": "9:16",
+      "steps": [
+        {
+          "id": "carrel-portrait",
+          "references": [
+            {
+              "file": "output/imagegen/carrel-hero.png",
+              "sha256": "685ef73b853ebacf8de75bcda4b9b85d3722566e33503863214e27a3aa5d7c52"
+            }
+          ],
+          "prompt": "Original editorial campaign for Carrel infrastructure, Japanese/Korean contemporary fashion photography, youthful and lively but cool, candid direct-flash character, airy pale walls and pale oak study furniture. Photorealistic physical materials, soft daylight, slight lens softness. No text, typography, logos, watermarks, signs, borders, graphic bands or UI. The cobalt glazed ceramic object is a squared inverted U arch with two straight thick legs, a broad horizontal top bridge, gently rounded edges and an open bottom. Preserve its silhouette. Film softness and grain will be added afterwards.\n\nUse case: identity-preserve. Recompose this selected campaign into a vertical portrait. Preserve the exact same youthful adult woman, long straight black hair and wispy bangs, facial identity, white short-sleeve blouse, charcoal skirt, white socks, study desk, chair, lighting and cobalt ceramic squared arch. Show a wider view around the same seated pose. Upper 29% must be plain pale wall, head begins below it. The woman and arch fit together in central 78% of width, no cropped head or object, feet may fall near bottom. Keep lower edge simple for controls. No extra people, objects, text or changes to age or styling."
+        }
+      ],
+      "source": "carrel-portrait.png",
+      "source_sha256": "a23ad10dc76809575dad073aa79e72ef1767fc8d7cf4af2d5eef133880ce678f",
+      "reported_usage": {
+        "prompt_tokens": 507,
+        "completion_tokens": 2040,
+        "total_tokens": 2547,
+        "cost": 0,
+        "is_byok": true,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.1021335,
+          "upstream_inference_prompt_cost": 0.0002535,
+          "upstream_inference_completions_cost": 0.10188
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 1680
+        }
+      },
+      "postprocess": {
+        "source": "carrel-portrait.png",
+        "source_sha256": "a23ad10dc76809575dad073aa79e72ef1767fc8d7cf4af2d5eef133880ce678f",
+        "output": "carrel-portrait-film.png",
+        "size": [
+          1080,
+          1920
+        ],
+        "downsample": [
+          630,
+          1120
+        ],
+        "gaussian_blur": 1.15,
+        "saturation": 0.93,
+        "highlight_bloom": {
+          "threshold": 0.67,
+          "radius": 13,
+          "strength": 0.045
+        },
+        "contrast": 0.94,
+        "lift": 0.007,
+        "luminance_grain_sigma": 0.028,
+        "chroma_grain_sigma": 0.0025,
+        "seed": 20261002
+      },
+      "processing_script": "scripts/grade-made-photo.py",
+      "processing_script_sha256": "67018ea207797ce296b4b072b105cf9a82713e9c2d845a003dbf3eed8c8f4123",
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6,
+        "size": [
+          1080,
+          1920
+        ],
+        "bytes": 502662,
+        "sha256": "7dab1e72e4fb473a8126ac1c3825fc910c3401bcad425bee7219cad4d67add70"
+      }
+    },
+    {
+      "file": "carrel-workspace-portrait.webp",
+      "ratio": "9:16",
+      "steps": [
+        {
+          "id": "carrel-workspace-portrait",
+          "references": [
+            {
+              "file": "references/carrel-workspace.png",
+              "sha256": "788f26ec4c1cd8da70bcb8fac8f267ae1fd3f840534261d8286e9ce711eb8400"
+            }
+          ],
+          "prompt": "Original editorial campaign for Carrel infrastructure, Japanese/Korean contemporary fashion photography, youthful and lively but cool, candid direct-flash character, airy pale walls and pale oak study furniture. Photorealistic physical materials, soft daylight, slight lens softness. No text, typography, logos, watermarks, signs, borders, graphic bands or UI. The cobalt glazed ceramic object is a squared inverted U arch with two straight thick legs, a broad horizontal top bridge, gently rounded edges and an open bottom. Preserve its silhouette. Film softness and grain will be added afterwards.\n\nUse case: identity-preserve. Recompose this exact tabletop still-life into a vertical full-screen photograph. There is exactly ONE single cobalt squared arch, ONE cream notebook tucked under that arch and ONE silver laptop to its left. Do not duplicate the arch. Preserve its shape, glaze, desk, pale wall and sidelight. Show the complete single arch and notebook near center, small laptop partially visible on the left. Keep meaningful objects within central 75% width with generous empty pale wall above and pale oak foreground below. No people, cables, other arches, extra objects or text."
+        }
+      ],
+      "source": "carrel-workspace-portrait.png",
+      "source_sha256": "ac480ed570a5aaa8e9de36e64a2f8283493bd6620cb3f961f4f4cb6fe5cae16a",
+      "reported_usage": {
+        "prompt_tokens": 491,
+        "completion_tokens": 2094,
+        "total_tokens": 2585,
+        "cost": 0,
+        "is_byok": true,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.1022875,
+          "upstream_inference_prompt_cost": 0.0002455,
+          "upstream_inference_completions_cost": 0.102042
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 1680
+        }
+      },
+      "postprocess": {
+        "source": "carrel-workspace-portrait.png",
+        "source_sha256": "ac480ed570a5aaa8e9de36e64a2f8283493bd6620cb3f961f4f4cb6fe5cae16a",
+        "output": "carrel-workspace-portrait-film.png",
+        "size": [
+          1080,
+          1920
+        ],
+        "downsample": [
+          630,
+          1120
+        ],
+        "gaussian_blur": 1.15,
+        "saturation": 0.93,
+        "highlight_bloom": {
+          "threshold": 0.67,
+          "radius": 13,
+          "strength": 0.045
+        },
+        "contrast": 0.94,
+        "lift": 0.007,
+        "luminance_grain_sigma": 0.028,
+        "chroma_grain_sigma": 0.0025,
+        "seed": 20261002
+      },
+      "processing_script": "scripts/grade-made-photo.py",
+      "processing_script_sha256": "67018ea207797ce296b4b072b105cf9a82713e9c2d845a003dbf3eed8c8f4123",
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6,
+        "size": [
+          1080,
+          1920
+        ],
+        "bytes": 489988,
+        "sha256": "c5ae3fb5fd2584275e8859318d89c0b75046abed7d17954989696f675cab6634"
+      }
+    },
+    {
+      "file": "carrel-connections-portrait.webp",
+      "ratio": "9:16",
+      "steps": [
+        {
+          "id": "carrel-connections-portrait",
+          "references": [
+            {
+              "file": "references/carrel-connections.png",
+              "sha256": "47675892bfe20cbb83039a88894d92137fe6ef9942c1637e457c5a4633934e29"
+            }
+          ],
+          "prompt": "Original editorial campaign for Carrel infrastructure, Japanese/Korean contemporary fashion photography, youthful and lively but cool, candid direct-flash character, airy pale walls and pale oak study furniture. Photorealistic physical materials, soft daylight, slight lens softness. No text, typography, logos, watermarks, signs, borders, graphic bands or UI. The cobalt glazed ceramic object is a squared inverted U arch with two straight thick legs, a broad horizontal top bridge, gently rounded edges and an open bottom. Preserve its silhouette. Film softness and grain will be added afterwards.\n\nUse case: identity-preserve. Recompose this exact connections tabletop still-life into a vertical full-screen photograph. Preserve every object's count, cobalt glaze, squared-arch silhouette, material, oak desk and pale wall. Fit all arches and the meaningful props fully in the middle 70% of the width and middle 60% of height, with generous pale wall above and pale oak foreground below. For multiple arches arrange their depth along a diagonal receding away from camera instead of spreading horizontally, maintaining physical groundedness. Preserve the cable if present, the notebook and laptop if present. No people or new objects, no text. Natural editorial photography."
+        }
+      ],
+      "source": "carrel-connections-portrait.png",
+      "source_sha256": "10dd961f7f1e8a69b7eab6e05e391be31bd9d476f64ae68efed4ef6c6d0fe60c",
+      "reported_usage": {
+        "prompt_tokens": 505,
+        "completion_tokens": 2128,
+        "total_tokens": 2633,
+        "cost": 0,
+        "is_byok": true,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.1023965,
+          "upstream_inference_prompt_cost": 0.0002525,
+          "upstream_inference_completions_cost": 0.102144
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 1680
+        }
+      },
+      "postprocess": {
+        "source": "carrel-connections-portrait.png",
+        "source_sha256": "10dd961f7f1e8a69b7eab6e05e391be31bd9d476f64ae68efed4ef6c6d0fe60c",
+        "output": "carrel-connections-portrait-film.png",
+        "size": [
+          1080,
+          1920
+        ],
+        "downsample": [
+          630,
+          1120
+        ],
+        "gaussian_blur": 1.15,
+        "saturation": 0.93,
+        "highlight_bloom": {
+          "threshold": 0.67,
+          "radius": 13,
+          "strength": 0.045
+        },
+        "contrast": 0.94,
+        "lift": 0.007,
+        "luminance_grain_sigma": 0.028,
+        "chroma_grain_sigma": 0.0025,
+        "seed": 20261002
+      },
+      "processing_script": "scripts/grade-made-photo.py",
+      "processing_script_sha256": "67018ea207797ce296b4b072b105cf9a82713e9c2d845a003dbf3eed8c8f4123",
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6,
+        "size": [
+          1080,
+          1920
+        ],
+        "bytes": 500392,
+        "sha256": "57eebfe5069b9735fee9b93e93522ea3f9af199007f164a5571f5b2d08fd49b8"
+      }
+    },
+    {
+      "file": "carrel-snapshots-portrait.webp",
+      "ratio": "9:16",
+      "steps": [
+        {
+          "id": "carrel-snapshots-portrait",
+          "references": [
+            {
+              "file": "references/carrel-snapshots.png",
+              "sha256": "abc5c01c9b81f3b4d451484d4a2829743c4d112c1ef97b75d2073b9ad434b7d9"
+            }
+          ],
+          "prompt": "Original editorial campaign for Carrel infrastructure, Japanese/Korean contemporary fashion photography, youthful and lively but cool, candid direct-flash character, airy pale walls and pale oak study furniture. Photorealistic physical materials, soft daylight, slight lens softness. No text, typography, logos, watermarks, signs, borders, graphic bands or UI. The cobalt glazed ceramic object is a squared inverted U arch with two straight thick legs, a broad horizontal top bridge, gently rounded edges and an open bottom. Preserve its silhouette. Film softness and grain will be added afterwards.\n\nUse case: identity-preserve. Recompose this exact snapshots tabletop still-life into a vertical full-screen photograph. Preserve every object's count, cobalt glaze, squared-arch silhouette, material, oak desk and pale wall. Fit all arches and the meaningful props fully in the middle 70% of the width and middle 60% of height, with generous pale wall above and pale oak foreground below. For multiple arches arrange their depth along a diagonal receding away from camera instead of spreading horizontally, maintaining physical groundedness. Preserve the cable if present, the notebook and laptop if present. No people or new objects, no text. Natural editorial photography."
+        }
+      ],
+      "source": "carrel-snapshots-portrait.png",
+      "source_sha256": "2fe5a375d4092bcad3cf42483ea7da01a7b07940ba110cf2261e57600f912d57",
+      "reported_usage": {
+        "prompt_tokens": 1366,
+        "completion_tokens": 1680,
+        "total_tokens": 3046,
+        "cost": 0.101483,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.101483,
+          "upstream_inference_prompt_cost": 0.000683,
+          "upstream_inference_completions_cost": 0.1008
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 1680
+        }
+      },
+      "postprocess": {
+        "source": "carrel-snapshots-portrait.png",
+        "source_sha256": "2fe5a375d4092bcad3cf42483ea7da01a7b07940ba110cf2261e57600f912d57",
+        "output": "carrel-snapshots-portrait-film.png",
+        "size": [
+          1080,
+          1920
+        ],
+        "downsample": [
+          630,
+          1120
+        ],
+        "gaussian_blur": 1.15,
+        "saturation": 0.93,
+        "highlight_bloom": {
+          "threshold": 0.67,
+          "radius": 13,
+          "strength": 0.045
+        },
+        "contrast": 0.94,
+        "lift": 0.007,
+        "luminance_grain_sigma": 0.028,
+        "chroma_grain_sigma": 0.0025,
+        "seed": 20261002
+      },
+      "processing_script": "scripts/grade-made-photo.py",
+      "processing_script_sha256": "67018ea207797ce296b4b072b105cf9a82713e9c2d845a003dbf3eed8c8f4123",
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6,
+        "size": [
+          1080,
+          1920
+        ],
+        "bytes": 497720,
+        "sha256": "71847972d40dfca55603c7a2060e36d17b7d7deaa58f4fa32e87770b4ab599e9"
+      }
+    },
+    {
+      "file": "carrel-study.webp",
+      "ratio": "16:9",
+      "steps": [
+        {
+          "id": "carrel-study",
+          "references": [
+            {
+              "file": "output/imagegen/carrel-hero.png",
+              "sha256": "685ef73b853ebacf8de75bcda4b9b85d3722566e33503863214e27a3aa5d7c52"
+            }
+          ],
+          "prompt": "Original editorial campaign for Carrel infrastructure, Japanese/Korean contemporary fashion photography, youthful and lively but cool, candid direct-flash character, airy pale walls and pale oak study furniture. Photorealistic physical materials, soft daylight, slight lens softness. No text, typography, logos, watermarks, signs, borders, graphic bands or UI. The cobalt glazed ceramic object is a squared inverted U arch with two straight thick legs, a broad horizontal top bridge, gently rounded edges and an open bottom. Preserve its silhouette. Film softness and grain will be added afterwards.\n\nUse case: identity-preserve. A second photograph in the same fashion editorial. Preserve this exact young adult woman, youthful face, long black hair and wispy bangs, white blouse, charcoal skirt and cobalt arch. Camera is now across the library desk, wider environmental view; she sits relaxed behind the pale oak desk looking down at a small open silver laptop with her hands resting naturally beside it. Laptop screen faces her, no visible interface. The cobalt arch stands beside the laptop. Woman and arch grouped within central 65% width, head near upper center. Pale wall and soft daylight, quiet cinematic study moment. Keep corners low detail and pale, especially bottom corners as the fixed site controls are black. No other people or text."
+        }
+      ],
+      "source": "carrel-study.png",
+      "source_sha256": "5ea0c300cebf3bea86d819c91ed479a4f555c505b98ef62ab01104188055b18f",
+      "reported_usage": {
+        "prompt_tokens": 519,
+        "completion_tokens": 2113,
+        "total_tokens": 2632,
+        "cost": 0,
+        "is_byok": true,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.1023585,
+          "upstream_inference_prompt_cost": 0.0002595,
+          "upstream_inference_completions_cost": 0.102099
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 1680
+        }
+      },
+      "postprocess": {
+        "source": "carrel-study.png",
+        "source_sha256": "5ea0c300cebf3bea86d819c91ed479a4f555c505b98ef62ab01104188055b18f",
+        "output": "carrel-study-film.png",
+        "size": [
+          1920,
+          1080
+        ],
+        "downsample": [
+          1120,
+          630
+        ],
+        "gaussian_blur": 1.15,
+        "saturation": 0.93,
+        "highlight_bloom": {
+          "threshold": 0.67,
+          "radius": 13,
+          "strength": 0.045
+        },
+        "contrast": 0.94,
+        "lift": 0.007,
+        "luminance_grain_sigma": 0.028,
+        "chroma_grain_sigma": 0.0025,
+        "seed": 20261002
+      },
+      "processing_script": "scripts/grade-made-photo.py",
+      "processing_script_sha256": "67018ea207797ce296b4b072b105cf9a82713e9c2d845a003dbf3eed8c8f4123",
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6,
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 519052,
+        "sha256": "9757ad3a9021cd26070627b81406827644cf3d2864ad6580645079fc69afc405"
+      }
+    },
+    {
+      "file": "carrel-study-portrait.webp",
+      "ratio": "9:16",
+      "steps": [
+        {
+          "id": "carrel-study-portrait",
+          "references": [
+            {
+              "file": "output/imagegen/carrel-study.png",
+              "sha256": "5ea0c300cebf3bea86d819c91ed479a4f555c505b98ef62ab01104188055b18f"
+            }
+          ],
+          "prompt": "Original editorial campaign for Carrel infrastructure, Japanese/Korean contemporary fashion photography, youthful and lively but cool, candid direct-flash character, airy pale walls and pale oak study furniture. Photorealistic physical materials, soft daylight, slight lens softness. No text, typography, logos, watermarks, signs, borders, graphic bands or UI. The cobalt glazed ceramic object is a squared inverted U arch with two straight thick legs, a broad horizontal top bridge, gently rounded edges and an open bottom. Preserve its silhouette. Film softness and grain will be added afterwards.\n\nUse case: identity-preserve. Recompose the exact study scene into a VERTICAL 9:16 full-screen photograph. Preserve this exact young adult woman with long black hair and wispy bangs, youthful face, white blouse, same laptop, ONE cobalt squared arch and oak desk. IMPORTANT: photograph from further away so the woman, laptop AND the entire arch form one compact group within the central 60 percent of the image width. The arch must be beside the woman very close to the laptop, with its rightmost edge BEFORE 80 percent image width. Leave the outermost 20 percent on BOTH sides as empty pale wall/table. Woman head near 35 percent image height; arch and laptop at 60 percent image height. Keep empty wall above and pale oak below. No clipped objects, no new objects, no text."
+        }
+      ],
+      "source": "carrel-study-portrait.png",
+      "source_sha256": "845fd57cfaff32d1c56f8266a3c276a25817f6e82ccbb10d0e862ea74262b835",
+      "reported_usage": {
+        "prompt_tokens": 545,
+        "completion_tokens": 2090,
+        "total_tokens": 2635,
+        "cost": 0,
+        "is_byok": true,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.1023025,
+          "upstream_inference_prompt_cost": 0.0002725,
+          "upstream_inference_completions_cost": 0.10203
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 1680
+        }
+      },
+      "postprocess": {
+        "source": "carrel-study-portrait.png",
+        "source_sha256": "845fd57cfaff32d1c56f8266a3c276a25817f6e82ccbb10d0e862ea74262b835",
+        "output": "carrel-study-portrait-film.png",
+        "size": [
+          1080,
+          1920
+        ],
+        "downsample": [
+          630,
+          1120
+        ],
+        "gaussian_blur": 1.15,
+        "saturation": 0.93,
+        "highlight_bloom": {
+          "threshold": 0.67,
+          "radius": 13,
+          "strength": 0.045
+        },
+        "contrast": 0.94,
+        "lift": 0.007,
+        "luminance_grain_sigma": 0.028,
+        "chroma_grain_sigma": 0.0025,
+        "seed": 20261002
+      },
+      "processing_script": "scripts/grade-made-photo.py",
+      "processing_script_sha256": "67018ea207797ce296b4b072b105cf9a82713e9c2d845a003dbf3eed8c8f4123",
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6,
+        "size": [
+          1080,
+          1920
+        ],
+        "bytes": 506244,
+        "sha256": "e964c6fc90fbadb25592098abae7057d1f297dbc9b3f99e70fb2a9395f650f21"
+      }
     }
   ],
   "videos": [
@@ -467,7 +853,7 @@
       "provider": "OpenRouter",
       "model": "kwaivgi/kling-v3.0-pro",
       "generated": "2026-10-02",
-      "prompt": "A near-still five-second living editorial photograph. Locked camera. Preserve the exact adult woman, black bob, gray shirt, seated pose, face proportions and calm closed-mouth expression. Only one subtle natural blink and barely perceptible breathing. No head turn, no smile, no hand movement. The cobalt glazed ceramic squared arch must remain completely rigid and stationary, preserving its two legs, wide top bridge, open bottom, thickness, glazing, reflections and contact points. Keep the oak desk, chair, hands, book, clothing and cream wall unchanged. No zoom, camera move, reframing, text or added objects. Settle into the exact reference pose at the end for a quiet loop.",
+      "prompt": "A near-still five-second living editorial photograph. Locked camera. Preserve this exact young adult woman, youthful face, long straight black hair with wispy bangs, white short-sleeved blouse, charcoal skirt, seated pose and relaxed expression. Only one subtle natural blink and barely perceptible breathing. No head turn, smile change, hand or leg movement. The cobalt glazed ceramic squared arch stays completely rigid and stationary, with unchanged two legs, broad bridge and open bottom, surface and contact points. Keep desk, chair, clothing, hands, hair length and pale wall identical. No zoom, camera movement, reframing or new objects or text. End in the precise starting pose for a quiet loop.",
       "request": {
         "duration": 5,
         "resolution": "720p",
@@ -476,14 +862,14 @@
       },
       "first_frame": "carrel-hero.png",
       "last_frame": "carrel-hero.png",
-      "reference_sha256": "e4b536c5757388ab3f59ac5d2367356abdaf1e3dbfb67beec8989281b645f4a3",
+      "reference_sha256": "685ef73b853ebacf8de75bcda4b9b85d3722566e33503863214e27a3aa5d7c52",
       "reported_usage": {
         "cost": 0.56,
         "is_byok": false
       },
       "postprocess": {
         "source": "carrel-hero-raw.mp4",
-        "source_sha256": "89b2b0979d3464b5318e92e22406648302c5e50cef71f51be643a703e05157fb",
+        "source_sha256": "e4de2ba6ebab6b28de933f50c7c260f9813397e22c37ce67287ba13e11a8d8b8",
         "output": "carrel-hero-film.mp4",
         "frames": 121,
         "fps": 24.0,
@@ -507,8 +893,8 @@
         "crf": 22,
         "maxrate": "4M",
         "bufsize": "4M",
-        "bytes": 1164489,
-        "sha256": "a5fad3f2931138204e383dcc24dc383ec262584adf9fed4852bb75637612411f"
+        "bytes": 1688692,
+        "sha256": "b3a2297d913239b81be0a9fc464f0018f84e1f5437f081d016d2b95f0f23da14"
       },
       "loop_note": "Small natural pose changes remain between the first and last frames."
     },
@@ -517,7 +903,7 @@
       "provider": "OpenRouter",
       "model": "kwaivgi/kling-v3.0-pro",
       "generated": "2026-10-02",
-      "prompt": "Preserve the vertical framing and all quiet wall space above the head. A near-still five-second living editorial photograph. Locked camera. Preserve the exact adult woman, black bob, gray shirt, seated pose, face proportions and calm closed-mouth expression. Only one subtle natural blink and barely perceptible breathing. No head turn, no smile, no hand movement. The cobalt glazed ceramic squared arch must remain completely rigid and stationary, preserving its two legs, wide top bridge, open bottom, thickness, glazing, reflections and contact points. Keep the oak desk, chair, hands, book, clothing and cream wall unchanged. No zoom, camera move, reframing, text or added objects. Settle into the exact reference pose at the end for a quiet loop.",
+      "prompt": "Preserve the vertical framing and empty pale wall above her head. A near-still five-second living editorial photograph. Locked camera. Preserve this exact young adult woman, youthful face, long straight black hair with wispy bangs, white short-sleeved blouse, charcoal skirt, seated pose and relaxed expression. Only one subtle natural blink and barely perceptible breathing. No head turn, smile change, hand or leg movement. The cobalt glazed ceramic squared arch stays completely rigid and stationary, with unchanged two legs, broad bridge and open bottom, surface and contact points. Keep desk, chair, clothing, hands, hair length and pale wall identical. No zoom, camera movement, reframing or new objects or text. End in the precise starting pose for a quiet loop.",
       "request": {
         "duration": 5,
         "resolution": "720p",
@@ -526,14 +912,14 @@
       },
       "first_frame": "carrel-portrait.png",
       "last_frame": "carrel-portrait.png",
-      "reference_sha256": "e4da0aeea859e6447d7f7a4ffe07df9162dc1e5d27467927b7729e7346666809",
+      "reference_sha256": "a23ad10dc76809575dad073aa79e72ef1767fc8d7cf4af2d5eef133880ce678f",
       "reported_usage": {
         "cost": 0.56,
         "is_byok": false
       },
       "postprocess": {
         "source": "carrel-portrait-raw.mp4",
-        "source_sha256": "12d3d59cfa82451535894742ca97ffbfd80112ac34b9329d3df44fe81ff9a9dc",
+        "source_sha256": "ce9b5c53373b2a0a0f5ce7937fe06a4b41e564f95adf63433c08bec6ac37c6ca",
         "output": "carrel-portrait-film.mp4",
         "frames": 121,
         "fps": 24.0,
@@ -557,17 +943,103 @@
         "crf": 22,
         "maxrate": "4M",
         "bufsize": "4M",
-        "bytes": 1421515,
-        "sha256": "3dab9e56294be0f3463c14ace94c87f9412ffcf4ccbf82cca64bd2be6cc81b0e"
+        "bytes": 1659285,
+        "sha256": "254235e23292be2471f6cda5b173fae9a758e050ac518f027837fbe1d3a72365"
       },
       "loop_note": "Small natural pose changes remain between the first and last frames."
     }
   ],
   "cost_summary": {
     "currency": "USD",
-    "image_openrouter_reported_cost": 0,
-    "image_reported_upstream_inference_cost": 0.613294,
-    "video_openrouter_reported_cost": 1.12,
-    "note": "Images used BYOK. A zero OpenRouter cost does not mean no provider charge; upstream costs are the values reported by the API, not an invoice. No rejected generation attempts."
-  }
+    "initial_release": {
+      "currency": "USD",
+      "image_openrouter_reported_cost": 0,
+      "image_reported_upstream_inference_cost": 0.613294,
+      "video_openrouter_reported_cost": 1.12,
+      "note": "Images used BYOK. A zero OpenRouter cost does not mean no provider charge; upstream costs are the values reported by the API, not an invoice. No rejected generation attempts."
+    },
+    "this_revision": {
+      "currency": "USD",
+      "image_openrouter_reported_cost": 0.101483,
+      "image_reported_upstream_inference_cost": 0.9197685,
+      "video_openrouter_reported_cost": 1.12,
+      "selected_image_generations": 7,
+      "rejected_image_generations": 2
+    },
+    "note": "This revision includes two rejected portrait compositions. BYOK upstream cost and OpenRouter reported cost are provider-reported accounting fields, not an invoice; do not add them as independent charges."
+  },
+  "casting_review": {
+    "requirements": [
+      "Young adult female casting",
+      "Stylish Japanese/Korean editorial reference",
+      "Youthful energy, long black hair and white blouse"
+    ],
+    "rejected": "The initial bob haircut, gray office shirt and mature corporate-portrait direction.",
+    "reference_role": "casting-style.png guides fashion and mood only; generated subjects are original."
+  },
+  "revision": "2026-10-02 casting and full-viewport story correction",
+  "rejected_attempts": [
+    {
+      "id": "carrel-study-portrait",
+      "prompt": "Original editorial campaign for Carrel infrastructure, Japanese/Korean contemporary fashion photography, youthful and lively but cool, candid direct-flash character, airy pale walls and pale oak study furniture. Photorealistic physical materials, soft daylight, slight lens softness. No text, typography, logos, watermarks, signs, borders, graphic bands or UI. The cobalt glazed ceramic object is a squared inverted U arch with two straight thick legs, a broad horizontal top bridge, gently rounded edges and an open bottom. Preserve its silhouette. Film softness and grain will be added afterwards.\n\nUse case: identity-preserve. Recompose this exact study photograph as a vertical full-screen image. Preserve woman's youthful face, long black hair with wispy bangs, white blouse, pose, laptop and cobalt arch, desk and lighting. Keep all of woman, laptop and arch inside central 75% width, no cropped head or arch. Upper and lower 15% quiet pale wall and light oak. Original camera height and study mood. No new people, objects or text.",
+      "references": [
+        "output/imagegen/carrel-study.png"
+      ],
+      "source_sha256": "b6b4928ce7b1d90342f72da7ed040ff4501013dde0d6a6183591cc66928d6b6a",
+      "reported_usage": {
+        "prompt_tokens": 472,
+        "completion_tokens": 2078,
+        "total_tokens": 2550,
+        "cost": 0,
+        "is_byok": true,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.10223,
+          "upstream_inference_prompt_cost": 0.000236,
+          "upstream_inference_completions_cost": 0.101994
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 1680
+        }
+      },
+      "reason": "The study arch was too close to the right crop edge."
+    },
+    {
+      "id": "carrel-workspace-portrait",
+      "prompt": "Original editorial campaign for Carrel infrastructure, Japanese/Korean contemporary fashion photography, youthful and lively but cool, candid direct-flash character, airy pale walls and pale oak study furniture. Photorealistic physical materials, soft daylight, slight lens softness. No text, typography, logos, watermarks, signs, borders, graphic bands or UI. The cobalt glazed ceramic object is a squared inverted U arch with two straight thick legs, a broad horizontal top bridge, gently rounded edges and an open bottom. Preserve its silhouette. Film softness and grain will be added afterwards.\n\nUse case: identity-preserve. Recompose this exact workspace tabletop still-life into a vertical full-screen photograph. Preserve every object's count, cobalt glaze, squared-arch silhouette, material, oak desk and pale wall. Fit all arches and the meaningful props fully in the middle 70% of the width and middle 60% of height, with generous pale wall above and pale oak foreground below. For multiple arches arrange their depth along a diagonal receding away from camera instead of spreading horizontally, maintaining physical groundedness. Preserve the cable if present, the notebook and laptop if present. No people or new objects, no text. Natural editorial photography.",
+      "references": [
+        "references/carrel-workspace.png"
+      ],
+      "source_sha256": "be6b9a4c037e45e7e3c245eedd170046711fa29e0f579af7bbd5d9793ed5aa18",
+      "reported_usage": {
+        "prompt_tokens": 505,
+        "completion_tokens": 2051,
+        "total_tokens": 2556,
+        "cost": 0,
+        "is_byok": true,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.1021655,
+          "upstream_inference_prompt_cost": 0.0002525,
+          "upstream_inference_completions_cost": 0.101913
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 1680
+        }
+      },
+      "reason": "Duplicated the workspace arch."
+    }
+  ]
 }

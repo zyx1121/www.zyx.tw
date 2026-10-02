@@ -160,6 +160,7 @@ function carrelBlocks() {
     ...CARREL.lifecycle.map((item) => `- ${item.label}: ${item.body}`),
     `## ${CARREL.start.title}`,
     CARREL.start.body,
+    `![${text(CARREL.start.alt)}](${absoluteUrl(asset("carrel", CARREL.start.image))})`,
     `MCP endpoint: ${CARREL.start.endpoint}`,
     ...CARREL.start.clients.map(
       (client) => `### ${client.name}\n\n\`\`\`sh\n${client.command}\n\`\`\``

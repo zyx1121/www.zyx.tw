@@ -32,24 +32,36 @@ function pixels(value) {
   return Number(literal[1]) * (literal[2] === "rem" ? 16 : 1)
 }
 
-function legal(value) {
+function legal(value, allowDisplay = true) {
   const clean = String(value)
     .trim()
     .replace(/\s*!important$/, "")
-  if (ALLOWED.has(pixels(clean)) || clean === "inherit") return true
+  if (clean === "inherit") return true
+  const size = pixels(clean)
+  if (ALLOWED.has(size)) return allowDisplay || size !== 80
   const token = clean.match(/^var\(--text-([\w]+)\)$/)
-  return Boolean(token && TOKENS.has(token[1]))
+  return Boolean(
+    token &&
+    TOKENS.has(token[1]) &&
+    (allowDisplay || TOKENS.get(token[1]) !== 80)
+  )
 }
 
 export function checkSource(path, source, normalized = new Set()) {
   const errors = []
+  const allowDisplay =
+    !/^apps\/web\/(?:app\/made\/|components\/(?:made-|carrel-))/.test(path)
   function report(offset, value) {
     const line = source.slice(0, offset).split("\n").length
     errors.push(
-      `${path}:${line}: illegal font size ${value}; use 14, 16, 24 or 80px`
+      `${path}:${line}: illegal font size ${value}; use ${allowDisplay ? "14, 16, 24 or 80px" : "14, 16 or 24px on Made"}`
     )
   }
   function checkUtilities(text, offset = 0) {
+    if (!allowDisplay) {
+      for (const match of text.matchAll(/\btext-display\b/g))
+        report(offset + match.index, match[0])
+    }
     for (const match of text.matchAll(
       /text-\[([^\]]+)\]|text-\(([^)]+)\)|\[font-size:([^\]]+)\]/g
     )) {
@@ -63,7 +75,7 @@ export function checkSource(path, source, normalized = new Set()) {
       )
         continue
       const tokenValue = value.startsWith("--") ? `var(${value})` : value
-      if (legal(tokenValue)) continue
+      if (legal(tokenValue, allowDisplay)) continue
       const end = match.index + match[0].length
       const standalone =
         (match.index === 0 || /\s/.test(text[match.index - 1])) &&
@@ -87,7 +99,7 @@ export function checkSource(path, source, normalized = new Set()) {
     for (const match of css.matchAll(
       /(?:font-size|--text-[a-z0-9]+)\s*:\s*([^;{}]+)/g
     )) {
-      if (!legal(match[1])) report(offset + match.index, match[1])
+      if (!legal(match[1], allowDisplay)) report(offset + match.index, match[1])
     }
     for (const match of css.matchAll(/(?:^|[;{])\s*font\s*:\s*([^;{}]+)/g)) {
       if (match[1].trim() !== "inherit")
@@ -111,7 +123,7 @@ export function checkSource(path, source, normalized = new Set()) {
       ts.isStringLiteralLike(node) || ts.isNumericLiteral(node)
         ? node.text
         : node.getText(file)
-    if (!legal(value)) report(node.getStart(file), value)
+    if (!legal(value, allowDisplay)) report(node.getStart(file), value)
   }
   function visit(node) {
     if (
@@ -235,6 +247,6 @@ if (
     process.exitCode = 1
   } else
     console.log(
-      "Typography OK: only 14, 16, 24 and 80px; upstream literals are normalized by the shared theme."
+      "Typography OK: Made uses only 14, 16 and 24px; other surfaces also allow 80px. Upstream literals are normalized by the shared theme."
     )
 }
