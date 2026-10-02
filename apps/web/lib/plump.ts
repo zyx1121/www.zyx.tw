@@ -2,11 +2,11 @@
 export const PLUMP = {
   name: "Plump",
   purpose: "SVG to 3D",
-  tagline: "A little more dimension.",
+  tagline: "Your SVG, with a little more body.",
   description:
     "Turn an SVG into a 3D object. Give it depth, find a material, set the light and save a scene you can come back to.",
   href: "https://plump.zyx.tw",
-  image: "/made/plump.webp",
+  image: "/made/identities/plump-material.webp",
   imageAlt: "A silver four-lobed SVG shape given depth and soft edges in Plump",
   idea: {
     title: "Your shape. A new feeling.",
@@ -41,11 +41,6 @@ export const PLUMP = {
   credit: "A product by Loki, made under zyx.",
 } as const
 
-export const MADE = {
-  title: "Made",
-  description: "Small ideas, made into things you can use. Products by zyx.",
-} as const
-
 /** Our sample is a filled vector outline, not generated raster artwork. */
 export const PLUMP_SAMPLE =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path d="M100 53C127-7 207 73 147 100C207 127 127 207 100 147C73 207-7 127 53 100C-7 73 73-7 100 53Z" fill="#000"/></svg>'
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="#111111" fill-rule="evenodd" d="M128 57 C149 24 179 20 201 41 C224 63 228 93 198 127 C229 153 226 189 204 211 C182 233 151 231 128 200 C103 231 72 233 49 211 C26 189 26 155 57 128 C27 103 28 71 50 48 C72 25 103 26 128 57 Z"/></svg>'

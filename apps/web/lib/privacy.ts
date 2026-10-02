@@ -41,7 +41,7 @@ export const PRIVACY: LegalDoc = {
         ],
         [
           {
-            text: "The 3D mark on www.zyx.tw loads its lighting from plump.zyx.tw, another of these sites.",
+            text: "The 3D mark and interactive Made models on www.zyx.tw load their lighting from plump.zyx.tw, another of these sites.",
           },
         ],
       ],
