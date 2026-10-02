@@ -1,0 +1,94 @@
+{
+  "provider": "OpenRouter",
+  "model": "google/gemini-3.1-flash-image",
+  "generated": "2026-10-02",
+  "images": [
+    {
+      "file": "time-hero.webp",
+      "ratio": "16:9",
+      "steps": [
+        {
+          "id": "time-dreamy-e-hero",
+          "references": [
+            "output/imagegen/time-dreamy-c-hero.png",
+            "references/time-material.webp"
+          ],
+          "prompt": "Use case: photorealistic-natural. Create one ORIGINAL wide environmental fashion photograph for Time. Image 1 is a CASTING AND WARDROBE reference ONLY: preserve the same original adult woman age 23, soft girlish delicate features, waist-length pin-straight jet-black hair, dense eyebrow-length straight bangs, cool aloof eyes, closed relaxed rose lips, white romantic short puff-sleeve blouse with opaque bodice, charcoal pleated short skirt. Preserve the dreamy early-2000s Japanese indie-fashion feeling. Do NOT copy Image 1's pose, blue sky, grass, shoulder-held prop or close portrait composition. Image 2 is the exact Time product geometry and material: a thick transparent honey-amber OPEN C-ring with a visible gap at upper right and two rounded ends. Preserve that open shape, depth and translucent refraction, not a closed donut. Make an imaginative everyday scene, not a product catalog. WIDE shot with more environment: show the woman head to feet, her complete figure about HALF the frame height and face about 5 percent of the total image height. Subject centered around x=34 percent, with quiet but real scenery on the right for live webpage text. Dreamy, wistful and emotionally distant, no smile, no sales pose. Photographed on real 35mm film with a compact flash, gentle focus and slight imperfect lens softness. Skin must look real. No text, numerals, signage, logos, watermarks, UI, graphic panels or borders. One adult woman only. Original scene, not the reference's field or grass overhead shot.\n\nAFTER HOURS LAUNDROMAT. Wide environmental fashion photograph from across the room, camera about 4.5m away and at chest height, 35mm lens. A small old Japanese neighborhood laundromat with a continuous row of brushed stainless circular washing-machine doors along the back wall, pale mint-white tiled walls, gray linoleum, fluorescent ceiling light. No labels or readable control text. On a low plain off-white waiting bench in the left third, the adult woman sits slightly slouched, ankles together angled sideways, white socks and silver ballet flats on the floor. Her cheek rests lazily in one palm, elbow on her knee, looking quietly toward the distant camera through full black bangs; long pin-straight hair spills over one shoulder to her lap. At the other end of her bench, an oversized clear amber glass C-ring about 65cm wide rests tilted on a loosely folded white towel, like a strange piece of laundry. Her free hand rests absent-mindedly on its rounded lower end, the gap at upper right is fully visible and unobstructed. Echo the ring shape subtly in the round metal washer doors. Tiny amber reflections on the towel and floor. Cool green fluorescent ambient light, restrained direct flash, gentle hazy highlight bloom and nostalgic 2000s snapshot feel. Frame the entire room, bench, woman and ring with plenty of breathing space; she is small within the scene, NOT a thigh-up crop. The right side shows softly receding machines, pale wall and real tiled floor, continuous natural perspective across the whole image. Mysterious ordinary waiting moment, dreamy, aloof, fashion zine, no modern luxury interior."
+        }
+      ],
+      "postprocess": {
+        "source": "time-dreamy-e-hero.png",
+        "source_sha256": "bd5e16461c7995884ec9fa0788d418eac9cc1924f26ee3d6982863997e85ff5a",
+        "output": "time-dreamy-e-hero-film.png",
+        "size": [
+          1920,
+          1080
+        ],
+        "downsample": [
+          1120,
+          630
+        ],
+        "gaussian_blur": 1.15,
+        "saturation": 0.93,
+        "highlight_bloom": {
+          "threshold": 0.67,
+          "radius": 13,
+          "strength": 0.045
+        },
+        "contrast": 0.94,
+        "lift": 0.007,
+        "luminance_grain_sigma": 0.028,
+        "chroma_grain_sigma": 0.0025,
+        "seed": 20261002
+      },
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6
+      }
+    },
+    {
+      "file": "time-portrait.webp",
+      "ratio": "9:16",
+      "steps": [
+        {
+          "id": "time-dreamy-e-portrait",
+          "references": [
+            "output/imagegen/time-dreamy-e-hero.png"
+          ],
+          "prompt": "Use case: identity-preserve. Recompose the supplied original AI photograph as a single continuous photorealistic 9:16 mobile campaign. Preserve the SAME adult woman age 23, exact face, full black bangs, long straight black hair, cool aloof expression, white puff-sleeve blouse, gray pleated skirt, white socks, silver ballet flats, white waiting bench and clear amber OPEN C-ring. Preserve the cool green laundromat, round stainless washing-machine doors, pale tiled walls, gray floor, fluorescent light and gentle camera softness. Do not copy a different model, change the outfit or turn the ring into a closed circle. No added typography, lettering, numbers, watermarks or graphic panels.\n\nPull back and recompose the original laundromat scene vertically, with enough room to see the waiting bench, full seated woman head to feet, the entire amber C-ring and white towel on the floor. Keep her head resting in one palm, the other hand draped over the upper rounded end of the ring, exactly the same cool faraway gaze and relaxed waiting pose. The woman and ring occupy the center of the lower two thirds, with her head beginning around 33 percent from the top and her shoes at about 87 percent. Her face should remain small, approximately 8 percent of the image height, because the user prefers a distant environmental photograph, not a close beauty portrait. Her complete body and both feet must fit within the central 80 percent of the width. Leave top 27 percent as naturally lit pale mint tile wall and softly receding machine details, quiet enough for live black page text. Maintain one physically coherent laundromat, continuous walls and machine rows, no blank band at top, no duplicated machines or abrupt seams. Place the entire ring, with its gap at upper right and both rounded ends visible, in the lower middle beside her shins on the white towel. This should look like a vertical picture from the SAME shoot, same identity and frame distance, no glossy sharp fashion retouch. Image will receive a separate analog grain and diffusion pass later."
+        }
+      ],
+      "postprocess": {
+        "source": "time-dreamy-e-portrait.png",
+        "source_sha256": "399299080247c793588a1145bae7a79e00b0749c41614584754fe083596f7a09",
+        "output": "time-dreamy-e-portrait-film.png",
+        "size": [
+          1080,
+          1920
+        ],
+        "downsample": [
+          630,
+          1120
+        ],
+        "gaussian_blur": 1.15,
+        "saturation": 0.93,
+        "highlight_bloom": {
+          "threshold": 0.67,
+          "radius": 13,
+          "strength": 0.045
+        },
+        "contrast": 0.94,
+        "lift": 0.007,
+        "luminance_grain_sigma": 0.028,
+        "chroma_grain_sigma": 0.0025,
+        "seed": 20261002
+      },
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6
+      }
+    }
+  ]
+}

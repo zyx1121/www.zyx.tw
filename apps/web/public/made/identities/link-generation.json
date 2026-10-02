@@ -5,24 +5,98 @@
   "images": [
     {
       "file": "link-hero.webp",
-      "id": "link-fashion-a",
       "ratio": "16:9",
-      "references": [
-        "references/link-material.webp",
-        "references/link-reference.png",
-        "references/hearby-direction.jpg"
+      "steps": [
+        {
+          "id": "link-editorial-hero",
+          "references": [
+            "references/link-material.webp",
+            "references/talky-cups.jpg"
+          ],
+          "prompt": "Create a single original photorealistic fashion-editorial photograph, with NO TEXT anywhere. Image 1 is the exact geometric object and its material: preserve its silhouette, openings, color and surface. Image 2 is a visual direction reference for contemporary Japanese and Korean fashion-editorial styling, beautiful adult female casting, natural fresh makeup, airy black hair, restrained white/gray/black clothing, candid direct-flash photography and an ordinary setting with one strange oversized object. Do not reproduce the reference model's identity, outfit or exact pose. Cast a distinct original East Asian woman age 25, with an appealing expressive face, real skin and believable hands. Calm natural gaze, youthful energy and relaxed styling. Clear gentle features, not severe high-fashion contour makeup. The object is part of a physical scene, not a product being presented in a catalog. Keep the person and object in the LEFT 58 percent, and keep the RIGHT 36 percent quiet pale wall for live website text. Keep the very top edge pale and uncluttered for navigation. No typography, words, letters, numbers, watermarks, brand names, UI, borders, signage or captions. No other people. No school uniforms or sexualized styling.\n\nA beautiful adult woman with long sleek black hair and a delicate straight fringe, expressive clear eyes, soft natural rose lips and minimal fresh makeup. She wears an opaque white relaxed long-sleeved poplin blouse with an open collar, a fitted charcoal waistcoat and wide gray tailored trousers, a tiny silver stud earring. She sits on the edge of a polished tubular steel bench in front of a clean pale tiled urban wall. She leans forward slightly with a cool, curious direct gaze, her head subtly tilted. ONE oversized vermilion silicone double-loop shape rests diagonally across her lap, held naturally at its outer edge by one hand; her other hand rests on the bench. Exact object from Image 1: TWO holes, two padded round lobes connected by one broad bridge, no separate chain pieces. The saturated red has a tactile satin finish. Soft black-and-white styling and precise natural beauty, contemporary Seoul/Tokyo fashion editorial, relaxed rather than a stiff sales pose. Direct flash with a crisp mild shadow, neutral daylight, subtle grain, realistic fabric and skin. Slightly elevated 35mm camera, medium shot from thighs up, complete head and entire red shape. Person and prop in left 58 percent; right 36 percent blank pale tiled wall. No words, lettering or typography anywhere."
+        }
       ],
-      "prompt": "Original fashion-editorial campaign for zyx Link. Image 1 is the exact Link identity and material reference: a compact diagonal red silicone double-loop, TWO round openings, thick middle bridge and two padded lobes. Image 2 is its precise flat silhouette. Preserve that geometry and vermilion color. Image 3 is a VISUAL DIRECTION reference only: use its direct-flash photography, fashion casting, confident deadpan attitude, restrained black/white clothing and one strange physical object. Create an ORIGINAL adult model with a different face and hairstyle; do not reproduce the people or composition of Image 3. One photorealistic image, no lettering, typography, watermark, border, interface or extra logos. Treat the person as a professionally cast fashion model, styled and made up for a youth-culture editorial. Beautiful face, art-directed posture, real skin texture and believable anatomy, not a casual souvenir photograph. Neither smiling for a family photo nor romantic posing.\n\nUse case: ads-marketing. Asset: full-bleed 16:9 website hero. A strikingly beautiful adult East Asian female fashion model, age 25, with sharply defined features, precise subtle eyeliner, natural rose lips, sleek long black hair with a deep side part tucked behind one ear. She wears a fitted opaque black sleeveless top, a boxy black leather jacket worn open, and charcoal wide-leg tailored trousers, small silver hoop earrings. Confident relaxed stance, one hip angled, chin slightly lowered, direct steady gaze into camera, lips closed, cool detached expression. She stands in front of a clean off-white tiled urban wall. She holds ONE oversized vermilion silicone Link shape vertically diagonally beside her right shoulder with a natural hand grip at the lower outer edge, like an unusual sculptural accessory. The object is 40cm long, full contour and BOTH holes clearly visible, separate from face and neck. On-camera direct flash, crisp hard shadow to the left, lightly underexposed ambient light, rich vermilion, deep clean blacks, visible leather and silicone texture. 35mm fashion editorial medium shot from mid-thigh up, camera very slightly below eye level, no distortion of face. Person and object occupy LEFT 58%, right 36% is uninterrupted off-white wall for black website text, keep top right and bottom right quiet. Avoid smile, hugging, ordinary plain T-shirt styling, commercial stock photography, glamour soft light, airbrushed plastic skin, or a model simply presenting a product to sell it."
+      "postprocess": {
+        "source": "link-editorial-hero.png",
+        "source_sha256": "dc8092e11f3950d679cabbe921e3378cb54b942e9efaea536c67ce808187854c",
+        "output": "link-editorial-hero-film.png",
+        "size": [
+          1920,
+          1080
+        ],
+        "downsample": [
+          1120,
+          630
+        ],
+        "gaussian_blur": 1.15,
+        "saturation": 0.93,
+        "highlight_bloom": {
+          "threshold": 0.67,
+          "radius": 13,
+          "strength": 0.045
+        },
+        "contrast": 0.94,
+        "lift": 0.007,
+        "luminance_grain_sigma": 0.028,
+        "chroma_grain_sigma": 0.0025,
+        "seed": 20261002
+      },
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6
+      }
     },
     {
       "file": "link-portrait.webp",
-      "id": "link-fashion-a-portrait",
       "ratio": "9:16",
-      "references": [
-        "output/imagegen/link-fashion-a.png",
-        "references/link-reference.png"
+      "steps": [
+        {
+          "id": "link-editorial-portrait",
+          "references": [
+            "output/imagegen/link-editorial-hero.png",
+            "references/link-material.webp"
+          ],
+          "prompt": "Edit the supplied original AI fashion photograph into a matching 9:16 mobile photograph. Image 1 is the selected source image: preserve the SAME adult woman's exact face, hairstyle, outfit, posture, object, material, lighting and scene. Image 2 is the precise object/material reference. Make an original vertical composition from the same shoot, never a collage. Photorealistic natural skin and believable hands. No text, typography, numbers, logos, watermark, interface, border or decorative graphics.\n\nUse case: identity-preserve. Recompose as a vertical environmental fashion photograph from the same shoot. Preserve the woman with long black hair and light fringe, white long-sleeved blouse, charcoal waistcoat and gray trousers, sitting on the metal and wood bench. Keep the single red silicone double-loop with TWO open holes and ONE broad connecting bridge across her lap. Both holes must remain visible. Preserve her exact face, delicate makeup and crisp direct-flash lighting. Critical mobile layout: pull camera back so the entire head begins 30 percent down from the top, with no person or prop in the upper 27 percent. This top 27 percent is continuous pale wall for live website title. Head and face around the upper-middle, between 32 and 44 percent of height. Person and the entire object occupy the central 76 percent of width and the middle 32 to 76 percent of height, leaving room for narrow crops. Lower 20 percent contains low-detail pale floor or the pale base of the bench so a button can overlay it. The woman has a natural fully coherent seated body and legs, no distorted limbs. Keep the face, hair, clothing, light and object identical to Image 1. Plain photograph, do not add any text or create a separate blank panel."
+        },
+        {
+          "id": "link-editorial-portrait-clean",
+          "references": [
+            "output/imagegen/link-editorial-portrait.png"
+          ],
+          "prompt": "Use case: precise-object-edit. Image 1 is the edit target, an original AI photograph. Perform only the specified background repair. Preserve the adult woman's exact identity, face, hair, clothing, anatomy, skin texture, object geometry, material, light and all existing positions. Preserve the original camera, framing and photographic realism. Output one seamless full-bleed photograph with no text, typography, watermark, interface, borders, blank graphic panels or collage joins.\n\nRemove the foreground rectangular marble slab covering the bottom 14 percent. Show the continuous real light-gray concrete floor beneath the same bench instead, with appropriate soft shadows and lower bench supports. Keep the visible person, face, hair, clothing, red prop, both holes and pose exactly unchanged; keep the same shot scale, head position and empty upper wall. Complete only the small lower trouser area previously hidden by the foreground slab, without introducing new furniture. No flat graphical blocks or borders."
+        }
       ],
-      "prompt": "Edit the supplied original AI fashion photograph into a matching mobile campaign photograph. Image 1 is the selected source image: preserve this exact adult woman's face, long side-parted black hair, black leather jacket, opaque black top, charcoal trousers, earrings, confident deadpan expression, direct-flash lighting, tiled off-white wall and vermilion silicone double-loop prop. Image 2 is the exact product silhouette; keep TWO round openings, two padded lobes and the connecting bridge. One photorealistic image. No text, lettering, symbols, watermark, interface, border or additional logo.\n\nUse case: identity-preserve. Asset: full-bleed 9:16 mobile website background. Recompose the same scene vertically, like a pulled-back fashion photograph from the same shoot. The same woman stands confidently holding the same red double-loop alongside her torso with a natural hand at the lower edge. Frame her from head to upper shins, body angled slightly, both holes fully visible, entire head and prop in frame, no change to face, hair, outfit, material or lighting. Her head begins around 32 percent down the canvas; her face, upper body and the red shape occupy the central 32 to 73 percent of the image height. Keep the TOP 28 percent as completely empty off-white tiled wall, a clean area reserved for live website typography. Keep bottom 20 percent pale gray concrete floor and wall with minimal detail for website controls. Woman and prop fit inside the central 76 percent of width so narrow mobile crops retain the face and both openings. Strong clean direct flash, crisp shadow, subtle natural skin and leather texture. Preserve original beautiful face and cool, composed styling. Do not add any typography, do not move her head into the top empty wall, do not turn the prop into separate chain links, do not add another person."
+      "postprocess": {
+        "source": "link-editorial-portrait-clean.png",
+        "source_sha256": "3abb8659227b7a10dc0037e43e5aed31dd8364345974725554de354fd7f1113a",
+        "output": "link-editorial-portrait-clean-film.png",
+        "size": [
+          1080,
+          1920
+        ],
+        "downsample": [
+          630,
+          1120
+        ],
+        "gaussian_blur": 1.15,
+        "saturation": 0.93,
+        "highlight_bloom": {
+          "threshold": 0.67,
+          "radius": 13,
+          "strength": 0.045
+        },
+        "contrast": 0.94,
+        "lift": 0.007,
+        "luminance_grain_sigma": 0.028,
+        "chroma_grain_sigma": 0.0025,
+        "seed": 20261002
+      },
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6
+      }
     }
   ]
 }

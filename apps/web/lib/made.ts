@@ -14,7 +14,7 @@ export const PRODUCTS = [
     href: PLUMP.href,
     material: "Chrome",
     imageAlt:
-      "A person squeezes an oversized chrome Plump shape through a narrow tiled doorway, their cheek pressed against it.",
+      "A woman in a white blouse sits on a metal stool in a doorway, holding an oversized four-lobed chrome Plump shape.",
   },
   {
     id: "time",
@@ -24,7 +24,7 @@ export const PRODUCTS = [
     href: "https://time.zyx.tw",
     material: "Amber glass",
     imageAlt:
-      "Friends at a basketball court look through a thick amber glass Time ring, refracting the afternoon light.",
+      "A woman with long black hair waits in a cool green laundromat beside an amber glass Time ring, with soft focus and film grain.",
   },
   {
     id: "link",
@@ -34,7 +34,7 @@ export const PRODUCTS = [
     href: "https://link.zyx.tw",
     material: "Vermilion silicone",
     imageAlt:
-      "A woman in a black leather jacket holds a red double-loop Link shape against an off-white tiled wall.",
+      "A woman in a white blouse and gray waistcoat sits on a bench, holding a vermilion double-loop Link shape.",
   },
 ] as const
 
