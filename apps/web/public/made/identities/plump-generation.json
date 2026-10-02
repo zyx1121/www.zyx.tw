@@ -1,0 +1,109 @@
+{
+  "provider": "OpenRouter",
+  "model": "google/gemini-3.1-flash-image",
+  "generated": "2026-10-02",
+  "images": [
+    {
+      "file": "plump-hero.webp",
+      "ratio": "16:9",
+      "steps": [
+        {
+          "id": "plump-editorial-hero",
+          "references": [
+            "references/plump-material.webp",
+            "references/talky-hero.jpg"
+          ],
+          "prompt": "Create a single original photorealistic fashion-editorial photograph, with NO TEXT anywhere. Image 1 is the exact geometric object and its material: preserve its silhouette, openings, color and surface. Image 2 is a visual direction reference for contemporary Japanese and Korean fashion-editorial styling, beautiful adult female casting, natural fresh makeup, airy black hair, restrained white/gray/black clothing, candid direct-flash photography and an ordinary setting with one strange oversized object. Do not reproduce the reference model's identity, outfit or exact pose. Cast a distinct original East Asian woman age 25, with an appealing expressive face, real skin and believable hands. Calm natural gaze, youthful energy and relaxed styling. Clear gentle features, not severe high-fashion contour makeup. The object is part of a physical scene, not a product being presented in a catalog. Keep the person and object in the LEFT 58 percent, and keep the RIGHT 36 percent quiet pale wall for live website text. Keep the very top edge pale and uncluttered for navigation. No typography, words, letters, numbers, watermarks, brand names, UI, borders, signage or captions. No other people. No school uniforms or sexualized styling.\n\nA beautiful adult woman with long straight jet-black hair and light wispy bangs, fresh subtle eyeliner and natural pink lips. She wears a crisp opaque white short-sleeved cotton blouse, a charcoal tailored A-line midi skirt and silver flat shoes. She sits sideways on a simple low chrome stool inside a narrow off-white doorway, one foot on the floor, knees naturally together and turned to one side. A huge inflated chrome four-lobed X-shaped cushion, exactly like Image 1, fills most of the doorway across her lap. It gently presses against the door jambs, communicating that it is plump and taking up space. FOUR rounded soft lobes, solid center, NO holes. One hand rests loosely on its lower side; the other rests on the stool. Her face and neck remain fully visible above and to the side of the object. She tilts her head slightly and looks into camera with a quiet playful expression, lips closed. Bright direct flash, rich mirrored silver with believable reflections, off-white painted wall, narrow strip of warm wood floor. Medium-wide 35mm fashion photograph from slightly above knee level, face around 37 percent across and 30 percent down, complete head. The object and model occupy left 58 percent, right 36 percent is uninterrupted empty off-white wall. Clear attractive face and polished Korean/Japanese magazine styling. No text of any kind."
+        },
+        {
+          "id": "plump-editorial-hero-clean",
+          "references": [
+            "output/imagegen/plump-editorial-hero.png"
+          ],
+          "prompt": "Use case: precise-object-edit. Edit the reference photograph. Preserve the original adult woman, face, hair, clothing, pose, hands, chrome four-lobed object, stool, lighting, composition and photographic detail exactly. No text or watermarks.\n\nRemove ONLY the artificial horizontal pale band across the top roughly 5 percent of the image. Continue the actual wall, door frames and their texture naturally all the way to the top edge. The result must be a single continuous photograph with no top stripe, no horizontal seam, no flat graphic area. Do not crop, move, rescale or change the woman or the chrome prop. Keep everything below this top strip unchanged."
+        }
+      ],
+      "postprocess": {
+        "source": "plump-editorial-hero-clean.png",
+        "source_sha256": "b95dbf77f2305b6425af6b2e1d6df6b96183c48e48e20a31b3be19983c180920",
+        "output": "plump-editorial-hero-clean-film.png",
+        "size": [
+          1920,
+          1080
+        ],
+        "downsample": [
+          1120,
+          630
+        ],
+        "gaussian_blur": 1.15,
+        "saturation": 0.93,
+        "highlight_bloom": {
+          "threshold": 0.67,
+          "radius": 13,
+          "strength": 0.045
+        },
+        "contrast": 0.94,
+        "lift": 0.007,
+        "luminance_grain_sigma": 0.028,
+        "chroma_grain_sigma": 0.0025,
+        "seed": 20261002
+      },
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6
+      }
+    },
+    {
+      "file": "plump-portrait.webp",
+      "ratio": "9:16",
+      "steps": [
+        {
+          "id": "plump-editorial-portrait",
+          "references": [
+            "output/imagegen/plump-editorial-hero.png",
+            "references/plump-material.webp"
+          ],
+          "prompt": "Edit the supplied original AI fashion photograph into a matching 9:16 mobile photograph. Image 1 is the selected source image: preserve the SAME adult woman's exact face, hairstyle, outfit, posture, object, material, lighting and scene. Image 2 is the precise object/material reference. Make an original vertical composition from the same shoot, never a collage. Photorealistic natural skin and believable hands. No text, typography, numbers, logos, watermark, interface, border or decorative graphics.\n\nUse case: identity-preserve. Recompose as a vertical environmental fashion photograph from the same shoot. Preserve the woman with long black hair and wispy bangs, white long-sleeved blouse, gray trousers and black flats, seated on the chrome stool in the narrow white doorway. Keep the four-lobed inflated chrome X, solid center and NO holes. Keep all four lobes in frame and her face visible. Keep the playful compact seated pose and the warm wood floor. Critical mobile layout: pull camera back so the entire head begins 30 percent down from the top, with no person or prop in the upper 27 percent. This top 27 percent is continuous pale wall for live website title. Head and face around the upper-middle, between 32 and 44 percent of height. Person and the entire object occupy the central 76 percent of width and the middle 32 to 76 percent of height, leaving room for narrow crops. Lower 20 percent contains low-detail pale floor or the pale base of the bench so a button can overlay it. The woman has a natural fully coherent seated body and legs, no distorted limbs. Keep the face, hair, clothing, light and object identical to Image 1. Plain photograph, do not add any text or create a separate blank panel."
+        },
+        {
+          "id": "plump-editorial-portrait-clean",
+          "references": [
+            "output/imagegen/plump-editorial-portrait.png"
+          ],
+          "prompt": "Use case: precise-object-edit. Image 1 is the edit target, an original AI photograph. Perform only the specified background repair. Preserve the adult woman's exact identity, face, hair, clothing, anatomy, skin texture, object geometry, material, light and all existing positions. Preserve the original camera, framing and photographic realism. Output one seamless full-bleed photograph with no text, typography, watermark, interface, borders, blank graphic panels or collage joins.\n\nRemove the flat rectangular background band covering the top 27 percent of the image. Extend the white doorway, vertical door mouldings and wall texture naturally all the way to the top edge so this is one continuous interior photograph. No hard horizontal join at 27 percent height. Keep all positions and sizes of the woman, hair, face, hands, chrome object, stool and floor unchanged. Preserve the existing empty space around the top, using real continuous wall and vertical doorway detail rather than a separate blank block."
+        }
+      ],
+      "postprocess": {
+        "source": "plump-editorial-portrait-clean.png",
+        "source_sha256": "b03667fa61bdc13a174b1f1b25519729e580cf4e04a628d81a7a9dc0756af9d4",
+        "output": "plump-editorial-portrait-clean-film.png",
+        "size": [
+          1080,
+          1920
+        ],
+        "downsample": [
+          630,
+          1120
+        ],
+        "gaussian_blur": 1.15,
+        "saturation": 0.93,
+        "highlight_bloom": {
+          "threshold": 0.67,
+          "radius": 13,
+          "strength": 0.045
+        },
+        "contrast": 0.94,
+        "lift": 0.007,
+        "luminance_grain_sigma": 0.028,
+        "chroma_grain_sigma": 0.0025,
+        "seed": 20261002
+      },
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6
+      }
+    }
+  ]
+}

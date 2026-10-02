@@ -327,31 +327,39 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
     min-height: 700px;
   }
   .made-label {
-    left: 20px;
+    left: auto;
     right: 20px;
-    top: 84px;
+    top: 104px;
   }
   .made-copy {
-    left: 20px;
-    right: 20px;
-    top: auto;
-    bottom: 140px;
+    position: static;
     transform: none;
   }
+  .made-copy h1 {
+    position: absolute;
+    left: 20px;
+    top: 84px;
+  }
   .made-copy p {
+    position: absolute;
+    left: 20px;
+    top: 180px;
     max-width: 280px;
-    margin-top: 16px;
+    margin: 0;
   }
   .made-copy .made-cta {
-    margin-top: 20px;
+    position: absolute;
+    left: 20px;
+    bottom: 140px;
+    margin: 0;
     gap: 24px;
   }
   .made-wash {
     background: linear-gradient(
       0deg,
       rgb(245 243 235 / 0.97),
-      rgb(245 243 235 / 0.65) 30%,
-      transparent 62%
+      rgb(245 243 235 / 0.65) 20%,
+      transparent 40%
     );
   }
   .made-campaign-bottom {
@@ -361,38 +369,6 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
     gap: 12px;
     font-size: 14px;
     line-height: 20px;
-  }
-  .made-link .made-label {
-    left: auto;
-    top: 104px;
-  }
-  .made-link .made-copy {
-    position: static;
-  }
-  .made-link .made-copy :is(h1, h2) {
-    position: absolute;
-    left: 20px;
-    top: 84px;
-  }
-  .made-link .made-copy p {
-    position: absolute;
-    left: 20px;
-    top: 180px;
-    margin: 0;
-  }
-  .made-link .made-copy .made-cta {
-    position: absolute;
-    left: 20px;
-    bottom: 140px;
-    margin: 0;
-  }
-  .made-link .made-wash {
-    background: linear-gradient(
-      0deg,
-      rgb(245 243 235 / 0.97),
-      rgb(245 243 235 / 0.65) 20%,
-      transparent 40%
-    );
   }
 }
 @media (max-width: 440px) {
@@ -418,9 +394,6 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   min-height: 44px;
 }
 @media (min-width: 901px) {
-  .made-time .made-label {
-    color: var(--color-white);
-  }
   .made-campaign-tools {
     padding: 0 12px;
     border-radius: var(--radius-lg);

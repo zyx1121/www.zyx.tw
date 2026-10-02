@@ -152,11 +152,9 @@ export function MadeExperience({ product: selected }: { product?: ProductId }) {
         if (edge === "top") {
           root.style.setProperty(
             "--made-logo-ink",
-            section?.id === "time" && window.innerWidth > 900
-              ? "var(--color-white)"
-              : section?.dataset.madeInk === "dark"
-                ? "var(--color-black)"
-                : "var(--color-white)"
+            section?.dataset.madeInk === "dark"
+              ? "var(--color-black)"
+              : "var(--color-white)"
           )
         }
         root.style.setProperty(
