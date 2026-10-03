@@ -1,4 +1,3 @@
-import { localeProxy } from "@workspace/ui/lib/i18n-proxy"
 import { getSessionCookie } from "better-auth/cookies"
 import { NextResponse, type NextRequest } from "next/server"
 
@@ -18,7 +17,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  return localeProxy(request)
+  return NextResponse.next()
 }
 
 export const config = {

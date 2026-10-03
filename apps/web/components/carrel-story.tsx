@@ -1,5 +1,4 @@
 "use client"
-import { T, useT } from "@workspace/ui/components/locale-provider"
 
 /* Full-viewport photographs use separately composed portrait sources. */
 /* eslint-disable @next/next/no-img-element */
@@ -34,21 +33,15 @@ function Reveal({ children }: { children: ReactNode }) {
 }
 
 function Workflow() {
-  const t = useT()
-
   const [step, setStep] = useState(0)
   const current = CARREL.workflow[step]!
   return (
     <div className="carrel-demo">
       <div className="carrel-request">
-        <p className="carrel-caption">
-          <T>{"Example request"}</T>
-        </p>
-        <blockquote>
-          <T>{CARREL.request}</T>
-        </blockquote>
+        <p className="carrel-caption">Example request</p>
+        <blockquote>{CARREL.request}</blockquote>
       </div>
-      <div className="carrel-choices" aria-label={t("Deployment steps")}>
+      <div className="carrel-choices" aria-label="Deployment steps">
         {CARREL.workflow.map((item, index) => (
           <button
             key={item.id}
@@ -57,10 +50,7 @@ function Workflow() {
             aria-controls="carrel-workflow-panel"
             onClick={() => setStep(index)}
           >
-            <span className="carrel-caption">
-              0<T>{index + 1}</T>
-            </span>{" "}
-            <T>{item.label}</T>
+            <span className="carrel-caption">0{index + 1}</span> {item.label}
           </button>
         ))}
       </div>
@@ -70,38 +60,27 @@ function Workflow() {
         aria-live="polite"
       >
         <div>
-          <h3>
-            <T>{current.title}</T>
-          </h3>
-          <p>
-            <T>{current.body}</T>
-          </p>
+          <h3>{current.title}</h3>
+          <p>{current.body}</p>
         </div>
         <ul>
           {current.lines.map((line) => (
-            <li key={line}>
-              <T>{line}</T>
-            </li>
+            <li key={line}>{line}</li>
           ))}
         </ul>
       </div>
       <p className="carrel-caption">
-        <T>{"An illustrated workflow. Explore the steps above."}</T>
+        An illustrated workflow. Explore the steps above.
       </p>
     </div>
   )
 }
 
 function Connections() {
-  const t = useT()
-
   const [selected, setSelected] = useState(1)
   return (
     <div className="carrel-demo">
-      <div
-        className="carrel-network"
-        aria-label={t("Example service connections")}
-      >
+      <div className="carrel-network" aria-label="Example service connections">
         {CARREL.network.map((node, index) => (
           <button
             type="button"
@@ -110,12 +89,8 @@ function Connections() {
             aria-controls="carrel-network-detail"
             onClick={() => setSelected(index)}
           >
-            <span>
-              <T>{node.label}</T>
-            </span>
-            <span className="carrel-caption">
-              <T>{node.note}</T>
-            </span>
+            <span>{node.label}</span>
+            <span className="carrel-caption">{node.note}</span>
           </button>
         ))}
       </div>
@@ -124,23 +99,19 @@ function Connections() {
         className="carrel-network-detail"
         aria-live="polite"
       >
-        <T>{CARREL.network[selected]!.detail}</T>
+        {CARREL.network[selected]!.detail}
       </p>
-      <p className="carrel-caption">
-        <T>{"HTTPS → App → Database · TCP 5432"}</T>
-      </p>
+      <p className="carrel-caption">HTTPS → App → Database · TCP 5432</p>
     </div>
   )
 }
 
 function Lifecycle() {
-  const t = useT()
-
   const [selected, setSelected] = useState(0)
   const current = CARREL.lifecycle[selected]!
   return (
     <div className="carrel-demo">
-      <div className="carrel-choices" aria-label={t("Environment management")}>
+      <div className="carrel-choices" aria-label="Environment management">
         {CARREL.lifecycle.map((item, index) => (
           <button
             key={item.id}
@@ -149,7 +120,7 @@ function Lifecycle() {
             aria-controls="carrel-lifecycle-detail"
             onClick={() => setSelected(index)}
           >
-            <T>{item.label}</T>
+            {item.label}
           </button>
         ))}
       </div>
@@ -158,20 +129,14 @@ function Lifecycle() {
         className="carrel-lifecycle-detail"
         aria-live="polite"
       >
-        <h3>
-          <T>{current.title}</T>
-        </h3>
-        <p>
-          <T>{current.body}</T>
-        </p>
+        <h3>{current.title}</h3>
+        <p>{current.body}</p>
       </div>
     </div>
   )
 }
 
 function CopyCode({ label, value }: { label: string; value: string }) {
-  const t = useT()
-
   const [status, setStatus] = useState("")
   useEffect(() => {
     if (!status) return
@@ -181,12 +146,10 @@ function CopyCode({ label, value }: { label: string; value: string }) {
   return (
     <div className="carrel-code">
       <div className="carrel-code-heading">
-        <h3>
-          <T>{label}</T>
-        </h3>
+        <h3>{label}</h3>
         <button
           type="button"
-          aria-label={t("Copy {label}", { label })}
+          aria-label={`Copy ${label}`}
           onClick={async () => {
             try {
               await navigator.clipboard.writeText(value)
@@ -196,14 +159,14 @@ function CopyCode({ label, value }: { label: string; value: string }) {
             }
           }}
         >
-          <T>{"Copy ↗"}</T>
+          Copy ↗
         </button>
       </div>
       <pre>
         <code>{value}</code>
       </pre>
       <p className="carrel-copy-status carrel-caption" role="status">
-        <T>{status}</T>
+        {status}
       </p>
     </div>
   )
@@ -220,8 +183,6 @@ function Photograph({
   alt: string
   align?: "center" | "right"
 }) {
-  const t = useT()
-
   return (
     <figure
       className="carrel-photograph"
@@ -232,7 +193,7 @@ function Photograph({
         <source media="(max-width: 900px)" srcSet={asset("carrel", portrait)} />
         <img
           src={asset("carrel", image)}
-          alt={t(alt)}
+          alt={alt}
           width={1920}
           height={1080}
           loading="lazy"
@@ -244,23 +205,15 @@ function Photograph({
 }
 
 export function CarrelStory() {
-  const t = useT()
-
   return (
     <div id="story" className="carrel-story">
       <section className="carrel-content" aria-labelledby="carrel-intro-title">
         <div className={column}>
           <Reveal>
             <div className="carrel-introduction">
-              <p className="carrel-caption">
-                <T>{CARREL.eyebrow}</T>
-              </p>
-              <h2 id="carrel-intro-title">
-                <T>{CARREL.introduction.title}</T>
-              </h2>
-              <p>
-                <T>{CARREL.introduction.body}</T>
-              </p>
+              <p className="carrel-caption">{CARREL.eyebrow}</p>
+              <h2 id="carrel-intro-title">{CARREL.introduction.title}</h2>
+              <p>{CARREL.introduction.body}</p>
             </div>
           </Reveal>
         </div>
@@ -270,7 +223,7 @@ export function CarrelStory() {
           <Photograph
             image={chapter.image}
             portrait={chapter.portrait}
-            alt={t(chapter.alt)}
+            alt={chapter.alt}
           />
           <section
             className="carrel-content"
@@ -278,21 +231,13 @@ export function CarrelStory() {
           >
             <div className={column}>
               <Reveal>
-                <p className="carrel-caption">
-                  <T>{chapter.caption}</T>
-                </p>
+                <p className="carrel-caption">{chapter.caption}</p>
                 <div className="carrel-chapter-copy">
                   <div>
-                    <p className="carrel-caption">
-                      <T>{chapter.number}</T>
-                    </p>
-                    <h2 id={`carrel-${chapter.id}-title`}>
-                      <T>{chapter.title}</T>
-                    </h2>
+                    <p className="carrel-caption">{chapter.number}</p>
+                    <h2 id={`carrel-${chapter.id}-title`}>{chapter.title}</h2>
                   </div>
-                  <p>
-                    <T>{chapter.body}</T>
-                  </p>
+                  <p>{chapter.body}</p>
                 </div>
                 {chapter.id === "workspace" && <Workflow />}
                 {chapter.id === "connections" && <Connections />}
@@ -305,7 +250,7 @@ export function CarrelStory() {
       <Photograph
         image={CARREL.start.image}
         portrait={CARREL.start.portrait}
-        alt={t(CARREL.start.alt)}
+        alt={CARREL.start.alt}
         align="right"
       />
       <section
@@ -316,43 +261,26 @@ export function CarrelStory() {
         <div className={column}>
           <Reveal>
             <div className="carrel-start">
-              <p className="carrel-caption">
-                <T>{"Get started"}</T>
-              </p>
-              <h2 id="carrel-start-title">
-                <T>{CARREL.start.title}</T>
-              </h2>
-              <p className="carrel-start-intro">
-                <T>{CARREL.start.body}</T>
-              </p>
-              <CopyCode
-                label={t("MCP endpoint")}
-                value={CARREL.start.endpoint}
-              />
+              <p className="carrel-caption">Get started</p>
+              <h2 id="carrel-start-title">{CARREL.start.title}</h2>
+              <p className="carrel-start-intro">{CARREL.start.body}</p>
+              <CopyCode label="MCP endpoint" value={CARREL.start.endpoint} />
               {CARREL.start.clients.map((client) => (
                 <CopyCode
                   key={client.name}
-                  label={t(client.name)}
+                  label={client.name}
                   value={client.command}
                 />
               ))}
               <div className="carrel-first-request">
-                <h3>
-                  <T>{"Your first request"}</T>
-                </h3>
-                <blockquote>
-                  <T>{CARREL.start.firstRequest}</T>
-                </blockquote>
+                <h3>Your first request</h3>
+                <blockquote>{CARREL.start.firstRequest}</blockquote>
                 <p className="carrel-caption">
-                  <T>
-                    {
-                      "Your agent can use a saved public SSH key, or ask you for one."
-                    }
-                  </T>
+                  Your agent can use a saved public SSH key, or ask you for one.
                 </p>
               </div>
               <Link href="/made" className="carrel-return">
-                <T>{"All products ↗"}</T>
+                All products ↗
               </Link>
             </div>
           </Reveal>

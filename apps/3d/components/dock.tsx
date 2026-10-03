@@ -1,5 +1,4 @@
 "use client"
-import { T, useT } from "@workspace/ui/components/locale-provider"
 
 import {
   Box,
@@ -65,8 +64,6 @@ export function Dock({
   onExport,
   error,
 }: DockProps) {
-  const t = useT()
-
   const fileInput = useRef<HTMLInputElement>(null)
   // One section open at a time, by label.
   const [open, setOpen] = useState<string | null>(null)
@@ -92,17 +89,17 @@ export function Dock({
           data-slot="floating-notice"
           className="pointer-events-auto max-w-md rounded-xl border bg-popover px-3 py-2 text-xs/5 whitespace-pre-line text-destructive"
         >
-          <T>{error}</T>
+          {error}
         </p>
       )}
       <nav
-        aria-label={t("Plump editor")}
+        aria-label="Plump editor"
         data-slot="floating-toolbar"
         className="pointer-events-auto flex items-center gap-0.5 rounded-2xl border bg-popover p-1"
       >
         <Section icon={<Box />} {...section("Shape")}>
           <p className="text-xs/5 text-muted-foreground">
-            <T>{"Open an SVG file, or drop one on the page."}</T>
+            Open an SVG file, or drop one on the page.
           </p>
           <ParamGroup
             id="shape"
@@ -119,7 +116,7 @@ export function Dock({
 
         <Section icon={<Palette />} {...section("Material")}>
           <PresetSelect
-            label={t("Material")}
+            label="Material"
             presets={materials}
             value={material.id}
             onChange={(id) => {
@@ -151,7 +148,7 @@ export function Dock({
 
         <Section icon={<Sun />} {...section("Environment")}>
           <PresetSelect
-            label={t("Environment")}
+            label="Environment"
             presets={environments}
             value={environment.id}
             onChange={(id) =>
@@ -190,7 +187,7 @@ export function Dock({
 
         <Section icon={<Camera />} {...section("Staging")}>
           <PresetSelect
-            label={t("Staging")}
+            label="Staging"
             presets={stagings}
             value={staging.id}
             onChange={(id) =>
@@ -221,9 +218,7 @@ export function Dock({
             return (
               <div key={preset.id} className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor={`effect-${preset.id}`}>
-                    <T>{preset.label}</T>
-                  </Label>
+                  <Label htmlFor={`effect-${preset.id}`}>{preset.label}</Label>
                   <Switch
                     id={`effect-${preset.id}`}
                     checked={active !== undefined}
@@ -259,31 +254,27 @@ export function Dock({
           variant="ghost"
           size="sm"
           className="rounded-xl px-2 text-sm/6 lg:px-2.5"
-          aria-label={t("Open an SVG or a scene.json")}
+          aria-label="Open an SVG or a scene.json"
           onClick={() => fileInput.current?.click()}
         >
           <FolderOpen />
-          <span className="hidden lg:inline">
-            <T>{"Open"}</T>
-          </span>
+          <span className="hidden lg:inline">Open</span>
         </Button>
         <Button
           variant="ghost"
           size="sm"
           className="rounded-xl px-2 text-sm/6 lg:px-2.5"
-          aria-label={t("Export scene.json")}
+          aria-label="Export scene.json"
           onClick={onExport}
         >
           <Download />
-          <span className="hidden lg:inline">
-            <T>{"Export"}</T>
-          </span>
+          <span className="hidden lg:inline">Export</span>
         </Button>
         <input
           ref={fileInput}
           type="file"
           accept=".svg,image/svg+xml,.json,application/json"
-          aria-label={t("Open an SVG or a scene.json")}
+          aria-label="Open an SVG or a scene.json"
           className="hidden"
           onChange={(event) => {
             const file = event.target.files?.[0]
@@ -328,8 +319,6 @@ function Section({
   onOpenChange: (open: boolean) => void
   children: ReactNode
 }) {
-  const t = useT()
-
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
       <PopoverTrigger
@@ -337,19 +326,17 @@ function Section({
           <Button
             variant="ghost"
             size="sm"
-            aria-label={t(label)}
+            aria-label={label}
             className="rounded-xl px-2 text-sm/6 data-popup-open:bg-muted lg:px-2.5"
           />
         }
       >
         {icon}
-        <span className="hidden lg:inline">
-          <T>{label}</T>
-        </span>
+        <span className="hidden lg:inline">{label}</span>
       </PopoverTrigger>
       <PopoverContent side="top" sideOffset={10} className="w-72 gap-4 p-4">
         <PopoverTitle className="text-xs font-medium text-muted-foreground">
-          <T>{label}</T>
+          {label}
         </PopoverTitle>
         {children}
       </PopoverContent>

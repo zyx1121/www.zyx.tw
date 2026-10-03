@@ -8,6 +8,7 @@ import {
 } from "@workspace/ui/components/og-image";
 
 // Rendered once at build time: this app is a static export.
+export const dynamic = "force-static";
 
 export const alt = OG_ALT;
 export const size = OG_SIZE;

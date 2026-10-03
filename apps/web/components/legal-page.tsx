@@ -1,4 +1,3 @@
-import { T } from "@workspace/ui/components/locale-provider"
 import { cn } from "@workspace/ui/lib/utils"
 
 import { Hero, HeroTitle } from "@/components/hero"
@@ -21,12 +20,10 @@ function Paragraph({ runs }: { runs: Run[] }) {
               : {})}
             className={LINK}
           >
-            <T>{text}</T>
+            {text}
           </a>
         ) : (
-          <span key={index}>
-            <T>{text}</T>
-          </span>
+          <span key={index}>{text}</span>
         )
       )}
     </p>
@@ -38,17 +35,12 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
   return (
     <main className={cn(column, page, "flex-1 text-sm/6")}>
       <Hero
-        title={
-          <HeroTitle>
-            <T>{doc.title}</T>
-          </HeroTitle>
-        }
+        title={<HeroTitle>{doc.title}</HeroTitle>}
         subtitle={
           <>
-            <T>{"Last updated"}</T>
-            <T> </T>
+            Last updated{" "}
             <time dateTime={doc.updated} className="tabular-nums">
-              <T>{doc.updated}</T>
+              {doc.updated}
             </time>
             .
           </>
@@ -61,9 +53,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
           className={cn(index > 0 && "mt-15", enter)}
           style={enterRow(3 + index)}
         >
-          <h2 className="text-2xl">
-            <T>{heading}</T>
-          </h2>
+          <h2 className="text-2xl">{heading}</h2>
           {paragraphs.map((runs, paragraph) => (
             <Paragraph key={paragraph} runs={runs} />
           ))}

@@ -1,6 +1,3 @@
-"use client"
-
-import { LanguageToggle, useT } from "@workspace/ui/components/locale-provider"
 import Link from "next/link"
 
 import {
@@ -54,17 +51,16 @@ export function LegalLinks({
   labels?: { privacy: string; terms: string }
   tips?: { privacy: string; terms: string }
 }) {
-  const t = useT()
   return (
     <>
-      <CornerTip tip={t(tips.privacy)}>
+      <CornerTip tip={tips.privacy}>
         <a href="https://www.zyx.tw/privacy" className={cornerLink}>
-          {t(labels.privacy)}
+          {labels.privacy}
         </a>
       </CornerTip>
-      <CornerTip tip={t(tips.terms)}>
+      <CornerTip tip={tips.terms}>
         <a href="https://www.zyx.tw/terms" className={cornerLink}>
-          {t(labels.terms)}
+          {labels.terms}
         </a>
       </CornerTip>
     </>
@@ -127,11 +123,9 @@ export function TopCorners({
   markTip = home.startsWith("/") ? "Home" : new URL(home).host,
   nav,
   fade = false,
-  languageSwitch = true,
   className,
   style,
 }: {
-  languageSwitch?: boolean
   home?: string
   /** The mark's accessible name. */
   label?: string
@@ -142,15 +136,14 @@ export function TopCorners({
   className?: string
   style?: React.CSSProperties
 }) {
-  const t = useT()
   return (
     <header>
       {fade && <EdgeFade edge="top" />}
       <Corner at="top-left" className={className} style={style}>
-        <CornerTip tip={typeof markTip === "string" ? t(markTip) : markTip}>
+        <CornerTip tip={markTip}>
           <Link
             href={home}
-            aria-label={t(label)}
+            aria-label={label}
             className="group rounded-sm outline-offset-4 focus-visible:outline-2"
           >
             {/* 20 px tall, the corners' line height. */}
@@ -158,10 +151,9 @@ export function TopCorners({
           </Link>
         </CornerTip>
       </Corner>
-      {(nav || languageSwitch) && (
+      {nav && (
         <Corner at="top-right" className={className} style={style}>
           {nav}
-          {languageSwitch && <LanguageToggle className={cornerLink} />}
         </Corner>
       )}
     </header>

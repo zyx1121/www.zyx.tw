@@ -1,6 +1,3 @@
-import { LocaleProvider } from "@workspace/ui/components/locale-provider"
-import { getLocale, localizedMetadata } from "@workspace/ui/lib/i18n-server"
-import { MESSAGES } from "@/lib/messages"
 import type { Metadata } from "next"
 
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
@@ -17,7 +14,7 @@ import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 
 import { SITE_DESC, SITE_NAME, SITE_TITLE } from "@/lib/site"
 
-const baseMetadata: Metadata = {
+export const metadata: Metadata = {
   metadataBase: new URL("https://link.zyx.tw"),
   title: { default: SITE_TITLE, template: `%s | ${SITE_NAME}` },
   description: SITE_DESC,
@@ -49,29 +46,21 @@ export default async function RootLayout({
   // this has to run here (Node.js Server Component) and not middleware.
   await attributeRootLayoutRequest()
 
-  const locale = await getLocale()
-
   return (
     <html
-      lang={locale}
+      lang="en"
       suppressHydrationWarning
       className={cn("dark", "antialiased", fontVariables, "font-sans")}
     >
       <body>
-        <LocaleProvider locale={locale} messages={MESSAGES}>
-          <ThemeProvider>
-            <TooltipProvider>
-              <TopCorners />
-              {children}
-              <BottomCorners links={<LegalLinks />} />
-            </TooltipProvider>
-          </ThemeProvider>
-        </LocaleProvider>
+        <ThemeProvider>
+          <TooltipProvider>
+            <TopCorners />
+            {children}
+            <BottomCorners links={<LegalLinks />} />
+          </TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
-}
-
-export async function generateMetadata() {
-  return localizedMetadata(baseMetadata, MESSAGES)
 }

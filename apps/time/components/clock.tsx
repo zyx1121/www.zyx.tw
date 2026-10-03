@@ -1,5 +1,4 @@
 "use client"
-import { T } from "@workspace/ui/components/locale-provider"
 
 import { useEffect, useState } from "react"
 
@@ -39,18 +38,14 @@ export function Clock() {
 
   return (
     <main className="flex min-h-dvh w-dvw items-center justify-center px-5">
-      <h1 className="sr-only">
-        <T>{SITE_NAME}</T>
-      </h1>
-      <p className="sr-only">
-        <T>{SITE_DESC}</T>
-      </p>
+      <h1 className="sr-only">{SITE_NAME}</h1>
+      <p className="sr-only">{SITE_DESC}</p>
       <span className="max-w-full text-center text-display font-bold tabular-nums">
         {time
           ? time.split(":").map((part, index) => (
               <span key={index} className="inline-block">
-                <T>{part}</T>
-                <T>{index < 2 ? ":" : ""}</T>
+                {part}
+                {index < 2 ? ":" : ""}
                 <wbr />
               </span>
             ))

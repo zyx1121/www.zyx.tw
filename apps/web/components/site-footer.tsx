@@ -1,5 +1,4 @@
 "use client"
-import { T, useT } from "@workspace/ui/components/locale-provider"
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -15,8 +14,6 @@ import { enter, ENTER, enterDelay } from "@/lib/layout"
 
 /** The bottom corners: Privacy and Terms, which cover every zyx.tw site. */
 export function SiteFooter() {
-  const t = useT()
-
   const pathname = usePathname()
   const home = pathname === "/"
   const made = pathname.startsWith("/made/")
@@ -30,22 +27,22 @@ export function SiteFooter() {
       style={enterDelay(ENTER.footer)}
       links={
         <>
-          <CornerTip tip={t(LEGAL_TIPS.privacy)}>
+          <CornerTip tip={LEGAL_TIPS.privacy}>
             <Link
               href="/privacy"
               aria-current={pathname === "/privacy" ? "page" : undefined}
               className={cornerLink}
             >
-              <T>{"Privacy"}</T>
+              Privacy
             </Link>
           </CornerTip>
-          <CornerTip tip={t(LEGAL_TIPS.terms)}>
+          <CornerTip tip={LEGAL_TIPS.terms}>
             <Link
               href="/terms"
               aria-current={pathname === "/terms" ? "page" : undefined}
               className={cornerLink}
             >
-              <T>{"Terms"}</T>
+              Terms
             </Link>
           </CornerTip>
         </>

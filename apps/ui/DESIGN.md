@@ -124,7 +124,7 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
 
 ## Content
 
-- **Languages**: all owned interfaces default to Traditional Chinese (`zh-TW`) and offer English (`en`). Resolve a supported `?lang` value first, then the shared `zyx_locale` cookie, then `zh-TW`. The cookie lasts one year, uses `Path=/`, `SameSite=Lax`, `Secure` over HTTPS and `Domain=.zyx.tw` only on that domain and its subdomains. Do not infer the default from browser language. The top-right language switch preserves query parameters, fragments, scroll and application state. Server-render content, metadata and `html lang` consistently. Translate interface text, validation, accessible labels and page Markdown; preserve product names, commands, protocol identifiers and user content. Add both locales to the app dictionary when publishing new content.
+- **English UI copy**: the public zyx.tw sites write their interface in English (`lang="en"`). An app written for Chinese readers, such as `1909` (`lang="zh-TW"`), writes its UI in Chinese and follows the CJK rules below.
 - **Spaces between CJK and Latin**: put a space between CJK text and Latin letters or digits (`使用 shadcn/ui 的元件`, `共 7 個元件`), but not next to full-width punctuation.
 - **Full-width CJK punctuation**: CJK sentences take full-width marks (`，。：；！？「」（）`); Latin sentences take half-width ones.
 - **Short declarative sentences**: one idea per sentence, in the present tense. Say what a thing does, not what it might do.
@@ -133,9 +133,9 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
 
 ## Agent surfaces
 
-Every zyx.tw site is written for people and for agents. Next.js pages and Markdown resolve the same request locale. Registry JSON and technical agent instructions remain English. Static standalone sites publish both locale variants.
+Every zyx.tw site is written for people and for agents. A static export (`output: "export"`) has no server to answer `Accept: text/markdown`, so each surface is a file at its own URL, and `vercel.json` adds the headers.
 
-- **Markdown for every content page**: `/index.md` for the home page and `<path>.md` for the others, built from the same data as the HTML by request-scoped route handlers. Each starts with YAML front matter (`site`, `url`, `title`, `description`). Agents find it through the `Link` header and the `<link rel="alternate">` in the head; the page shows no link to it.
+- **Markdown for every content page**: `/index.md` for the home page and `<path>.md` for the others, built from the same data as the HTML by route handlers with `dynamic = "force-static"`. Each starts with YAML front matter (`site`, `url`, `title`, `description`). Agents find it through the `Link` header and the `<link rel="alternate">` in the head; the page shows no link to it.
 - **`/llms.txt`**: an H1, a one-paragraph summary, "When to use", "How an agent should use it" as numbered steps, and Markdown links to the Markdown pages ([llmstxt.org](https://llmstxt.org)).
 - **`/agent-instructions.md`**: when to use the site and when not to, the call order, and the rules an agent must follow, including that the index is complete, so nothing else may be invented.
 - **Link headers**: the HTML for `/` answers with `Link: </llms.txt>; rel="describedby", </index.md>; rel="alternate"; type="text/markdown"`, and `<head>` repeats the alternate (`alternates.types` in the page metadata). Markdown is served as `text/markdown; charset=utf-8`, and `llms.txt` as `text/plain; charset=utf-8`.

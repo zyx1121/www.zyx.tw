@@ -1,9 +1,9 @@
-import { getMarkdown } from "@/lib/markdown"
+import { markdownResponse, notFoundMarkdown } from "@/lib/markdown"
 
 // Prerendered with its 404 status; next.config.mjs rewrites Markdown
 // requests for paths that do not exist here.
+export const dynamic = "force-static"
 
-export async function GET() {
-  const { markdownResponse, notFoundMarkdown } = await getMarkdown()
+export function GET() {
   return markdownResponse(notFoundMarkdown(), { status: 404 })
 }

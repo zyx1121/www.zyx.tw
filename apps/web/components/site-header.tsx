@@ -1,5 +1,4 @@
 "use client"
-import { T, useT } from "@workspace/ui/components/locale-provider"
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -17,8 +16,6 @@ import { PAGES } from "@/lib/site"
 const NAV = PAGES.filter((page) => page.nav)
 
 export function SiteHeader() {
-  const t = useT()
-
   const pathname = usePathname()
   // The home is a dark 3D stage in either theme, so its corners take the
   // dark tokens, and nothing scrolls under them.
@@ -28,26 +25,26 @@ export function SiteHeader() {
   return (
     <TopCorners
       home="/"
-      label={t("zyx, home")}
+      label="zyx, home"
       fade={!home}
       className={
         home ? `dark ${enter}` : made ? `made-top-corner ${enter}` : enter
       }
       nav={
-        <nav aria-label={t("Main")}>
+        <nav aria-label="Main">
           <ul className="flex gap-4">
             {NAV.map(({ path, label, tip }) => {
               const current =
                 pathname === path || pathname.startsWith(`${path}/`)
               return (
                 <li key={path} className="relative flex">
-                  <CornerTip tip={tip ? t(tip) : undefined}>
+                  <CornerTip tip={tip}>
                     <Link
                       href={path}
                       aria-current={current ? "page" : undefined}
                       className={cornerLink}
                     >
-                      <T>{label}</T>
+                      {label}
                     </Link>
                   </CornerTip>
                   {/* Springs to the new page's item on navigation. */}

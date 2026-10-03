@@ -1,5 +1,3 @@
-import { localizedMetadata } from "@workspace/ui/lib/i18n-server";
-import { MESSAGES } from "@/lib/messages";
 import type { Metadata } from "next";
 
 import { Hero } from "@/components/hero";
@@ -9,7 +7,7 @@ import { COMPONENTS, getItem } from "@/lib/registry";
 import { MARKDOWN_PATH } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-const baseMetadata: Metadata = {
+export const metadata: Metadata = {
   alternates: {
     canonical: "/",
     types: { "text/markdown": MARKDOWN_PATH },
@@ -30,8 +28,4 @@ export default function Home() {
       />
     </main>
   );
-}
-
-export async function generateMetadata() {
-  return localizedMetadata(baseMetadata, MESSAGES, "/");
 }

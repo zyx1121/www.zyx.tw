@@ -1,5 +1,4 @@
 "use client"
-import { T } from "@workspace/ui/components/locale-provider"
 
 import { useEffect, useState } from "react"
 
@@ -31,16 +30,9 @@ export default function MadeScene({ product }: { product: ProductId }) {
   if (failed)
     return (
       <p role="status">
-        <T>
-          {"The model could not load. Download its scene to open it in Plump."}
-        </T>
+        The model could not load. Download its scene to open it in Plump.
       </p>
     )
-  if (!scene)
-    return (
-      <p role="status">
-        <T>{"Loading model…"}</T>
-      </p>
-    )
+  if (!scene) return <p role="status">Loading model…</p>
   return <Scene3D scene={scene} controls className="size-full" />
 }

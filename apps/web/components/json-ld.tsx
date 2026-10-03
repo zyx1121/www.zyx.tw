@@ -1,5 +1,3 @@
-import { getI18n } from "@workspace/ui/lib/i18n-server"
-import { MESSAGES } from "@/lib/messages"
 import type { Project } from "@/lib/projects"
 import {
   EMAIL,
@@ -24,8 +22,7 @@ function JsonLd({ data }: { data: object }) {
 }
 
 /** Who the site is by and what it is: on every page. */
-export async function SiteJsonLd() {
-  const { locale, t } = await getI18n(MESSAGES)
+export function SiteJsonLd() {
   return (
     <JsonLd
       data={{
@@ -56,8 +53,8 @@ export async function SiteJsonLd() {
             "@id": `${SITE_URL}/#website`,
             url: `${SITE_URL}/`,
             name: SITE_NAME,
-            description: t(SITE_DESCRIPTION),
-            inLanguage: locale,
+            description: SITE_DESCRIPTION,
+            inLanguage: "en",
             author: { "@id": PERSON },
             publisher: { "@id": PERSON },
           },
@@ -68,20 +65,19 @@ export async function SiteJsonLd() {
 }
 
 /** The works page's list, one ListItem per project. */
-export async function ProjectsJsonLd({ projects }: { projects: Project[] }) {
-  const { t } = await getI18n(MESSAGES)
+export function ProjectsJsonLd({ projects }: { projects: Project[] }) {
   return (
     <JsonLd
       data={{
         "@context": "https://schema.org",
         "@type": "ItemList",
-        name: t("Works"),
+        name: "Works",
         itemListElement: projects.map(({ name, href, purpose }, index) => ({
           "@type": "ListItem",
           position: index + 1,
           name,
           url: href,
-          description: t(purpose),
+          description: purpose,
         })),
       }}
     />

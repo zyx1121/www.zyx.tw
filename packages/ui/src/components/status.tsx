@@ -1,5 +1,4 @@
 "use client"
-import { T, useLocale, useT } from "@workspace/ui/components/locale-provider"
 
 import Link from "next/link"
 import { SiGithub } from "react-icons/si"
@@ -43,14 +42,13 @@ const LEVEL_CLASS: Record<HeatmapDay["contributionLevel"], string> = {
   FOURTH_QUARTILE: "bg-foreground",
 }
 
+const dateFmt = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+})
+
 function HeatmapGrid({ heatmap }: { heatmap: Heatmap }) {
-  const locale = useLocale()
-  const t = useT()
-  const dateFmt = new Intl.DateTimeFormat(locale, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  })
   const days = heatmap.weeks.flatMap((w) => w.contributionDays)
   return (
     <div
@@ -62,10 +60,9 @@ function HeatmapGrid({ heatmap }: { heatmap: Heatmap }) {
       {days.map((day) => (
         <div
           key={day.date}
-          title={t("{date}: {count} contributions", {
-            date: dateFmt.format(new Date(day.date)),
-            count: day.contributionCount,
-          })}
+          title={`${dateFmt.format(new Date(day.date))}: ${day.contributionCount} contribution${
+            day.contributionCount === 1 ? "" : "s"
+          }`}
           className={cn(
             "aspect-square rounded-[2px]",
             LEVEL_CLASS[day.contributionLevel]
@@ -85,8 +82,6 @@ export function Status({
   className?: string
   style?: React.CSSProperties
 }) {
-  const locale = useLocale()
-  const t = useT()
   return (
     <section
       aria-labelledby="status-heading"
@@ -94,7 +89,7 @@ export function Status({
       style={style}
     >
       <h2 id="status-heading" className="text-sm/6 font-medium">
-        <T>{STATUS_COPY.title}</T>
+        {STATUS_COPY.title}
       </h2>
       <div className="mt-5 rounded-lg bg-card p-5">
         <div className="flex items-center justify-between gap-4">
@@ -105,15 +100,12 @@ export function Status({
             className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <SiGithub className="h-4 w-4" aria-hidden="true" />
-            <span>
-              @<T>{GITHUB_USER}</T>
-            </span>
+            <span>@{GITHUB_USER}</span>
           </Link>
           {data.heatmap && (
             <span className="text-xs text-muted-foreground tabular-nums">
-              {t("{count} contributions this year", {
-                count: data.heatmap.totalContributions.toLocaleString(locale),
-              })}
+              {data.heatmap.totalContributions.toLocaleString()} contributions
+              this year
             </span>
           )}
         </div>
@@ -127,11 +119,11 @@ export function Status({
         <ul className="mt-5 space-y-3">
           {data.events.length === 0 && (
             <li className="text-sm text-muted-foreground">
-              <T>{STATUS_COPY.empty}</T>
+              {STATUS_COPY.empty}
             </li>
           )}
           {data.events.map((e) => {
-            const { kind, text } = describeEvent(e, locale)
+            const { kind, text } = describeEvent(e)
             const Icon = ICON[kind]
             return (
               <li
@@ -143,19 +135,15 @@ export function Status({
                   aria-hidden="true"
                 />
                 <span className="flex-1 truncate">
-                  <span className="text-foreground">
-                    <T>{text}</T>
-                  </span>
-                  <span>
-                    <T>{" in "}</T>
-                  </span>
+                  <span className="text-foreground">{text}</span>
+                  <span> in </span>
                   <Link
                     href={`https://github.com/${e.repo.name}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline underline-offset-4 transition-colors hover:text-foreground"
                   >
-                    <T>{e.repo.name}</T>
+                    {e.repo.name}
                   </Link>
                 </span>
                 {/* The page is prerendered (ISR, 5 min), so the server's
@@ -166,7 +154,7 @@ export function Status({
                   className="shrink-0 text-xs text-muted-foreground tabular-nums"
                   suppressHydrationWarning
                 >
-                  <T>{timeAgo(e.created_at, Date.now(), locale)}</T>
+                  {timeAgo(e.created_at)}
                 </span>
               </li>
             )

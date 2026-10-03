@@ -1,6 +1,5 @@
 "use client"
 
-import { useT } from "@workspace/ui/components/locale-provider"
 import { useDeferredValue, useEffect, useState } from "react"
 
 import {
@@ -31,7 +30,6 @@ function loadScene(): SceneV1 {
 }
 
 export function Editor() {
-  const t = useT()
   const [scene, setScene] = useState(loadScene)
   const [error, setError] = useState<string | null>(null)
   // Rebuilding the mesh can take a frame or two; this keeps the sliders
@@ -53,7 +51,7 @@ export function Editor() {
       try {
         data = JSON.parse(text)
       } catch {
-        setError(t("{file} is not valid JSON", { file: file.name }))
+        setError(`${file.name} is not valid JSON`)
         return
       }
       const result = safeParseScene(data)

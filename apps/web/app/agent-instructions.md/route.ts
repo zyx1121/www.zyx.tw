@@ -1,6 +1,7 @@
-import { getMarkdown } from "@/lib/markdown"
+import { agentInstructions, markdownResponse } from "@/lib/markdown"
 
-export async function GET() {
-  const { agentInstructions, markdownResponse } = await getMarkdown("en")
+export const dynamic = "force-static"
+
+export function GET() {
   return markdownResponse(agentInstructions())
 }
