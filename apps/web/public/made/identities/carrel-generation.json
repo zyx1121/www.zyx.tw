@@ -72,13 +72,24 @@
         "format": "webp",
         "quality": 90,
         "method": 6,
-        "resample": "Lanczos 2048 to 1024",
+        "crop": {
+          "box": [
+            144,
+            226,
+            1925,
+            2007
+          ],
+          "zoom": 1.15,
+          "reason": "Match the visual size of the other material cards. The base keeps its floor line; the object height becomes about 72 percent of the frame, close to Plump."
+        },
+        "resample": "Crop 1781 px square from the 2048 source, Lanczos to 1024",
         "size": [
           1024,
           1024
         ],
-        "bytes": 37190,
-        "sha256": "c92b2053aa9efe70c28c60730d509c89a9bcd8b17845d89607cf3cc6c10a77bc"
+        "bytes": 46684,
+        "sha256": "ff6e106121d8f18bef743234b1b16582cd57c4d3bed6c438d8f37c5b1ab613bc",
+        "previous_export_sha256": "c92b2053aa9efe70c28c60730d509c89a9bcd8b17845d89607cf3cc6c10a77bc"
       },
       "replaces": {
         "sha256": "e3f67d8d6324e45b00cc618088245cdf134781c7010601baa11edc1cea205508",
