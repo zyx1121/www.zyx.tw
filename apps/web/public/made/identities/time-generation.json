@@ -65,7 +65,7 @@
       "selection": {
         "candidates": 6,
         "selected": "c6",
-        "note": "Six candidates. c1-c3 kept the previous frontal angle; c4 showed a transparent edge artifact; c5 drifted from the backdrop. c6 has the closest backdrop to Plump and a clear left three-quarter turn. The prompt described the key light as upper left; the output follows the light in Plump's card, from the upper right with the shadow falling left."
+        "note": "Six candidates. c1-c3 kept the previous frontal angle; c4 showed a transparent edge artifact; c5 drifted from the backdrop. c6 has the closest backdrop to Plump and a clear left three-quarter turn. The prompt described the key light as upper left; the output follows the light in Plump's card from the upper right, with its shadow mostly under the ring."
       },
       "export": {
         "format": "webp",
