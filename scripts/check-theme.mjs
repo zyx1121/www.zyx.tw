@@ -14,10 +14,10 @@
 //   3. the `css` rules of the `theme` item (the frosted overlays) appear, the
 //      same apart from whitespace and comments, in apps/ui/app/globals.css
 //      and every consumer stylesheet, and
-//   4. no at-rule in the `css` rules holds declarations directly. The shadcn
-//      CLI reads an at-rule's children as nested rules and fails on
-//      `@theme inline { --text-xs: ... }` ("Unknown word"), so theme
-//      variables belong in `cssVars.theme`.
+//   4. no at-rule other than @utility in the `css` rules holds declarations
+//      directly. The shadcn CLI reads an at-rule's children as nested rules
+//      and fails on `@theme inline { --text-xs: ... }` ("Unknown word"), so
+//      theme variables belong in `cssVars.theme`.
 //
 // Usage: node scripts/check-theme.mjs
 
@@ -177,9 +177,11 @@ if (theme?.css) {
 }
 
 // 4. at-rules in the registry theme css hold rules, never declarations
+// (`@utility` is the exception: the CLI writes its declarations as given)
 if (theme?.css) {
   for (const [key, value] of Object.entries(theme.css)) {
-    if (!key.startsWith("@") || typeof value !== "object") continue
+    if (!key.startsWith("@") || key.startsWith("@utility")) continue
+    if (typeof value !== "object") continue
     for (const [child, body] of Object.entries(value)) {
       if (typeof body === "string") {
         errors.push(
