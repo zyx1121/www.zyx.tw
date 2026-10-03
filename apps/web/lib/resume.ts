@@ -120,12 +120,6 @@ export const SECTIONS: Section[] = [
     entries: [
       {
         when: "2026",
-        what: "A local model host for agents on Windows",
-        where: "aias",
-        href: "https://github.com/zyx1121/aias",
-      },
-      {
-        when: "2026",
         what: "An operating system for AI agents",
         where: "kitbash",
         href: "https://github.com/zyx1121/kitbash",
