@@ -77,7 +77,7 @@ Use a stable lowercase, hyphenated product ID. All published files live in `publ
 | `<id>.svg`                 | Canonical geometric silhouette used by the product mark                                                |
 | `<id>.scene.json`          | Required when `model: true`: Plump scene schema `v1`, embedding the matching SVG and material settings |
 | `<id>.glb`                 | Required when `model: true`: export of that geometric model for download                               |
-| `<id>-material.webp`       | Square 1024 × 1024 material artwork for the index                                                      |
+| `<id>-material.webp`       | Square 1024 × 1024 material artwork for the index, matching Plump's backdrop, light, framing and turn  |
 | `<id>-hero.webp`           | Graded 1920 × 1080 landscape photograph and video poster                                               |
 | `<id>-portrait.webp`       | Separately composed, graded 1080 × 1920 mobile photograph and poster                                   |
 | `<id>-hero-motion.mp4`     | Required when `motion: true`: landscape motion clip derived from the selected landscape source         |
@@ -90,7 +90,7 @@ Generated material and campaign images interpret the geometric reference. They a
 
 ## Image and motion workflow
 
-1. **Establish the object.** Prepare the canonical SVG and, when offering a 3D viewer, its scene and GLB. Use the silhouette and chosen material as the reference for the square artwork and campaign. Check holes, connecting bridges, thickness and orientation before selecting an image.
+1. **Establish the object.** Prepare the canonical SVG and, when offering a 3D viewer, its scene and GLB. Use the silhouette and chosen material as the reference for the square artwork and campaign. Check holes, connecting bridges, thickness and orientation before selecting an image. Generate the square artwork with Plump's material card as the backdrop, light, framing and turn reference and the silhouette as the shape reference, as recorded for Time, Link and Carrel. A material reference photographed from another angle can pull the result back to that angle and light, so compare the turn and the shadow side with Plump before selecting.
 2. **Select the landscape photograph.** Keep the subject and object toward the left, with quiet scenery on the right for live text and a clear top edge for navigation. The current image pipeline used OpenRouter `google/gemini-3.1-flash-image`. Model choice may change; record what actually produced the selected image.
 3. **Compose the portrait from the selected source.** Preserve identity, clothes, object, lighting and setting. Leave roughly the upper 27% quiet for the title, keep the subject and object inside the central 80% of the width, and allow low-detail space near the bottom for controls. Treat these as composition targets and verify the real `object-fit: cover` crop at 320px. A center crop of the landscape is not the mobile deliverable.
 4. **Grade after composition is selected.** Retain ungraded source PNGs. Use [`grade-made-photo.py`](../../scripts/grade-made-photo.py) for the established softness, bloom, lifted blacks and seeded grain. Export its graded PNG as WebP with quality 90 and method 6. Never feed an already graded image through the finish again.
