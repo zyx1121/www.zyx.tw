@@ -4,6 +4,89 @@
   "generated": "2026-10-02",
   "images": [
     {
+      "file": "link-material.webp",
+      "ratio": "1:1",
+      "generated": "2026-10-03",
+      "steps": [
+        {
+          "id": "link-material-c9",
+          "references": [
+            {
+              "file": "refs/plump-material.png",
+              "role": "backdrop, light, framing and turn (published Plump material card)",
+              "sha256": "fbf8a8a3be415696d90fe472e4d4aa4ff7a80a99bb48c3032604c07d4ce4f330"
+            },
+            {
+              "file": "refs/link-reference.png",
+              "role": "flat silhouette",
+              "sha256": "267a5676bd2d017330d9d77cb3d835ceb56d8fe6d5e2fca56595528eb0b70057"
+            }
+          ],
+          "prompt": "Create one square studio product photograph of a single object. Image 1 is the STYLE, CAMERA, LIGHT AND ANGLE REFERENCE. Match it exactly: the same seamless pale cool blue-gray paper backdrop and floor with the same soft gradient that is slightly brighter on the right, the same soft diffused key light from the upper right, the same soft contact shadow falling toward the LEFT on the floor, the same gentle highlights, the same camera height slightly above the object's center and the same moderate lens perspective. The object rests on the floor in the center of the frame and its width fills about 65 percent of the frame width, the same visual size as the object in Image 1. The viewing angle and lighting must come from Image 1, not from Image 2. Rotate the object about 30 degrees around its vertical axis so that its LEFT side wall turns partly toward the camera and is clearly visible as a band of thickness along its left edge, while its right side wall stays hidden, exactly like the object in Image 1. Do not copy the shape, color or chrome material of the object in Image 1. The product to photograph is Link, a solid object made of vermilion red soft-touch matte silicone, color close to #D32823, with a smooth, very slightly satiny surface and thick, softly rounded pillow-like edges. Image 2 is its flat geometric silhouette: two rounded loops fused diagonally by one broad bridge, each loop with exactly one rounded hole, two holes in total. Keep that contour, exactly two holes, the diagonal orientation from lower left to upper right and the proportions. The object is about as thick as the object in Image 1 and rests upright on the floor on its lower loop. Because of the turn, the outline looks slightly narrower than the silhouette, the thickness of its left side is visible, and the inner walls of both holes show their depth. Show only this one object. No text, writing, signature, maker's mark, stamp, logo, label, prop, person, pedestal, plinth or second object."
+        }
+      ],
+      "request": {
+        "resolution": "2K",
+        "aspect_ratio": "1:1"
+      },
+      "source": "link-material-c9.jpg",
+      "source_size": [
+        2048,
+        2048
+      ],
+      "source_sha256": "b67f328d34f016646ec317af8715b2ddbabb87ee0ecc527461b8bf7e206ce801",
+      "reported_usage": {
+        "prompt_tokens": 945,
+        "completion_tokens": 2057,
+        "total_tokens": 3002,
+        "cost": 0,
+        "is_byok": true,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.1024035,
+          "upstream_inference_prompt_cost": 0.0004725,
+          "upstream_inference_completions_cost": 0.101931
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 1680
+        }
+      },
+      "selection": {
+        "candidates": 9,
+        "selected": "c9",
+        "note": "Nine candidates. c1-c6 used the previous card as a material reference and kept its frontal view and left-side light. c7-c9 used only Plump's card and the silhouette, with the color sampled from the previous card (#D32823): c7 merged Plump's four lobes and showed four holes, c8 turned too far and drifted from the backdrop, and c9 keeps two holes, turns left and casts its shadow left like Plump."
+      },
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6,
+        "resample": "Lanczos 2048 to 1024",
+        "size": [
+          1024,
+          1024
+        ],
+        "bytes": 25570,
+        "sha256": "b1bd6d4920d22f1a4eaa35ea669854149f945598e49cca2463b644422300bf8f"
+      },
+      "replaces": {
+        "sha256": "ba17b2a3b0988c0445e6c693ef6ca33c0694f40eb4afbc5a09dba92841b08356",
+        "previous": "made-seeds study card from October 2, 2026, photographed frontally with the light from the left.",
+        "reason": "Unified with the Plump material card: pale blue-gray seamless backdrop, soft key light from the upper right with the shadow falling left, and a left three-quarter turn."
+      },
+      "cost": {
+        "currency": "USD",
+        "openrouter_reported_cost": 0,
+        "reported_upstream_inference_cost": 0.921708,
+        "note": "BYOK. Includes the rejected candidates. Provider-reported accounting fields, not an invoice."
+      }
+    },
+    {
       "file": "link-hero.webp",
       "ratio": "16:9",
       "steps": [

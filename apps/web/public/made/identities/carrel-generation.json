@@ -10,7 +10,7 @@
       "generated": "2026-10-03",
       "steps": [
         {
-          "id": "carrel-material-c6",
+          "id": "carrel-material-c9",
           "references": [
             {
               "file": "refs/plump-material.png",
@@ -28,23 +28,23 @@
               "sha256": "cb191a5909010efaa16e8c001213b2d085a946e3ab26f983d9a15665905d8669"
             }
           ],
-          "prompt": "Create one square studio product photograph of a single object. Image 1 is the STYLE, CAMERA AND ANGLE REFERENCE. Match it exactly: the same seamless pale cool blue-gray paper backdrop and floor with the same soft vertical gradient, the same soft diffused key light from the upper left, the same gentle highlights and soft contact shadow, the same camera height slightly above the object's center and the same moderate lens perspective. The object rests on the floor in the center of the frame and fills about 65 percent of the frame width. The viewing angle must come from Image 1, not from Image 2. Rotate the object about 30 degrees around its vertical axis so that its LEFT side wall turns partly toward the camera and is clearly visible as a band of thickness along its left edge, while its right side wall stays hidden, exactly like the object in Image 1. Do not copy the shape, color or chrome material of the object in Image 1. Image 2 is a MATERIAL AND SHAPE REFERENCE photographed from a different angle: Carrel, a squared arch of glossy cobalt blue glazed ceramic with two straight legs, rounded outer top corners and a tall rectangular opening. Keep its cobalt color, slightly uneven hand-glazed ceramic surface, leg width, opening size and depth. Because of the turn, the outer side face of the LEFT leg and the left end of the top are visible, and the right side face is hidden. Image 3 is its flat geometric silhouette: keep that contour, the opening and the proportions. The arch stands upright on its two legs. Show only this one object. No text, logo, label, prop, person, pedestal, plinth or second object."
+          "prompt": "Create one square studio product photograph of a single object. Image 1 is the STYLE, CAMERA, LIGHT AND ANGLE REFERENCE. Match it exactly: the same seamless pale cool blue-gray paper backdrop and floor with the same soft gradient that is slightly brighter on the right, the same soft diffused key light from the upper right, the same soft contact shadow falling toward the LEFT on the floor, the same gentle highlights, the same camera height slightly above the object's center and the same moderate lens perspective. The object rests on the floor in the center of the frame and its width fills about 65 percent of the frame width, the same visual size as the object in Image 1. The viewing angle and lighting must come from Image 1, not from Image 2. Rotate the object about 30 degrees around its vertical axis so that its LEFT side wall turns partly toward the camera and is clearly visible as a band of thickness along its left edge, while its right side wall stays hidden, exactly like the object in Image 1. Do not copy the shape, color or chrome material of the object in Image 1. Image 2 is a MATERIAL AND SHAPE REFERENCE photographed from a different angle: Carrel, a squared arch of glossy cobalt blue glazed ceramic with two straight legs, rounded outer top corners and a tall rectangular opening. Keep its cobalt color, slightly uneven hand-glazed ceramic surface, leg width, opening size and depth. Because of the turn, the outer side face of the LEFT leg and the left end of the top are visible, and the right side face is hidden. Image 3 is its flat geometric silhouette: keep that contour, the opening and the proportions. The arch stands upright on its two legs. Keep the glaze clean, with no writing or marks on the ceramic. Show only this one object. No text, writing, signature, maker's mark, stamp, logo, label, prop, person, pedestal, plinth or second object."
         }
       ],
       "request": {
         "resolution": "2K",
         "aspect_ratio": "1:1"
       },
-      "source": "carrel-material-c6.jpg",
+      "source": "carrel-material-c9.jpg",
       "source_size": [
         2048,
         2048
       ],
-      "source_sha256": "6db05effa89efd838b88d4ab39a9ddf03ee2d668c5723fcc63f849d94352dfa8",
+      "source_sha256": "b419f7bda43804d48ff1559a472a479dd2046c38253114515ea78bb6227d4637",
       "reported_usage": {
-        "prompt_tokens": 1120,
-        "completion_tokens": 2058,
-        "total_tokens": 3178,
+        "prompt_tokens": 1178,
+        "completion_tokens": 2052,
+        "total_tokens": 3230,
         "cost": 0,
         "is_byok": true,
         "prompt_tokens_details": {
@@ -54,9 +54,9 @@
           "video_tokens": 0
         },
         "cost_details": {
-          "upstream_inference_cost": 0.102494,
-          "upstream_inference_prompt_cost": 0.00056,
-          "upstream_inference_completions_cost": 0.101934
+          "upstream_inference_cost": 0.102505,
+          "upstream_inference_prompt_cost": 0.000589,
+          "upstream_inference_completions_cost": 0.101916
         },
         "completion_tokens_details": {
           "reasoning_tokens": 0,
@@ -64,9 +64,9 @@
         }
       },
       "selection": {
-        "candidates": 6,
-        "selected": "c6",
-        "note": "Six candidates. c1-c3 kept the previous right-side turn; c4-c6 show the left side like Plump. c6 had the closest backdrop."
+        "candidates": 9,
+        "selected": "c9",
+        "note": "Nine candidates. c1-c3 kept the previous right-side turn. c4-c6 turned left, but c6 carried a signature-like mark on the left leg. c7-c9 used a corrected prompt with the key light from the upper right: c7 was still lit from the left and drifted from the backdrop, c8 drifted from the backdrop and also carried the mark, and c9 has a clean glaze, turns left and casts its shadow left like Plump."
       },
       "export": {
         "format": "webp",
@@ -77,21 +77,20 @@
           1024,
           1024
         ],
-        "bytes": 42016,
-        "sha256": "60a609890dad79767b90daa1182fa6a024bd6d08665d405f55d8d55e7cf14523"
+        "bytes": 37190,
+        "sha256": "c92b2053aa9efe70c28c60730d509c89a9bcd8b17845d89607cf3cc6c10a77bc"
       },
       "replaces": {
         "sha256": "e3f67d8d6324e45b00cc618088245cdf134781c7010601baa11edc1cea205508",
-        "reason": "Unified with the Plump material card: pale blue-gray seamless backdrop, upper-left key light and a left three-quarter turn.",
-        "previous": "Text-only card from October 2, 2026 on a pale warm-gray seamless floor, turned to show its right side."
+        "previous": "Text-only card from October 2, 2026 on a pale warm-gray seamless floor, turned to show its right side.",
+        "reason": "Unified with the Plump material card: pale blue-gray seamless backdrop, soft key light from the upper right with the shadow falling left, and a left three-quarter turn."
       },
       "cost": {
         "currency": "USD",
         "openrouter_reported_cost": 0,
-        "reported_upstream_inference_cost": 0.614448,
+        "reported_upstream_inference_cost": 0.922221,
         "note": "BYOK. Includes the rejected candidates. Provider-reported accounting fields, not an invoice."
-      },
-      "archive": "Archives/zyx1121/www.zyx.tw/made-material-unify-20261003/"
+      }
     },
     {
       "file": "carrel-workspace.webp",
@@ -1013,8 +1012,8 @@
     "material_card_2026_10_03": {
       "currency": "USD",
       "image_openrouter_reported_cost": 0,
-      "image_reported_upstream_inference_cost": 0.614448,
-      "image_generations": 6,
+      "image_reported_upstream_inference_cost": 0.922221,
+      "image_generations": 9,
       "selected_image_generations": 1
     }
   },

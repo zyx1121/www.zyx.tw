@@ -65,7 +65,7 @@
       "selection": {
         "candidates": 6,
         "selected": "c6",
-        "note": "Six candidates. c1-c3 kept the previous frontal angle; c4 showed a transparent edge artifact; c5 drifted from the backdrop. c6 had the closest backdrop to Plump and a clear left three-quarter turn."
+        "note": "Six candidates. c1-c3 kept the previous frontal angle; c4 showed a transparent edge artifact; c5 drifted from the backdrop. c6 has the closest backdrop to Plump and a clear left three-quarter turn. The prompt described the key light as upper left; the output follows the light in Plump's card, from the upper right with the shadow falling left."
       },
       "export": {
         "format": "webp",
@@ -81,16 +81,15 @@
       },
       "replaces": {
         "sha256": "4f95240e78d30e5252d21979bb76f5c91121571107fa9b5d220646fcbb1515ad",
-        "reason": "Unified with the Plump material card: pale blue-gray seamless backdrop, upper-left key light and a left three-quarter turn.",
-        "previous": "made-seeds study card from October 2, 2026, photographed nearly frontally."
+        "previous": "made-seeds study card from October 2, 2026, photographed nearly frontally.",
+        "reason": "Unified with the Plump material card: pale blue-gray seamless backdrop, soft key light from the upper right with the shadow falling left, and a left three-quarter turn."
       },
       "cost": {
         "currency": "USD",
         "openrouter_reported_cost": 0,
         "reported_upstream_inference_cost": 0.614518,
         "note": "BYOK. Includes the rejected candidates. Provider-reported accounting fields, not an invoice."
-      },
-      "archive": "Archives/zyx1121/www.zyx.tw/made-material-unify-20261003/"
+      }
     },
     {
       "file": "time-hero.webp",
