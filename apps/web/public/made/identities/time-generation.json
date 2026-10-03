@@ -4,6 +4,95 @@
   "generated": "2026-10-02",
   "images": [
     {
+      "file": "time-material.webp",
+      "ratio": "1:1",
+      "generated": "2026-10-03",
+      "steps": [
+        {
+          "id": "time-material-c6",
+          "references": [
+            {
+              "file": "refs/plump-material.png",
+              "role": "backdrop, light, framing and turn (published Plump material card)",
+              "sha256": "fbf8a8a3be415696d90fe472e4d4aa4ff7a80a99bb48c3032604c07d4ce4f330"
+            },
+            {
+              "file": "refs/time-material.png",
+              "role": "material and shape (previous published Time material card)",
+              "sha256": "ef4f084be86be502472fc598dcd7659815edb05488091b90b65c1c58fc05b652"
+            },
+            {
+              "file": "refs/time-reference.png",
+              "role": "flat silhouette",
+              "sha256": "0041738d3d29e58ab4d3973188dde133de92ed1d61cb1b0897f994f61f99ccc6"
+            }
+          ],
+          "prompt": "Create one square studio product photograph of a single object. Image 1 is the STYLE, CAMERA AND ANGLE REFERENCE. Match it exactly: the same seamless pale cool blue-gray paper backdrop and floor with the same soft vertical gradient, the same soft diffused key light from the upper left, the same gentle highlights and soft contact shadow, the same camera height slightly above the object's center and the same moderate lens perspective. The object rests on the floor in the center of the frame and fills about 65 percent of the frame width. The viewing angle must come from Image 1, not from Image 2. Rotate the object about 30 degrees around its vertical axis so that its LEFT side wall turns partly toward the camera and is clearly visible as a band of thickness along its left edge, while its right side wall stays hidden, exactly like the object in Image 1. Do not copy the shape, color or chrome material of the object in Image 1. Image 2 is a MATERIAL AND SHAPE REFERENCE photographed from a different, more frontal angle: Time, a thick open ring of translucent amber glass with two rounded ends and one opening at the upper right. Keep its amber color, glass transparency, warm light cast onto the floor, ring thickness, rounded ends and the position and width of the opening. Because of the turn, the ring appears slightly narrower than a perfect circle and the thickness of its left side is visible. Image 3 is its flat geometric silhouette: keep that contour, the single opening and its proportions. The ring stands upright on its lower edge. Show only this one object. No text, logo, label, prop, person, pedestal, plinth or second object."
+        }
+      ],
+      "request": {
+        "resolution": "2K",
+        "aspect_ratio": "1:1"
+      },
+      "source": "time-material-c6.jpg",
+      "source_size": [
+        2048,
+        2048
+      ],
+      "source_sha256": "6166fc84e6241175cc86ac3a433c43a487138bf54730b6ba69431eb623fe2232",
+      "reported_usage": {
+        "prompt_tokens": 1120,
+        "completion_tokens": 2076,
+        "total_tokens": 3196,
+        "cost": 0,
+        "is_byok": true,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.102548,
+          "upstream_inference_prompt_cost": 0.00056,
+          "upstream_inference_completions_cost": 0.101988
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 1680
+        }
+      },
+      "selection": {
+        "candidates": 6,
+        "selected": "c6",
+        "note": "Six candidates. c1-c3 kept the previous frontal angle; c4 showed a transparent edge artifact; c5 drifted from the backdrop. c6 had the closest backdrop to Plump and a clear left three-quarter turn."
+      },
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6,
+        "resample": "Lanczos 2048 to 1024",
+        "size": [
+          1024,
+          1024
+        ],
+        "bytes": 40714,
+        "sha256": "ffe5576fe1d835ddd62bbf675d021c4da625e0a57ebefa20ceacc1e9473abe35"
+      },
+      "replaces": {
+        "sha256": "4f95240e78d30e5252d21979bb76f5c91121571107fa9b5d220646fcbb1515ad",
+        "reason": "Unified with the Plump material card: pale blue-gray seamless backdrop, upper-left key light and a left three-quarter turn.",
+        "previous": "made-seeds study card from October 2, 2026, photographed nearly frontally."
+      },
+      "cost": {
+        "currency": "USD",
+        "openrouter_reported_cost": 0,
+        "reported_upstream_inference_cost": 0.614518,
+        "note": "BYOK. Includes the rejected candidates. Provider-reported accounting fields, not an invoice."
+      },
+      "archive": "Archives/zyx1121/www.zyx.tw/made-material-unify-20261003/"
+    },
+    {
       "file": "time-hero.webp",
       "ratio": "16:9",
       "steps": [

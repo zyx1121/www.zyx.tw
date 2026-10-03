@@ -52,7 +52,7 @@ Copy this template into the product's task notes and fill it in using the [publi
 
 ## Completion checklist
 
-- [ ] Identity assets complete: SVG and square material WebP; matching scene `v1` and GLB when `model: true`.
+- [ ] Identity assets complete: SVG and a square material WebP matching Plump's material card setup; matching scene `v1` and GLB when `model: true`.
 - [ ] Landscape and portrait complete: selected source, graded WebP, motion MP4 when `motion: true`, any chapter images, inspected exports and generation record.
 - [ ] Site registration complete: `PRODUCTS`, HTML route, Markdown route, `site.json`, metadata and any Works entry.
 - [ ] Sandbox checks and Safari acceptance passed: shared layout, only 24/16/14px rendered text, 320px/1024px/desktop, keyboard, navigation, model, motion controls, reduced motion and failure fallback. Attach measurements and any remaining limitations.

@@ -7,6 +7,7 @@ For new products, follow the [Made publishing guide](../../../MADE.md) and [prod
 - Each product owns a geometric SVG. Products with `model: true` embed the same outline in their Plump `scene.json` (v1) and exported GLB. Carrel does not offer a 3D model. The parent zyx mark remains the site signature.
 - Plump uses chrome and volume, Time uses amber glass and light, Link uses vermilion silicone and connection, and Carrel uses cobalt ceramic and a sheltered workspace.
 - Material and campaign WebPs are AI art directed images generated with `google/gemini-3.1-flash-image` through OpenRouter. They interpret the supplied outlines; they are not screenshots of the renderer or photographs of actual products or customers.
+- Material cards share one studio setup, taken from Plump's card: a pale blue-gray seamless backdrop, upper-left key light, soft contact shadow, centered framing and a left three-quarter turn that shows the object's left side. Time and Carrel were regenerated to this setup on October 3, 2026, with Plump's card as the setup reference, the previous card as the material reference and the SVG silhouette as the shape reference. Link already matched. The generation records list the references, prompts, candidates and spend.
 - Desktop campaigns are 1920 × 1080. Mobile campaigns are separately composed 1080 × 1920 images.
 - The live model viewer loads `@workspace/3d`, the same renderer as Plump. It loads lighting from Plump only after the viewer opens. Its lighting and geometry are distinct from the generated campaign images.
 
