@@ -20,7 +20,7 @@ const OG_IMAGE = {
 
 export { EMAIL }
 
-export const SITE_NAME = "zyx"
+export const SITE_NAME = "zyx.tw"
 export const SITE_URL = site.url
 export const SITE_DESCRIPTION =
   "Loki (詹詠翔), CS grad student at NYCU WinLab. Side projects, lab work and GitHub activity."
