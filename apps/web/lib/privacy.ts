@@ -26,7 +26,7 @@ export const PRIVACY: LegalDoc = {
       paragraphs: [
         [
           {
-            text: "No site runs analytics or tracking scripts. The language switch on kitbash and sensorium saves your Traditional Chinese or English preference in a zyx_locale cookie for one year, shared across zyx.tw subdomains. 1909 also sets cookies that keep its members signed in.",
+            text: "No site runs analytics or tracking scripts. None sets cookies, except 1909, whose sign-in sets cookies that keep its members signed in.",
           },
         ],
         [
