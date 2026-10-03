@@ -179,8 +179,9 @@ export function checkRepository(root = ROOT) {
   const theme = registry.items.find((item) => item.name === "theme")
   const errors = []
   const normalized = new Set()
+  const vars = theme.cssVars?.theme ?? {}
   for (const [name, px] of TOKENS) {
-    const actual = theme.css["@theme inline"][`--text-${name}`]
+    const actual = vars[`text-${name}`]
     if (pixels(actual) !== px)
       errors.push(`registry theme: --text-${name} must resolve to ${px}px`)
   }
@@ -195,6 +196,10 @@ export function checkRepository(root = ROOT) {
     }
   }
   checkRules(theme.css)
+  for (const [key, value] of Object.entries(vars)) {
+    if (/^text-[a-z0-9]+$/.test(key) && !legal(value))
+      errors.push(`registry theme: illegal --${key}: ${value}`)
+  }
   for (const [selector, rule] of Object.entries(theme.css)) {
     if (!legal(rule["font-size"])) continue
     for (const match of selector.matchAll(/\[class~="(text-\[[^\]]+\])"\]/g))

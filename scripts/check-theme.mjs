@@ -3,14 +3,21 @@
 //
 // Source of truth: apps/ui/app/globals.css (stock shadcn base-nova neutral
 // palette with the registry `theme` item applied). The script checks that
-//   1. every cssVar in the `theme` item of apps/ui/registry.json is present,
-//      with the same value, in apps/ui/app/globals.css, and
+//   1. every light and dark cssVar in the `theme` item of
+//      apps/ui/registry.json is present, with the same value, in the :root or
+//      .dark rule of apps/ui/app/globals.css, and every `cssVars.theme`
+//      entry (the type scale) is declared in an `@theme inline` block of
+//      apps/ui/app/globals.css and of every consumer stylesheet, and
 //   2. every consumer stylesheet below declares exactly the same :root and
 //      .dark custom properties as apps/ui/app/globals.css, no more, no less,
 //      and
 //   3. the `css` rules of the `theme` item (the frosted overlays) appear, the
 //      same apart from whitespace and comments, in apps/ui/app/globals.css
-//      and every consumer stylesheet.
+//      and every consumer stylesheet, and
+//   4. no at-rule in the `css` rules holds declarations directly. The shadcn
+//      CLI reads an at-rule's children as nested rules and fails on
+//      `@theme inline { --text-xs: ... }` ("Unknown word"), so theme
+//      variables belong in `cssVars.theme`.
 //
 // Usage: node scripts/check-theme.mjs
 
@@ -55,6 +62,21 @@ function parseTokens(path) {
   return blocks
 }
 
+// Custom properties declared in every `@theme inline` block of a stylesheet.
+function parseThemeInline(path) {
+  const css = read(path).replace(/\/\*[\s\S]*?\*\//g, "")
+  const vars = new Map()
+  const block = /@theme\s+inline\s*\{([^}]*)\}/g
+  let match
+  while ((match = block.exec(css))) {
+    for (const decl of match[1].split(";")) {
+      const m = decl.match(/^\s*(--[\w-]+)\s*:\s*([\s\S]+?)\s*$/)
+      if (m) vars.set(m[1], normalize(m[2]))
+    }
+  }
+  return vars
+}
+
 function normalize(value) {
   return value.replace(/\s+/g, " ").trim()
 }
@@ -93,11 +115,19 @@ const theme = registry.items.find((item) => item.name === "theme")
 if (!theme) {
   errors.push(`${REGISTRY}: no "theme" item`)
 } else {
-  for (const [mode, selector] of Object.entries(MODES)) {
-    const vars = {
-      ...(theme.cssVars?.theme ?? {}),
-      ...(theme.cssVars?.[mode] ?? {}),
+  for (const path of [SOURCE, ...CONSUMERS]) {
+    const declared = parseThemeInline(path)
+    for (const [name, value] of Object.entries(theme.cssVars?.theme ?? {})) {
+      const actual = declared.get(`--${name}`)
+      if (actual !== normalize(value)) {
+        errors.push(
+          `${path} @theme inline --${name}: ${actual ?? "(missing)"}, registry theme says ${value}`
+        )
+      }
     }
+  }
+  for (const [mode, selector] of Object.entries(MODES)) {
+    const vars = theme.cssVars?.[mode] ?? {}
     for (const [name, value] of Object.entries(vars)) {
       const actual = source[selector].get(`--${name}`)
       if (actual !== normalize(value)) {
@@ -142,6 +172,20 @@ if (theme?.css) {
       errors.push(
         `${path}: missing the registry theme's css rules, or they differ`
       )
+    }
+  }
+}
+
+// 4. at-rules in the registry theme css hold rules, never declarations
+if (theme?.css) {
+  for (const [key, value] of Object.entries(theme.css)) {
+    if (!key.startsWith("@") || typeof value !== "object") continue
+    for (const [child, body] of Object.entries(value)) {
+      if (typeof body === "string") {
+        errors.push(
+          `${REGISTRY} theme css "${key}" declares "${child}" directly; the shadcn CLI cannot apply that, use cssVars.theme`
+        )
+      }
     }
   }
 }
