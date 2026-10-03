@@ -1,5 +1,4 @@
 "use client"
-import { T } from "@workspace/ui/components/locale-provider"
 
 import {
   resolveValues,
@@ -53,11 +52,9 @@ function ParamControl({ id, def, value, onChange }: ParamControlProps) {
       return (
         <div className="space-y-2.5">
           <div className="flex items-center justify-between">
-            <Label id={`${id}-label`}>
-              <T>{def.label}</T>
-            </Label>
+            <Label id={`${id}-label`}>{def.label}</Label>
             <span className="text-xs text-muted-foreground tabular-nums">
-              <T>{formatNumber(number, def.step)}</T>
+              {formatNumber(number, def.step)}
             </span>
           </div>
           {/* An array, since the stock Slider draws one thumb per entry and
@@ -80,9 +77,7 @@ function ParamControl({ id, def, value, onChange }: ParamControlProps) {
       const color = typeof value === "string" ? value : def.default
       return (
         <div className="flex items-center justify-between">
-          <Label htmlFor={id}>
-            <T>{def.label}</T>
-          </Label>
+          <Label htmlFor={id}>{def.label}</Label>
           <input
             id={id}
             type="color"
@@ -96,9 +91,7 @@ function ParamControl({ id, def, value, onChange }: ParamControlProps) {
     case "boolean":
       return (
         <div className="flex items-center justify-between">
-          <Label htmlFor={id}>
-            <T>{def.label}</T>
-          </Label>
+          <Label htmlFor={id}>{def.label}</Label>
           <Switch
             id={id}
             checked={typeof value === "boolean" ? value : def.default}

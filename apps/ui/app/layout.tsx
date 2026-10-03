@@ -1,6 +1,3 @@
-import { LocaleProvider } from "@workspace/ui/components/locale-provider";
-import { getLocale, localizedMetadata } from "@workspace/ui/lib/i18n-server";
-import { MESSAGES } from "@/lib/messages";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -16,7 +13,7 @@ import { cn } from "@/lib/utils";
 
 const SITE_TITLE = `Loki's design system | ${SITE_NAME}`;
 
-const baseMetadata: Metadata = {
+export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: SITE_TITLE, template: `%s | ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
@@ -40,16 +37,14 @@ const baseMetadata: Metadata = {
 // build fails if a route under a fully static export tree calls it. There's
 // also no per-request Next.js server at runtime for a static export
 // deployment, so there would be nothing to attribute per-visitor anyway.
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = await getLocale();
-
   return (
     <html
-      lang={locale}
+      lang="en"
       suppressHydrationWarning
       // Dark is server-rendered, so the first paint and pages without
       // JavaScript are dark. A stable gutter keeps the centered column still
@@ -65,27 +60,21 @@ export default async function RootLayout({
       {/* Body text is 16px at every width, phones included. The page fills
           the viewport so the footer sits low on short pages. */}
       <body className="flex min-h-dvh flex-col text-sm">
-        <LocaleProvider locale={locale} messages={MESSAGES}>
-          <JsonLd />
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem={false}
-            disableTransitionOnChange
-          >
-            <TooltipProvider>
-              <SiteHeader />
-              {children}
-              <SiteFooter />
-            </TooltipProvider>
-            <Toaster />
-          </ThemeProvider>
-        </LocaleProvider>
+        <JsonLd />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          <TooltipProvider>
+            <SiteHeader />
+            {children}
+            <SiteFooter />
+          </TooltipProvider>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
-}
-
-export async function generateMetadata() {
-  return localizedMetadata(baseMetadata, MESSAGES);
 }

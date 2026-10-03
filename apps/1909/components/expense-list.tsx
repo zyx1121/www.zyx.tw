@@ -1,5 +1,4 @@
 "use client"
-import { T, useLocale } from "@workspace/ui/components/locale-provider"
 
 import { useExpenseDetail } from "@/hooks/use-expense-detail"
 import { Badge } from "@/components/ui/badge"
@@ -13,7 +12,6 @@ export function ExpenseList({
   expenses: Expense[]
   currentMemberId: number
 }) {
-  const locale = useLocale()
   const {
     selected,
     setSelected,
@@ -27,11 +25,7 @@ export function ExpenseList({
   } = useExpenseDetail(currentMemberId)
 
   if (expenses.length === 0) {
-    return (
-      <p className="text-center text-sm text-muted-foreground">
-        <T>{"尚無紀錄"}</T>
-      </p>
-    )
+    return <p className="text-center text-sm text-muted-foreground">尚無紀錄</p>
   }
 
   return (
@@ -44,12 +38,10 @@ export function ExpenseList({
             className="flex w-full items-center gap-3 px-1 py-3 text-left text-sm transition-colors hover:bg-muted/50"
           >
             <span className="w-12 shrink-0 text-muted-foreground tabular-nums">
-              <T>
-                {new Date(expense.created_at).toLocaleDateString(locale, {
-                  month: "2-digit",
-                  day: "2-digit",
-                })}
-              </T>
+              {new Date(expense.created_at).toLocaleDateString("zh-TW", {
+                month: "2-digit",
+                day: "2-digit",
+              })}
             </span>
             <span className="w-16 shrink-0 font-medium">
               {expense.member?.name}
@@ -59,7 +51,7 @@ export function ExpenseList({
               ${expense.amount.toLocaleString()}
             </span>
             <Badge variant={expense.settled ? "secondary" : "default"}>
-              <T>{expense.settled ? "已核銷" : "未核銷"}</T>
+              {expense.settled ? "已核銷" : "未核銷"}
             </Badge>
           </button>
         ))}

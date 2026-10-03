@@ -69,10 +69,3 @@ Copy this template into the product's task notes and fill it in using the [publi
 | Live product introduction                 |                |
 | Published media hashes and range response |                |
 | Known limitations                         |                |
-
-## Localization
-
-- Traditional Chinese copy (default):
-- English copy:
-- Dictionary entries, translated metadata and Markdown checked:
-- Both languages checked at 320px and desktop, using the same three type sizes:

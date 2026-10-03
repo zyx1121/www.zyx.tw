@@ -2,7 +2,7 @@
   "name": "www.zyx.tw",
   "version": "0.0.1",
   "private": true,
-  "description": "Loki's personal site \u2014 turborepo + Next.js 16 + Tailwind v4 + shadcn/ui",
+  "description": "Loki's personal site — turborepo + Next.js 16 + Tailwind v4 + shadcn/ui",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
@@ -11,8 +11,7 @@
     "format:check": "turbo format:check",
     "typecheck": "turbo typecheck",
     "theme:check": "node scripts/check-theme.mjs",
-    "typography:check": "node --test scripts/check-typography.test.mjs && node scripts/check-typography.mjs",
-    "i18n:check": "bun test packages/ui/src/lib/i18n.test.mjs"
+    "typography:check": "node --test scripts/check-typography.test.mjs && node scripts/check-typography.mjs"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",

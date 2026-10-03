@@ -1,5 +1,4 @@
 "use client"
-import { T, useT } from "@workspace/ui/components/locale-provider"
 
 import {
   Select,
@@ -22,26 +21,24 @@ export function PresetSelect({
   value,
   onChange,
 }: PresetSelectProps) {
-  const t = useT()
-
   return (
     <Select
       items={presets.map((preset) => ({
         value: preset.id,
-        label: t(preset.label),
+        label: preset.label,
       }))}
       value={value}
       onValueChange={(next) => {
         if (typeof next === "string") onChange(next)
       }}
     >
-      <SelectTrigger aria-label={t(label)} className="w-full">
+      <SelectTrigger aria-label={label} className="w-full">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
         {presets.map((preset) => (
           <SelectItem key={preset.id} value={preset.id}>
-            <T>{preset.label}</T>
+            {preset.label}
           </SelectItem>
         ))}
       </SelectContent>

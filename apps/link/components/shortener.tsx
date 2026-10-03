@@ -1,5 +1,4 @@
 "use client"
-import { T, useT } from "@workspace/ui/components/locale-provider"
 
 import JSConfetti from "js-confetti"
 import { useActionState, useEffect, useRef } from "react"
@@ -16,8 +15,6 @@ type ActionState =
   | null
 
 export function Shortener() {
-  const t = useT()
-
   const [state, action, isPending] = useActionState<ActionState, FormData>(
     createShortLink,
     null
@@ -69,12 +66,8 @@ export function Shortener() {
 
   return (
     <main className="flex h-dvh w-dvw flex-col items-center justify-center gap-6 px-4">
-      <h1 className="sr-only">
-        <T>{SITE_NAME}</T>
-      </h1>
-      <p className="sr-only">
-        <T>{SITE_DESC}</T>
-      </p>
+      <h1 className="sr-only">{SITE_NAME}</h1>
+      <p className="sr-only">{SITE_DESC}</p>
       <form
         action={action}
         className="flex w-full max-w-xl flex-col items-center gap-4"
@@ -83,8 +76,8 @@ export function Shortener() {
           ref={inputRef}
           name="url"
           type="url"
-          aria-label={t("URL to shorten")}
-          placeholder={t("https://your-very-long-url.com/goes/here")}
+          aria-label="URL to shorten"
+          placeholder="https://your-very-long-url.com/goes/here"
           required
           disabled={isPending}
           className="h-auto rounded-none border-0 bg-transparent p-0 text-center font-mono text-sm text-foreground focus-visible:ring-0 disabled:bg-transparent md:text-sm dark:bg-transparent dark:disabled:bg-transparent"
@@ -93,19 +86,15 @@ export function Shortener() {
           type="submit"
           variant="ghost"
           disabled={isPending}
-          aria-label={t(isPending ? "Shortening URL" : "Shorten URL")}
+          aria-label={isPending ? "Shortening URL" : "Shorten URL"}
           className="h-auto p-0 text-sm transition-opacity hover:bg-transparent hover:opacity-80 disabled:opacity-40 dark:hover:bg-transparent"
         >
-          <span aria-hidden="true">
-            <T>{isPending ? "⏳" : "🔥"}</T>
-          </span>
+          <span aria-hidden="true">{isPending ? "⏳" : "🔥"}</span>
         </Button>
       </form>
 
       {state && !state.ok && (
-        <p className="text-sm text-muted-foreground">
-          <T>{state.error}</T>
-        </p>
+        <p className="text-sm text-muted-foreground">{state.error}</p>
       )}
 
       {state?.ok && (
@@ -116,12 +105,12 @@ export function Shortener() {
             rel="noopener noreferrer"
             className="font-mono text-sm hover:underline"
           >
-            <T>{state.shortUrl}</T>
+            {state.shortUrl}
           </a>
           <Button
             variant="ghost"
             onClick={handleCopy}
-            aria-label={t("Copy short URL")}
+            aria-label="Copy short URL"
             className="h-auto p-0 text-sm transition-opacity hover:bg-transparent hover:opacity-80 dark:hover:bg-transparent"
           >
             <span aria-hidden="true">📋</span>

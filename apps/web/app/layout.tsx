@@ -1,6 +1,3 @@
-import { LocaleProvider } from "@workspace/ui/components/locale-provider"
-import { getLocale, localizedMetadata } from "@workspace/ui/lib/i18n-server"
-import { MESSAGES } from "@/lib/messages"
 import type { Metadata } from "next"
 
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
@@ -17,7 +14,7 @@ import { SiteHeader } from "@/components/site-header"
 import sceneFile from "@/lib/home-scene.json"
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
 
-const baseMetadata: Metadata = {
+export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
@@ -45,11 +42,9 @@ export default async function RootLayout({
   // this has to run here (Node.js Server Component) and not middleware.
   await attributeRootLayoutRequest()
 
-  const locale = await getLocale()
-
   return (
     <html
-      lang={locale}
+      lang="en"
       suppressHydrationWarning
       // A stable gutter keeps the centered column from moving when a page
       // gains or loses its scrollbar. One edge only, so the left corners stay
@@ -67,23 +62,17 @@ export default async function RootLayout({
       {/* Body text is 16px at every width, phones included. Pages fill the
           viewport so the footer sits low. */}
       <body className="flex min-h-dvh flex-col text-sm">
-        <LocaleProvider locale={locale} messages={MESSAGES}>
-          <SiteJsonLd />
-          <ThemeProvider>
-            <TooltipProvider>
-              <MotionProvider>
-                <SiteHeader />
-                {children}
-                <SiteFooter />
-              </MotionProvider>
-            </TooltipProvider>
-          </ThemeProvider>
-        </LocaleProvider>
+        <SiteJsonLd />
+        <ThemeProvider>
+          <TooltipProvider>
+            <MotionProvider>
+              <SiteHeader />
+              {children}
+              <SiteFooter />
+            </MotionProvider>
+          </TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
-}
-
-export async function generateMetadata() {
-  return localizedMetadata(baseMetadata, MESSAGES)
 }

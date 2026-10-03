@@ -1,5 +1,4 @@
 "use client";
-import { T, useT } from "@workspace/ui/components/locale-provider";
 
 import { memo, useMemo, useState, type ReactNode } from "react";
 import Markdown from "react-markdown";
@@ -41,8 +40,6 @@ export const CodeBlock = memo(function CodeBlock({
   code: string;
   language?: string;
 }) {
-  const t = useT();
-
   const [raw, setRaw] = useState(false);
   const formatted = useMemo(() => {
     if (!["json", "jsonc"].includes(language.toLowerCase())) return null;
@@ -75,20 +72,20 @@ export const CodeBlock = memo(function CodeBlock({
               size="sm"
               onClick={() => setRaw((value) => !value)}
             >
-              <T>{raw ? "格式化" : "原始內容"}</T>
+              {raw ? "格式化" : "原始內容"}
             </Button>
           )}
           <Button
             type="button"
             variant="ghost"
             size="icon-sm"
-            aria-label={t("複製程式碼")}
+            aria-label="複製程式碼"
             onClick={async () => {
               try {
                 await navigator.clipboard.writeText(display);
-                toast.success(t("已複製"));
+                toast.success("已複製");
               } catch {
-                toast.error(t("無法存取剪貼簿"));
+                toast.error("無法存取剪貼簿");
               }
             }}
           >
@@ -96,7 +93,7 @@ export const CodeBlock = memo(function CodeBlock({
           </Button>
         </div>
       </div>
-      <pre tabIndex={0} aria-label={t("{language} code", { language })}>
+      <pre tabIndex={0} aria-label={`${language} 程式碼`}>
         <code className={`language-${language}`}>{highlighted}</code>
       </pre>
     </div>
@@ -108,7 +105,6 @@ export const MarkdownResponse = memo(function MarkdownResponse({
 }: {
   content: string;
 }) {
-  const t = useT();
   // Models sometimes return a JSON object/array without a code fence.
   const bareJson = useMemo(() => {
     if (!["[", "{"].includes(content.trimStart().charAt(0))) return false;
@@ -155,8 +151,7 @@ export const MarkdownResponse = memo(function MarkdownResponse({
             ),
             img: ({ alt }) => (
               <span className="text-muted-foreground">
-                <T>{"[圖片："}</T>
-                {alt || t("圖片")}]
+                [圖片：{alt || "圖片"}]
               </span>
             ),
           }}

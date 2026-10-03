@@ -1,5 +1,4 @@
 "use client";
-import { T, useT } from "@workspace/ui/components/locale-provider";
 
 import { useState } from "react";
 import { ChevronsUpDown, Italic, Underline } from "lucide-react";
@@ -173,11 +172,9 @@ function Group({
     <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-5">
       <div className={enter} style={enterDelay(row)}>
         <h2 id={`${id}-title`} className="text-sm/6 font-medium">
-          <T>{title}</T>
+          {title}
         </h2>
-        <p className="mt-3 text-muted-foreground">
-          <T>{description}</T>
-        </p>
+        <p className="mt-3 text-muted-foreground">{description}</p>
       </div>
       <div className="mt-5 flex flex-col gap-15">{children}</div>
     </section>
@@ -201,9 +198,7 @@ function Demo({
     <section className={enter} style={enterDelay(row)}>
       {title && (
         <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-5 gap-y-1">
-          <h3>
-            <T>{title}</T>
-          </h3>
+          <h3>{title}</h3>
           {command && (
             <code className="font-mono text-xs wrap-break-word text-muted-foreground">
               {command}
@@ -225,8 +220,6 @@ export function Showcase({
   /** The registry:ui items, in registry.json order. */
   items: ShowcaseItem[];
 }) {
-  const t = useT();
-
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(60);
   const [scrambleRun, setScrambleRun] = useState(0);
@@ -250,13 +243,11 @@ export function Showcase({
     "shimmering-text": (
       <div className="space-y-2">
         <p className="text-2xl">
-          <ShimmeringText>
-            <T>{"Generating response..."}</T>
-          </ShimmeringText>
+          <ShimmeringText>Generating response...</ShimmeringText>
         </p>
         <p className="text-sm">
           <ShimmeringText duration={3}>
-            <T>{"Slow shimmer for long waits"}</T>
+            Slow shimmer for long waits
           </ShimmeringText>
         </p>
       </div>
@@ -268,15 +259,12 @@ export function Showcase({
           <ScrambleText
             key={`mount-${scrambleRun}`}
             element="p"
-            text={t("Signal, decoded.")}
+            text="Signal, decoded."
             className="text-2xl"
           />
           <p className="text-sm text-muted-foreground">
-            <T>
-              {
-                "With trigger=&quot;in-view&quot;, the last line of this page waits until it scrolls into view."
-              }
-            </T>
+            With trigger=&quot;in-view&quot;, the last line of this page waits
+            until it scrolls into view.
           </p>
         </div>
         <Button
@@ -284,7 +272,7 @@ export function Showcase({
           variant="outline"
           onClick={() => setScrambleRun((run) => run + 1)}
         >
-          <T>{"Replay"}</T>
+          Replay
         </Button>
       </>
     ),
@@ -292,35 +280,22 @@ export function Showcase({
       <>
         <div className="space-y-2">
           <p className="text-2xl">
-            <T>{"Built for"}</T>
-            <T> </T>
+            Built for{" "}
             <RotatingText
-              words={[
-                "the web.",
-                "small screens.",
-                "people.",
-                "agents too.",
-              ].map((word) => t(word))}
+              words={["the web.", "small screens.", "people.", "agents too."]}
             />
           </p>
           <p className="text-sm text-muted-foreground">
-            <T>{"Quietly"}</T>
-            <T> </T>
+            Quietly{" "}
             <RotatingText
               transition="fade"
-              words={[
-                "fading in.",
-                "swapping words.",
-                "holding its width.",
-              ].map((word) => t(word))}
+              words={["fading in.", "swapping words.", "holding its width."]}
             />
           </p>
         </div>
         <div className="space-y-3">
           <p className="font-mono text-sm">
-            <span className="text-muted-foreground">
-              <T>{"@zyx1121/"}</T>
-            </span>
+            <span className="text-muted-foreground">@zyx1121/</span>
             <RotatingText
               words={REGISTRY_ITEMS}
               index={item}
@@ -348,7 +323,7 @@ export function Showcase({
                 }}
                 onBlur={() => setItemHovered(false)}
               >
-                <T>{name}</T>
+                {name}
               </Button>
             ))}
           </div>
@@ -356,9 +331,8 @@ export function Showcase({
             data-testid="rotating-text-log"
             className="font-mono text-xs text-muted-foreground tabular-nums"
           >
-            <T>{"onIndexChange: "}</T>
-            <T>{itemLog.join(" ") || "none yet"}</T>
-            <T>{itemHovered ? " (paused)" : ""}</T>
+            onIndexChange: {itemLog.join(" ") || "none yet"}
+            {itemHovered ? " (paused)" : ""}
           </p>
         </div>
       </>
@@ -367,7 +341,7 @@ export function Showcase({
       <>
         <MaskReveal key={maskRun}>
           <div className="rounded-2xl bg-secondary px-4 py-2 text-sm text-secondary-foreground">
-            <T>{"A feathered mask sweeps in after 1s and settles over 5s."}</T>
+            A feathered mask sweeps in after 1s and settles over 5s.
           </div>
         </MaskReveal>
         <Button
@@ -375,50 +349,30 @@ export function Showcase({
           variant="outline"
           onClick={() => setMaskRun((run) => run + 1)}
         >
-          <T>{"Replay"}</T>
+          Replay
         </Button>
       </>
     ),
     "ask-ai": (
       // -ml-1 at the call site lines the pill's rounded end up with the text
       // column; flex keeps it out of a line box.
-      <AskAi
-        className="-ml-1 flex"
-        markdownUrl={MARKDOWN_PATH}
-        labels={{
-          trigger: t("Ask AI"),
-          other: t("Other AI"),
-          copyPage: t("Copy page"),
-          viewMarkdown: t("View as Markdown"),
-          copied: t("Copied"),
-          failed: t("Copy failed"),
-        }}
-      />
+      <AskAi className="-ml-1 flex" markdownUrl={MARKDOWN_PATH} />
     ),
     "hdr-highlight": (
       <div className="space-y-4">
         <p className="text-2xl">
-          <T>{"Brighter than "}</T>
-          <HdrHighlight>
-            <T>{"white"}</T>
-          </HdrHighlight>
-          .
+          Brighter than <HdrHighlight>white</HdrHighlight>.
         </p>
         <nav className="flex gap-5 text-sm">
           {["Works", "About", "Contact"].map((label) => (
             <button key={label} type="button">
-              <HdrHighlight hover>
-                <T>{label}</T>
-              </HdrHighlight>
+              <HdrHighlight hover>{label}</HdrHighlight>
             </button>
           ))}
         </nav>
         <p className="text-sm text-muted-foreground">
-          <T>
-            {
-              "Needs an HDR display in dark mode. The buttons light up on hover or focus and fade back over 2s. SDR screens show plain text."
-            }
-          </T>
+          Needs an HDR display in dark mode. The buttons light up on hover or
+          focus and fade back over 2s. SDR screens show plain text.
         </p>
       </div>
     ),
@@ -431,41 +385,21 @@ export function Showcase({
       content: (
         <>
           <div className="flex flex-wrap items-center gap-3">
-            <Button>
-              <T>{"Default"}</T>
-            </Button>
-            <Button variant="secondary">
-              <T>{"Secondary"}</T>
-            </Button>
-            <Button variant="outline">
-              <T>{"Outline"}</T>
-            </Button>
-            <Button variant="ghost">
-              <T>{"Ghost"}</T>
-            </Button>
-            <Button variant="destructive">
-              <T>{"Destructive"}</T>
-            </Button>
-            <Button variant="link">
-              <T>{"Link"}</T>
-            </Button>
+            <Button>Default</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="outline">Outline</Button>
+            <Button variant="ghost">Ghost</Button>
+            <Button variant="destructive">Destructive</Button>
+            <Button variant="link">Link</Button>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <Button size="xs">
-              <T>{"Extra small"}</T>
-            </Button>
-            <Button size="sm">
-              <T>{"Small"}</T>
-            </Button>
-            <Button size="default">
-              <T>{"Default"}</T>
-            </Button>
-            <Button size="lg">
-              <T>{"Large"}</T>
-            </Button>
+            <Button size="xs">Extra small</Button>
+            <Button size="sm">Small</Button>
+            <Button size="default">Default</Button>
+            <Button size="lg">Large</Button>
             <Button disabled={loading} onClick={trigger}>
               {loading && <Spinner />}
-              <T>{loading ? "Saving..." : "Trigger loading"}</T>
+              {loading ? "Saving..." : "Trigger loading"}
             </Button>
           </div>
         </>
@@ -476,18 +410,10 @@ export function Showcase({
       add: "badge",
       content: (
         <div className="flex flex-wrap items-center gap-3">
-          <Badge>
-            <T>{"Default"}</T>
-          </Badge>
-          <Badge variant="secondary">
-            <T>{"Secondary"}</T>
-          </Badge>
-          <Badge variant="outline">
-            <T>{"Outline"}</T>
-          </Badge>
-          <Badge variant="destructive">
-            <T>{"Destructive"}</T>
-          </Badge>
+          <Badge>Default</Badge>
+          <Badge variant="secondary">Secondary</Badge>
+          <Badge variant="outline">Outline</Badge>
+          <Badge variant="destructive">Destructive</Badge>
         </div>
       ),
     },
@@ -497,19 +423,15 @@ export function Showcase({
       content: (
         <div className="grid max-w-sm gap-6">
           <div className="grid gap-2">
-            <Label htmlFor="email">
-              <T>{"Email"}</T>
-            </Label>
-            <Input id="email" type="email" placeholder={t("loki@zyx.tw")} />
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" type="email" placeholder="loki@zyx.tw" />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="bio">
-              <T>{"Bio"}</T>
-            </Label>
-            <Textarea id="bio" placeholder={t("Say something.")} />
+            <Label htmlFor="bio">Bio</Label>
+            <Textarea id="bio" placeholder="Say something." />
           </div>
-          <Input aria-invalid placeholder={t("Invalid state")} />
-          <Input disabled placeholder={t("Disabled")} />
+          <Input aria-invalid placeholder="Invalid state" />
+          <Input disabled placeholder="Disabled" />
         </div>
       ),
     },
@@ -520,48 +442,32 @@ export function Showcase({
         <div className="grid max-w-sm gap-6">
           <Select defaultValue="matcha">
             <SelectTrigger>
-              <SelectValue placeholder={t("Pick a flavor")} />
+              <SelectValue placeholder="Pick a flavor" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="vanilla">
-                <T>{"Vanilla"}</T>
-              </SelectItem>
-              <SelectItem value="matcha">
-                <T>{"Matcha"}</T>
-              </SelectItem>
-              <SelectItem value="hojicha">
-                <T>{"Hojicha"}</T>
-              </SelectItem>
-              <SelectItem value="black-sesame">
-                <T>{"Black sesame"}</T>
-              </SelectItem>
+              <SelectItem value="vanilla">Vanilla</SelectItem>
+              <SelectItem value="matcha">Matcha</SelectItem>
+              <SelectItem value="hojicha">Hojicha</SelectItem>
+              <SelectItem value="black-sesame">Black sesame</SelectItem>
             </SelectContent>
           </Select>
           <div className="flex items-center gap-2">
             <Checkbox id="terms" defaultChecked />
-            <Label htmlFor="terms">
-              <T>{"Accept terms"}</T>
-            </Label>
+            <Label htmlFor="terms">Accept terms</Label>
           </div>
           <RadioGroup defaultValue="comfortable" className="flex gap-6">
             <div className="flex items-center gap-2">
               <RadioGroupItem value="compact" id="r-compact" />
-              <Label htmlFor="r-compact">
-                <T>{"Compact"}</T>
-              </Label>
+              <Label htmlFor="r-compact">Compact</Label>
             </div>
             <div className="flex items-center gap-2">
               <RadioGroupItem value="comfortable" id="r-comfortable" />
-              <Label htmlFor="r-comfortable">
-                <T>{"Comfortable"}</T>
-              </Label>
+              <Label htmlFor="r-comfortable">Comfortable</Label>
             </div>
           </RadioGroup>
           <div className="flex items-center gap-2">
             <Switch id="notify" defaultChecked />
-            <Label htmlFor="notify">
-              <T>{"Notifications"}</T>
-            </Label>
+            <Label htmlFor="notify">Notifications</Label>
           </div>
           <Slider defaultValue={[40]} max={100} step={1} />
         </div>
@@ -574,35 +480,31 @@ export function Showcase({
         <>
           <Tabs defaultValue="account" className="max-w-sm">
             <TabsList>
-              <TabsTrigger value="account">
-                <T>{"Account"}</T>
-              </TabsTrigger>
-              <TabsTrigger value="password">
-                <T>{"Password"}</T>
-              </TabsTrigger>
+              <TabsTrigger value="account">Account</TabsTrigger>
+              <TabsTrigger value="password">Password</TabsTrigger>
             </TabsList>
             <TabsContent
               value="account"
               className="text-sm text-muted-foreground"
             >
-              <T>{"Manage your account here."}</T>
+              Manage your account here.
             </TabsContent>
             <TabsContent
               value="password"
               className="text-sm text-muted-foreground"
             >
-              <T>{"Change your password here."}</T>
+              Change your password here.
             </TabsContent>
           </Tabs>
           <div className="flex items-center gap-3">
-            <Toggle aria-label={t("Toggle italic")}>
+            <Toggle aria-label="Toggle italic">
               <Italic />
             </Toggle>
             <ToggleGroup multiple variant="outline">
-              <ToggleGroupItem value="italic" aria-label={t("Italic")}>
+              <ToggleGroupItem value="italic" aria-label="Italic">
                 <Italic />
               </ToggleGroupItem>
-              <ToggleGroupItem value="underline" aria-label={t("Underline")}>
+              <ToggleGroupItem value="underline" aria-label="Underline">
                 <Underline />
               </ToggleGroupItem>
             </ToggleGroup>
@@ -616,24 +518,15 @@ export function Showcase({
       content: (
         <Card className="max-w-sm">
           <CardHeader>
-            <CardTitle>
-              <T>{"Project torpor"}</T>
-            </CardTitle>
-            <CardDescription>
-              <T>{"Protocol-aware agent hibernation."}</T>
-            </CardDescription>
+            <CardTitle>Project torpor</CardTitle>
+            <CardDescription>Protocol-aware agent hibernation.</CardDescription>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            <T>
-              {
-                "Idle agents park their state and release the GPU until the next A2A message arrives."
-              }
-            </T>
+            Idle agents park their state and release the GPU until the next A2A
+            message arrives.
           </CardContent>
           <CardFooter>
-            <Button size="sm">
-              <T>{"Resume"}</T>
-            </Button>
+            <Button size="sm">Resume</Button>
           </CardFooter>
         </Card>
       ),
@@ -644,141 +537,90 @@ export function Showcase({
       content: (
         <div className="flex flex-wrap items-center gap-3">
           <Dialog>
-            <DialogTrigger
-              render={
-                <Button variant="outline">
-                  <T>{"Dialog"}</T>
-                </Button>
-              }
-            />
+            <DialogTrigger render={<Button variant="outline">Dialog</Button>} />
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>
-                  <T>{"Rename project"}</T>
-                </DialogTitle>
+                <DialogTitle>Rename project</DialogTitle>
                 <DialogDescription>
-                  <T>{"Give the project a new name."}</T>
+                  Give the project a new name.
                 </DialogDescription>
               </DialogHeader>
               <Input defaultValue="torpor" />
               <DialogFooter>
-                <Button>
-                  <T>{"Save"}</T>
-                </Button>
+                <Button>Save</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
 
           <AlertDialog>
             <AlertDialogTrigger
-              render={
-                <Button variant="destructive">
-                  <T>{"Alert dialog"}</T>
-                </Button>
-              }
+              render={<Button variant="destructive">Alert dialog</Button>}
             />
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>
-                  <T>{"Delete this run?"}</T>
-                </AlertDialogTitle>
+                <AlertDialogTitle>Delete this run?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  <T>{"This action cannot be undone."}</T>
+                  This action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>
-                  <T>{"Cancel"}</T>
-                </AlertDialogCancel>
-                <AlertDialogAction>
-                  <T>{"Delete"}</T>
-                </AlertDialogAction>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction>Delete</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
 
           <Sheet>
-            <SheetTrigger
-              render={
-                <Button variant="outline">
-                  <T>{"Sheet"}</T>
-                </Button>
-              }
-            />
+            <SheetTrigger render={<Button variant="outline">Sheet</Button>} />
             <SheetContent>
               <SheetHeader>
-                <SheetTitle>
-                  <T>{"Settings"}</T>
-                </SheetTitle>
-                <SheetDescription>
-                  <T>{"Side panel over a scrim."}</T>
-                </SheetDescription>
+                <SheetTitle>Settings</SheetTitle>
+                <SheetDescription>Side panel over a scrim.</SheetDescription>
               </SheetHeader>
             </SheetContent>
           </Sheet>
 
           <Popover>
             <PopoverTrigger
-              render={
-                <Button variant="outline">
-                  <T>{"Popover"}</T>
-                </Button>
-              }
+              render={<Button variant="outline">Popover</Button>}
             />
             <PopoverContent className="text-sm">
-              <T>{"Anchored floating surface."}</T>
+              Anchored floating surface.
             </PopoverContent>
           </Popover>
 
           <Tooltip>
             <TooltipTrigger
-              render={
-                <Button variant="outline">
-                  <T>{"Tooltip"}</T>
-                </Button>
-              }
+              render={<Button variant="outline">Tooltip</Button>}
             />
-            <TooltipContent>
-              <T>{"Hover hint"}</T>
-            </TooltipContent>
+            <TooltipContent>Hover hint</TooltipContent>
           </Tooltip>
 
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
                 <Button variant="outline">
-                  <T>{"Menu "}</T>
-                  <ChevronsUpDown />
+                  Menu <ChevronsUpDown />
                 </Button>
               }
             />
             <DropdownMenuContent>
-              <DropdownMenuLabel>
-                <T>{"My account"}</T>
-              </DropdownMenuLabel>
+              <DropdownMenuLabel>My account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <T>{"Profile"}</T>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <T>{"Billing"}</T>
-              </DropdownMenuItem>
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem>Billing</DropdownMenuItem>
               <DropdownMenuItem variant="destructive">
-                <T>{"Sign out"}</T>
+                Sign out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
           <HoverCard>
             <HoverCardTrigger
-              render={
-                <Button variant="link">
-                  <T>{"@zyx1121"}</T>
-                </Button>
-              }
+              render={<Button variant="link">@zyx1121</Button>}
             />
             <HoverCardContent className="text-sm">
-              <T>{"Loki, NYCU CS, WinLab."}</T>
+              Loki, NYCU CS, WinLab.
             </HoverCardContent>
           </HoverCard>
         </div>
@@ -791,19 +633,15 @@ export function Showcase({
         <>
           <Accordion multiple={false} className="max-w-sm">
             <AccordionItem value="what">
-              <AccordionTrigger>
-                <T>{"What is this?"}</T>
-              </AccordionTrigger>
+              <AccordionTrigger>What is this?</AccordionTrigger>
               <AccordionContent>
-                <T>{"Stock shadcn/ui with a grayscale theme."}</T>
+                Stock shadcn/ui with a grayscale theme.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="why">
-              <AccordionTrigger>
-                <T>{"Why grayscale?"}</T>
-              </AccordionTrigger>
+              <AccordionTrigger>Why grayscale?</AccordionTrigger>
               <AccordionContent>
-                <T>{"Color comes from content, not chrome."}</T>
+                Color comes from content, not chrome.
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -811,13 +649,12 @@ export function Showcase({
             <CollapsibleTrigger
               render={
                 <Button variant="ghost" size="sm">
-                  <ChevronsUpDown />
-                  <T>{" Toggle details"}</T>
+                  <ChevronsUpDown /> Toggle details
                 </Button>
               }
             />
             <CollapsibleContent className="pt-2 text-sm text-muted-foreground">
-              <T>{"Hidden details revealed."}</T>
+              Hidden details revealed.
             </CollapsibleContent>
           </Collapsible>
         </>
@@ -829,20 +666,14 @@ export function Showcase({
       content: (
         <div className="grid max-w-md gap-4">
           <Alert>
-            <AlertTitle>
-              <T>{"Heads up"}</T>
-            </AlertTitle>
+            <AlertTitle>Heads up</AlertTitle>
             <AlertDescription>
-              <T>{"Registry rebuilt on stock shadcn/ui."}</T>
+              Registry rebuilt on stock shadcn/ui.
             </AlertDescription>
           </Alert>
           <Alert variant="destructive">
-            <AlertTitle>
-              <T>{"Build failed"}</T>
-            </AlertTitle>
-            <AlertDescription>
-              <T>{"Check the CI logs for details."}</T>
-            </AlertDescription>
+            <AlertTitle>Build failed</AlertTitle>
+            <AlertDescription>Check the CI logs for details.</AlertDescription>
           </Alert>
         </div>
       ),
@@ -854,39 +685,21 @@ export function Showcase({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>
-                <T>{"App"}</T>
-              </TableHead>
-              <TableHead>
-                <T>{"Domain"}</T>
-              </TableHead>
-              <TableHead className="text-right">
-                <T>{"Status"}</T>
-              </TableHead>
+              <TableHead>App</TableHead>
+              <TableHead>Domain</TableHead>
+              <TableHead className="text-right">Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow>
-              <TableCell>
-                <T>{"ui"}</T>
-              </TableCell>
-              <TableCell>
-                <T>{"ui.zyx.tw"}</T>
-              </TableCell>
-              <TableCell className="text-right">
-                <T>{"live"}</T>
-              </TableCell>
+              <TableCell>ui</TableCell>
+              <TableCell>ui.zyx.tw</TableCell>
+              <TableCell className="text-right">live</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>
-                <T>{"web"}</T>
-              </TableCell>
-              <TableCell>
-                <T>{"www.zyx.tw"}</T>
-              </TableCell>
-              <TableCell className="text-right">
-                <T>{"live"}</T>
-              </TableCell>
+              <TableCell>web</TableCell>
+              <TableCell>www.zyx.tw</TableCell>
+              <TableCell className="text-right">live</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -900,16 +713,12 @@ export function Showcase({
           <div className="flex flex-wrap items-center gap-6">
             <Avatar>
               {/* Served from this site, so the demo makes no request to GitHub. */}
-              <AvatarImage src="/avatar.jpg" alt={t("Loki")} />
-              <AvatarFallback>
-                <T>{"ZY"}</T>
-              </AvatarFallback>
+              <AvatarImage src="/avatar.jpg" alt="Loki" />
+              <AvatarFallback>ZY</AvatarFallback>
             </Avatar>
             <KbdGroup>
               <Kbd>⌘</Kbd>
-              <Kbd>
-                <T>{"K"}</T>
-              </Kbd>
+              <Kbd>K</Kbd>
             </KbdGroup>
             <Spinner />
             <Skeleton className="h-8 w-32" />
@@ -937,26 +746,18 @@ export function Showcase({
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="/">
-                  <T>{"zyx.tw"}</T>
-                </BreadcrumbLink>
+                <BreadcrumbLink href="/">zyx.tw</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>
-                  <T>{"ui"}</T>
-                </BreadcrumbPage>
+                <BreadcrumbPage>ui</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          <Pagination aria-label={t("Pagination")} className="tabular-nums">
+          <Pagination className="tabular-nums">
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious
-                  href="#"
-                  text={t("Previous")}
-                  aria-label={t("Go to previous page")}
-                />
+                <PaginationPrevious href="#" />
               </PaginationItem>
               <PaginationItem>
                 <PaginationLink href="#" isActive>
@@ -970,11 +771,7 @@ export function Showcase({
                 <PaginationEllipsis />
               </PaginationItem>
               <PaginationItem>
-                <PaginationNext
-                  href="#"
-                  text={t("Next")}
-                  aria-label={t("Go to next page")}
-                />
+                <PaginationNext href="#" />
               </PaginationItem>
             </PaginationContent>
           </Pagination>
@@ -985,11 +782,8 @@ export function Showcase({
       title: "Sonner",
       add: "sonner",
       content: (
-        <Button
-          variant="outline"
-          onClick={() => toast(t("Copied to clipboard"))}
-        >
-          <T>{"Show toast"}</T>
+        <Button variant="outline" onClick={() => toast("Copied to clipboard")}>
+          Show toast
         </Button>
       ),
     },
@@ -999,11 +793,9 @@ export function Showcase({
       content: (
         <ScrollArea className="h-40 max-w-sm rounded-lg border p-4">
           <p className="text-sm text-muted-foreground">
-            <T>
-              {Array.from({ length: 12 })
-                .map((_, i) => `Line ${i + 1} of scrollable content.`)
-                .join(" ")}
-            </T>
+            {Array.from({ length: 12 })
+              .map((_, i) => `Line ${i + 1} of scrollable content.`)
+              .join(" ")}
           </p>
         </ScrollArea>
       ),
@@ -1016,7 +808,7 @@ export function Showcase({
 
   return (
     <div className="flex flex-col gap-20">
-      <Group id="theme" title={t("Theme")} description={theme} row={FIRST_ROW}>
+      <Group id="theme" title="Theme" description={theme} row={FIRST_ROW}>
         <Demo row={FIRST_ROW + 1}>
           {/* Each command wraps at its spaces, with continuation lines
               indented under the first, so a phone shows it whole. */}
@@ -1035,21 +827,19 @@ export function Showcase({
 
       <Group
         id="components"
-        title={t("Components")}
+        title="Components"
         description="What shadcn/ui does not have, one component per file."
         row={componentsRow}
       >
         {items.map(({ name, title, description }, index) => (
           <Demo
             key={name}
-            title={t(title)}
+            title={title}
             command={addCommand(name)}
             row={componentsRow + 1 + index}
           >
             {demos[name] ?? (
-              <p className="text-muted-foreground">
-                <T>{description}</T>
-              </p>
+              <p className="text-muted-foreground">{description}</p>
             )}
           </Demo>
         ))}
@@ -1057,18 +847,18 @@ export function Showcase({
 
       <Group
         id="base"
-        title={t("Base components")}
+        title="Base components"
         description="Stock shadcn/ui on the theme, straight from the shadcn CLI."
         row={baseRow}
       >
         {base.map(({ title, add, content }, index) => (
           <Demo
             key={title}
-            title={t(title)}
+            title={title}
             command={`bunx shadcn@latest add ${add}`}
             row={baseRow + 1 + index}
           >
-            <T>{content}</T>
+            {content}
           </Demo>
         ))}
       </Group>
@@ -1081,7 +871,7 @@ export function Showcase({
           element="p"
           trigger="in-view"
           speed={30}
-          text={t("This line decoded as it scrolled into view.")}
+          text="This line decoded as it scrolled into view."
           className="text-sm text-muted-foreground"
         />
       </div>

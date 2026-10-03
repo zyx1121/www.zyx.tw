@@ -58,11 +58,11 @@ Every page has a Markdown version, and the site describes itself to agents:
 - [`/llms.txt`](https://ui.zyx.tw/llms.txt): when to use the registry and how, as an llmstxt.org index
 - [`/agent-instructions.md`](https://ui.zyx.tw/agent-instructions.md): the call order and the rules an agent follows
 
-All three are built from `registry.json` by route handlers under `app/`, so they list exactly what `/r/` serves. Page Markdown follows the request locale; technical agent instructions remain English. The home page links them with a locale-aware `Link` header and a `<link rel="alternate">`, and carries JSON-LD.
+All three are built from `registry.json` by route handlers under `app/`, so they list exactly what `/r/` serves. The home page links them with a `Link` header (set in `vercel.json`, since the site is a static export) and a `<link rel="alternate">`, and carries JSON-LD.
 
 ## Tech Stack
 
-- **Framework**: Next.js 16 (App Router, server-rendered locale)
+- **Framework**: Next.js 16 (App Router, static export)
 - **Styling**: Tailwind CSS v4, tw-animate-css
 - **Components**: shadcn/ui (Base UI base)
 - **Registry**: shadcn CLI
