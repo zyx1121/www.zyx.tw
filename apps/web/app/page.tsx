@@ -6,12 +6,12 @@ import { pageMetadata, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site"
 export const dynamic = "force-static"
 
 // The home's canonical and Markdown alternate live here, not in the root
-// layout, so the not-found page does not inherit them. The title carries the
-// name people search for, and is absolute because a layout's title template
-// skips the page in its own segment.
+// layout, so the not-found page does not inherit them. The title is the site
+// name alone, absolute because a layout's title template skips the page in
+// its own segment.
 export const metadata = {
-  ...pageMetadata({ path: "/", title: "Loki (詹詠翔)" }),
-  title: { absolute: `Loki (詹詠翔) | ${SITE_NAME}` },
+  ...pageMetadata({ path: "/" }),
+  title: { absolute: SITE_NAME },
 }
 
 /**
