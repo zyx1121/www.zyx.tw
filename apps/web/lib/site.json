@@ -52,6 +52,14 @@
       "priority": 0.8
     },
     {
+      "path": "/made/peck",
+      "label": "Peck",
+      "markdown": "/made/peck.md",
+      "summary": "Peck: visual feedback for coding agents, a macOS browser with local MCP",
+      "changeFrequency": "monthly",
+      "priority": 0.8
+    },
+    {
       "path": "/works",
       "label": "Works",
       "tip": "Every project and its link",

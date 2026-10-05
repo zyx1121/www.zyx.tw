@@ -1,0 +1,376 @@
+{
+  "provider": "OpenRouter",
+  "model": "google/gemini-3.1-flash-image",
+  "generated": "2026-10-05",
+  "mark": {
+    "file": "peck.svg",
+    "note": "A rounded polygon of a cursor arrow on two feet, its left point and the end of a short stem, drawn to match the selected material card."
+  },
+  "images": [
+    {
+      "file": "peck-material.webp",
+      "ratio": "1:1",
+      "generated": "2026-10-05",
+      "steps": [
+        {
+          "id": "peck-cursor-black-material-c1",
+          "references": [
+            {
+              "file": "refs/plump-material.png",
+              "role": "backdrop, light, framing and turn (published Plump material card)",
+              "sha256": "fbf8a8a3be415696d90fe472e4d4aa4ff7a80a99bb48c3032604c07d4ce4f330"
+            },
+            {
+              "file": "refs/peck-cursor-reference.png",
+              "role": "flat silhouette: a plump cursor arrow with its tip to the upper left",
+              "sha256": "f631eb5807efd24594a24fcdf8f69925715291b7238de4ff3aaef3553d2cc4a9"
+            }
+          ],
+          "prompt": "Create one square studio product photograph of a single object. Image 1 is the STYLE, CAMERA, LIGHT AND ANGLE REFERENCE. Match it exactly: the same seamless pale cool blue-gray paper backdrop and floor with the same soft gradient that is slightly brighter on the right, the same soft diffused key light from the upper right, the same soft contact shadow falling toward the LEFT on the floor, the same gentle highlights, the same camera height slightly above the object's center and the same moderate lens perspective. The object rests on the floor in the center of the frame and its width fills about 65 percent of the frame width, the same visual size as the object in Image 1. The viewing angle and lighting must come from Image 1, not from Image 2. Rotate the object about 30 degrees around its vertical axis so that its LEFT side wall turns partly toward the camera and is clearly visible as a band of thickness along its left edge, while its right side wall stays hidden, exactly like the object in Image 1. Do not copy the shape, color or chrome material of the object in Image 1. The product to photograph is Peck, a solid object made of black high-gloss piano lacquer, color close to #111111, with deep mirror-like reflections of the softbox and thick, softly rounded pillow-like edges. Image 2 is its flat geometric silhouette: a plump arrow-shaped pointer like a computer cursor, its rounded tip pointing to the upper left, with a broad body and a softly rounded notch on its lower right edge. Keep that contour, the tip toward the upper left and the proportions. The object is about as thick as the object in Image 1 and stands upright on the floor, supported at its lowest rounded corner. Because of the turn, the outline looks slightly narrower than the silhouette and the thickness of its left side is visible. Show only this one object. No text, writing, signature, maker's mark, stamp, logo, label, prop, person, pedestal, plinth or second object."
+        }
+      ],
+      "request": {
+        "resolution": "2K",
+        "aspect_ratio": "1:1"
+      },
+      "source": "peck-cursor-black-material-c1.jpg",
+      "source_size": [
+        2048,
+        2048
+      ],
+      "source_sha256": "b12d370cb575f7f5c7c65d9a78a0159e602841de2ef4ed000119fceefa604c1b",
+      "reported_usage": {
+        "prompt_tokens": 941,
+        "completion_tokens": 2072,
+        "total_tokens": 3013,
+        "cost": 0,
+        "is_byok": true,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.1024465,
+          "upstream_inference_prompt_cost": 0.0004705,
+          "upstream_inference_completions_cost": 0.101976
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 1680
+        }
+      },
+      "selection": {
+        "candidates": 5,
+        "selected": "c1",
+        "confirmed": "Loki, 2026-10-05",
+        "note": "Shown as A to D: an emerald lacquer cursor, a lilac anodized aluminum cursor, this black piano-lacquer cursor and an emerald lacquer speech bubble. The first emerald cursor became a square tile with an embossed arrow and was redrawn with the object stated as the cursor itself. Black matches Peck's all-black interface."
+      },
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6,
+        "size": [
+          1024,
+          1024
+        ],
+        "bytes": 18680,
+        "sha256": "05f6b10a12831eb414b37e3f1a6707f29a99877e7017515077d37f4b6177c4fe",
+        "resample": "Lanczos 2048 to 1024"
+      },
+      "cost": {
+        "currency": "USD",
+        "openrouter_reported_cost": 0,
+        "reported_upstream_inference_cost": 0.51162,
+        "note": "BYOK. Includes the rejected candidates. Provider-reported accounting fields, not invoices."
+      }
+    },
+    {
+      "file": "peck-hero.webp",
+      "ratio": "16:9",
+      "generated": "2026-10-05",
+      "steps": [
+        {
+          "id": "peck-hero-corridor",
+          "references": [
+            {
+              "file": "refs/peck-material.jpg",
+              "role": "object geometry and material (the selected Peck material card)",
+              "sha256": "b12d370cb575f7f5c7c65d9a78a0159e602841de2ef4ed000119fceefa604c1b"
+            },
+            {
+              "file": "refs/talky-cups.jpg",
+              "role": "styling direction only: Japanese and Korean fashion-editorial casting, wardrobe and direct flash",
+              "sha256": "71158883a0b11aed0bbc768d3238c6cb7e347d7475a1d8bb451d8899be0bfc0c"
+            }
+          ],
+          "prompt": "Create a single original photorealistic fashion-editorial photograph, with NO TEXT anywhere. Image 1 is the exact geometric object and its material: preserve its silhouette, two feet, color and surface. Image 2 is a visual direction reference for contemporary Japanese and Korean fashion-editorial styling, beautiful adult female casting, natural fresh makeup, airy black hair, restrained white/gray/black clothing, candid direct-flash photography and an ordinary setting with one strange oversized object. Do not reproduce the reference model's identity, outfit or exact pose. Cast a distinct original East Asian woman age 25, with an appealing expressive face, real skin and believable hands. Calm natural gaze, youthful energy and relaxed styling. Clear gentle features, not severe high-fashion contour makeup. The object is part of a physical scene, not a product being presented in a catalog. Keep the person and object in the LEFT 58 percent, and keep the RIGHT 36 percent quiet pale wall for live website text. Keep the very top edge pale and uncluttered for navigation. No typography, words, letters, numbers, watermarks, brand names, UI, screens, monitors, laptops, borders, signage or captions. No other people. No school uniforms or sexualized styling.\n\nA beautiful adult woman with long sleek black hair and a delicate straight fringe, expressive clear eyes, soft natural lips and minimal fresh makeup. She wears an opaque white oversized poplin shirt, wide gray tailored trousers and simple black shoes. She sits on a low pale wooden bench in a bright, empty corridor with a pale painted wall. She holds the oversized black cursor sculpture upright on her lap with both hands, its tip pointing to the upper left, like a found object she wants to show; slight head tilt and a direct, gentle gaze. Medium shot from the thighs up.\n\nExact object from Image 1: ONE oversized solid sculpture of a computer cursor arrow in glossy black piano lacquer, deep mirror-like black with soft reflections, thick softly rounded edges, its tip pointing to the upper left, a broad body, a short thick stem and two rounded feet. It is a heavy solid object, not a flat sign, cutout or balloon. Direct flash with a crisp mild shadow, neutral daylight, subtle grain, realistic fabric and skin. Slightly elevated 35mm camera, complete head and the entire black cursor in frame. Person and prop in left 58 percent; right 36 percent blank pale wall. No words, lettering or typography anywhere."
+        }
+      ],
+      "request": {
+        "resolution": "2K",
+        "aspect_ratio": "16:9"
+      },
+      "source": "peck-hero-corridor.jpg",
+      "source_sha256": "b029a64749a1aa2dc550fc815ccef4ac9150f020591429b6a8f61e899ae0e0e1",
+      "reported_usage": {
+        "prompt_tokens": 1025,
+        "completion_tokens": 1999,
+        "total_tokens": 3024,
+        "cost": 0,
+        "is_byok": true,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.1022695,
+          "upstream_inference_prompt_cost": 0.0005125,
+          "upstream_inference_completions_cost": 0.101757
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 1680
+        }
+      },
+      "selection": {
+        "candidates": 3,
+        "selected": "peck-hero-corridor",
+        "confirmed": "Loki, 2026-10-05",
+        "note": "Three landscape directions with the same casting and object: a gallery with a standing pose, a worktable with an arm resting on the cursor, and this corridor bench with the cursor held on her lap."
+      },
+      "postprocess": {
+        "source": "peck-editorial-hero.jpg",
+        "source_sha256": "b029a64749a1aa2dc550fc815ccef4ac9150f020591429b6a8f61e899ae0e0e1",
+        "output": "peck-editorial-hero-film.png",
+        "size": [
+          1920,
+          1080
+        ],
+        "downsample": [
+          1120,
+          630
+        ],
+        "gaussian_blur": 1.15,
+        "saturation": 0.93,
+        "highlight_bloom": {
+          "threshold": 0.67,
+          "radius": 13,
+          "strength": 0.045
+        },
+        "contrast": 0.94,
+        "lift": 0.007,
+        "luminance_grain_sigma": 0.028,
+        "chroma_grain_sigma": 0.0025,
+        "seed": 20261002
+      },
+      "processing_script": "scripts/grade-made-photo.py",
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6,
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 496698,
+        "sha256": "d64e69a29475dd4d2bd46fa3040ec7c31964590a3a1eb1978f36b2559667f442"
+      },
+      "cost": {
+        "currency": "USD",
+        "openrouter_reported_cost": 0,
+        "reported_upstream_inference_cost": 0.307603,
+        "note": "BYOK. Includes the rejected candidates. Provider-reported accounting fields, not invoices."
+      }
+    },
+    {
+      "file": "peck-portrait.webp",
+      "ratio": "9:16",
+      "generated": "2026-10-05",
+      "steps": [
+        {
+          "id": "peck-portrait-corridor-c1",
+          "references": [
+            {
+              "file": "output/peck-hero-corridor.jpg",
+              "role": "the selected landscape photograph, kept identical in identity, outfit, object and light",
+              "sha256": "b029a64749a1aa2dc550fc815ccef4ac9150f020591429b6a8f61e899ae0e0e1"
+            },
+            {
+              "file": "refs/peck-material.jpg",
+              "role": "object geometry and material (the selected Peck material card)",
+              "sha256": "b12d370cb575f7f5c7c65d9a78a0159e602841de2ef4ed000119fceefa604c1b"
+            }
+          ],
+          "prompt": "Edit the supplied original AI fashion photograph into a matching 9:16 mobile photograph. Image 1 is the selected source image: preserve the SAME adult woman's exact face, hairstyle, outfit, posture, object, material, lighting and scene. Image 2 is the precise object/material reference. Make an original vertical composition from the same shoot, never a collage. Photorealistic natural skin and believable hands. No text, typography, numbers, logos, watermark, interface, border or decorative graphics.\n\nUse case: identity-preserve. Recompose as a vertical environmental fashion photograph from the same shoot. Preserve the woman with long sleek black hair and a straight fringe, the white oversized poplin shirt, gray tailored trousers and black shoes, sitting on the same low pale wooden bench in the same bright corridor with a pale painted wall. Keep the single glossy black piano-lacquer cursor sculpture, its tip pointing to the upper left, a short thick stem and two rounded feet, held upright on her lap with both hands exactly as in Image 1. Preserve her exact face, delicate makeup and crisp direct-flash lighting. Critical mobile layout: pull the camera back so the entire head begins 30 percent down from the top, with no person or prop in the upper 27 percent. This top 27 percent is continuous pale wall for the live website title. Head and face around the upper middle, between 32 and 44 percent of the height. Person and the entire object occupy the central 76 percent of the width and the middle 32 to 76 percent of the height, leaving room for narrow crops. The lower 20 percent contains low-detail pale floor and the pale base of the bench so a button can overlay it. The woman has a natural, fully coherent seated body and legs, no distorted limbs. Keep the face, hair, clothing, light and object identical to Image 1. Plain photograph; do not add any text or create a separate blank panel."
+        }
+      ],
+      "request": {
+        "resolution": "2K",
+        "aspect_ratio": "9:16"
+      },
+      "source": "peck-portrait-corridor-c1.jpg",
+      "source_sha256": "98bf60405eb8668fc1ada84de22f0f6695329af4288a43ab70a53144c7d3297d",
+      "reported_usage": {
+        "prompt_tokens": 927,
+        "completion_tokens": 2140,
+        "total_tokens": 3067,
+        "cost": 0,
+        "is_byok": true,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.1026435,
+          "upstream_inference_prompt_cost": 0.0004635,
+          "upstream_inference_completions_cost": 0.10218
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 1680
+        }
+      },
+      "selection": {
+        "candidates": 2,
+        "selected": "peck-portrait-corridor-c1",
+        "confirmed": "Loki, 2026-10-05",
+        "note": "Two vertical recompositions of the selected landscape photograph. The second raised one foot in an unnatural pose."
+      },
+      "postprocess": {
+        "source": "peck-editorial-portrait.jpg",
+        "source_sha256": "98bf60405eb8668fc1ada84de22f0f6695329af4288a43ab70a53144c7d3297d",
+        "output": "peck-editorial-portrait-film.png",
+        "size": [
+          1080,
+          1920
+        ],
+        "downsample": [
+          630,
+          1120
+        ],
+        "gaussian_blur": 1.15,
+        "saturation": 0.93,
+        "highlight_bloom": {
+          "threshold": 0.67,
+          "radius": 13,
+          "strength": 0.045
+        },
+        "contrast": 0.94,
+        "lift": 0.007,
+        "luminance_grain_sigma": 0.028,
+        "chroma_grain_sigma": 0.0025,
+        "seed": 20261002
+      },
+      "processing_script": "scripts/grade-made-photo.py",
+      "export": {
+        "format": "webp",
+        "quality": 90,
+        "method": 6,
+        "size": [
+          1080,
+          1920
+        ],
+        "bytes": 510898,
+        "sha256": "46b6e6fbe52434ae116de0be325909a4cfa13494c75ecfb24f24ec1a25fb5859"
+      },
+      "cost": {
+        "currency": "USD",
+        "openrouter_reported_cost": 0,
+        "reported_upstream_inference_cost": 0.204987,
+        "note": "BYOK. Includes the rejected candidates. Provider-reported accounting fields, not invoices."
+      }
+    }
+  ],
+  "videos": [
+    {
+      "file": "peck-hero-motion.mp4",
+      "provider": "OpenRouter",
+      "model": "kwaivgi/kling-v3.0-pro",
+      "generated": "2026-10-05",
+      "prompt": "A near-still five-second living photograph. Locked-off camera, identical first and last composition. Preserve the reference adult woman's exact identity, face proportions, gaze, neutral closed-mouth expression, seated pose, clothing and lighting. Motion is confined to one delicate natural blink and imperceptibly small breathing. Everything below her shoulders stays perfectly still. No head turn, no smile, no hand or finger movement, no camera movement, no zoom or reframing. Keep the glossy black piano-lacquer cursor sculpture rigid and motionless on her lap. Preserve its tip pointing to the upper left, its broad body, short thick stem and two rounded feet, its outline, size, orientation, mirror-like gloss and both hands' contact points. No bending, squeezing, stretching or rotation. Preserve the white oversized shirt, gray trousers, black shoes, pale wooden bench, pale corridor wall and shadows exactly. Minimal amplitude, an almost frozen photograph, gentle natural micro-motion only, settling into the exact reference frame for a calm continuous loop.",
+      "request": {
+        "duration": 5,
+        "resolution": "720p",
+        "aspect_ratio": "16:9",
+        "generate_audio": false
+      },
+      "first_frame": "peck-hero-corridor.jpg",
+      "last_frame": "peck-hero-corridor.jpg",
+      "reference_sha256": "b029a64749a1aa2dc550fc815ccef4ac9150f020591429b6a8f61e899ae0e0e1",
+      "postprocess": {
+        "source": "peck-kling-raw.mp4",
+        "source_sha256": "07da49757f29e907a83f1054e8bd7b6c0e510fbe9b6b9923080930562696b8dd",
+        "output": "peck-kling-film.mp4",
+        "frames": 121,
+        "fps": 24.0,
+        "duration": 5.041666666666667,
+        "dimensions": [
+          1936,
+          1080
+        ],
+        "grain_sigma": 0.018,
+        "seed": 20261002,
+        "notes": "Film treatment adapted from approved Made photo grading, with temporal grain and blur scaled to the native video resolution."
+      },
+      "processing_script": "scripts/grade-made-video.py",
+      "export": {
+        "format": "mp4",
+        "bytes": 1451578,
+        "sha256": "93efc7e4f2ec103a130850e50358b4be9476c79e8dc70a9602079aff38edcb47"
+      },
+      "cost": {
+        "currency": "USD",
+        "openrouter_reported_cost": 0.56,
+        "is_byok": false
+      }
+    },
+    {
+      "file": "peck-portrait-motion.mp4",
+      "provider": "OpenRouter",
+      "model": "kwaivgi/kling-v3.0-pro",
+      "generated": "2026-10-05",
+      "prompt": "Preserve the tall vertical framing and quiet empty wall above the woman's head. A near-still five-second living photograph. Locked-off camera, identical first and last composition. Preserve the reference adult woman's exact identity, face proportions, gaze, neutral closed-mouth expression, seated pose, clothing and lighting. Motion is confined to one delicate natural blink and imperceptibly small breathing. Everything below her shoulders stays perfectly still. No head turn, no smile, no hand or finger movement, no camera movement, no zoom or reframing. Keep the glossy black piano-lacquer cursor sculpture rigid and motionless on her lap. Preserve its tip pointing to the upper left, its broad body, short thick stem and two rounded feet, its outline, size, orientation, mirror-like gloss and both hands' contact points. No bending, squeezing, stretching or rotation. Preserve the white oversized shirt, gray trousers, black shoes, pale wooden bench, pale corridor wall and shadows exactly. Minimal amplitude, an almost frozen photograph, gentle natural micro-motion only, settling into the exact reference frame for a calm continuous loop.",
+      "request": {
+        "duration": 5,
+        "resolution": "720p",
+        "aspect_ratio": "9:16",
+        "generate_audio": false
+      },
+      "first_frame": "peck-portrait-corridor-c1.jpg",
+      "last_frame": "peck-portrait-corridor-c1.jpg",
+      "reference_sha256": "98bf60405eb8668fc1ada84de22f0f6695329af4288a43ab70a53144c7d3297d",
+      "postprocess": {
+        "source": "peck-kling-portrait-raw.mp4",
+        "source_sha256": "ad3956b6cae0600639fd53f9ab0d573b8bf83d81bb3e7210ccecc2f3153ecf7a",
+        "output": "peck-kling-portrait-film.mp4",
+        "frames": 121,
+        "fps": 24.0,
+        "duration": 5.041666666666667,
+        "dimensions": [
+          1072,
+          1928
+        ],
+        "grain_sigma": 0.018,
+        "seed": 20261002,
+        "notes": "Film treatment adapted from approved Made photo grading, with temporal grain and blur scaled to the native video resolution."
+      },
+      "processing_script": "scripts/grade-made-video.py",
+      "export": {
+        "format": "mp4",
+        "bytes": 1566064,
+        "sha256": "6b8cd39d6f6c71dfd87a3a753eec15556a840e82a330d873ec129a37fe1f9fab"
+      },
+      "cost": {
+        "currency": "USD",
+        "openrouter_reported_cost": 0.56,
+        "is_byok": false
+      }
+    }
+  ]
+}

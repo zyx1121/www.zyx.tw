@@ -84,6 +84,22 @@ export const PRODUCTS = [
     imageAlt:
       "A young woman with long black hair and a white blouse sits at an oak library desk beside a cobalt ceramic arch.",
   },
+  {
+    id: "peck",
+    name: "Peck",
+    purpose: "Visual feedback for coding agents",
+    description:
+      "A browser you share with your coding agent. Point at an element and leave a comment; Claude Code or Codex gets the screenshot, source location, console and network records through local MCP.",
+    href: "https://github.com/zyx1121/peck/releases/latest",
+    material: "Black piano lacquer",
+    kind: "app",
+    platforms: ["macos"],
+    motion: true,
+    model: false,
+    action: "Get Peck",
+    imageAlt:
+      "A young woman with long black hair and a white shirt sits on a pale wooden bench in a bright corridor, holding an oversized glossy black cursor on her lap.",
+  },
 ] as const satisfies readonly ProductDefinition[]
 
 export type Product = (typeof PRODUCTS)[number]
