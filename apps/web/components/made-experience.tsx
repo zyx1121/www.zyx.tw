@@ -31,6 +31,17 @@ import { useReducedMotion } from "@/lib/use-reduced-motion"
 
 const PORTRAIT_QUERY = "(max-width: 900px)"
 
+// Sites outside zyx.tw open in a new tab and get no referrer, as the
+// Privacy page promises.
+function outsideZyx(href: string) {
+  try {
+    const { hostname } = new URL(href)
+    return hostname !== "zyx.tw" && !hostname.endsWith(".zyx.tw")
+  } catch {
+    return false
+  }
+}
+
 function subscribePortrait(onChange: () => void) {
   const query = window.matchMedia(PORTRAIT_QUERY)
   query.addEventListener("change", onChange)
@@ -213,7 +224,13 @@ function Campaign({
       <div className="made-copy">
         <h1 id={`${product.id}-headline`}>{product.name}</h1>
         <p>{product.purpose}</p>
-        <a className="made-cta" href={product.href}>
+        <a
+          className="made-cta"
+          href={product.href}
+          {...(outsideZyx(product.href)
+            ? { target: "_blank", rel: "noopener noreferrer" }
+            : {})}
+        >
           {product.action}
           <span aria-hidden>↗</span>
         </a>
