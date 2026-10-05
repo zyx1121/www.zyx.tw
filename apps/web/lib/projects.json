@@ -119,5 +119,16 @@
       "dither": "/previews/time-dither.webp",
       "focus": "50% 50%"
     }
+  },
+  {
+    "slug": "peck",
+    "name": "Peck",
+    "href": "https://github.com/zyx1121/peck",
+    "purpose": "visual feedback for coding agents",
+    "preview": {
+      "image": "/previews/peck.webp",
+      "dither": "/previews/peck-dither.webp",
+      "focus": "50% 50%"
+    }
   }
 ]
