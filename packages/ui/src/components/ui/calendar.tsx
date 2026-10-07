@@ -86,6 +86,14 @@ function Calendar({
   )
 }
 
+// The day in local time: toISOString would shift it by the time zone, and
+// the server and the browser can sit in different ones.
+function localDay(date: Date) {
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = String(date.getDate()).padStart(2, "0")
+  return `${date.getFullYear()}-${month}-${day}`
+}
+
 function CalendarDayButton({
   className,
   day,
@@ -101,7 +109,7 @@ function CalendarDayButton({
     <button
       ref={ref}
       type="button"
-      data-day={day.date.toISOString().slice(0, 10)}
+      data-day={localDay(day.date)}
       data-selected={modifiers.selected || undefined}
       className={cn(
         buttonVariants({ variant: "ghost", size: "icon" }),
