@@ -1,17 +1,17 @@
 "use client"
 
 import { cornerLink } from "@workspace/ui/components/corners"
-
-import { useExpenseForm } from "@/hooks/use-expense-form"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Button } from "@workspace/ui/components/ui/button"
+import { Input } from "@workspace/ui/components/ui/input"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@workspace/ui/components/ui/dialog"
+
+import { useExpenseForm } from "@/hooks/use-expense-form"
 
 export function ExpenseForm() {
   const { formRef, open, setOpen, handleSubmit } = useExpenseForm()

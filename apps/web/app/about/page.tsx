@@ -1,11 +1,12 @@
+import { cn } from "cn"
+
 import { Status } from "@workspace/ui/components/status"
 import { ScrambleText } from "@workspace/ui/components/ui/scramble-text"
-import { cn } from "@workspace/ui/lib/utils"
+import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
 import { Hero } from "@/components/hero"
 import { ABOUT, HOME } from "@/lib/copy"
 import { getGithubStatus } from "@/lib/github"
-import { column, enter, enterRow, page } from "@/lib/layout"
 import { FACTS, SECTIONS } from "@/lib/resume"
 import { pageMetadata } from "@/lib/site"
 
@@ -23,10 +24,10 @@ export const dynamic = "force-static"
 const block = (step: number) => enterRow(1 + step)
 
 const LINK =
-  "rounded-sm underline decoration-muted-foreground/40 underline-offset-4 outline-offset-2 transition-colors hover:decoration-foreground focus-visible:outline-2"
+  "rounded-control underline decoration-muted-foreground/40 underline-offset-4 outline-offset-2 transition-colors hover:decoration-foreground focus-visible:outline-2"
 
 /** The resume's section headings, at group-heading size. */
-const HEADING = "text-sm/6 font-medium"
+const HEADING = "text-body font-medium"
 
 /**
  * Titles as displayed: "Wi-Fi" keeps its hyphen and "6 GHz" its space on one
@@ -68,20 +69,17 @@ export default async function About() {
           <ScrambleText
             element="h1"
             text={HOME.title}
-            className="text-2xl/8 font-medium"
+            className="text-title font-medium"
           />
         }
         className="pb-25"
       />
 
       {/* Facts: a muted label column, then the value. */}
-      <dl
-        className={cn("grid grid-cols-[7rem_1fr] gap-x-5 gap-y-3", enter)}
-        style={block(1)}
-      >
+      <dl className={cn("flex flex-col gap-y-3", block(1))}>
         {FACTS.map(({ label, value, href }) => (
-          <div key={label} className="contents">
-            <dt className="text-muted-foreground">{label}</dt>
+          <div key={label} className="flex gap-x-5">
+            <dt className="w-28 shrink-0 text-muted-foreground">{label}</dt>
             <dd>
               <Value text={value} href={href} />
             </dd>
@@ -93,32 +91,32 @@ export default async function About() {
         <section
           key={id}
           aria-labelledby={`${id}-heading`}
-          className={cn("mt-20", enter)}
-          style={block(2 + index)}
+          className={cn("mt-20", block(2 + index))}
         >
           <h2 id={`${id}-heading`} className={HEADING}>
             {title}
           </h2>
           <ol className="mt-5 flex flex-col gap-y-3">
             {entries.map(({ when, what, note, where, href }) => (
-              <li
-                key={`${when} ${what}`}
-                className="grid grid-cols-[7rem_1fr] gap-x-5 sm:grid-cols-[7rem_1fr_fit-content(16rem)]"
-              >
-                <span className="text-xs whitespace-nowrap text-muted-foreground tabular-nums">
+              <li key={`${when} ${what}`} className="flex gap-x-5">
+                <span className="w-28 shrink-0 text-caption whitespace-nowrap text-muted-foreground tabular-nums">
                   {when}
                 </span>
-                <span className="text-pretty">
-                  {unbroken(what)}
-                  {note && (
-                    <span className="block text-muted-foreground">{note}</span>
-                  )}
-                </span>
-                {/* At most 16rem wide from sm, so a long name wraps in
-                    its own column instead of squeezing the one beside it. */}
-                <span className="col-start-2 text-pretty text-muted-foreground sm:col-start-auto sm:text-right">
-                  <Value text={where} href={href} />
-                </span>
+                <div className="flex min-w-0 flex-1 flex-col gap-x-5 sm:flex-row sm:justify-between">
+                  <span className="text-pretty">
+                    {unbroken(what)}
+                    {note && (
+                      <span className="block text-muted-foreground">
+                        {note}
+                      </span>
+                    )}
+                  </span>
+                  {/* At most 16rem wide from sm, so a long name wraps in
+                      its own column instead of squeezing the one beside it. */}
+                  <span className="shrink-0 text-pretty text-muted-foreground sm:max-w-64 sm:text-right">
+                    <Value text={where} href={href} />
+                  </span>
+                </div>
               </li>
             ))}
           </ol>
@@ -127,8 +125,7 @@ export default async function About() {
 
       <Status
         data={status}
-        className={cn("mt-20", enter)}
-        style={block(2 + SECTIONS.length)}
+        className={cn("mt-20", block(2 + SECTIONS.length))}
       />
     </main>
   )

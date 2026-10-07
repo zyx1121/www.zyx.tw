@@ -1,7 +1,8 @@
 "use client"
 
+import { Badge } from "@workspace/ui/components/ui/badge"
+
 import { useExpenseDetail } from "@/hooks/use-expense-detail"
-import { Badge } from "@/components/ui/badge"
 import { ExpenseDetail } from "@/components/expense-detail"
 import type { Expense } from "@/lib/types"
 
@@ -25,7 +26,9 @@ export function ExpenseList({
   } = useExpenseDetail(currentMemberId)
 
   if (expenses.length === 0) {
-    return <p className="text-center text-sm text-muted-foreground">尚無紀錄</p>
+    return (
+      <p className="text-center text-body text-muted-foreground">尚無紀錄</p>
+    )
   }
 
   return (
@@ -35,7 +38,7 @@ export function ExpenseList({
           <button
             key={expense.id}
             onClick={() => setSelected(expense)}
-            className="flex w-full items-center gap-3 px-1 py-3 text-left text-sm transition-colors hover:bg-muted/50"
+            className="flex w-full items-center gap-3 px-1 py-3 text-left text-body transition-colors hover:bg-muted/50"
           >
             <span className="w-12 shrink-0 text-muted-foreground tabular-nums">
               {new Date(expense.created_at).toLocaleDateString("zh-TW", {
@@ -50,7 +53,7 @@ export function ExpenseList({
             <span className="shrink-0 tabular-nums">
               ${expense.amount.toLocaleString()}
             </span>
-            <Badge variant={expense.settled ? "secondary" : "default"}>
+            <Badge variant={expense.settled ? "muted" : "default"}>
               {expense.settled ? "已核銷" : "未核銷"}
             </Badge>
           </button>

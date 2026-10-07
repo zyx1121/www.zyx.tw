@@ -1,4 +1,4 @@
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "cn"
 
 // The mark from apps/web/public/zyx.svg, with its viewBox tightened to the path's box
 // (0 0 4096 3615), so its edges are the drawing's edges.

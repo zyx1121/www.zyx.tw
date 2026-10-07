@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { cn } from "cn"
 
 import {
   Tooltip,
@@ -8,7 +9,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@workspace/ui/components/ui/tooltip"
-import { cn } from "@workspace/ui/lib/utils"
 
 export type At = "top-left" | "top-right" | "bottom-left" | "bottom-right"
 

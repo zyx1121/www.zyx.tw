@@ -1,11 +1,12 @@
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "cn"
+
+import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
 import { Hero, HeroTitle } from "@/components/hero"
 import type { LegalDoc, Run } from "@/lib/legal"
-import { column, enter, enterRow, page } from "@/lib/layout"
 
 const LINK =
-  "rounded-sm underline underline-offset-4 outline-offset-2 transition-colors hover:text-muted-foreground focus-visible:outline-2"
+  "rounded-control underline underline-offset-4 outline-offset-2 transition-colors hover:text-muted-foreground focus-visible:outline-2"
 
 function Paragraph({ runs }: { runs: Run[] }) {
   return (
@@ -33,7 +34,7 @@ function Paragraph({ runs }: { runs: Run[] }) {
 /** Privacy and Terms: the title, the date of the last change, the sections. */
 export function LegalPage({ doc }: { doc: LegalDoc }) {
   return (
-    <main className={cn(column, page, "flex-1 text-sm/6")}>
+    <main className={cn(column, page, "flex-1 text-body")}>
       <Hero
         title={<HeroTitle>{doc.title}</HeroTitle>}
         subtitle={
@@ -50,10 +51,9 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
       {doc.sections.map(({ heading, paragraphs }, index) => (
         <section
           key={heading}
-          className={cn(index > 0 && "mt-15", enter)}
-          style={enterRow(3 + index)}
+          className={cn(index > 0 && "mt-15", enterRow(3 + index))}
         >
-          <h2 className="text-2xl">{heading}</h2>
+          <h2 className="text-title">{heading}</h2>
           {paragraphs.map((runs, paragraph) => (
             <Paragraph key={paragraph} runs={runs} />
           ))}

@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import { cn } from "cn";
+
+import "@workspace/ui/globals.css";
+
+import { ThemeProvider } from "@workspace/ui/components/theme-provider";
+import { Toaster } from "@workspace/ui/components/ui/sonner";
+import { TooltipProvider } from "@workspace/ui/components/ui/tooltip";
+import { fontVariables } from "@workspace/ui/lib/fonts";
 
 import { JsonLd } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { fontVariables } from "@/lib/fonts";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
-import { cn } from "@/lib/utils";
 
 const SITE_TITLE = `Loki's design system | ${SITE_NAME}`;
 
@@ -57,16 +59,10 @@ export default function RootLayout({
         "font-sans"
       )}
     >
-      {/* Body text is 16px at every width, phones included. The page fills
-          the viewport so the footer sits low on short pages. */}
-      <body className="flex min-h-dvh flex-col text-sm">
+      {/* The page fills the viewport so the footer sits low on short pages. */}
+      <body className="flex min-h-dvh flex-col">
         <JsonLd />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
+        <ThemeProvider>
           <TooltipProvider>
             <SiteHeader />
             {children}

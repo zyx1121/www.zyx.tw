@@ -13,12 +13,12 @@ import {
   type ReactNode,
   type CSSProperties,
 } from "react"
+import { cn } from "cn"
 
 import { MaskReveal } from "@workspace/ui/components/ui/mask-reveal"
-import { cn } from "@workspace/ui/lib/utils"
+import { column, enterRow, page, rowDelay } from "@workspace/ui/lib/layout"
 
 import { Hero } from "@/components/hero"
-import { column, enter, enterRow, ENTER, page } from "@/lib/layout"
 import {
   asset,
   MADE,
@@ -338,7 +338,7 @@ export function MadeExperience({
             title={
               <h1
                 id="made-title"
-                className="text-2xl/8 font-medium text-pretty"
+                className="text-title font-medium text-pretty"
               >
                 {MADE.title}
               </h1>
@@ -347,11 +347,7 @@ export function MadeExperience({
           />
           <div className="made-grid">
             {PRODUCTS.map((product, index) => (
-              <article
-                key={product.id}
-                className={enter}
-                style={enterRow(index + 3)}
-              >
+              <article key={product.id} className={enterRow(index + 3)}>
                 <Link
                   className="made-card"
                   href={`/made/${product.id}`}
@@ -359,9 +355,7 @@ export function MadeExperience({
                 >
                   <div className="made-object">
                     <MaskReveal
-                      delay={(index + 3) * ENTER.row}
-                      duration={600}
-                      className="h-full w-full"
+                      className={cn("size-full", rowDelay(index + 3))}
                     >
                       <img
                         src={asset(product.id, "-material.webp")}

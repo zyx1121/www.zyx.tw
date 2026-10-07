@@ -9,8 +9,8 @@ import {
   CornerTip,
   TopCorners,
 } from "@workspace/ui/components/corners"
+import { enter } from "@workspace/ui/lib/layout"
 
-import { enter } from "@/lib/layout"
 import { PAGES } from "@/lib/site"
 
 const NAV = PAGES.filter((page) => page.nav)
@@ -51,7 +51,7 @@ export function SiteHeader() {
                   {current && (
                     <ActiveMark
                       layoutId="site-header-mark"
-                      className="absolute -bottom-2 left-[calc(50%-2px)]"
+                      className="absolute -bottom-2 left-1/2 -ml-0.5"
                     />
                   )}
                 </li>

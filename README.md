@@ -59,7 +59,7 @@ Plain `bun dev` boots turbo across all 7 apps at once. `--filter=<app>` (or `cd 
 | Layer         | Choice                                                                                                 |
 | ------------- | ------------------------------------------------------------------------------------------------------ |
 | Framework     | Next.js 16.1 (App Router + Turbopack)                                                                  |
-| UI            | React 19, Tailwind CSS v4, shadcn/ui (`base-nova`, Base UI) + the [ui.zyx.tw](https://ui.zyx.tw) theme |
+| UI            | React 19, Tailwind CSS v4, Base UI, the [ui.zyx.tw](https://ui.zyx.tw) design system                   |
 | Language      | TypeScript 5.9, strict + `noUncheckedIndexedAccess`                                                    |
 | Backend       | Supabase (`1909`, `link`)                                                                              |
 | 3D            | three.js, React Three Fiber, drei and postprocessing (`good`, `3d`)                                    |
@@ -78,42 +78,29 @@ Apps on `@workspace/ui` load the fonts from `packages/ui/src/lib/fonts.ts` and p
 
 For a new Made product, follow the [product publishing guide](./apps/web/MADE.md) and start with its [brief template](./apps/web/templates/made-product.md). They cover the index and campaign design, identity assets, desktop/mobile photography and motion, route registration, generation records and production acceptance.
 
-Shared components live in `packages/ui`. Add a stock component there with the shadcn CLI:
-
-```bash
-cd packages/ui
-bunx --bun shadcn@latest add button
-```
-
-It lands in `packages/ui/src/components/ui/` and imports from any app:
+Every component lives once, in `packages/ui/src/components/ui/`, and every app imports it from there:
 
 ```tsx
 import { Button } from "@workspace/ui/components/ui/button"
 ```
 
-zyx components (`theme-toggle`, `shimmering-text`, `scramble-text`, `rotating-text`, `mask-reveal`, `ask-ai`, `hdr-highlight`) come from the registry, already configured in `components.json`:
-
-```bash
-bunx --bun shadcn@latest add @zyx1121/theme-toggle
-```
-
-The theme tokens in `packages/ui/src/styles/globals.css` and `apps/1909/app/globals.css` must match `apps/ui/app/globals.css` and the `theme` item in `apps/ui/registry.json`. CI runs the check; run it locally with:
+They are our own lightweight rewrites on Base UI, not stock shadcn copies; [`apps/ui/DESIGN.md`](./apps/ui/DESIGN.md) is the contract. Every app imports the one stylesheet, `@workspace/ui/globals.css`. CI checks that it matches the `base` item in `apps/ui/registry.json` and that every app uses only the tokens:
 
 ```bash
 bun run theme:check
-bun run typography:check
+bun run tokens:check
 ```
 
 ## Pulling the design system into another project
 
-Outside this monorepo, init on the Base UI base and add the theme from ui.zyx.tw:
+Outside this monorepo, init the project from the base, then add components by name:
 
 ```bash
-bunx shadcn@latest init -b base -p nova
-bunx shadcn@latest add https://ui.zyx.tw/r/theme.json
+bunx shadcn@latest init https://ui.zyx.tw/r/base.json
+bunx shadcn@latest add @zyx1121/button @zyx1121/dialog
 ```
 
-Base components come straight from `bunx shadcn@latest add <name>`; zyx-only components come from the registry (see [`apps/ui/README.md`](./apps/ui/README.md)).
+See [`apps/ui/README.md`](./apps/ui/README.md).
 
 ## Environment variables
 

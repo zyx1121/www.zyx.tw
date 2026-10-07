@@ -1,9 +1,10 @@
 "use client"
 
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "cn"
+
+import { enterRow } from "@workspace/ui/lib/layout"
 
 import { useShowcase } from "@/components/showcase"
-import { enter, enterRow } from "@/lib/layout"
 
 /**
  * One row per project: the name on the left and its purpose in muted text on
@@ -31,9 +32,8 @@ export function ProjectList({ className }: { className?: string }) {
             // space-between is what moves the purpose between the two places.
             className={cn(
               "group relative flex flex-wrap justify-between gap-x-5",
-              enter
+              enterRow(2 + index)
             )}
-            style={enterRow(2 + index)}
             onPointerEnter={(event) => {
               if (event.pointerType === "mouse") engage(index)
             }}
@@ -48,7 +48,7 @@ export function ProjectList({ className }: { className?: string }) {
               href={project.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-sm decoration-muted-foreground underline-offset-4 outline-offset-4 transition-colors after:absolute after:inset-0 hover:underline focus-visible:outline-2 max-sm:text-muted-foreground max-sm:group-data-active:text-foreground max-sm:after:-inset-y-1.5"
+              className="rounded-control decoration-muted-foreground underline-offset-4 outline-offset-4 transition-colors after:absolute after:inset-0 hover:underline focus-visible:outline-2 max-sm:text-muted-foreground max-sm:group-data-active:text-foreground max-sm:after:-inset-y-1.5"
               onFocus={(event) => {
                 if (event.currentTarget.matches(":focus-visible")) engage(index)
               }}

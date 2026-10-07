@@ -28,8 +28,8 @@ jobs:
       - name: Theme drift check
         run: bun run theme:check
 
-      - name: Typography policy
-        run: bun run typography:check
+      - name: Token policy
+        run: bun run tokens:check
 
       - name: Lint
         run: bun run lint
@@ -46,3 +46,67 @@ jobs:
           NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ secrets.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
+  registry:
+    name: Registry smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.13
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build the registry
+        run: bun run build --filter=ui
+
+      # Install the base and every component into a fresh project, the way an
+      # app outside this repo would. Items depend on each other by absolute
+      # URL; point those at this build so unreleased items resolve.
+      - name: Init a project from the base and add every component
+        run: |
+          mkdir -p "$RUNNER_TEMP/registry"
+          cp -r apps/ui/out/r "$RUNNER_TEMP/registry/r"
+          sed -i 's#https://ui.zyx.tw/r/\([a-z-]*\)\.json#http://localhost:8099/r/\1.json#g' "$RUNNER_TEMP"/registry/r/*.json
+          (cd "$RUNNER_TEMP/registry" && python3 -m http.server 8099 > /dev/null 2>&1 &)
+          for i in $(seq 1 10); do curl -sf localhost:8099/r/base.json > /dev/null && break; sleep 1; done
+          mkdir -p "$RUNNER_TEMP/consumer" && cd "$RUNNER_TEMP/consumer"
+          bunx shadcn@latest init http://localhost:8099/r/base.json -t next -n app --no-monorepo -y
+          cd app
+          grep -q '"@zyx1121": "https://ui.zyx.tw/r/{name}.json"' components.json
+          grep -q -- '--text-\*: initial' app/globals.css
+          grep -q -- '--text-caption: 0.875rem' app/globals.css
+          grep -q -- '--radius-surface: calc(var(--radius) + 1.5rem)' app/globals.css
+          grep -q '@utility duration-overlay' app/globals.css
+          ! grep -q -- '--card:' app/globals.css
+          items=$(python3 -c 'import json; print(" ".join(f"http://localhost:8099/r/{i["name"]}.json" for i in json.load(open("../../registry/r/registry.json"))["items"] if i["type"] == "registry:ui"))')
+          bunx shadcn@latest add $items -y -o
+          ! grep -rq 'text-sm\|text-xs\|rounded-lg' components/ui
+          grep -q 'animate-mask-reveal' app/globals.css
+          cat > app/page.tsx <<'PAGE'
+          import { Button } from "@/components/ui/button"
+          import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+          import { InputGroup, InputGroupInput } from "@/components/ui/input-group"
+          import { MaskReveal } from "@/components/ui/mask-reveal"
+          import { Toolbar } from "@/components/ui/toolbar"
+
+          export default function Page() {
+            return (
+              <main>
+                <Toolbar><Button>Save</Button></Toolbar>
+                <InputGroup><InputGroupInput /></InputGroup>
+                <MaskReveal>zyx</MaskReveal>
+                <Dialog>
+                  <DialogTrigger render={<Button />}>Open</DialogTrigger>
+                  <DialogContent><DialogTitle>Title</DialogTitle></DialogContent>
+                </Dialog>
+              </main>
+            )
+          }
+          PAGE
+          bun run build

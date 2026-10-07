@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { cn } from "cn"
 
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
 import "@workspace/ui/globals.css"
@@ -10,7 +11,6 @@ import {
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 import { fontVariables } from "@workspace/ui/lib/fonts"
-import { cn } from "@workspace/ui/lib/utils"
 
 import { SITE_DESC, SITE_NAME, SITE_TITLE } from "@/lib/site"
 

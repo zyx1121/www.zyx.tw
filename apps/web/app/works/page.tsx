@@ -1,4 +1,6 @@
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "cn"
+
+import { column, page } from "@workspace/ui/lib/layout"
 
 import { Hero, HeroTitle } from "@/components/hero"
 import { ProjectsJsonLd } from "@/components/json-ld"
@@ -6,7 +8,6 @@ import { PreviewStage } from "@/components/preview-stage"
 import { ProjectList } from "@/components/project-list"
 import { Showcase } from "@/components/showcase"
 import { WORKS } from "@/lib/copy"
-import { column, page } from "@/lib/layout"
 import { projects } from "@/lib/projects"
 import { pageMetadata } from "@/lib/site"
 
@@ -26,7 +27,7 @@ export default function Works() {
         <Hero title={<HeroTitle>{WORKS.title}</HeroTitle>} />
         {/* No entrance fade: the first dither can be the page's largest
             paint, and Chrome skipped it as LCP while it faded in. */}
-        <PreviewStage className="mt-10 mb-5 min-h-[max(12.5rem,45cqw)] flex-1" />
+        <PreviewStage className="mt-10 mb-5 min-h-60 flex-1 lg:min-h-82 2xl:min-h-110" />
         <ProjectList />
       </Showcase>
     </main>

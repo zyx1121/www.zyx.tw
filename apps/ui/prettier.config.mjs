@@ -7,7 +7,7 @@ const config = {
   printWidth: 80,
   plugins: ["prettier-plugin-tailwindcss"],
   tailwindFunctions: ["cn", "cva"],
-  tailwindStylesheet: "./app/globals.css",
+  tailwindStylesheet: "../../packages/ui/src/styles/globals.css",
 };
 
 export default config;

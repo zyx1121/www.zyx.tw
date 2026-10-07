@@ -135,7 +135,7 @@ Run the repository's required checks in the sandbox or CI:
 
 ```sh
 bun run theme:check
-bun run typography:check
+bun run tokens:check
 bun run lint
 bun run format:check
 bun run typecheck

@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { cn } from "cn";
+
+import { column } from "@workspace/ui/lib/layout";
 
 import { Hero } from "@/components/hero";
 import { Showcase } from "@/components/showcase";
-import { column } from "@/lib/layout";
-import { COMPONENTS, getItem } from "@/lib/registry";
-import { MARKDOWN_PATH } from "@/lib/site";
-import { cn } from "@/lib/utils";
+import { COMPONENTS } from "@/lib/registry";
+import { INIT_COMMAND, MARKDOWN_PATH } from "@/lib/site";
 
 export const metadata: Metadata = {
   alternates: {
@@ -19,7 +20,7 @@ export default function Home() {
     <main className={cn(column, "flex-1 pt-30 pb-25")}>
       <Hero />
       <Showcase
-        theme={getItem("theme").description}
+        initCommand={INIT_COMMAND}
         items={COMPONENTS.map(({ name, title, description }) => ({
           name,
           title,

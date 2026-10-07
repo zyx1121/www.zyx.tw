@@ -43,7 +43,7 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
 }
 .made-card {
   display: block;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
 }
 .made-page .made-card:hover {
   text-decoration: none;
@@ -58,7 +58,7 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   width: 100%;
   aspect-ratio: 1;
   overflow: hidden;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
   background: var(--color-neutral-200);
   color: var(--color-black);
 }
@@ -93,14 +93,14 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
   font-weight: 500;
 }
 .made-identity-name > span {
   color: var(--muted-foreground);
-  font-size: 14px;
-  line-height: 20px;
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
 }
 .made-mark {
   display: inline-block;
@@ -125,8 +125,8 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
 }
 .made-card-meta > span:last-child {
   color: var(--muted-foreground);
-  font-size: 14px;
-  line-height: 20px;
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
 }
 .made-campaign {
   position: relative;
@@ -192,8 +192,8 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   transform: translateY(-50%);
 }
 .made-copy :is(h1, h2) {
-  font-size: 24px;
-  line-height: 32px;
+  font-size: var(--text-title);
+  line-height: var(--text-title--line-height);
   font-weight: 500;
 }
 .made-plump .made-copy {
@@ -215,7 +215,7 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   padding: 12px 20px;
   margin-top: 20px;
   border: 1px solid currentColor;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -237,8 +237,8 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   gap: 20px;
 }
 .made-clock {
-  font-size: 24px;
-  line-height: 32px;
+  font-size: var(--text-title);
+  line-height: var(--text-title--line-height);
   font-variant-numeric: tabular-nums;
 }
 .made-dialog {
@@ -249,7 +249,7 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
   max-height: calc(100svh - 40px);
   padding: 0;
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
   background: transparent;
   color: var(--foreground);
   overflow: auto;
@@ -274,8 +274,8 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
     0 0 12px var(--color-black);
 }
 .made-model-head h2 {
-  font-size: 24px;
-  line-height: 32px;
+  font-size: var(--text-title);
+  line-height: var(--text-title--line-height);
   font-weight: 500;
 }
 .made-model-head button {
@@ -361,8 +361,8 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
     right: 20px;
     bottom: 76px;
     gap: 12px;
-    font-size: 14px;
-    line-height: 20px;
+    font-size: var(--text-caption);
+    line-height: var(--text-caption--line-height);
   }
 }
 .made-top-corner:has([aria-label="zyx, home"]) {
@@ -385,8 +385,8 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
 }
 @media (max-width: 360px) {
   .made-clock {
-    font-size: 16px;
-    line-height: 24px;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
   }
   .made-campaign-tools {
     gap: 12px;
@@ -398,7 +398,7 @@ body:has(.made-page[data-made-detail="true"]) .made-top-corner {
 @media (min-width: 901px) {
   .made-campaign-tools {
     padding: 0 12px;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius);
     background: rgb(245 243 235 / 0.88);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
