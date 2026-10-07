@@ -1,33 +1,28 @@
-import { Card, CardContent } from "@/components/ui/card"
 import type { Debt } from "@/lib/types"
 
+// Page layer: one row per debt, separated by hairlines, no card around them.
 export function BalanceSummary({ debts }: { debts: Debt[] }) {
   if (debts.length === 0) {
-    return (
-      <Card>
-        <CardContent className="py-4 text-center text-sm text-muted-foreground">
-          目前沒有未核銷的欠款
-        </CardContent>
-      </Card>
-    )
+    return <p className="text-muted-foreground">目前沒有未核銷的欠款</p>
   }
 
   return (
-    <div className="grid gap-2">
+    <ul className="flex flex-col">
       {debts.map((debt, i) => (
-        <Card key={i}>
-          <CardContent className="flex items-center justify-between px-4 py-2">
-            <span className="text-sm">
-              <span className="font-medium">{debt.from}</span>
-              {" 欠 "}
-              <span className="font-medium">{debt.to}</span>
-            </span>
-            <span className="font-medium tabular-nums">
-              ${debt.amount.toLocaleString()}
-            </span>
-          </CardContent>
-        </Card>
+        <li
+          key={i}
+          className="flex items-center justify-between border-b py-3 first:border-t"
+        >
+          <span>
+            <span className="font-medium">{debt.from}</span>
+            {" 欠 "}
+            <span className="font-medium">{debt.to}</span>
+          </span>
+          <span className="font-medium tabular-nums">
+            ${debt.amount.toLocaleString()}
+          </span>
+        </li>
       ))}
-    </div>
+    </ul>
   )
 }

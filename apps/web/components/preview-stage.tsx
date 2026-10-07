@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { cn } from "cn"
 
 import { MaskReveal } from "@workspace/ui/components/ui/mask-reveal"
-import { cn } from "@workspace/ui/lib/utils"
 
 import { useShowcase } from "@/components/showcase"
 import { runDecode } from "@/lib/decode"
@@ -16,7 +16,7 @@ const LAYER = "absolute inset-0 size-full object-cover"
 // Layers appear at once and fade out over 300 ms. A transition takes the
 // timing of the state it moves to, so only the hidden state carries one.
 const FADE_OUT =
-  "opacity-0 motion-safe:transition-opacity motion-safe:duration-300"
+  "opacity-0 motion-safe:transition-opacity motion-safe:duration-overlay"
 
 type Layer = { id: number; index: number }
 
@@ -124,7 +124,7 @@ export function PreviewStage({ className }: { className?: string }) {
       data-slot="preview-stage"
       data-decoded={colorVisible ? "" : undefined}
       className={cn(
-        "relative isolate overflow-hidden rounded-lg bg-background ring-1 ring-foreground/10",
+        "relative isolate overflow-hidden rounded-control bg-background ring-1 ring-foreground/10",
         className
       )}
       onPointerUp={(event) => {
@@ -143,12 +143,7 @@ export function PreviewStage({ className }: { className?: string }) {
             style={focusOf(index)}
           />
         ) : (
-          <MaskReveal
-            key={id}
-            delay={0}
-            duration={600}
-            className="absolute inset-0 size-full"
-          >
+          <MaskReveal key={id} className="absolute inset-0 size-full">
             {/* eslint-disable-next-line @next/next/no-img-element -- see above */}
             <img
               src={ditherOf(index)}

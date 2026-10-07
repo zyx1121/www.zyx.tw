@@ -39,11 +39,11 @@ import { Label } from "@workspace/ui/components/ui/label"
 import {
   Popover,
   PopoverContent,
-  PopoverTitle,
   PopoverTrigger,
 } from "@workspace/ui/components/ui/popover"
 import { Separator } from "@workspace/ui/components/ui/separator"
 import { Switch } from "@workspace/ui/components/ui/switch"
+import { Toolbar } from "@workspace/ui/components/ui/toolbar"
 
 import { ParamGroup } from "@/components/param-control"
 import { PresetSelect } from "@/components/preset-select"
@@ -84,205 +84,205 @@ export function Dock({
     // the error take pointer events, the rest stays the canvas's.
     <div className="pointer-events-none absolute inset-x-0 bottom-12 flex flex-col items-center gap-2 px-2">
       {error && (
-        <p
+        <Toolbar
           role="alert"
-          data-slot="floating-notice"
-          className="pointer-events-auto max-w-md rounded-xl border bg-popover px-3 py-2 text-xs/5 whitespace-pre-line text-destructive"
+          className="pointer-events-auto max-w-md px-3 py-2 whitespace-pre-line text-destructive"
         >
           {error}
-        </p>
+        </Toolbar>
       )}
-      <nav
-        aria-label="Plump editor"
-        data-slot="floating-toolbar"
-        className="pointer-events-auto flex items-center gap-0.5 rounded-2xl border bg-popover p-1"
-      >
-        <Section icon={<Box />} {...section("Shape")}>
-          <p className="text-xs/5 text-muted-foreground">
-            Open an SVG file, or drop one on the page.
-          </p>
-          <ParamGroup
-            id="shape"
-            defs={shapeControls}
-            values={scene.shape}
-            onChange={(key, value) =>
-              onChange((current) => ({
-                ...current,
-                shape: { ...current.shape, [key]: value },
-              }))
-            }
-          />
-        </Section>
+      <nav aria-label="Plump editor" className="pointer-events-auto">
+        <Toolbar>
+          <Section icon={<Box />} {...section("Shape")}>
+            <p className="text-caption text-muted-foreground">
+              Open an SVG file, or drop one on the page.
+            </p>
+            <ParamGroup
+              id="shape"
+              defs={shapeControls}
+              values={scene.shape}
+              onChange={(key, value) =>
+                onChange((current) => ({
+                  ...current,
+                  shape: { ...current.shape, [key]: value },
+                }))
+              }
+            />
+          </Section>
 
-        <Section icon={<Palette />} {...section("Material")}>
-          <PresetSelect
-            label="Material"
-            presets={materials}
-            value={material.id}
-            onChange={(id) => {
-              const preset = findPreset(materials, id) ?? materials[0]
-              onChange((current) => ({
-                ...current,
-                material: {
-                  id: preset.id,
-                  params: defaultValues(preset.params),
-                },
-              }))
+          <Section icon={<Palette />} {...section("Material")}>
+            <PresetSelect
+              label="Material"
+              presets={materials}
+              value={material.id}
+              onChange={(id) => {
+                const preset = findPreset(materials, id) ?? materials[0]
+                onChange((current) => ({
+                  ...current,
+                  material: {
+                    id: preset.id,
+                    params: defaultValues(preset.params),
+                  },
+                }))
+              }}
+            />
+            <ParamGroup
+              id={`material-${material.id}`}
+              defs={material.params}
+              values={scene.material.params}
+              onChange={(key, value) =>
+                onChange((current) => ({
+                  ...current,
+                  material: {
+                    ...current.material,
+                    params: { ...current.material.params, [key]: value },
+                  },
+                }))
+              }
+            />
+          </Section>
+
+          <Section icon={<Sun />} {...section("Environment")}>
+            <PresetSelect
+              label="Environment"
+              presets={environments}
+              value={environment.id}
+              onChange={(id) =>
+                onChange((current) => ({
+                  ...current,
+                  environment: { ...current.environment, id },
+                }))
+              }
+            />
+            <ParamGroup
+              id="environment"
+              defs={environmentControls}
+              values={scene.environment}
+              onChange={(key, value) =>
+                onChange((current) => ({
+                  ...current,
+                  environment: { ...current.environment, [key]: value },
+                }))
+              }
+            />
+          </Section>
+
+          <Section icon={<PaintBucket />} {...section("Background")}>
+            <ParamGroup
+              id="staging"
+              defs={stagingControls}
+              values={scene.staging}
+              onChange={(key, value) =>
+                onChange((current) => ({
+                  ...current,
+                  staging: { ...current.staging, [key]: value },
+                }))
+              }
+            />
+          </Section>
+
+          <Section icon={<Camera />} {...section("Staging")}>
+            <PresetSelect
+              label="Staging"
+              presets={stagings}
+              value={staging.id}
+              onChange={(id) =>
+                onChange((current) => ({
+                  ...current,
+                  staging: { ...current.staging, id },
+                }))
+              }
+            />
+            <ParamGroup
+              id="motion"
+              defs={motionControls}
+              values={scene.motion}
+              onChange={(key, value) =>
+                onChange((current) => ({
+                  ...current,
+                  motion: { ...current.motion, [key]: value },
+                }))
+              }
+            />
+          </Section>
+
+          <Section icon={<Sparkles />} {...section("Effects")}>
+            {effects.map((preset) => {
+              const active = scene.effects.find(
+                (effect) => effect.id === preset.id
+              )
+              return (
+                <div key={preset.id} className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor={`effect-${preset.id}`}>
+                      {preset.label}
+                    </Label>
+                    <Switch
+                      id={`effect-${preset.id}`}
+                      checked={active !== undefined}
+                      onCheckedChange={(checked) =>
+                        onChange((current) =>
+                          toggleEffect(current, preset, checked)
+                        )
+                      }
+                    />
+                  </div>
+                  {active && (
+                    <ParamGroup
+                      id={`effect-${preset.id}`}
+                      defs={preset.params}
+                      values={active.params}
+                      onChange={(key, value) =>
+                        onChange((current) =>
+                          setEffectParam(current, preset.id, key, value)
+                        )
+                      }
+                    />
+                  )}
+                </div>
+              )
+            })}
+          </Section>
+
+          {/* Stretches to the bar's full height; -my-1 cancels the bar's
+            padding so the line meets its top and bottom edges. */}
+          <Separator
+            orientation="vertical"
+            className="mx-1 -my-1 h-auto self-stretch"
+          />
+
+          <Button
+            variant="ghost"
+            className="px-3"
+            aria-label="Open an SVG or a scene.json"
+            onClick={() => fileInput.current?.click()}
+          >
+            <FolderOpen />
+            <span className="hidden lg:inline">Open</span>
+          </Button>
+          <Button
+            variant="ghost"
+            className="px-3"
+            aria-label="Export scene.json"
+            onClick={onExport}
+          >
+            <Download />
+            <span className="hidden lg:inline">Export</span>
+          </Button>
+          <input
+            ref={fileInput}
+            type="file"
+            accept=".svg,image/svg+xml,.json,application/json"
+            aria-label="Open an SVG or a scene.json"
+            className="hidden"
+            onChange={(event) => {
+              const file = event.target.files?.[0]
+              // Clear it so choosing the same file again still fires
+              event.target.value = ""
+              if (file) onOpenFile(file)
             }}
           />
-          <ParamGroup
-            id={`material-${material.id}`}
-            defs={material.params}
-            values={scene.material.params}
-            onChange={(key, value) =>
-              onChange((current) => ({
-                ...current,
-                material: {
-                  ...current.material,
-                  params: { ...current.material.params, [key]: value },
-                },
-              }))
-            }
-          />
-        </Section>
-
-        <Section icon={<Sun />} {...section("Environment")}>
-          <PresetSelect
-            label="Environment"
-            presets={environments}
-            value={environment.id}
-            onChange={(id) =>
-              onChange((current) => ({
-                ...current,
-                environment: { ...current.environment, id },
-              }))
-            }
-          />
-          <ParamGroup
-            id="environment"
-            defs={environmentControls}
-            values={scene.environment}
-            onChange={(key, value) =>
-              onChange((current) => ({
-                ...current,
-                environment: { ...current.environment, [key]: value },
-              }))
-            }
-          />
-        </Section>
-
-        <Section icon={<PaintBucket />} {...section("Background")}>
-          <ParamGroup
-            id="staging"
-            defs={stagingControls}
-            values={scene.staging}
-            onChange={(key, value) =>
-              onChange((current) => ({
-                ...current,
-                staging: { ...current.staging, [key]: value },
-              }))
-            }
-          />
-        </Section>
-
-        <Section icon={<Camera />} {...section("Staging")}>
-          <PresetSelect
-            label="Staging"
-            presets={stagings}
-            value={staging.id}
-            onChange={(id) =>
-              onChange((current) => ({
-                ...current,
-                staging: { ...current.staging, id },
-              }))
-            }
-          />
-          <ParamGroup
-            id="motion"
-            defs={motionControls}
-            values={scene.motion}
-            onChange={(key, value) =>
-              onChange((current) => ({
-                ...current,
-                motion: { ...current.motion, [key]: value },
-              }))
-            }
-          />
-        </Section>
-
-        <Section icon={<Sparkles />} {...section("Effects")}>
-          {effects.map((preset) => {
-            const active = scene.effects.find(
-              (effect) => effect.id === preset.id
-            )
-            return (
-              <div key={preset.id} className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor={`effect-${preset.id}`}>{preset.label}</Label>
-                  <Switch
-                    id={`effect-${preset.id}`}
-                    checked={active !== undefined}
-                    onCheckedChange={(checked) =>
-                      onChange((current) =>
-                        toggleEffect(current, preset, checked)
-                      )
-                    }
-                  />
-                </div>
-                {active && (
-                  <ParamGroup
-                    id={`effect-${preset.id}`}
-                    defs={preset.params}
-                    values={active.params}
-                    onChange={(key, value) =>
-                      onChange((current) =>
-                        setEffectParam(current, preset.id, key, value)
-                      )
-                    }
-                  />
-                )}
-              </div>
-            )
-          })}
-        </Section>
-
-        {/* Stretches to the bar's full height; -my-1 cancels the bar's
-            padding so the line meets its top and bottom edges. */}
-        <Separator orientation="vertical" className="mx-1 -my-1" />
-
-        <Button
-          variant="ghost"
-          size="sm"
-          className="rounded-xl px-2 text-sm/6 lg:px-2.5"
-          aria-label="Open an SVG or a scene.json"
-          onClick={() => fileInput.current?.click()}
-        >
-          <FolderOpen />
-          <span className="hidden lg:inline">Open</span>
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="rounded-xl px-2 text-sm/6 lg:px-2.5"
-          aria-label="Export scene.json"
-          onClick={onExport}
-        >
-          <Download />
-          <span className="hidden lg:inline">Export</span>
-        </Button>
-        <input
-          ref={fileInput}
-          type="file"
-          accept=".svg,image/svg+xml,.json,application/json"
-          aria-label="Open an SVG or a scene.json"
-          className="hidden"
-          onChange={(event) => {
-            const file = event.target.files?.[0]
-            // Clear it so choosing the same file again still fires
-            event.target.value = ""
-            if (file) onOpenFile(file)
-          }}
-        />
+        </Toolbar>
       </nav>
     </div>
   )
@@ -325,19 +325,21 @@ function Section({
         render={
           <Button
             variant="ghost"
-            size="sm"
             aria-label={label}
-            className="rounded-xl px-2 text-sm/6 data-popup-open:bg-muted lg:px-2.5"
+            className="px-3 data-popup-open:bg-muted"
           />
         }
       >
         {icon}
         <span className="hidden lg:inline">{label}</span>
       </PopoverTrigger>
-      <PopoverContent side="top" sideOffset={10} className="w-72 gap-4 p-4">
-        <PopoverTitle className="text-xs font-medium text-muted-foreground">
-          {label}
-        </PopoverTitle>
+      {/* A panel of controls 24px in, so it takes rounded-surface. */}
+      <PopoverContent
+        side="top"
+        sideOffset={10}
+        className="w-80 gap-4 rounded-surface p-6"
+      >
+        <p className="font-medium text-muted-foreground">{label}</p>
         {children}
       </PopoverContent>
     </Popover>

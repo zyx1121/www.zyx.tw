@@ -1,12 +1,13 @@
 "use client"
 
 /* Full-viewport photographs use separately composed portrait sources. */
-/* eslint-disable @next/next/no-img-element */
+
 import Link from "next/link"
 import { Fragment, useEffect, useRef, useState, type ReactNode } from "react"
 
+import { column } from "@workspace/ui/lib/layout"
+
 import { CARREL } from "@/lib/carrel"
-import { column } from "@/lib/layout"
 import { asset } from "@/lib/made"
 
 function Reveal({ children }: { children: ReactNode }) {

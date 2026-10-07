@@ -1,4 +1,5 @@
 import { Corner } from "@workspace/ui/components/corners"
+import { Separator } from "@workspace/ui/components/ui/separator"
 
 import { calculateDebts } from "@/lib/calc"
 import { db } from "@/lib/db"
@@ -8,7 +9,6 @@ import { UserNav } from "@/components/user-nav"
 import { BalanceSummary } from "@/components/balance-summary"
 import { ExpenseForm } from "@/components/expense-form"
 import { ExpenseList } from "@/components/expense-list"
-import { Separator } from "@/components/ui/separator"
 
 export default async function Page() {
   const currentMember = await requireMember()
@@ -37,17 +37,17 @@ export default async function Page() {
         <ExpenseForm />
         <UserNav name={currentMember.name} />
       </Corner>
-      <h1 className="text-2xl/8 font-medium">1909</h1>
+      <h1 className="text-title font-medium">1909</h1>
 
       <section className="flex flex-col gap-2">
-        <h2 className="text-sm text-muted-foreground">欠款摘要</h2>
+        <h2 className="text-body text-muted-foreground">欠款摘要</h2>
         <BalanceSummary debts={debts} />
       </section>
 
       <Separator />
 
       <section className="flex flex-col gap-2">
-        <h2 className="text-sm text-muted-foreground">支出紀錄</h2>
+        <h2 className="text-body text-muted-foreground">支出紀錄</h2>
         <ExpenseList expenses={expenses} currentMemberId={currentMember.id} />
       </section>
     </div>

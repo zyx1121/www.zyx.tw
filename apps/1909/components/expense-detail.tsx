@@ -2,15 +2,16 @@
 
 import { useState } from "react"
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Badge } from "@workspace/ui/components/ui/badge"
+import { Button } from "@workspace/ui/components/ui/button"
+import { Input } from "@workspace/ui/components/ui/input"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@workspace/ui/components/ui/dialog"
+
 import type { Expense } from "@/lib/types"
 
 export function ExpenseDetail({
@@ -54,7 +55,7 @@ export function ExpenseDetail({
           <DialogTitle>{editing ? "編輯支出" : expense?.title}</DialogTitle>
         </DialogHeader>
         {expense && !editing && (
-          <div className="flex flex-col gap-3 text-sm">
+          <div className="flex flex-col gap-3 text-body">
             <div className="flex justify-between">
               <span className="text-muted-foreground">付款人</span>
               <span>{expense.member?.name}</span>
@@ -73,7 +74,7 @@ export function ExpenseDetail({
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">狀態</span>
-              <Badge variant={expense.settled ? "secondary" : "default"}>
+              <Badge variant={expense.settled ? "muted" : "default"}>
                 {expense.settled ? "已核銷" : "未核銷"}
               </Badge>
             </div>

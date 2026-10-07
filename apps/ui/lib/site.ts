@@ -4,10 +4,10 @@
 export const SITE_NAME = "ui.zyx.tw";
 export const SITE_URL = "https://ui.zyx.tw";
 export const SITE_DESCRIPTION =
-  "Loki's design system. Stock shadcn/ui, grayscale palette, plus my own components.";
+  "Loki's design system. Grayscale tokens and lightweight components, served as a shadcn registry.";
 /** The hero's one line. */
 export const TAGLINE =
-  "Stock shadcn/ui on a full grayscale palette, plus my own components.";
+  "Grayscale tokens and lightweight components, one shadcn registry.";
 
 export const AUTHOR = { name: "Loki", url: "https://www.zyx.tw" } as const;
 
@@ -21,7 +21,7 @@ export const MARKDOWN_PATH = "/index.md";
 export const LLMS_PATH = "/llms.txt";
 export const AGENT_INSTRUCTIONS_PATH = "/agent-instructions.md";
 
-export const INIT_COMMAND = "bunx shadcn@latest init -b base -p nova";
+export const INIT_COMMAND = `bunx shadcn@latest init ${SITE_URL}/r/base.json`;
 
 export function itemUrl(name: string) {
   return `${SITE_URL}/r/${name}.json`;

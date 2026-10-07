@@ -7,12 +7,11 @@ import {
   useState,
   useSyncExternalStore,
 } from "react"
-
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "cn"
 
 const DEFAULT_CHARSET = "!#$%&*+-/<=>?@[]^{}~"
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)"
-// Side of the scale probe in local px, as in its size-[100px] class.
+// Side of the scale probe in local px, as in its size-25 class.
 const PROBE_SIZE = 100
 
 function subscribeReducedMotion(onChange: () => void) {
@@ -291,7 +290,7 @@ function ScrambleText({
         // Hide the server-rendered text until the client starts the effect.
         // The hold ends on its own after 1.5s, so the text still shows if
         // scripts fail.
-        "motion-safe:data-[state=idle]:animate-[scramble-text-hold_1.5s]",
+        "motion-safe:data-[state=idle]:animate-scramble-hold",
         "data-[state=running]:[-webkit-text-fill-color:transparent]",
         className
       )}
@@ -325,7 +324,7 @@ function ScrambleText({
             aria-hidden
             className="absolute size-0 overflow-hidden select-none"
           >
-            <span ref={probeRef} className="block size-[100px]" />
+            <span ref={probeRef} className="block size-25" />
           </span>
         </>
       )}

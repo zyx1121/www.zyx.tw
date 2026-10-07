@@ -12,6 +12,7 @@ import {
   VscTag,
 } from "react-icons/vsc"
 import type { IconType } from "react-icons"
+import { cn } from "cn"
 
 import {
   describeEvent,
@@ -22,7 +23,6 @@ import {
 } from "@workspace/ui/lib/github-events"
 import { GITHUB_USER, STATUS_COPY } from "@workspace/ui/lib/profile"
 import { timeAgo } from "@workspace/ui/lib/time-ago"
-import { cn } from "@workspace/ui/lib/utils"
 
 const ICON: Record<EventKind, IconType> = {
   commit: VscGitCommit,
@@ -76,34 +76,28 @@ function HeatmapGrid({ heatmap }: { heatmap: Heatmap }) {
 export function Status({
   data,
   className,
-  style,
 }: {
   data: StatusData
   className?: string
-  style?: React.CSSProperties
 }) {
   return (
-    <section
-      aria-labelledby="status-heading"
-      className={className}
-      style={style}
-    >
-      <h2 id="status-heading" className="text-sm/6 font-medium">
+    <section aria-labelledby="status-heading" className={className}>
+      <h2 id="status-heading" className="text-body font-medium">
         {STATUS_COPY.title}
       </h2>
-      <div className="mt-5 rounded-lg bg-card p-5">
+      <div className="mt-5">
         <div className="flex items-center justify-between gap-4">
           <Link
             href={`https://github.com/${GITHUB_USER}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className="group inline-flex items-center gap-2 text-body text-muted-foreground transition-colors hover:text-foreground"
           >
             <SiGithub className="h-4 w-4" aria-hidden="true" />
             <span>@{GITHUB_USER}</span>
           </Link>
           {data.heatmap && (
-            <span className="text-xs text-muted-foreground tabular-nums">
+            <span className="text-caption text-muted-foreground tabular-nums">
               {data.heatmap.totalContributions.toLocaleString()} contributions
               this year
             </span>
@@ -118,7 +112,7 @@ export function Status({
 
         <ul className="mt-5 space-y-3">
           {data.events.length === 0 && (
-            <li className="text-sm text-muted-foreground">
+            <li className="text-body text-muted-foreground">
               {STATUS_COPY.empty}
             </li>
           )}
@@ -128,7 +122,7 @@ export function Status({
             return (
               <li
                 key={e.id}
-                className="flex items-baseline gap-3 text-sm text-muted-foreground"
+                className="flex items-baseline gap-3 text-body text-muted-foreground"
               >
                 <Icon
                   className="h-4 w-4 shrink-0 translate-y-0.5 text-muted-foreground"
@@ -151,7 +145,7 @@ export function Status({
                     recomputes it. The client value is the right one; suppress
                     the text-mismatch warning instead of forcing a match. */}
                 <span
-                  className="shrink-0 text-xs text-muted-foreground tabular-nums"
+                  className="shrink-0 text-caption text-muted-foreground tabular-nums"
                   suppressHydrationWarning
                 >
                   {timeAgo(e.created_at)}

@@ -1,198 +1,449 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
-  "name": "zyx",
+  "name": "zyx1121",
   "homepage": "https://ui.zyx.tw",
   "items": [
     {
-      "name": "theme",
-      "type": "registry:theme",
-      "title": "Theme",
-      "description": "The zyx.tw theme on top of stock shadcn/ui: full grayscale palette, a 1rem radius, pure black dark mode, muted text at 4.5:1 on every surface in both themes, frosted transparent overlays, and a strict 24/16/14px interface type scale plus 80px display text. Init with the base preset and neutral color, then add this.",
+      "name": "base",
+      "type": "registry:base",
+      "title": "zyx Base",
+      "description": "The zyx.tw design system base: grayscale tokens, four type sizes, a concentric radius scale and two motion durations.",
+      "extends": "none",
+      "config": {
+        "style": "base-nova",
+        "iconLibrary": "lucide",
+        "tailwind": {
+          "baseColor": "neutral"
+        },
+        "registries": {
+          "@zyx1121": "https://ui.zyx.tw/r/{name}.json"
+        }
+      },
+      "dependencies": [
+        "class-variance-authority",
+        "cn",
+        "lucide-react",
+        "@base-ui/react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://ui.zyx.tw/r/font-inter.json",
+        "https://ui.zyx.tw/r/font-noto-sans-jp.json",
+        "https://ui.zyx.tw/r/font-noto-sans-tc.json",
+        "https://ui.zyx.tw/r/font-geist-mono.json"
+      ],
+      "devDependencies": ["tw-animate-css", "shadcn"],
+      "css": {
+        "@import \"tw-animate-css\"": {},
+        "@import \"shadcn/tailwind.css\"": {},
+        "@utility duration-state": {
+          "--tw-duration": "150ms",
+          "transition-duration": "150ms",
+          "--tw-ease": "cubic-bezier(0, 0, 0.2, 1)",
+          "transition-timing-function": "cubic-bezier(0, 0, 0.2, 1)"
+        },
+        "@utility duration-overlay": {
+          "--tw-duration": "200ms",
+          "transition-duration": "200ms",
+          "--tw-ease": "cubic-bezier(0, 0, 0.2, 1)",
+          "transition-timing-function": "cubic-bezier(0, 0, 0.2, 1)"
+        },
+        "@utility w-menu": {
+          "width": "calc(var(--anchor-width) + 0.5rem)"
+        },
+        "@layer base": {
+          "*": {
+            "@apply border-border outline-ring/50": {}
+          },
+          "html": {
+            "@apply font-sans": {}
+          },
+          "body": {
+            "@apply bg-background text-body text-foreground": {}
+          },
+          ".dark": {
+            "color-scheme": "dark"
+          }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          "*, ::before, ::after": {
+            "animation-duration": "1ms !important",
+            "animation-delay": "0s !important",
+            "animation-iteration-count": "1 !important",
+            "transition-duration": "1ms !important",
+            "transition-delay": "0s !important",
+            "scroll-behavior": "auto !important"
+          }
+        }
+      },
       "cssVars": {
         "theme": {
-          "text-xs": "0.875rem",
-          "text-xs--line-height": "1.25rem",
-          "text-sm": "1rem",
-          "text-sm--line-height": "1.5rem",
-          "text-base": "1rem",
-          "text-base--line-height": "1.5rem",
-          "text-lg": "1rem",
-          "text-lg--line-height": "1.5rem",
-          "text-xl": "1rem",
-          "text-xl--line-height": "1.5rem",
-          "text-2xl": "1.5rem",
-          "text-2xl--line-height": "2rem",
-          "text-3xl": "1.5rem",
-          "text-3xl--line-height": "2rem",
-          "text-4xl": "1.5rem",
-          "text-4xl--line-height": "2rem",
-          "text-5xl": "1.5rem",
-          "text-5xl--line-height": "2rem",
-          "text-6xl": "1.5rem",
-          "text-6xl--line-height": "2rem",
-          "text-7xl": "1.5rem",
-          "text-7xl--line-height": "2rem",
-          "text-8xl": "1.5rem",
-          "text-8xl--line-height": "2rem",
-          "text-9xl": "1.5rem",
-          "text-9xl--line-height": "2rem",
+          "text-*": "initial",
           "text-display": "5rem",
-          "text-display--line-height": "5rem"
+          "text-display--line-height": "5rem",
+          "text-title": "1.5rem",
+          "text-title--line-height": "2rem",
+          "text-body": "1rem",
+          "text-body--line-height": "1.5rem",
+          "text-caption": "0.875rem",
+          "text-caption--line-height": "1.25rem",
+          "font-sans": "var(--font-inter), var(--font-noto-sans-jp), var(--font-noto-sans-tc), ui-sans-serif, system-ui, sans-serif",
+          "font-heading": "var(--font-inter), var(--font-noto-sans-jp), var(--font-noto-sans-tc), ui-sans-serif, system-ui, sans-serif",
+          "font-mono": "var(--font-geist-mono), ui-monospace, monospace",
+          "default-font-feature-settings": "\"liga\" 1, \"calt\" 1, \"ss01\" 1, \"zero\" 1",
+          "radius-control": "var(--radius)",
+          "radius-menu": "calc(var(--radius) + 0.25rem)",
+          "radius-surface": "calc(var(--radius) + 1.5rem)"
         },
         "light": {
-          "radius": "1rem",
-          "muted-foreground": "oklch(0.54 0 0)"
+          "background": "oklch(1 0 0)",
+          "foreground": "oklch(0.145 0 0)",
+          "primary": "oklch(0.205 0 0)",
+          "primary-foreground": "oklch(0.985 0 0)",
+          "muted": "oklch(0.97 0 0)",
+          "muted-foreground": "oklch(0.54 0 0)",
+          "destructive": "oklch(0.577 0.245 27.325)",
+          "border": "oklch(0.922 0 0)",
+          "input": "oklch(0.922 0 0)",
+          "ring": "oklch(0.708 0 0)",
+          "radius": "1rem"
         },
         "dark": {
           "background": "oklch(0 0 0)",
+          "foreground": "oklch(0.985 0 0)",
+          "primary": "oklch(0.922 0 0)",
+          "primary-foreground": "oklch(0.205 0 0)",
+          "muted": "oklch(0.269 0 0)",
           "muted-foreground": "oklch(0.65 0 0)",
-          "sidebar-primary": "oklch(0.922 0 0)",
-          "sidebar-primary-foreground": "oklch(0.205 0 0)"
+          "destructive": "oklch(0.704 0.191 22.216)",
+          "border": "oklch(1 0 0 / 10%)",
+          "input": "oklch(1 0 0 / 15%)",
+          "ring": "oklch(0.556 0 0)"
         }
+      }
+    },
+    {
+      "name": "font-inter",
+      "type": "registry:font",
+      "title": "Inter",
+      "font": {
+        "family": "'Inter Variable', sans-serif",
+        "provider": "google",
+        "import": "Inter",
+        "variable": "--font-inter",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/inter"
       },
-      "css": {
-        "@layer base": {
-          "body": {
-            "font-size": "1rem",
-            "line-height": "1.5rem"
-          },
-          "small, sub, sup": {
-            "font-size": "0.875rem"
-          }
-        },
-        "[data-slot=\"button\"], [data-slot=\"toggle\"], [data-slot=\"calendar\"], [class~=\"text-[0.8rem]\"]": {
-          "font-size": "1rem",
-          "line-height": "1.5rem"
-        },
-        "[data-slot=\"calendar\"] .rdp-weekday, [data-slot=\"calendar\"] .rdp-week_number, [data-slot=\"questionnaire-choice-shortcut\"], [class~=\"text-[0.625rem]\"]": {
-          "font-size": "0.875rem",
-          "line-height": "1.25rem"
-        },
-        "[data-sonner-toaster] [data-sonner-toast][data-styled=\"true\"]": {
-          "font-size": "1rem",
-          "line-height": "1.5rem"
-        },
-        "[data-sonner-toaster] [data-sonner-toast][data-styled=\"true\"] [data-description], [data-sonner-toaster] [data-sonner-toast][data-styled=\"true\"] [data-button]": {
-          "font-size": "0.875rem",
-          "line-height": "1.25rem"
-        },
-        "@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))": {
-          "[data-slot=\"dialog-overlay\"], [data-slot=\"alert-dialog-overlay\"], [data-slot=\"sheet-overlay\"], [data-slot=\"drawer-overlay\"], [data-slot=\"combobox-content\"], [data-slot=\"select-content\"], [data-slot=\"popover-content\"], [data-slot=\"dropdown-menu-content\"], [data-slot=\"dropdown-menu-sub-content\"], [data-slot=\"context-menu-content\"], [data-slot=\"context-menu-sub-content\"], [data-slot=\"menubar-content\"], [data-slot=\"menubar-sub-content\"], [data-slot=\"hover-card-content\"], .bg-popover:has(> div > [data-slot=\"navigation-menu-content\"]), [data-slot=\"dialog-content\"], [data-slot=\"alert-dialog-content\"], [data-slot=\"sheet-content\"], [data-slot=\"drawer-popup\"], [data-slot=\"floating-toolbar\"], [data-slot=\"floating-notice\"], .recharts-tooltip-wrapper > div": {
-            "background-color": "transparent",
-            "-webkit-backdrop-filter": "blur(12px)",
-            "backdrop-filter": "blur(12px)"
-          },
-          "[data-slot=\"dialog-footer\"], [data-slot=\"alert-dialog-footer\"], [data-slot=\"dialog-content\"] [data-slot=\"command\"]": {
-            "background-color": "transparent"
-          },
-          "[data-slot=\"drawer-popup\"]": {
-            "--drawer-bleed-background": "transparent"
-          },
-          "[data-slot=\"corner-edge\"]": {
-            "background": "transparent",
-            "-webkit-backdrop-filter": "blur(12px)",
-            "backdrop-filter": "blur(12px)",
-            "-webkit-mask-image": "linear-gradient(var(--edge-direction), #000 35%, transparent)",
-            "mask-image": "linear-gradient(var(--edge-direction), #000 35%, transparent)"
-          },
-          "[data-slot=\"corner-edge\"][data-edge=\"top\"]": {
-            "--edge-direction": "to bottom"
-          },
-          "[data-slot=\"corner-edge\"][data-edge=\"bottom\"]": {
-            "--edge-direction": "to top"
-          }
-        }
-      }
+      "description": "Inter for Latin text, with open digits and a slashed zero."
     },
     {
-      "name": "shimmering-text",
-      "type": "registry:ui",
-      "title": "Shimmering Text",
-      "description": "Text with a shimmer sweeping across it, for loading and streaming states. CSS-only, zero dependencies, respects reduced motion.",
-      "files": [
-        {
-          "path": "registry/ui/shimmering-text.tsx",
-          "type": "registry:ui"
-        }
-      ],
-      "css": {
-        "@keyframes shimmering-text": {
-          "0%": {
-            "background-position": "100% center"
-          },
-          "100%": {
-            "background-position": "0% center"
-          }
-        }
-      }
+      "name": "font-noto-sans-jp",
+      "type": "registry:font",
+      "title": "Noto Sans JP",
+      "font": {
+        "family": "'Noto Sans JP Variable', sans-serif",
+        "provider": "google",
+        "import": "Noto_Sans_JP",
+        "variable": "--font-noto-sans-jp",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/noto-sans-jp"
+      },
+      "description": "Noto Sans JP for CJK after Inter, so Han characters take Japanese forms."
     },
     {
-      "name": "theme-toggle",
+      "name": "font-noto-sans-tc",
+      "type": "registry:font",
+      "title": "Noto Sans TC",
+      "font": {
+        "family": "'Noto Sans TC Variable', sans-serif",
+        "provider": "google",
+        "import": "Noto_Sans_TC",
+        "variable": "--font-noto-sans-tc",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/noto-sans-tc"
+      },
+      "description": "Noto Sans TC for the CJK characters Noto Sans JP lacks."
+    },
+    {
+      "name": "font-geist-mono",
+      "type": "registry:font",
+      "title": "Geist Mono",
+      "font": {
+        "family": "'Geist Mono Variable', monospace",
+        "provider": "google",
+        "import": "Geist_Mono",
+        "variable": "--font-geist-mono",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/geist-mono"
+      },
+      "description": "Geist Mono for code only."
+    },
+    {
+      "name": "alert-dialog",
       "type": "registry:ui",
-      "title": "Theme Toggle",
-      "description": "Light/dark switcher for next-themes: a ghost icon button with a hydration-safe icon.",
-      "dependencies": ["next-themes", "lucide-react"],
-      "registryDependencies": ["button"],
+      "title": "Alert Dialog",
+      "description": "Confirmation dialog with Cancel and an action.",
+      "dependencies": ["@base-ui/react", "cn"],
+      "registryDependencies": ["https://ui.zyx.tw/r/button.json"],
       "files": [
         {
-          "path": "registry/ui/theme-toggle.tsx",
+          "path": "registry/zyx/ui/alert-dialog.tsx",
           "type": "registry:ui"
         }
       ]
     },
     {
-      "name": "scramble-text",
+      "name": "attachment",
       "type": "registry:ui",
-      "title": "Scramble Text",
-      "description": "Random glyphs resolve into the final text from left to right, 50ms per character by default, on mount or in view. The text itself never leaves the flow, so the element keeps its display, line breaks and size; glyphs are aria-hidden and unselectable, and reduced motion shows the text at once. Zero dependencies.",
+      "title": "Attachment",
+      "description": "File chip with a media square, name and upload state.",
+      "dependencies": ["cn"],
       "files": [
         {
-          "path": "registry/ui/scramble-text.tsx",
+          "path": "registry/zyx/ui/attachment.tsx",
           "type": "registry:ui"
         }
-      ],
-      "css": {
-        "@keyframes scramble-text-hold": {
-          "0%, 100%": {
-            "opacity": "0"
-          }
-        }
-      }
+      ]
     },
     {
-      "name": "rotating-text",
+      "name": "avatar",
       "type": "registry:ui",
-      "title": "Rotating Text",
-      "description": "Cycles through words every 3.2s with a scramble or fade, controlled or uncontrolled. Reserves the widest word's box so the layout never shifts, pauses while the tab is hidden or on demand, and never auto-advances under reduced motion.",
-      "registryDependencies": ["https://ui.zyx.tw/r/scramble-text.json"],
+      "title": "Avatar",
+      "description": "Round 40px avatar with an initials fallback.",
+      "dependencies": ["@base-ui/react", "cn"],
       "files": [
         {
-          "path": "registry/ui/rotating-text.tsx",
+          "path": "registry/zyx/ui/avatar.tsx",
           "type": "registry:ui"
         }
-      ],
-      "css": {
-        "@keyframes rotating-text-fade": {
-          "from": {
-            "opacity": "0"
-          },
-          "to": {
-            "opacity": "1"
-          }
+      ]
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "Status label: default, muted, outline, destructive.",
+      "dependencies": ["@base-ui/react", "class-variance-authority", "cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/badge.tsx",
+          "type": "registry:ui"
         }
-      }
+      ]
+    },
+    {
+      "name": "bubble",
+      "type": "registry:ui",
+      "title": "Bubble",
+      "description": "Chat text: a muted bubble for the person, plain text for the reply.",
+      "dependencies": ["@base-ui/react", "class-variance-authority", "cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/bubble.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "Button in one 40px height: variants default, outline, ghost, destructive; sizes default and icon.",
+      "dependencies": ["@base-ui/react", "class-variance-authority", "cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "calendar",
+      "type": "registry:ui",
+      "title": "Calendar",
+      "description": "Month grid for picking one day, with 40px day buttons.",
+      "dependencies": ["cn", "lucide-react", "react-day-picker"],
+      "registryDependencies": ["https://ui.zyx.tw/r/button.json"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/calendar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "chart",
+      "type": "registry:ui",
+      "title": "Chart",
+      "description": "Recharts container in the theme's colors, with a frosted tooltip.",
+      "dependencies": ["cn", "recharts"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "Round 20px checkbox.",
+      "dependencies": ["@base-ui/react", "cn", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/checkbox.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "collapsible",
+      "type": "registry:ui",
+      "title": "Collapsible",
+      "description": "Unstyled show / hide region.",
+      "dependencies": ["@base-ui/react", "cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/collapsible.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "combobox",
+      "type": "registry:ui",
+      "title": "Combobox",
+      "description": "Trigger and content for a searchable picker built from Popover and Command.",
+      "dependencies": ["cn", "lucide-react"],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/field-trigger.json",
+        "https://ui.zyx.tw/r/popover.json"
+      ],
+      "files": [
+        {
+          "path": "registry/zyx/ui/combobox.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "command",
+      "type": "registry:ui",
+      "title": "Command",
+      "description": "Searchable list for a combobox inside a popover.",
+      "dependencies": ["cmdk", "cn", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/command.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "description": "Frosted modal with title, description and footer; sizes default and wide.",
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "cn",
+        "lucide-react"
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/button.json"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "title": "Dropdown Menu",
+      "description": "Frosted action menu with labels, separators and one level of submenu.",
+      "dependencies": ["@base-ui/react", "cn", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/dropdown-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "field-trigger",
+      "type": "registry:ui",
+      "title": "Field Trigger",
+      "description": "Shared class list for pick-a-value triggers.",
+      "files": [
+        {
+          "path": "registry/zyx/ui/field-trigger.ts",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "input-group",
+      "type": "registry:ui",
+      "title": "Input Group",
+      "description": "Input with an icon, text or a round button inside its border.",
+      "dependencies": ["cn"],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/button.json",
+        "https://ui.zyx.tw/r/input.json"
+      ],
+      "files": [
+        {
+          "path": "registry/zyx/ui/input-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "Text input, 40px tall to match Button.",
+      "dependencies": ["@base-ui/react", "cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "Form label in text-body, medium weight.",
+      "dependencies": ["cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/label.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "mask-reveal",
       "type": "registry:ui",
       "title": "Mask Reveal",
-      "description": "Reveals its children from left to right with a smoothstep-feathered gradient mask, after a 1s delay over 5s. The mask exists only while the keyframes play, so rings and shadows are intact afterwards. CSS only; reduced motion shows the content at once.",
+      "description": "Reveals its content with a feathered mask sweeping left to right.",
+      "dependencies": ["cn"],
       "files": [
         {
-          "path": "registry/ui/mask-reveal.tsx",
+          "path": "registry/zyx/ui/mask-reveal.tsx",
           "type": "registry:ui"
         }
       ],
+      "cssVars": {
+        "theme": {
+          "animate-mask-reveal": "mask-reveal 600ms cubic-bezier(0.16, 1, 0.3, 1) var(--tw-animation-delay, 0s) backwards"
+        }
+      },
       "css": {
         "@keyframes mask-reveal": {
           "from": {
@@ -211,54 +462,253 @@
       }
     },
     {
-      "name": "ask-ai",
+      "name": "message",
       "type": "registry:ui",
-      "title": "Ask AI",
-      "description": "An Ask AI pill that opens the page in ChatGPT, Claude or Google AI Mode with a prompt, copies the prompt for any other AI, and copies or opens a Markdown version of the page. Sends the canonical URL, never the query or fragment. Composes the stock dropdown-menu and button.",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["button", "dropdown-menu"],
+      "title": "Message",
+      "description": "Chat transcript layout: groups, messages, content and footer.",
+      "dependencies": ["cn"],
       "files": [
         {
-          "path": "registry/ui/ask-ai.tsx",
+          "path": "registry/zyx/ui/message.tsx",
           "type": "registry:ui"
         }
       ]
     },
     {
-      "name": "hdr-highlight",
+      "name": "popover",
       "type": "registry:ui",
-      "title": "HDR Highlight",
-      "description": "Text that glows brighter than SDR white on HDR displays in dark mode, from a 309-byte PQ BT.2020 AVIF clipped to its own glyphs. No layout change anywhere; SDR screens render a plain span. Optional hover mode fades back over 2s.",
+      "title": "Popover",
+      "description": "Frosted menu surface anchored to a trigger.",
+      "dependencies": ["@base-ui/react", "cn"],
       "files": [
         {
-          "path": "registry/ui/hdr-highlight.tsx",
+          "path": "registry/zyx/ui/popover.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "resizable",
+      "type": "registry:ui",
+      "title": "Resizable",
+      "description": "Panels split by a hairline handle you can drag.",
+      "dependencies": ["cn", "react-resizable-panels"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/resizable.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "scramble-text",
+      "type": "registry:ui",
+      "title": "Scramble Text",
+      "description": "Text that resolves left to right from random glyphs, without moving layout.",
+      "dependencies": ["cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/scramble-text.tsx",
           "type": "registry:ui"
         }
       ],
+      "cssVars": {
+        "theme": {
+          "animate-scramble-hold": "scramble-text-hold 1.5s"
+        }
+      },
       "css": {
-        "@media (dynamic-range: high)": {
-          ".dark [data-slot=\"hdr-highlight\"]": {
-            "background-size": "100% 100%",
-            "-webkit-background-clip": "text",
-            "background-clip": "text"
-          },
-          ".dark [data-slot=\"hdr-highlight\"]:not([data-hover]), .dark [data-slot=\"hdr-highlight\"][data-hover]:hover, .dark :is(a, button, label, summary, [role=\"button\"], [role=\"link\"], [role=\"menuitem\"], [role=\"tab\"]):is(:hover, :focus-visible) [data-slot=\"hdr-highlight\"][data-hover]": {
-            "background-image": "url(data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUEAAAD4bWV0YQAAAAAAAAAhaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAAAAAAAOcGl0bQAAAAAAAQAAAB5pbG9jAAAAAEQAAAEAAQAAAAEAAAEgAAAAFQAAAChpaW5mAAAAAAABAAAAGmluZmUCAAAAAAEAAGF2MDFDb2xvcgAAAAB3aXBycAAAAFdpcGNvAAAAFGlzcGUAAAAAAAAACAAAAAgAAAAQcGl4aQAAAAADCgoKAAAADGF2MUOBIEAAAAAAE2NvbHJuY2x4AAkAEAAJgAAAAAxjbGxpAywDLAAAABhpcG1hAAAAAAAAAAEAAQUBAoMEBQAAAB1tZGF0EgAKBTgIv+aQMgoQAAAAD/iOhW1A), linear-gradient(currentcolor, currentcolor)",
-            "-webkit-text-fill-color": "transparent"
-          }
-        },
-        "@media (dynamic-range: high) and (prefers-reduced-motion: no-preference)": {
-          "@supports (transition-behavior: allow-discrete)": {
-            ".dark [data-slot=\"hdr-highlight\"][data-hover]": {
-              "transition": "-webkit-text-fill-color 2s cubic-bezier(0.4, 0, 0.2, 1), background-image 0s 2s allow-discrete"
-            },
-            ".dark [data-slot=\"hdr-highlight\"][data-hover]:hover, .dark :is(a, button, label, summary, [role=\"button\"], [role=\"link\"], [role=\"menuitem\"], [role=\"tab\"]):is(:hover, :focus-visible) [data-slot=\"hdr-highlight\"][data-hover]": {
-              "transition-duration": "0s",
-              "transition-delay": "0s"
-            }
+        "@keyframes scramble-text-hold": {
+          "0%, 100%": {
+            "opacity": "0"
           }
         }
       }
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Select",
+      "description": "Single-choice dropdown, as tall as Input.",
+      "dependencies": ["@base-ui/react", "cn", "lucide-react"],
+      "registryDependencies": ["https://ui.zyx.tw/r/field-trigger.json"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/select.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "Hairline divider, horizontal or vertical.",
+      "dependencies": ["@base-ui/react", "cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/separator.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sheet",
+      "type": "registry:ui",
+      "title": "Sheet",
+      "description": "Frosted full-height panel on the left or right edge.",
+      "dependencies": ["@base-ui/react", "cn", "lucide-react"],
+      "registryDependencies": ["https://ui.zyx.tw/r/button.json"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/sheet.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "Pulsing placeholder for loading content.",
+      "dependencies": ["cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/skeleton.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "slider",
+      "type": "registry:ui",
+      "title": "Slider",
+      "description": "Range slider with a 4px track and 20px thumbs.",
+      "dependencies": ["@base-ui/react", "cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/slider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sonner",
+      "type": "registry:ui",
+      "title": "Sonner",
+      "description": "Toasts on a frosted surface.",
+      "dependencies": ["lucide-react", "sonner"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/sonner.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "title": "Switch",
+      "description": "On / off toggle, one size.",
+      "dependencies": ["@base-ui/react", "cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/switch.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "title": "Table",
+      "description": "Data table with muted headers.",
+      "dependencies": ["cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/table.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "Segmented tabs with 40px triggers.",
+      "dependencies": ["@base-ui/react", "cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/tabs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "Multi-line input that grows with its content.",
+      "dependencies": ["cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/textarea.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "theme-toggle",
+      "type": "registry:ui",
+      "title": "Theme Toggle",
+      "description": "Icon button that switches light and dark (next-themes).",
+      "dependencies": ["lucide-react", "next-themes"],
+      "registryDependencies": ["https://ui.zyx.tw/r/button.json"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/theme-toggle.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "toggle",
+      "type": "registry:ui",
+      "title": "Toggle",
+      "description": "Pressable button that stays on, the box of a ghost Button.",
+      "dependencies": ["@base-ui/react", "cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/toggle.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "toolbar",
+      "type": "registry:ui",
+      "title": "Toolbar",
+      "description": "Frosted floating bar of 40px controls over a canvas or map.",
+      "dependencies": ["cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/toolbar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "Short inverted label on hover or focus.",
+      "dependencies": ["@base-ui/react", "cn"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

@@ -80,21 +80,21 @@ export function Shortener() {
           placeholder="https://your-very-long-url.com/goes/here"
           required
           disabled={isPending}
-          className="h-auto rounded-none border-0 bg-transparent p-0 text-center font-mono text-sm text-foreground focus-visible:ring-0 disabled:bg-transparent md:text-sm dark:bg-transparent dark:disabled:bg-transparent"
+          className="h-auto rounded-none border-0 bg-transparent p-0 text-center font-mono text-body text-foreground focus-visible:ring-0 disabled:bg-transparent md:text-body dark:bg-transparent dark:disabled:bg-transparent"
         />
         <Button
           type="submit"
           variant="ghost"
           disabled={isPending}
           aria-label={isPending ? "Shortening URL" : "Shorten URL"}
-          className="h-auto p-0 text-sm transition-opacity hover:bg-transparent hover:opacity-80 disabled:opacity-40 dark:hover:bg-transparent"
+          className="h-auto p-0 text-body transition-opacity hover:bg-transparent hover:opacity-80 disabled:opacity-40 dark:hover:bg-transparent"
         >
           <span aria-hidden="true">{isPending ? "⏳" : "🔥"}</span>
         </Button>
       </form>
 
       {state && !state.ok && (
-        <p className="text-sm text-muted-foreground">{state.error}</p>
+        <p className="text-body text-muted-foreground">{state.error}</p>
       )}
 
       {state?.ok && (
@@ -103,7 +103,7 @@ export function Shortener() {
             href={state.shortUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-mono text-sm hover:underline"
+            className="font-mono text-body hover:underline"
           >
             {state.shortUrl}
           </a>
@@ -111,7 +111,7 @@ export function Shortener() {
             variant="ghost"
             onClick={handleCopy}
             aria-label="Copy short URL"
-            className="h-auto p-0 text-sm transition-opacity hover:bg-transparent hover:opacity-80 dark:hover:bg-transparent"
+            className="h-auto p-0 text-body transition-opacity hover:bg-transparent hover:opacity-80 dark:hover:bg-transparent"
           >
             <span aria-hidden="true">📋</span>
           </Button>

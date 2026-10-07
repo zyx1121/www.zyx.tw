@@ -11,7 +11,7 @@
     "format:check": "turbo format:check",
     "typecheck": "turbo typecheck",
     "theme:check": "node scripts/check-theme.mjs",
-    "typography:check": "node --test scripts/check-typography.test.mjs && node scripts/check-typography.mjs"
+    "tokens:check": "node scripts/check-tokens.mjs"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",

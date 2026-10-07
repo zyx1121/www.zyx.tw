@@ -6,6 +6,7 @@ import {
   type ParamDefs,
   type ParamValue,
 } from "@workspace/3d"
+import { Input } from "@workspace/ui/components/ui/input"
 import { Label } from "@workspace/ui/components/ui/label"
 import { Slider } from "@workspace/ui/components/ui/slider"
 import { Switch } from "@workspace/ui/components/ui/switch"
@@ -53,7 +54,7 @@ function ParamControl({ id, def, value, onChange }: ParamControlProps) {
         <div className="space-y-2.5">
           <div className="flex items-center justify-between">
             <Label id={`${id}-label`}>{def.label}</Label>
-            <span className="text-xs text-muted-foreground tabular-nums">
+            <span className="text-caption text-muted-foreground tabular-nums">
               {formatNumber(number, def.step)}
             </span>
           </div>
@@ -78,12 +79,12 @@ function ParamControl({ id, def, value, onChange }: ParamControlProps) {
       return (
         <div className="flex items-center justify-between">
           <Label htmlFor={id}>{def.label}</Label>
-          <input
+          <Input
             id={id}
             type="color"
             value={color}
             onChange={(event) => onChange(event.target.value)}
-            className="h-6 w-10 cursor-pointer rounded-md border border-input bg-transparent p-0.5"
+            className="w-16 cursor-pointer p-1"
           />
         </div>
       )

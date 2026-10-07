@@ -37,8 +37,8 @@
 }
 .carrel-story h2,
 .carrel-story h3 {
-  font-size: 16px;
-  line-height: 24px;
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
   font-weight: 500;
 }
 .carrel-story p,
@@ -47,8 +47,8 @@
 }
 .carrel-caption {
   color: var(--muted-foreground);
-  font-size: 14px;
-  line-height: 20px;
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
 }
 .carrel-introduction {
   max-width: 560px;
@@ -73,10 +73,11 @@
 .carrel-chapter-copy > p {
   color: var(--muted-foreground);
 }
+/* Page layer: the demo is set off by hairlines above and below, not a frame. */
 .carrel-demo {
-  padding: 32px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  padding: 32px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 .carrel-request {
   max-width: 560px;
@@ -97,7 +98,7 @@
   padding: 8px 16px;
   min-height: 44px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
   color: var(--muted-foreground);
 }
 .carrel-story button[aria-pressed="true"] {
@@ -121,8 +122,8 @@
   align-content: start;
   gap: 12px;
   list-style: none;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
 }
 .carrel-workflow-panel li {
   padding-left: 16px;
@@ -142,7 +143,7 @@
   min-height: 112px;
   padding: 16px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
 }
 .carrel-network button + button::before {
   content: "";
@@ -184,10 +185,10 @@
 .carrel-code pre {
   overflow-x: auto;
   padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  font-size: 14px;
-  line-height: 20px;
+  border-radius: var(--radius);
+  background: var(--muted);
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }

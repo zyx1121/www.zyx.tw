@@ -9,45 +9,23 @@
 
 # ui.zyx.tw
 
-The zyx.tw design system. Stock shadcn/ui, grayscale palette, plus my own components.
+The zyx.tw design system: one base of grayscale tokens and lightweight components on Base UI, served as a shadcn registry.
 
-The base components are shadcn/ui as-is: the shadcn CLI owns them, and this registry does not fork them. What this registry ships is the theme (full grayscale, a 1rem radius, pure black dark mode) and the components shadcn doesn't have.
-
-The rules behind it live in [`DESIGN.md`](DESIGN.md): the theme tokens and fonts, then layout (a 4px grid, a 20px module, one column), radius, lines, optical alignment, motion, typography, color, content, and the surfaces every site offers agents.
+Every component is our own rewrite that keeps only the variants the zyx.tw apps use and takes every value from the tokens: four type sizes, a concentric radius scale, two motion durations. The rules behind it live in [`DESIGN.md`](DESIGN.md).
 
 ## Use it
 
-Init a project on the Base UI base, then add the theme:
+Init a project from the base. It writes the tokens, adds the fonts and registers the `@zyx1121` registry:
 
 ```bash
-bunx shadcn@latest init -b base -p nova
-bunx shadcn@latest add https://ui.zyx.tw/r/theme.json
+bunx shadcn@latest init https://ui.zyx.tw/r/base.json
 ```
 
-Add base components straight from shadcn:
+Then add components by name. Init installs a stock button; overwrite it with ours:
 
 ```bash
-bunx shadcn@latest add button dialog tabs
-```
-
-Add zyx components from this registry:
-
-```bash
-bunx shadcn@latest add https://ui.zyx.tw/r/shimmering-text.json
-```
-
-Or point `components.json` at the registry once and use the short form:
-
-```json
-{
-  "registries": {
-    "@zyx1121": "https://ui.zyx.tw/r/{name}.json"
-  }
-}
-```
-
-```bash
-bunx shadcn@latest add @zyx1121/shimmering-text
+bunx shadcn@latest add @zyx1121/button -o
+bunx shadcn@latest add @zyx1121/dialog @zyx1121/select
 ```
 
 ## For agents
@@ -64,7 +42,7 @@ All three are built from `registry.json` by route handlers under `app/`, so they
 
 - **Framework**: Next.js 16 (App Router, static export)
 - **Styling**: Tailwind CSS v4, tw-animate-css
-- **Components**: shadcn/ui (Base UI base)
+- **Components**: our own, on Base UI
 - **Registry**: shadcn CLI
 - **Package Manager**: Bun
 
@@ -77,12 +55,12 @@ bun dev
 
 ## Add a Component
 
-Only components shadcn/ui doesn't ship belong here. If shadcn has it, `bunx shadcn@latest add` it instead.
+The source lives in `packages/ui/src/components/ui/`; `registry/zyx/ui` is a symlink to it.
 
-1. Drop the source in `registry/ui/<name>.tsx`
+1. Write `packages/ui/src/components/ui/<name>.tsx` (siblings imported relatively)
 2. Register it in `registry.json`
 3. Add its demo to `components/showcase.tsx`
-4. `bun run registry:build` to regen `public/r/<name>.json`
+4. `bun run build` regenerates `public/r/<name>.json` and checks it builds
 5. Merge to `main`: Vercel builds and serves `main` only
 
 ## License

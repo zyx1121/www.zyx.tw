@@ -1,15 +1,14 @@
-import { attributeRootLayoutRequest } from "@workspace/otel/layout"
+import { cn } from "cn"
 
+import { attributeRootLayoutRequest } from "@workspace/otel/layout"
 import {
   BottomCorners,
   LegalLinks,
   TopCorners,
 } from "@workspace/ui/components/corners"
-
-import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { fontVariables } from "@/lib/fonts"
-import { cn } from "@/lib/utils"
+import "@workspace/ui/globals.css"
+import { ThemeProvider } from "@workspace/ui/components/theme-provider"
+import { fontVariables } from "@workspace/ui/lib/fonts"
 
 export const metadata = {
   title: "1909",

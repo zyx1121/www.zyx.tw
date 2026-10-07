@@ -1,8 +1,7 @@
 "use client"
 
 import * as m from "motion/react-m"
-
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "cn"
 
 // Settles in about 300 ms with a small overshoot.
 const SPRING = { type: "spring", stiffness: 550, damping: 32 } as const

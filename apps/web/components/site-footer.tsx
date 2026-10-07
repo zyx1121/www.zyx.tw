@@ -9,8 +9,7 @@ import {
   CornerTip,
   LEGAL_TIPS,
 } from "@workspace/ui/components/corners"
-
-import { enter, ENTER, enterDelay } from "@/lib/layout"
+import { enterFooter } from "@workspace/ui/lib/layout"
 
 /** The bottom corners: Privacy and Terms, which cover every zyx.tw site. */
 export function SiteFooter() {
@@ -22,9 +21,12 @@ export function SiteFooter() {
     <BottomCorners
       fade={!home}
       className={
-        home ? `dark ${enter}` : made ? `made-bottom-corner ${enter}` : enter
+        home
+          ? `dark ${enterFooter}`
+          : made
+            ? `made-bottom-corner ${enterFooter}`
+            : enterFooter
       }
-      style={enterDelay(ENTER.footer)}
       links={
         <>
           <CornerTip tip={LEGAL_TIPS.privacy}>
