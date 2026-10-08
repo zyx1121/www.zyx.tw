@@ -7,6 +7,10 @@ import { COMPONENTS, type RegistryItem } from "@/lib/registry";
 const GROUPS = [
   { title: "Layout", names: ["corners"] },
   {
+    title: "Blocks",
+    names: ["confirm-dialog", "empty-state", "status-page"],
+  },
+  {
     title: "Controls",
     names: [
       "button",

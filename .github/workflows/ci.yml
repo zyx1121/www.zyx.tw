@@ -87,7 +87,7 @@ jobs:
           grep -q -- '--radius-surface: calc(var(--radius) + 1.5rem)' app/globals.css
           grep -q '@utility duration-overlay' app/globals.css
           ! grep -q -- '--card:' app/globals.css
-          items=$(python3 -c 'import json; print(" ".join(f"http://localhost:8099/r/{i["name"]}.json" for i in json.load(open("../../registry/r/registry.json"))["items"] if i["type"] in ("registry:ui", "registry:component")))')
+          items=$(python3 -c 'import json; print(" ".join(f"http://localhost:8099/r/{i["name"]}.json" for i in json.load(open("../../registry/r/registry.json"))["items"] if i["type"] in ("registry:ui", "registry:component", "registry:block")))')
           bunx shadcn@latest add $items -y -o
           grep -q 'createCn' lib/utils.ts
           grep -q 'from "./corner-tip"' components/corners.tsx
@@ -96,7 +96,11 @@ jobs:
           ! grep -rq 'text-sm\|text-xs\|rounded-lg' components/ui
           grep -q 'animate-mask-reveal' app/globals.css
           cat > app/page.tsx <<'PAGE'
+          "use client"
           import { BottomCorners, LegalLinks, TopCorners } from "@/components/corners"
+          import { ConfirmDialog } from "@/components/confirm-dialog"
+          import { EmptyState } from "@/components/empty-state"
+          import { StatusPage } from "@/components/status-page"
           import { Button } from "@/components/ui/button"
           import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
           import { InputGroup, InputGroupInput } from "@/components/ui/input-group"
@@ -108,6 +112,9 @@ jobs:
               <main>
                 <TopCorners fade nav={<a href="/">Docs</a>} />
                 <BottomCorners fade links={<LegalLinks />} />
+                <StatusPage title="Not found" />
+                <EmptyState noun="projects" />
+                <ConfirmDialog trigger={<Button>Delete</Button>} title="Delete it?" confirmLabel="Delete" onConfirm={() => {}} />
                 <Toolbar><Button>Save</Button></Toolbar>
                 <InputGroup><InputGroupInput /></InputGroup>
                 <MaskReveal>zyx</MaskReveal>

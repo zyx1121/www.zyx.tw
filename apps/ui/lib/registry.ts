@@ -16,11 +16,15 @@ const data: { items: RegistryItem[] } = registry;
 
 export const ITEMS = data.items;
 
-// Everything a project adds by name: primitives (registry:ui) and the
-// composed pieces built from them (registry:component).
-export const COMPONENTS = ITEMS.filter(
-  (item) => item.type === "registry:ui" || item.type === "registry:component"
-);
+// Everything a project adds by name: primitives (registry:ui), the chrome
+// (registry:component) and blocks that serve one purpose (registry:block).
+const ADDABLE = new Set([
+  "registry:ui",
+  "registry:component",
+  "registry:block",
+]);
+
+export const COMPONENTS = ITEMS.filter((item) => ADDABLE.has(item.type));
 
 export function getItem(name: string) {
   const item = ITEMS.find((entry) => entry.name === name);

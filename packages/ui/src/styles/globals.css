@@ -23,8 +23,12 @@
   --text-body--line-height: 1.5rem;
   --text-caption: 0.875rem;
   --text-caption--line-height: 1.25rem;
-  --font-sans: var(--font-inter), var(--font-noto-sans-jp), var(--font-noto-sans-tc), ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-inter), var(--font-noto-sans-jp), var(--font-noto-sans-tc), ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    var(--font-inter), var(--font-noto-sans-jp), var(--font-noto-sans-tc),
+    ui-sans-serif, system-ui, sans-serif;
+  --font-heading:
+    var(--font-inter), var(--font-noto-sans-jp), var(--font-noto-sans-tc),
+    ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --default-font-feature-settings: "liga" 1, "calt" 1, "ss01" 1, "zero" 1;
   --color-background: var(--background);
@@ -41,7 +45,8 @@
   --radius-menu: calc(var(--radius) + 0.25rem);
   --radius-surface: calc(var(--radius) + 1.5rem);
   --animate-scramble-hold: scramble-text-hold 1.5s;
-  --animate-mask-reveal: mask-reveal 600ms cubic-bezier(0.16, 1, 0.3, 1) var(--tw-animation-delay, 0s) backwards;
+  --animate-mask-reveal: mask-reveal 600ms cubic-bezier(0.16, 1, 0.3, 1)
+    var(--tw-animation-delay, 0s) backwards;
 }
 
 :root {
@@ -189,7 +194,11 @@
 [data-slot="corner-edge"] {
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
-  -webkit-mask-image: linear-gradient(var(--edge-direction), #000 35%, transparent);
+  -webkit-mask-image: linear-gradient(
+    var(--edge-direction),
+    #000 35%,
+    transparent
+  );
   mask-image: linear-gradient(var(--edge-direction), #000 35%, transparent);
 }
 [data-slot="corner-edge"][data-edge="top"] {

@@ -5,6 +5,7 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { toast } from "sonner";
 import {
   ChevronsUpDownIcon,
+  Trash2Icon,
   FileTextIcon,
   PlusIcon,
   SearchIcon,
@@ -30,6 +31,9 @@ import {
   AttachmentTitle,
 } from "@workspace/ui/components/ui/attachment";
 import { Avatar, AvatarFallback } from "@workspace/ui/components/ui/avatar";
+import { ConfirmDialog } from "@workspace/ui/components/confirm-dialog";
+import { EmptyState, TableEmpty } from "@workspace/ui/components/empty-state";
+import { StatusPage } from "@workspace/ui/components/status-page";
 import { Badge } from "@workspace/ui/components/ui/badge";
 import { Bubble } from "@workspace/ui/components/ui/bubble";
 import { Button } from "@workspace/ui/components/ui/button";
@@ -195,6 +199,39 @@ function ComboboxDemo() {
         </Command>
       </ComboboxContent>
     </Popover>
+  );
+}
+
+const wait = () => new Promise<void>((resolve) => setTimeout(resolve, 1000));
+
+function EmptyStateDemo() {
+  const [query, setQuery] = useState("");
+  return (
+    <div className="flex w-full max-w-md flex-col gap-5">
+      <Input
+        aria-label="Search projects"
+        placeholder="Search projects"
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+      />
+      <EmptyState
+        noun="projects"
+        query={query}
+        onClearQuery={() => setQuery("")}
+        action={<Button>New project</Button>}
+      />
+      <Table className="w-full">
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead className="text-right">Updated</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableEmpty noun="projects" query={query} colSpan={2} />
+        </TableBody>
+      </Table>
+    </div>
   );
 }
 
@@ -564,6 +601,34 @@ const DEMOS: Record<string, React.ReactNode> = {
   "scramble-text": <ScrambleDemo />,
   "mask-reveal": <MaskRevealDemo />,
   "theme-toggle": <ThemeToggle />,
+  "confirm-dialog": (
+    <div className="flex items-center justify-center gap-3">
+      <ConfirmDialog
+        trigger={
+          <Button variant="ghost" size="icon" aria-label="Delete">
+            <Trash2Icon />
+          </Button>
+        }
+        title="Delete this project?"
+        confirmLabel="Delete"
+        onConfirm={wait}
+      />
+      <ConfirmDialog
+        trigger={<Button variant="outline">Archive</Button>}
+        title="Archive this project?"
+        confirmLabel="Archive"
+        variant="default"
+        onConfirm={wait}
+      />
+    </div>
+  ),
+  "empty-state": <EmptyStateDemo />,
+  "status-page": (
+    <StatusPage
+      title="Something went wrong"
+      action={<Button onClick={() => window.location.reload()}>Retry</Button>}
+    />
+  ),
   toolbar: (
     <Toolbar>
       <Button variant="ghost">Undo</Button>

@@ -231,6 +231,51 @@
       ]
     },
     {
+      "name": "confirm-dialog",
+      "type": "registry:block",
+      "title": "Confirm Dialog",
+      "description": "Asks before an action, locks both buttons while it runs and closes when it finishes.",
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/alert-dialog.json",
+        "https://ui.zyx.tw/r/button.json"
+      ],
+      "files": [
+        {
+          "path": "registry/zyx/components/confirm-dialog.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "empty-state",
+      "type": "registry:block",
+      "title": "Empty State",
+      "description": "One sentence and the next step when a list or a search has no rows, with a table row variant.",
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/button.json",
+        "https://ui.zyx.tw/r/table.json"
+      ],
+      "files": [
+        {
+          "path": "registry/zyx/components/empty-state.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "status-page",
+      "type": "registry:block",
+      "title": "Status Page",
+      "description": "A title and the way out, for not found, errors and no access.",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/zyx/components/status-page.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "alert-dialog",
       "type": "registry:ui",
       "title": "Alert Dialog",
