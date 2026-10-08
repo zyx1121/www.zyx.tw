@@ -151,6 +151,7 @@ The chrome is grayscale, so a badge tells states apart by fill, not by hue. A ca
 - **Chat**: message, bubble, attachment
 - **zyx**: scramble-text, mask-reveal, theme-toggle
 - **Layout** (`registry:component`, in `packages/ui/src/components/`): corners, with corner-tip and zyx-mark
+- **Blocks** (`registry:block`, in `packages/ui/src/components/`): confirm-dialog, empty-state, status-page. A block serves one purpose and fixes its copy pattern; a component is a part with no purpose of its own. Blocks have no description slot.
 
 Contract for every component:
 
@@ -204,6 +205,6 @@ Every zyx.tw site is written for people and for agents. A static export has no s
 ## What we explicitly don't do
 
 - **No stock copies.** A component exists once, in `packages/ui`. Restyling happens in that file, not in a theme override aimed at someone else's markup.
-- **No composite content blocks (Hero, CTA, Pricing) in the registry.** Pages compose components at the call site.
+- **No marketing blocks (Hero, CTA, Pricing) in the registry.** Blocks exist for interface patterns that repeat across apps (confirming, empty lists, status pages); page content is composed at the call site.
 - **No CSS-in-JS.** Tailwind utilities on tokens; app stylesheets only for content.
 - **No color in chrome**, **no header or footer bars**, **no menu button for a short nav**, **no bold for hierarchy**, **no cards on the page.**
