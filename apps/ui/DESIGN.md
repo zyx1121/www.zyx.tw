@@ -113,6 +113,33 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
 - **Offsets live at the call site**: nudges such as `-ml-1` or `-m-3` depend on the surrounding layout, so they go in the caller's `className`, never inside a component. An icon button in a text row takes its icon inset back on every side (`-m-3` on a 40px button with a 16px icon), so layout sees only the icon.
 - **Menus follow their trigger**: a menu opens 4px under its trigger, as wide as the trigger plus its padding (`w-menu`).
 
+## Lists
+
+- Rows are separated by dividers (`border-b`), never framed: no card per row, no border around the list. A row's text lines up with the page's left edge.
+- Row actions follow how many there are:
+
+| Actions on a row | Shape |
+| --- | --- |
+| One or two | Ghost icon buttons, each with a tooltip naming the verb ("Edit", "Delete") |
+| Three or more | One `⋯` button opening a `dropdown-menu`; the destructive action last, after a separator |
+
+- A delete button stays muted on the row. Red belongs to the confirmation that follows, not to the trigger.
+- Every action that cannot be undone asks first, in an `alert-dialog`. Its confirm button names the verb ("Delete", "Revoke"), never "OK" or "Confirm".
+
+## Status and categories
+
+The chrome is grayscale, so a badge tells states apart by fill, not by hue. A category (a kind, a tag, a group) never looks like a state.
+
+| What it is | Badge |
+| --- | --- |
+| Open, active, running, done | `default` |
+| Waiting, closed, inactive, draft | `muted` |
+| Rejected or failed | `destructive` |
+| A category or tag, not a state | `outline` |
+
+- Each app maps its status values to these variants in one place, next to the status labels, and every page reads that map.
+- A status that only applies to some rows shows nothing on the others; do not add a "normal" badge.
+
 ## Components
 
 `packages/ui/src/components/ui/`, published as `@zyx1121/<name>`:
@@ -141,6 +168,12 @@ Per item:
 
 ## Content
 
+Say it once, in as few words as the thing needs. No sentence explains what the screen already shows.
+
+- **Buttons are the verb**: "Save", "Delete", "Sign in". While it runs, the verb + "ing…" ("Saving…").
+- **Titles name the thing or ask the question**: "Receipts", "Delete this receipt?", "Nothing here". A subtitle, where a page has one, adds a fact the title lacks; it never explains the screen.
+- **Toasts are the outcome or the reason**, a few words: "Saved", "The file is over 10 MB".
+- **No helper text under fields**: the label carries what a field needs; an error goes in a toast.
 - **English UI copy**: the public zyx.tw sites write their interface in English (`lang="en"`). An app written for Chinese readers, such as `1909` (`lang="zh-TW"`), writes its UI in Chinese.
 - **Spaces between CJK and Latin** (`共 7 個元件`), but not next to full-width punctuation. CJK sentences take full-width marks.
 - **Short declarative sentences**: one idea per sentence, in the present tense.
