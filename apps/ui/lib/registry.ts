@@ -16,7 +16,11 @@ const data: { items: RegistryItem[] } = registry;
 
 export const ITEMS = data.items;
 
-export const COMPONENTS = ITEMS.filter((item) => item.type === "registry:ui");
+// Everything a project adds by name: primitives (registry:ui) and the
+// composed pieces built from them (registry:component).
+export const COMPONENTS = ITEMS.filter(
+  (item) => item.type === "registry:ui" || item.type === "registry:component"
+);
 
 export function getItem(name: string) {
   const item = ITEMS.find((entry) => entry.name === name);

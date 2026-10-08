@@ -5,6 +5,7 @@ import { COMPONENTS, type RegistryItem } from "@/lib/registry";
 // Import from server code only, like lib/registry.
 
 const GROUPS = [
+  { title: "Layout", names: ["corners"] },
   {
     title: "Controls",
     names: [
@@ -56,6 +57,14 @@ const GROUPS = [
 
 // Items that only other components use; they have no page of their own.
 const HELPERS = new Set(["field-trigger"]);
+
+// Items that are the page's own chrome: their page shows the real thing
+// around it instead of a demo.
+const CHROME = new Set(["corners"]);
+
+export function hasDemo(name: string) {
+  return !CHROME.has(name);
+}
 
 export interface DocGroup {
   title: string;

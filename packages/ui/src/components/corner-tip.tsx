@@ -7,7 +7,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@workspace/ui/components/ui/tooltip"
+} from "./ui/tooltip"
 
 import { cn } from "../lib/utils"
 
