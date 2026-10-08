@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { cn } from "cn"
 
 import {
   type At,
@@ -7,6 +6,8 @@ import {
   CornerTip,
 } from "@workspace/ui/components/corner-tip"
 import { ZyxMark } from "@workspace/ui/components/zyx-mark"
+
+import { cn } from "../lib/utils"
 
 export { CornerTip }
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { cn } from "cn";
+
+import { cn } from "@workspace/ui/lib/utils";
 
 import "@workspace/ui/globals.css";
 

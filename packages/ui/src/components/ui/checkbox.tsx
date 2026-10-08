@@ -1,8 +1,9 @@
 "use client"
 
 import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox"
-import { cn } from "cn"
 import { CheckIcon } from "lucide-react"
+
+import { cn } from "../../lib/utils"
 
 // Round, 20px, with a larger invisible hit area. A future radio shows a dot,
 // not a check, so the two stay apart.

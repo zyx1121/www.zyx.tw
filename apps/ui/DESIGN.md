@@ -10,7 +10,7 @@ This file is the design contract for every zyx.tw app. `bun run theme:check` and
 - **One stylesheet**: `packages/ui/src/styles/globals.css` holds the tokens, the utilities and the keyframes. Every app imports `@workspace/ui/globals.css`. An app may add a stylesheet only for its own content (Plump's font stack, the Made pages), never to restyle a component.
 - **The registry**: `apps/ui/registry.json` publishes the same files to projects outside this repo. `registry/zyx/ui` is a symlink to `packages/ui/src/components/ui`, and `shadcn build` writes `public/r/` from it. The `base` item (`registry:base`, `extends: "none"`) carries the tokens, utilities and fonts; `shadcn init https://ui.zyx.tw/r/base.json` sets up a project and registers `@zyx1121`.
 - **In sync by check**: `theme:check` fails when globals.css and the `base` item (plus the components' keyframes and animations) drift. CI also inits a fresh project from the built base, adds every component and builds it.
-- **Components import each other relatively** (`./button`), so the files work both in `packages/ui` and in a project's `components/ui`. `cn` comes from the `cn` package.
+- **Components import each other relatively** (`./button`), so the files work both in `packages/ui` and in a project's `components/ui`. `cn` comes from `lib/utils` (`../../lib/utils`), which extends the `cn` package so the four type sizes survive next to a text color.
 
 ## Tokens
 

@@ -1,4 +1,4 @@
-import { cn } from "cn"
+import { cn } from "@workspace/ui/lib/utils"
 
 /*
  * The product's mark: a square seal cut in relief, white 核准 ("approved")

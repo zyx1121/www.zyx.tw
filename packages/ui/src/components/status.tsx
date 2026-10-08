@@ -12,7 +12,6 @@ import {
   VscTag,
 } from "react-icons/vsc"
 import type { IconType } from "react-icons"
-import { cn } from "cn"
 
 import {
   describeEvent,
@@ -23,6 +22,8 @@ import {
 } from "@workspace/ui/lib/github-events"
 import { GITHUB_USER, STATUS_COPY } from "@workspace/ui/lib/profile"
 import { timeAgo } from "@workspace/ui/lib/time-ago"
+
+import { cn } from "../lib/utils"
 
 const ICON: Record<EventKind, IconType> = {
   commit: VscGitCommit,

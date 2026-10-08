@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { cn } from "cn";
 
+import { cn } from "@workspace/ui/lib/utils";
 import { column, enterRow } from "@workspace/ui/lib/layout";
 
 import { LLMS_PATH, MARKDOWN_PATH } from "@/lib/site";

@@ -1,5 +1,6 @@
 import * as React from "react"
-import { cn } from "cn"
+
+import { cn } from "../../lib/utils"
 
 // A floating bar of 40px controls over a working surface (a canvas, a map):
 // the frosted layer-2 surface with 4px around its controls, so it takes

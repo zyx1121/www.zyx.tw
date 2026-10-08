@@ -1,5 +1,4 @@
-import { cn } from "cn"
-
+import { cn } from "@workspace/ui/lib/utils"
 import { enterRow } from "@workspace/ui/lib/layout"
 
 /** The page title at hero size. Pages without an animated title use this. */

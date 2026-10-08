@@ -2,8 +2,9 @@
 
 import * as React from "react"
 import { Command as CommandPrimitive } from "cmdk"
-import { cn } from "cn"
 import { CheckIcon, SearchIcon } from "lucide-react"
+
+import { cn } from "../../lib/utils"
 
 // Searchable list for a popover (combobox). It has no surface of its own:
 // the popover provides the glass, border and p-1.

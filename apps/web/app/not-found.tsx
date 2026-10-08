@@ -1,6 +1,6 @@
 import Link from "next/link"
-import { cn } from "cn"
 
+import { cn } from "@workspace/ui/lib/utils"
 import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
 import { Hero, HeroTitle } from "@/components/hero"

@@ -1,4 +1,4 @@
-import { cn } from "cn"
+import { cn } from "../../lib/utils"
 
 // Reveals its content with a feathered mask sweeping left to right over
 // 600ms (`animate-mask-reveal` in globals.css). The delay comes from an

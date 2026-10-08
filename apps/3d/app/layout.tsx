@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
-import { cn } from "cn"
 
+import { cn } from "@workspace/ui/lib/utils"
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
 import "./globals.css"
 import {

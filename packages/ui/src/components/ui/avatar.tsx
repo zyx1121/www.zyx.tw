@@ -1,7 +1,8 @@
 "use client"
 
 import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar"
-import { cn } from "cn"
+
+import { cn } from "../../lib/utils"
 
 // One size, 40px: the height of a control row.
 function Avatar({ className, ...props }: AvatarPrimitive.Root.Props) {

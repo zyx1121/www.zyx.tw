@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { cn } from "cn"
 
+import { cn } from "@workspace/ui/lib/utils"
 import { MaskReveal } from "@workspace/ui/components/ui/mask-reveal"
 
 import { useShowcase } from "@/components/showcase"

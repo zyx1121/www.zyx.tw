@@ -26,7 +26,7 @@
         "@base-ui/react"
       ],
       "registryDependencies": [
-        "utils",
+        "https://ui.zyx.tw/r/utils.json",
         "https://ui.zyx.tw/r/font-inter.json",
         "https://ui.zyx.tw/r/font-noto-sans-jp.json",
         "https://ui.zyx.tw/r/font-noto-sans-tc.json",
@@ -123,6 +123,19 @@
       }
     },
     {
+      "name": "utils",
+      "type": "registry:lib",
+      "title": "Utils",
+      "description": "cn at @/lib/utils, aware of the four type sizes.",
+      "dependencies": ["cn"],
+      "files": [
+        {
+          "path": "registry/zyx/lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "font-inter",
       "type": "registry:font",
       "title": "Inter",
@@ -184,7 +197,10 @@
       "title": "Alert Dialog",
       "description": "Confirmation dialog with Cancel and an action.",
       "dependencies": ["@base-ui/react", "cn"],
-      "registryDependencies": ["https://ui.zyx.tw/r/button.json"],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/button.json"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/alert-dialog.tsx",
@@ -203,7 +219,8 @@
           "path": "registry/zyx/ui/attachment.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "avatar",
@@ -216,7 +233,8 @@
           "path": "registry/zyx/ui/avatar.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "badge",
@@ -229,7 +247,8 @@
           "path": "registry/zyx/ui/badge.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "bubble",
@@ -242,7 +261,8 @@
           "path": "registry/zyx/ui/bubble.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "button",
@@ -255,7 +275,8 @@
           "path": "registry/zyx/ui/button.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "calendar",
@@ -263,7 +284,10 @@
       "title": "Calendar",
       "description": "Month grid for picking one day, with 40px day buttons.",
       "dependencies": ["cn", "lucide-react", "react-day-picker"],
-      "registryDependencies": ["https://ui.zyx.tw/r/button.json"],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/button.json"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/calendar.tsx",
@@ -282,7 +306,8 @@
           "path": "registry/zyx/ui/chart.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "checkbox",
@@ -295,7 +320,8 @@
           "path": "registry/zyx/ui/checkbox.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "collapsible",
@@ -308,7 +334,8 @@
           "path": "registry/zyx/ui/collapsible.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "combobox",
@@ -317,6 +344,7 @@
       "description": "Trigger and content for a searchable picker built from Popover and Command.",
       "dependencies": ["cn", "lucide-react"],
       "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
         "https://ui.zyx.tw/r/field-trigger.json",
         "https://ui.zyx.tw/r/popover.json"
       ],
@@ -338,7 +366,8 @@
           "path": "registry/zyx/ui/command.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "dialog",
@@ -351,7 +380,10 @@
         "cn",
         "lucide-react"
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/button.json"],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/button.json"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/dialog.tsx",
@@ -370,7 +402,8 @@
           "path": "registry/zyx/ui/dropdown-menu.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "field-trigger",
@@ -391,6 +424,7 @@
       "description": "Input with an icon, text or a round button inside its border.",
       "dependencies": ["cn"],
       "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
         "https://ui.zyx.tw/r/button.json",
         "https://ui.zyx.tw/r/input.json"
       ],
@@ -412,7 +446,8 @@
           "path": "registry/zyx/ui/input.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "label",
@@ -425,7 +460,8 @@
           "path": "registry/zyx/ui/label.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "mask-reveal",
@@ -459,7 +495,8 @@
             "mask-position": "0 0"
           }
         }
-      }
+      },
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "message",
@@ -472,7 +509,8 @@
           "path": "registry/zyx/ui/message.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "popover",
@@ -485,7 +523,8 @@
           "path": "registry/zyx/ui/popover.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "resizable",
@@ -498,7 +537,8 @@
           "path": "registry/zyx/ui/resizable.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "scramble-text",
@@ -523,7 +563,8 @@
             "opacity": "0"
           }
         }
-      }
+      },
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "select",
@@ -531,7 +572,10 @@
       "title": "Select",
       "description": "Single-choice dropdown, as tall as Input.",
       "dependencies": ["@base-ui/react", "cn", "lucide-react"],
-      "registryDependencies": ["https://ui.zyx.tw/r/field-trigger.json"],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/field-trigger.json"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/select.tsx",
@@ -550,7 +594,8 @@
           "path": "registry/zyx/ui/separator.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "sheet",
@@ -558,7 +603,10 @@
       "title": "Sheet",
       "description": "Frosted full-height panel on the left or right edge.",
       "dependencies": ["@base-ui/react", "cn", "lucide-react"],
-      "registryDependencies": ["https://ui.zyx.tw/r/button.json"],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/button.json"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/sheet.tsx",
@@ -577,7 +625,8 @@
           "path": "registry/zyx/ui/skeleton.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "slider",
@@ -590,7 +639,8 @@
           "path": "registry/zyx/ui/slider.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "sonner",
@@ -616,7 +666,8 @@
           "path": "registry/zyx/ui/switch.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "table",
@@ -629,7 +680,8 @@
           "path": "registry/zyx/ui/table.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "tabs",
@@ -642,7 +694,8 @@
           "path": "registry/zyx/ui/tabs.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "textarea",
@@ -655,7 +708,8 @@
           "path": "registry/zyx/ui/textarea.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "theme-toggle",
@@ -682,7 +736,8 @@
           "path": "registry/zyx/ui/toggle.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "toolbar",
@@ -695,7 +750,8 @@
           "path": "registry/zyx/ui/toolbar.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     },
     {
       "name": "tooltip",
@@ -708,7 +764,8 @@
           "path": "registry/zyx/ui/tooltip.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
     }
   ]
 }

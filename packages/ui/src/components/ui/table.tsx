@@ -1,5 +1,6 @@
 import * as React from "react"
-import { cn } from "cn"
+
+import { cn } from "../../lib/utils"
 
 // Header text is muted so rows read first; put tabular-nums on number columns.
 // The outer columns have no side padding so text lines up with the page edge.

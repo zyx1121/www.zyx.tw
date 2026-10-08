@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useRef, type ReactNode } from "react"
-import { cn } from "cn"
+
+import { cn } from "@workspace/ui/lib/utils"
 
 /** Fades its screen up once, the first time it scrolls into view. */
 export function Reveal({
