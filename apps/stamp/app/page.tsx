@@ -2,15 +2,15 @@ import type { Metadata } from "next"
 import { cn } from "cn"
 
 import { buttonVariants } from "@workspace/ui/components/ui/button"
-import { column, enterRow, page } from "@workspace/ui/lib/layout"
+import { enterRow } from "@workspace/ui/lib/layout"
 
 import { Film } from "@/components/film"
+import { Reveal } from "@/components/reveal"
 import { Seal } from "@/components/seal"
 import {
+  ACCESS_URL,
   CAPABILITIES,
   CLOSING,
-  CONTACT_URL,
-  EMAIL,
   GUARANTEE,
   HERO,
   OFFICES,
@@ -24,10 +24,16 @@ import {
 // does not point at the home.
 export const metadata: Metadata = { alternates: { canonical: "/" } }
 
+/** The page's width: wider than the shared column, for campaign screens. */
+const WIDE = "mx-auto w-full max-w-6xl px-5 md:px-10"
+
+/** One screen, one idea: at least the viewport tall, content centered. */
+const SCREEN = "flex min-h-dvh flex-col justify-center py-30"
+
 function Actions({ className }: { className?: string }) {
   return (
     <div className={cn("flex flex-wrap gap-3", className)}>
-      <a href={CONTACT_URL} className={buttonVariants()}>
+      <a href={ACCESS_URL} className={buttonVariants()}>
         {HERO.primary}
       </a>
       <a href="#film" className={buttonVariants({ variant: "outline" })}>
@@ -37,12 +43,33 @@ function Actions({ className }: { className?: string }) {
   )
 }
 
-function Heading({ title, body }: { title: string; body?: string }) {
+function Statement({ title, body }: { title: string; body?: string }) {
   return (
-    <header className="flex max-w-2xl flex-col gap-3">
-      <h2 className="text-title font-medium">{title}</h2>
-      {body && <p className="text-muted-foreground">{body}</p>}
+    <header className="flex max-w-4xl flex-col gap-5">
+      <h2 className="stamp-statement">{title}</h2>
+      {body && (
+        <p className="stamp-lead max-w-2xl text-muted-foreground">{body}</p>
+      )}
     </header>
+  )
+}
+
+function Items({
+  items,
+  className,
+}: {
+  items: { title: string; body: string }[]
+  className?: string
+}) {
+  return (
+    <ul className={cn("grid gap-x-10 gap-y-15", className)}>
+      {items.map((item) => (
+        <li key={item.title} className="flex flex-col gap-3 border-t pt-5">
+          <h3 className="stamp-item-title">{item.title}</h3>
+          <p className="stamp-item-body text-muted-foreground">{item.body}</p>
+        </li>
+      ))}
+    </ul>
   )
 }
 
@@ -63,111 +90,119 @@ function Shot({ src, alt }: { src: string; alt: string }) {
 
 export default function Home() {
   return (
-    <main className={cn(column, page, "flex flex-col gap-20")}>
-      <section className="flex flex-col gap-5">
+    <main>
+      <section className={cn(WIDE, SCREEN, "gap-10")}>
         <h1 className={cn("relative w-fit", enterRow(1))}>
-          <span className="text-display font-medium tracking-tight">
-            {SITE_NAME}
-          </span>
-          <Seal className="seal-pressed absolute -top-3 -right-15 size-14" />
+          <span className="stamp-wordmark">{SITE_NAME}</span>
+          <Seal className="seal-pressed absolute -top-10 -right-2 size-14 sm:-top-4 sm:-right-16 sm:size-16 md:-top-6 md:-right-30 md:size-28" />
         </h1>
-        <p className={cn("text-title font-medium", enterRow(2))}>
-          {HERO.tagline}
-        </p>
-        <p className={cn("max-w-xl text-muted-foreground", enterRow(3))}>
-          {HERO.lede}
-        </p>
-        <Actions className={cn("pt-3", enterRow(4))} />
-      </section>
-
-      <Film id="film" className={cn("scroll-mt-20", enterRow(5))} />
-
-      <section className="flex flex-col gap-10">
-        <Heading title={STEPS.title} />
-        <ol className="grid gap-10 md:grid-cols-3 md:gap-5">
-          {STEPS.items.map((step, index) => (
-            <li key={step.title} className="flex flex-col gap-2 border-t pt-5">
-              <span className="text-caption text-muted-foreground tabular-nums">
-                0{index + 1}
-              </span>
-              <h3 className="font-medium">{step.title}</h3>
-              <p className="text-muted-foreground">{step.body}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section className="flex flex-col gap-10">
-        <Heading title={PRODUCT.title} body={PRODUCT.body} />
-        <Shot src="/audit-chat.jpg" alt={PRODUCT.alt} />
-      </section>
-
-      <section className="flex flex-col gap-10">
-        <Heading title={GUARANTEE.title} body={GUARANTEE.body} />
-        <Shot src="/leave-canvas.jpg" alt={GUARANTEE.alt} />
-        <ul className="grid gap-10 md:grid-cols-3 md:gap-5">
-          {GUARANTEE.points.map((point) => (
-            <li key={point.title} className="flex flex-col gap-2 border-t pt-5">
-              <h3 className="font-medium">{point.title}</h3>
-              <p className="text-muted-foreground">{point.body}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="flex flex-col gap-10">
-        <Heading title={OFFICES.title} />
-        <dl className="flex flex-col">
-          {OFFICES.items.map((item) => (
-            <div
-              key={item.office}
-              className="grid gap-1 border-t py-5 md:grid-cols-4 md:gap-5"
-            >
-              <dt className="font-medium">{item.office}</dt>
-              <dd className="text-muted-foreground md:col-span-3">
-                {item.job}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </section>
-
-      <section className="flex flex-col gap-10">
-        <Heading title={CAPABILITIES.title} />
-        <ul className="grid gap-x-5 gap-y-10 sm:grid-cols-2 2xl:grid-cols-4">
-          {CAPABILITIES.items.map((item) => (
-            <li key={item.title} className="flex flex-col gap-2 border-t pt-5">
-              <h3 className="font-medium">{item.title}</h3>
-              <p className="text-muted-foreground">{item.body}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="flex flex-col gap-10">
-        <Heading title={TRUST.title} body={TRUST.body} />
-        <ul className="grid gap-10 md:grid-cols-3 md:gap-5">
-          {TRUST.items.map((item) => (
-            <li key={item.title} className="flex flex-col gap-2 border-t pt-5">
-              <h3 className="font-medium">{item.title}</h3>
-              <p className="text-muted-foreground">{item.body}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="flex flex-col gap-5 border-t pt-20">
-        <h2 className="max-w-2xl text-title font-medium">{CLOSING.title}</h2>
-        <p className="text-muted-foreground">
-          {CLOSING.body}{" "}
-          <a
-            href={CONTACT_URL}
-            className="text-foreground underline underline-offset-4"
+        <div className="flex flex-col gap-5">
+          <p className={cn("stamp-statement max-w-4xl", enterRow(2))}>
+            {HERO.tagline}
+          </p>
+          <p
+            className={cn(
+              "stamp-lead max-w-2xl text-muted-foreground",
+              enterRow(3)
+            )}
           >
-            {EMAIL}
+            {HERO.lede}
+          </p>
+        </div>
+        <div className={cn("flex flex-col gap-3", enterRow(4))}>
+          <Actions />
+          <p className="text-caption text-muted-foreground">{HERO.note}</p>
+        </div>
+      </section>
+
+      <section className={cn(WIDE, SCREEN)}>
+        <Reveal>
+          <Film id="film" className="scroll-mt-20" />
+        </Reveal>
+      </section>
+
+      <section className={cn(WIDE, SCREEN)}>
+        <Reveal className="flex flex-col gap-20">
+          <Statement title={STEPS.title} />
+          <ol className="grid gap-x-10 gap-y-15 md:grid-cols-3">
+            {STEPS.items.map((step, index) => (
+              <li
+                key={step.title}
+                className="flex flex-col gap-3 border-t pt-5"
+              >
+                <span className="stamp-office text-muted-foreground tabular-nums">
+                  0{index + 1}
+                </span>
+                <h3 className="stamp-item-title">{step.title}</h3>
+                <p className="stamp-item-body text-muted-foreground">
+                  {step.body}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </Reveal>
+      </section>
+
+      <section className={cn(WIDE, SCREEN)}>
+        <Reveal className="flex flex-col gap-15">
+          <Statement title={PRODUCT.title} body={PRODUCT.body} />
+          <Shot src="/audit-chat.jpg" alt={PRODUCT.alt} />
+        </Reveal>
+      </section>
+
+      <section className={cn(WIDE, SCREEN)}>
+        <Reveal className="flex flex-col gap-15">
+          <Statement title={GUARANTEE.title} body={GUARANTEE.body} />
+          <Shot src="/leave-canvas.jpg" alt={GUARANTEE.alt} />
+          <Items items={GUARANTEE.points} className="md:grid-cols-3" />
+        </Reveal>
+      </section>
+
+      <section className={cn(WIDE, SCREEN)}>
+        <Reveal className="flex flex-col gap-15">
+          <Statement title={OFFICES.title} />
+          <dl className="flex flex-col">
+            {OFFICES.items.map((item) => (
+              <div
+                key={item.office}
+                className="grid gap-3 border-t py-10 md:grid-cols-2 md:gap-10"
+              >
+                <dt className="stamp-office">{item.office}</dt>
+                <dd className="stamp-lead text-muted-foreground">{item.job}</dd>
+              </div>
+            ))}
+          </dl>
+        </Reveal>
+      </section>
+
+      <section className={cn(WIDE, SCREEN)}>
+        <Reveal className="flex flex-col gap-20">
+          <Statement title={CAPABILITIES.title} />
+          <Items
+            items={CAPABILITIES.items}
+            className="sm:grid-cols-2 lg:grid-cols-4"
+          />
+        </Reveal>
+      </section>
+
+      <section className={cn(WIDE, SCREEN)}>
+        <Reveal className="flex flex-col gap-20">
+          <Statement title={TRUST.title} body={TRUST.body} />
+          <Items items={TRUST.items} className="md:grid-cols-3" />
+        </Reveal>
+      </section>
+
+      <section className={cn(WIDE, SCREEN, "items-center text-center")}>
+        <Reveal className="flex flex-col items-center gap-10">
+          <Seal id="seal-end" className="size-24 -rotate-6" />
+          <h2 className="stamp-statement max-w-4xl">{CLOSING.title}</h2>
+          <p className="stamp-lead max-w-2xl text-muted-foreground">
+            {CLOSING.body}
+          </p>
+          <a href={ACCESS_URL} className={buttonVariants()}>
+            {HERO.primary}
           </a>
-        </p>
-        <Actions className="pt-3" />
+        </Reveal>
       </section>
     </main>
   )

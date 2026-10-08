@@ -18,8 +18,7 @@ import { enterFooter, enterRow } from "@workspace/ui/lib/layout"
 import "./stamp.css"
 import { SiteJsonLd } from "@/components/json-ld"
 import {
-  CONTACT_URL,
-  EMAIL,
+  ACCESS_URL,
   SITE_DESC,
   SITE_NAME,
   SITE_TITLE,
@@ -92,9 +91,9 @@ export default async function RootLayout({
                   <a href="#film" className={cornerLink}>
                     Film
                   </a>
-                  <CornerTip tip={EMAIL}>
-                    <a href={CONTACT_URL} className={cornerLink}>
-                      Contact
+                  <CornerTip tip="Invite only">
+                    <a href={ACCESS_URL} className={cornerLink}>
+                      Request access
                     </a>
                   </CornerTip>
                 </>

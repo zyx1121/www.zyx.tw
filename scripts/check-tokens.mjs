@@ -56,6 +56,9 @@ const exempt = {
   // Stamp's seal is the product's mark: vermilion ink and glyphs sized in
   // the seal's own SVG units, the same in both themes.
   "apps/stamp/components/seal.tsx": ["color literal", "raw font size"],
+  // Loki waived the type scale for Stamp's campaign page (2026-10-08): each
+  // screen says one thing, set large.
+  "apps/stamp/app/stamp.css": ["raw font size"],
   // Plump's printed outline is exported into a downloadable SVG file.
   "apps/web/lib/plump.ts": ["color literal"],
 }
