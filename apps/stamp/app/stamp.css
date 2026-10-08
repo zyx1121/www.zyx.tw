@@ -32,3 +32,65 @@
     animation: seal-press 420ms cubic-bezier(0.2, 0.9, 0.3, 1.2) 500ms both;
   }
 }
+
+/*
+ * Campaign type. Loki waived the 80/24/16/14 scale for this page
+ * (2026-10-08): each screen says one thing, set large.
+ */
+
+.stamp-wordmark {
+  font-size: clamp(88px, 18vw, 200px);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  font-weight: 500;
+}
+
+.stamp-statement {
+  font-size: clamp(40px, 6.4vw, 88px);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.stamp-lead {
+  font-size: clamp(20px, 2.1vw, 26px);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+.stamp-item-title {
+  font-size: clamp(20px, 1.8vw, 24px);
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  font-weight: 500;
+}
+
+.stamp-item-body {
+  font-size: 17px;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.stamp-office {
+  font-size: clamp(28px, 3.6vw, 48px);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+
+/* Each screen fades up once as it scrolls into view. */
+@media (prefers-reduced-motion: no-preference) {
+  .stamp-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .stamp-reveal[data-visible="true"] {
+    opacity: 1;
+    transform: none;
+  }
+}

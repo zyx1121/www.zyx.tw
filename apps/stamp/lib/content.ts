@@ -5,157 +5,158 @@
 
 export const SITE_URL = "https://stamp.zyx.tw"
 export const SITE_NAME = "Stamp"
-export const SITE_TITLE = "Stamp | AI does the work. People sign off."
+export const SITE_TITLE = "Stamp | Let AI do the paperwork. You keep the stamp."
 export const SITE_DESC =
-  "Stamp turns one sentence into a running workflow for school offices. An agent builds and runs every step, and a named person stamps the ones that matter."
+  "Stamp builds and runs the workflows a school office repeats every week, and stops for the one moment that needs a person: the approval."
 
 export const EMAIL = "mail@zyx.tw"
-export const CONTACT_URL = `mailto:${EMAIL}?subject=${encodeURIComponent("Stamp demo")}`
+export const ACCESS_URL = `mailto:${EMAIL}?subject=${encodeURIComponent("Stamp access request")}`
 
 export function absoluteUrl(path: string) {
   return new URL(path, SITE_URL).toString()
 }
 
 export const HERO = {
-  tagline: "AI does the work. People sign off.",
-  lede: "Stamp turns one sentence into a running workflow for school offices. An agent builds and runs every step. A named person stamps the ones that matter.",
-  primary: "Book a demo",
+  tagline: "Let AI do the paperwork. You keep the stamp.",
+  lede: "Tell Stamp what your office does every week. It builds the workflow, runs it on your files and stops at the one moment that needs you: the approval.",
+  primary: "Request access",
   secondary: "Watch it run",
+  note: "Invite only. We bring on one school at a time.",
 }
 
 export const FILM = {
   caption:
-    "A registrar's office checks every admission brochure, then emails each department its own mistakes. Recorded in the product, 30 seconds.",
+    "Every admission brochure, checked for wrong dates and typos. Each department gets its own list once the registrar signs off. 30 seconds, recorded in the product.",
 }
 
 export const STEPS = {
-  title: "From a sentence to a stamped result",
+  title: "Say it once. It runs every time.",
   items: [
     {
-      title: "Describe it",
-      body: "Type the job the way you would tell a colleague: check every brochure for wrong dates and typos, then send each department its list.",
+      title: "Say what you need",
+      body: "No flowcharts, nothing to configure. Write it the way you would ask a colleague: check every brochure and send each department its mistakes.",
     },
     {
-      title: "The agent builds it",
-      body: "It asks what it needs, lays out the steps on a canvas and runs them on real files. Fixed rules become code. Only judgment goes to a model.",
+      title: "Watch it take shape",
+      body: "Stamp asks what it needs to know, lays out every step on a canvas and tries it on your real files. You see exactly what will happen.",
     },
     {
-      title: "A person stamps it",
-      body: "The run stops at the stamp. The named clerk reviews the result and approves or returns it. Nothing leaves the office before that.",
+      title: "Sign off, and it's done",
+      body: "The run waits for your stamp. Approve it and the emails go out. Return it and nothing leaves your office.",
     },
   ],
 }
 
 export const PRODUCT = {
-  title: "One canvas, one conversation",
-  body: "The workflow and the agent that builds it sit on the same screen. Ask for a change and the canvas updates. Every edit is a version you can restore.",
-  alt: "Stamp showing an accounting office's website audit: three checks run in parallel, while the agent explains why fixed rules belong in code.",
+  title: "Your workflow and your assistant, side by side",
+  body: "Ask for a change in plain words and watch the canvas update. Changed your mind? Every version is saved, so you can always go back.",
+  alt: "Stamp showing an accounting office's website audit: three checks run in parallel, while the assistant explains why fixed rules belong in code.",
 }
 
 export const GUARANTEE = {
-  title: "The stamp is the guarantee",
-  body: "A stamp step names a person or a role. Only that person, signed in, can approve it. Agents, schedules and outside tools can prepare the work, never stamp it.",
+  title: "AI prepares. People decide.",
+  body: "Automation should not cost you control. In Stamp, the decisions that matter carry a real person's name, and no AI can make them for you.",
   points: [
     {
-      title: "Agents cannot stamp",
-      body: "Approval goes through the signed-in session only. The chat agent and MCP clients share every other tool, but not this one.",
+      title: "Only people can stamp",
+      body: "Approvals come from a signed-in person. Not the assistant, not a schedule, not an outside tool.",
     },
     {
-      title: "Mail waits for approval",
-      body: "When recipients come from data, the email step runs only after an approved stamp in the same run.",
+      title: "Nothing goes out unchecked",
+      body: "When an email is written from data, it waits until someone has approved it.",
     },
     {
-      title: "Returned means stopped",
-      body: "A returned stamp ends the run. Every decision keeps its name, office and time.",
+      title: "Every decision on record",
+      body: "Who stamped it, for which office, and when. Returned work stops right there.",
     },
   ],
   alt: "A student affairs leave request in Stamp: requests of three days or more go to review, shorter ones to a quick confirmation, and the clerk has returned one.",
 }
 
 export const OFFICES = {
-  title: "Built with school offices",
+  title: "One tool for every office on campus",
   items: [
     {
       office: "Registrar",
-      job: "Checks every admission brochure for impossible dates, wrong weekdays and typos, then mails each department its own list.",
+      job: "Catches the impossible dates and typos in every admission brochure before applicants do.",
     },
     {
       office: "Student affairs",
-      job: "Takes leave requests from a public form, routes them by length and records the approved ones.",
+      job: "Takes leave requests from a simple form and sends only the long ones to review.",
     },
     {
       office: "General affairs",
-      job: "Reads receipts and invoices from photos or PDFs and registers them in a table.",
+      job: "Turns photos of receipts into a clean, searchable record.",
     },
     {
       office: "Library",
-      job: "Suggests subject headings for new books from their ISBN.",
+      job: "Suggests subject headings for new books from nothing but an ISBN.",
     },
     {
       office: "Accounting",
-      job: "Audits the office website for dead links, outdated documents and mistyped addresses.",
+      job: "Finds dead links and outdated documents on your website before anyone else does.",
     },
   ],
 }
 
 export const CAPABILITIES = {
-  title: "Everything an office workflow needs",
+  title: "Ready for real office work",
   items: [
     {
-      title: "Branches and loops",
-      body: "Route by rules, run every item in a list, gather the results.",
+      title: "Rules and loops",
+      body: "Route requests by rules. Handle a hundred files as easily as one.",
     },
     {
-      title: "Schedules and waits",
-      body: "Start every morning at eight, or pause until a date.",
+      title: "On schedule",
+      body: "Run every morning at eight, or wait patiently for a deadline.",
     },
     {
-      title: "Public forms",
-      body: "Anyone can submit, then follow their request on its own status page.",
+      title: "Forms anyone can fill",
+      body: "Share a link. People submit and follow their request as it moves.",
     },
     {
-      title: "Files and photos",
-      body: "PDFs, spreadsheets and phone photos go straight to the step that reads them.",
+      title: "Files as they come",
+      body: "PDFs, spreadsheets, even phone photos of receipts.",
     },
     {
       title: "Google Drive",
-      body: "Read, fill and write the Docs and Sheets the office already uses.",
+      body: "Works inside the Docs and Sheets your office already lives in.",
     },
     {
-      title: "Tables",
-      body: "Keep records between runs and update them by key.",
+      title: "Memory between runs",
+      body: "Keeps records in tables, so nothing is typed twice.",
     },
     {
-      title: "Retry and restore",
-      body: "Rerun from the step that failed. Roll the workflow back to any version.",
+      title: "Undo for everything",
+      body: "Retry from the step that failed. Restore any earlier version.",
     },
     {
-      title: "MCP",
-      body: "Every tool the chat agent has is open to Claude and other MCP clients.",
+      title: "Open to your AI",
+      body: "Claude and other MCP clients get every tool Stamp's assistant has.",
     },
   ],
 }
 
 export const TRUST = {
-  title: "One school, one server",
-  body: "Each school runs its own Stamp with its own database. Nothing is shared between schools.",
+  title: "Your school's data stays your school's",
+  body: "Every school gets its own Stamp, on its own server, with its own database. Nothing is shared between schools.",
   items: [
     {
-      title: "Sealed credentials",
-      body: "Passwords go into a form, never the chat. They are encrypted with AES-256-GCM, and the agent sees only their names.",
+      title: "Passwords stay sealed",
+      body: "Credentials go into a secure form, never the chat. They are encrypted with AES-256-GCM, and the AI only ever sees their names.",
     },
     {
-      title: "Sandboxed code",
-      body: "Generated code runs in an isolated sandbox with no access to the private network.",
+      title: "Code in a closed room",
+      body: "Everything Stamp writes runs in an isolated sandbox, cut off from your private network.",
     },
     {
-      title: "Every call on record",
-      body: "Each model call is logged with its tokens and cost, and every run is traced.",
+      title: "Nothing hidden",
+      body: "Every AI call is logged with its cost, and every run can be traced step by step.",
     },
   ],
 }
 
 export const CLOSING = {
-  title: "Bring one workflow. Leave with it running.",
-  body: "We set it up with your office, on your own server.",
+  title: "Give your office its afternoons back.",
+  body: "Stamp is invite only while we set up each school by hand. Tell us about one workflow your office repeats, and we will have it running with you.",
 }
