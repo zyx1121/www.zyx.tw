@@ -99,7 +99,7 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
 - **20px module**: spacing between page parts is a multiple of 20px: gutters `px-5`, corner insets 20px, demos `gap-15`, groups `gap-20`, hero to content `pb-25`, the top of the page to the title `pt-30`. Inside a part the 4px grid rules (12px from a title to its subtitle).
 - **Spotlight pages**: a page about one thing (a component page on ui.zyx.tw, a result) centers its content on both axes in the column and falls back to scrolling from the top when it is taller than the viewport.
 - **One column**: `column` from `@workspace/ui/lib/layout`, 576, 768 and 1024px wide with 20px gutters. `page` adds the 120px top and 100px bottom space.
-- **Four corners**: the chrome of every app is four fixed corners, 20px in from the viewport's corners, 16px between items, all `text-body`. Top left is always the zyx mark (to www.zyx.tw; to `/` on www.zyx.tw itself), which mirrors itself on hover. Top right holds the page nav and the page's function buttons. Bottom left is Privacy and Terms and nothing else (`LegalLinks`). Bottom right is the copyright. They come from `@workspace/ui/components/corners`; an app leaves a corner empty rather than filling it with something else. An app's own working surface is content, not chrome: Plump's toolbar stays at the bottom center of its canvas.
+- **Four corners**: the chrome of every app is four fixed corners, 20px in from the viewport's corners, 16px between items, all `text-body`. Top left is always the zyx mark (to www.zyx.tw; to `/` on www.zyx.tw itself), which mirrors itself on hover. Top right holds the page nav and the page's function buttons. Bottom left is Privacy and Terms and nothing else (`LegalLinks`). Bottom right is the copyright. They come from `@workspace/ui/components/corners`, published as `@zyx1121/corners`; an app leaves a corner empty rather than filling it with something else. An app's own working surface is content, not chrome: Plump's toolbar stays at the bottom center of its canvas.
 - **Corner tips**: an item in a corner can carry a tip (`CornerTip`) that says what its label leaves out; it never restates a text label. Tips open at once, toward the page; touch never opens them.
 - **The corners stay put**: where content scrolls under them, a transparent 12px blur fades out over 64px from the top and bottom edges (`fade`). Pages that fill the viewport leave it off.
 - **No menu button**: the nav stays short enough to fit a 320px viewport beside the mark.
@@ -150,6 +150,7 @@ The chrome is grayscale, so a badge tells states apart by fill, not by hue. A ca
 - **Content**: badge, avatar, table, tabs, collapsible, separator, skeleton, chart, resizable
 - **Chat**: message, bubble, attachment
 - **zyx**: scramble-text, mask-reveal, theme-toggle
+- **Layout** (`registry:component`, in `packages/ui/src/components/`): corners, with corner-tip and zyx-mark
 
 Contract for every component:
 

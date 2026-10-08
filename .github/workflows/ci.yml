@@ -87,13 +87,16 @@ jobs:
           grep -q -- '--radius-surface: calc(var(--radius) + 1.5rem)' app/globals.css
           grep -q '@utility duration-overlay' app/globals.css
           ! grep -q -- '--card:' app/globals.css
-          items=$(python3 -c 'import json; print(" ".join(f"http://localhost:8099/r/{i["name"]}.json" for i in json.load(open("../../registry/r/registry.json"))["items"] if i["type"] == "registry:ui"))')
+          items=$(python3 -c 'import json; print(" ".join(f"http://localhost:8099/r/{i["name"]}.json" for i in json.load(open("../../registry/r/registry.json"))["items"] if i["type"] in ("registry:ui", "registry:component")))')
           bunx shadcn@latest add $items -y -o
           grep -q 'createCn' lib/utils.ts
+          grep -q 'from "./corner-tip"' components/corners.tsx
+          grep -q 'corner-edge' app/globals.css
           grep -q 'from "../../lib/utils"' components/ui/button.tsx
           ! grep -rq 'text-sm\|text-xs\|rounded-lg' components/ui
           grep -q 'animate-mask-reveal' app/globals.css
           cat > app/page.tsx <<'PAGE'
+          import { BottomCorners, LegalLinks, TopCorners } from "@/components/corners"
           import { Button } from "@/components/ui/button"
           import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
           import { InputGroup, InputGroupInput } from "@/components/ui/input-group"
@@ -103,6 +106,8 @@ jobs:
           export default function Page() {
             return (
               <main>
+                <TopCorners fade nav={<a href="/">Docs</a>} />
+                <BottomCorners fade links={<LegalLinks />} />
                 <Toolbar><Button>Save</Button></Toolbar>
                 <InputGroup><InputGroupInput /></InputGroup>
                 <MaskReveal>zyx</MaskReveal>

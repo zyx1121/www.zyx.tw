@@ -192,6 +192,45 @@
       "description": "Geist Mono for code only."
     },
     {
+      "name": "corners",
+      "type": "registry:component",
+      "title": "Corners",
+      "description": "The four fixed corners every zyx.tw site shares: the zyx mark and the page nav on top, Privacy and Terms and the copyright below, each item with a tip.",
+      "dependencies": ["@base-ui/react", "next"],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/tooltip.json"
+      ],
+      "css": {
+        "[data-slot=\"corner-edge\"]": {
+          "-webkit-backdrop-filter": "blur(12px)",
+          "backdrop-filter": "blur(12px)",
+          "-webkit-mask-image": "linear-gradient(var(--edge-direction), #000 35%, transparent)",
+          "mask-image": "linear-gradient(var(--edge-direction), #000 35%, transparent)"
+        },
+        "[data-slot=\"corner-edge\"][data-edge=\"top\"]": {
+          "--edge-direction": "to bottom"
+        },
+        "[data-slot=\"corner-edge\"][data-edge=\"bottom\"]": {
+          "--edge-direction": "to top"
+        }
+      },
+      "files": [
+        {
+          "path": "registry/zyx/components/corners.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/zyx/components/corner-tip.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/zyx/components/zyx-mark.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "alert-dialog",
       "type": "registry:ui",
       "title": "Alert Dialog",
