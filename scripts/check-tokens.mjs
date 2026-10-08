@@ -13,6 +13,7 @@ const scanned = [
   "apps/3d",
   "apps/good",
   "apps/link",
+  "apps/stamp",
   "apps/time",
   "apps/ui",
   "apps/web",
@@ -52,6 +53,9 @@ const exempt = {
   // under the text; they are part of the artwork, not chrome.
   "apps/web/app/made/made.css": ["color literal"],
   "apps/web/app/made/carrel/carrel.css": ["color literal"],
+  // Stamp's seal is the product's mark: vermilion ink and glyphs sized in
+  // the seal's own SVG units, the same in both themes.
+  "apps/stamp/components/seal.tsx": ["color literal", "raw font size"],
   // Plump's printed outline is exported into a downloadable SVG file.
   "apps/web/lib/plump.ts": ["color literal"],
 }
