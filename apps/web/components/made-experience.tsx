@@ -13,8 +13,8 @@ import {
   type ReactNode,
   type CSSProperties,
 } from "react"
-import { cn } from "cn"
 
+import { cn } from "@workspace/ui/lib/utils"
 import { MaskReveal } from "@workspace/ui/components/ui/mask-reveal"
 import { column, enterRow, page, rowDelay } from "@workspace/ui/lib/layout"
 

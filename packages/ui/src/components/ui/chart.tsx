@@ -1,8 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "cn"
 import * as RechartsPrimitive from "recharts"
+
+import { cn } from "../../lib/utils"
 
 // Charts use the theme's own colors, not chart tokens (DESIGN.md, Color):
 // the main series is primary, a comparison muted-foreground and a series

@@ -1,7 +1,8 @@
 "use client"
 
 import { Switch as SwitchPrimitive } from "@base-ui/react/switch"
-import { cn } from "cn"
+
+import { cn } from "../../lib/utils"
 
 // One size: a 40 x 24 track with 2px padding, so the 20px thumb travels 16px.
 function Switch({ className, ...props }: SwitchPrimitive.Root.Props) {

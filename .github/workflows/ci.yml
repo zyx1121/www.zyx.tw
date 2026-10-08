@@ -31,6 +31,9 @@ jobs:
       - name: Token policy
         run: bun run tokens:check
 
+      - name: cn keeps the type scale next to a text color
+        run: bun -e 'import { cn } from "./packages/ui/src/lib/utils"; const out = cn("text-body text-title", "text-caption text-foreground"); if (out !== "text-caption text-foreground") throw new Error(out)'
+
       - name: Lint
         run: bun run lint
 
@@ -86,6 +89,8 @@ jobs:
           ! grep -q -- '--card:' app/globals.css
           items=$(python3 -c 'import json; print(" ".join(f"http://localhost:8099/r/{i["name"]}.json" for i in json.load(open("../../registry/r/registry.json"))["items"] if i["type"] == "registry:ui"))')
           bunx shadcn@latest add $items -y -o
+          grep -q 'createCn' lib/utils.ts
+          grep -q 'from "../../lib/utils"' components/ui/button.tsx
           ! grep -rq 'text-sm\|text-xs\|rounded-lg' components/ui
           grep -q 'animate-mask-reveal' app/globals.css
           cat > app/page.tsx <<'PAGE'

@@ -1,5 +1,4 @@
-import { cn } from "cn"
-
+import { cn } from "@workspace/ui/lib/utils"
 import { Status } from "@workspace/ui/components/status"
 import { ScrambleText } from "@workspace/ui/components/ui/scramble-text"
 import { column, enterRow, page } from "@workspace/ui/lib/layout"

@@ -7,7 +7,8 @@ import {
   useState,
   useSyncExternalStore,
 } from "react"
-import { cn } from "cn"
+
+import { cn } from "../../lib/utils"
 
 const DEFAULT_CHARSET = "!#$%&*+-/<=>?@[]^{}~"
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)"

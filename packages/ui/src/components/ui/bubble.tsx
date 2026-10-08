@@ -1,7 +1,8 @@
 import { mergeProps } from "@base-ui/react/merge-props"
 import { useRender } from "@base-ui/react/use-render"
 import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "cn"
+
+import { cn } from "../../lib/utils"
 
 // Two kinds of chat text: muted is the person's message in a filled bubble,
 // ghost is the assistant's reply set as plain page text at full width.

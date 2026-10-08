@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "cn"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import {
   DayPicker,
@@ -10,6 +9,7 @@ import {
   type DayPickerProps,
 } from "react-day-picker"
 
+import { cn } from "../../lib/utils"
 import { buttonVariants } from "./button"
 
 // A month grid for picking one day: 40px day buttons, the same box as an

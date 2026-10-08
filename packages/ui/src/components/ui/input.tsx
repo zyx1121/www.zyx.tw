@@ -1,6 +1,7 @@
 import * as React from "react"
 import { Input as InputPrimitive } from "@base-ui/react/input"
-import { cn } from "cn"
+
+import { cn } from "../../lib/utils"
 
 // Same height and radius as Button so they line up in a row.
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {

@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
-import { cn } from "cn"
 
+import { cn } from "@workspace/ui/lib/utils"
 import { buttonVariants } from "@workspace/ui/components/ui/button"
 import { enterRow } from "@workspace/ui/lib/layout"
 

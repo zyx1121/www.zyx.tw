@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { cn } from "cn";
 
+import { cn } from "@workspace/ui/lib/utils";
 import { column } from "@workspace/ui/lib/layout";
 
 import { Hero } from "@/components/hero";

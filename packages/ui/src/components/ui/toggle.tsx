@@ -1,7 +1,8 @@
 "use client"
 
 import { Toggle as TogglePrimitive } from "@base-ui/react/toggle"
-import { cn } from "cn"
+
+import { cn } from "../../lib/utils"
 
 // Same box as a ghost Button; pressed shows the muted fill.
 function Toggle({ className, ...props }: TogglePrimitive.Props) {

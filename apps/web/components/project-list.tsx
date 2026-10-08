@@ -1,7 +1,6 @@
 "use client"
 
-import { cn } from "cn"
-
+import { cn } from "@workspace/ui/lib/utils"
 import { enterRow } from "@workspace/ui/lib/layout"
 
 import { useShowcase } from "@/components/showcase"
