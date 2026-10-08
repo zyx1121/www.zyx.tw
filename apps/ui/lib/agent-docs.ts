@@ -1,3 +1,4 @@
+import { docMarkdownPath, DOC_GROUPS, getDoc } from "@/lib/docs";
 import { COMPONENTS, getItem, ITEMS, type RegistryItem } from "@/lib/registry";
 import {
   addCommand,
@@ -33,6 +34,7 @@ function lines(...parts: (string | string[])[]) {
 }
 
 function itemSection(item: RegistryItem, extra: string[] = []) {
+  const page = getDoc(item.name);
   return [
     `### ${item.title} (${code(item.name)})`,
     "",
@@ -40,6 +42,11 @@ function itemSection(item: RegistryItem, extra: string[] = []) {
     "",
     `- Install: ${code(addCommand(item.name))}`,
     `- JSON: [${item.name}.json](${itemUrl(item.name)})`,
+    ...(page
+      ? [
+          `- Page: [${SITE_URL}/${item.name}](${SITE_URL}/${item.name}) ([Markdown](${SITE_URL}${docMarkdownPath(item.name)}))`,
+        ]
+      : []),
     ...(item.dependencies?.length
       ? [`- npm dependencies: ${item.dependencies.map(code).join(", ")}`]
       : []),
@@ -99,6 +106,45 @@ export function indexMarkdown() {
   );
 }
 
+/** /<name>.md: one component page as Markdown. */
+export function componentMarkdown(name: string) {
+  const item = getItem(name);
+  const group = DOC_GROUPS.find((entry) =>
+    entry.items.some((member) => member.name === name)
+  );
+  return lines(
+    "---",
+    `site: ${SITE_NAME}`,
+    `url: ${SITE_URL}/${item.name}`,
+    `title: ${item.title}`,
+    `description: ${JSON.stringify(item.description)}`,
+    "---",
+    "",
+    `# ${item.title}`,
+    "",
+    item.description,
+    "",
+    ...(group ? [`Group: ${group.title}.`, ""] : []),
+    "## Install",
+    "",
+    "```bash",
+    INIT_COMMAND,
+    `bunx shadcn@latest add @zyx1121/${item.name}`,
+    "```",
+    "",
+    "The first line sets a project up on the base; skip it if the project already has it.",
+    "",
+    "## Item",
+    "",
+    itemSection(item),
+    "## More",
+    "",
+    `- [Index](${INDEX_URL}): every item`,
+    `- [Agent instructions](${INSTRUCTIONS_URL}): the call order and the rules`,
+    `- [DESIGN.md](${DESIGN_URL}): the design contract`
+  );
+}
+
 /** /llms.txt: the llmstxt.org index. */
 export function llmsText() {
   return lines(
@@ -124,6 +170,15 @@ export function llmsText() {
     `- [Index](${INDEX_URL}): what ui.zyx.tw is, how to start from the base, every item`,
     `- [Agent instructions](${INSTRUCTIONS_URL}): when to use the registry, the call order, the rules`,
     `- [DESIGN.md](${DESIGN_URL}): the design contract behind the theme and the components`,
+    "",
+    "## Components",
+    "",
+    DOC_GROUPS.flatMap((group) =>
+      group.items.map(
+        (item) =>
+          `- [${item.title}](${SITE_URL}${docMarkdownPath(item.name)}): ${group.title}. ${item.description}`
+      )
+    ),
     "",
     "## Registry",
     "",
