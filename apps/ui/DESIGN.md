@@ -18,13 +18,13 @@ This file is the design contract for every zyx.tw app. `bun run theme:check` and
 
 Grayscale. The only chroma on screen is `destructive` and content itself (photos, 3D scenes).
 
-| Token | Use |
-| --- | --- |
-| `background` / `foreground` | The page and its text |
-| `primary` / `primary-foreground` | The main action |
-| `muted` / `muted-foreground` | The one neutral fill, and secondary text |
-| `destructive` | Errors and deleting |
-| `border` / `input` / `ring` | Lines, control outlines, focus rings |
+| Token                            | Use                                      |
+| -------------------------------- | ---------------------------------------- |
+| `background` / `foreground`      | The page and its text                    |
+| `primary` / `primary-foreground` | The main action                          |
+| `muted` / `muted-foreground`     | The one neutral fill, and secondary text |
+| `destructive`                    | Errors and deleting                      |
+| `border` / `input` / `ring`      | Lines, control outlines, focus rings     |
 
 There is no `secondary`, `accent` or `card` (they duplicated `muted` or `background`), no `popover` (overlays are frosted glass), no `sidebar-*` (the chrome is the four corners) and no `chart-*` (charts use the colors above). `tokens:check` rejects them, Tailwind palette colors (`bg-gray-500`, `bg-black`) and color literals. The few literals that are content rather than chrome (the Made pages' photo-matched paper tones, Open Graph images, a sample SVG) are waived file by file in `scripts/check-tokens.mjs`, each with its reason.
 
@@ -36,12 +36,12 @@ There is no `secondary`, `accent` or `card` (they duplicated `muted` or `backgro
 
 Four sizes by role, the same on phones and desktops. Tailwind's own sizes are cleared (`--text-*: initial`), so `text-sm` and friends do not exist.
 
-| Utility | Size | Use |
-| --- | --- | --- |
+| Utility        | Size    | Use                                                                     |
+| -------------- | ------- | ----------------------------------------------------------------------- |
 | `text-display` | 80/80px | One oversized value per page: the time app's clock, a tool app's result |
-| `text-title` | 24/32px | Page and dialog titles |
-| `text-body` | 16/24px | Everything else: body, controls, tables, corners, section headings |
-| `text-caption` | 14/20px | Timestamps, counts, code, chart axes |
+| `text-title`   | 24/32px | Page and dialog titles                                                  |
+| `text-body`    | 16/24px | Everything else: body, controls, tables, corners, section headings      |
+| `text-caption` | 14/20px | Timestamps, counts, code, chart axes                                    |
 
 - **Hierarchy by weight and color**: 400 for text, 500 for titles, section headings, labels and buttons. Secondary text is `text-muted-foreground`.
 - **CSS** may only name the scale: `font-size: var(--text-body); line-height: var(--text-body--line-height)`.
@@ -53,23 +53,23 @@ Four sizes by role, the same on phones and desktops. Tailwind's own sizes are cl
 
 Radii are concentric: an outer corner equals the inner corner plus the padding between them.
 
-| Utility | Value | Use |
-| --- | --- | --- |
-| `rounded-control` | `--radius` (16px) | Buttons, inputs, select triggers, menu items, links' focus outline |
-| `rounded-menu` | control + 4px | Menus, toolbars and chips with `p-1` around control-radius items |
-| `rounded-surface` | control + 24px | Dialogs, toasts and panels with `p-6` around controls |
-| `rounded-full` | pill / circle | Badges, switches, checkboxes, avatars, a round button inside an input group |
+| Utility           | Value             | Use                                                                         |
+| ----------------- | ----------------- | --------------------------------------------------------------------------- |
+| `rounded-control` | `--radius` (16px) | Buttons, inputs, select triggers, menu items, links' focus outline          |
+| `rounded-menu`    | control + 4px     | Menus, toolbars and chips with `p-1` around control-radius items            |
+| `rounded-surface` | control + 24px    | Dialogs, toasts and panels with `p-6` around controls                       |
+| `rounded-full`    | pill / circle     | Badges, switches, checkboxes, avatars, a round button inside an input group |
 
 A new container picks its radius from this rule, not by eye. If its padding is not 4px or 24px, it changes its padding. CSS uses `var(--radius)` or `var(--radius-menu)` / `var(--radius-surface)`.
 
 ### Motion
 
-| Utility | Duration | Use |
-| --- | --- | --- |
-| `duration-state` | 150ms ease-out | A control changing state: hover, focus, check, switch, the tab highlight |
-| `duration-overlay` | 200ms ease-out | Something appearing or leaving: dialogs, menus, popovers, tooltips, the mark mirroring |
-| `enter-row-<n>` | n × 25ms delay | The page's staggered entrance (`enterRow`, below) |
-| `transition-column` | 300ms | The column easing its width between breakpoints |
+| Utility             | Duration       | Use                                                                                    |
+| ------------------- | -------------- | -------------------------------------------------------------------------------------- |
+| `duration-state`    | 150ms ease-out | A control changing state: hover, focus, check, switch, the tab highlight               |
+| `duration-overlay`  | 200ms ease-out | Something appearing or leaving: dialogs, menus, popovers, tooltips, the mark mirroring |
+| `enter-row-<n>`     | n × 25ms delay | The page's staggered entrance (`enterRow`, below)                                      |
+| `transition-column` | 300ms          | The column easing its width between breakpoints                                        |
 
 - **Page entrance**: rows fade in over 300ms (tw-animate-css), 25ms apart in document order, counting the top corners as row 0: the title is row 1, the subtitle row 2, each block after them one row further. The bottom corners come in at row 15 (375ms). Use `enterRow(n)` and `enterFooter` from `@workspace/ui/lib/layout`; the delay is tw-animate-css's own variable, never `delay-*`, which would also delay transitions.
 - **Entrances never move layout**: they change opacity, masks, transforms and color only, so CLS stays 0.
@@ -80,9 +80,9 @@ A new container picks its radius from this rule, not by eye. If its padding is n
 
 The interface is flat and has exactly two layers.
 
-| Layer | What lives there | Surface |
-| --- | --- | --- |
-| 1. Page | Everything on the page when it loads: titles, text, lists, tables, forms, demos | None: no borders around groups, no shadows, no card backgrounds |
+| Layer      | What lives there                                                                                                         | Surface                                                                                                                                                     |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Page    | Everything on the page when it loads: titles, text, lists, tables, forms, demos                                          | None: no borders around groups, no shadows, no card backgrounds                                                                                             |
 | 2. Overlay | Anything called up over the page or a working surface: dialog, alert dialog, sheet, menus, popovers, toasts, the toolbar | Frosted glass (`bg-transparent backdrop-blur-md`, 12px), a border, a shadow, `rounded-menu` or `rounded-surface`. Backdrops are the same glass with no tint |
 
 - Group page content with spacing and, where a line helps, a divider (`border-t` / `border-b`). Never wrap a group in a frame. `tokens:check` rejects `shadow-*` and a whole `border` in page code; only the components draw layer 2.
@@ -97,6 +97,7 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
 
 - **4px grid**: every spacing, size and line height is a multiple of 4px. Half steps of 2px are for optical corrections and the inside of controls only.
 - **20px module**: spacing between page parts is a multiple of 20px: gutters `px-5`, corner insets 20px, demos `gap-15`, groups `gap-20`, hero to content `pb-25`, the top of the page to the title `pt-30`. Inside a part the 4px grid rules (12px from a title to its subtitle).
+- **Spotlight pages**: a page about one thing (a component page on ui.zyx.tw, a result) centers its content on both axes in the column and falls back to scrolling from the top when it is taller than the viewport.
 - **One column**: `column` from `@workspace/ui/lib/layout`, 576, 768 and 1024px wide with 20px gutters. `page` adds the 120px top and 100px bottom space.
 - **Four corners**: the chrome of every app is four fixed corners, 20px in from the viewport's corners, 16px between items, all `text-body`. Top left is always the zyx mark (to www.zyx.tw; to `/` on www.zyx.tw itself), which mirrors itself on hover. Top right holds the page nav and the page's function buttons. Bottom left is Privacy and Terms and nothing else (`LegalLinks`). Bottom right is the copyright. They come from `@workspace/ui/components/corners`; an app leaves a corner empty rather than filling it with something else. An app's own working surface is content, not chrome: Plump's toolbar stays at the bottom center of its canvas.
 - **Corner tips**: an item in a corner can carry a tip (`CornerTip`) that says what its label leaves out; it never restates a text label. Tips open at once, toward the page; touch never opens them.
@@ -118,10 +119,10 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
 - Rows are separated by dividers (`border-b`), never framed: no card per row, no border around the list. A row's text lines up with the page's left edge.
 - Row actions follow how many there are:
 
-| Actions on a row | Shape |
-| --- | --- |
-| One or two | Ghost icon buttons, each with a tooltip naming the verb ("Edit", "Delete") |
-| Three or more | One `⋯` button opening a `dropdown-menu`; the destructive action last, after a separator |
+| Actions on a row | Shape                                                                                    |
+| ---------------- | ---------------------------------------------------------------------------------------- |
+| One or two       | Ghost icon buttons, each with a tooltip naming the verb ("Edit", "Delete")               |
+| Three or more    | One `⋯` button opening a `dropdown-menu`; the destructive action last, after a separator |
 
 - A delete button stays muted on the row. Red belongs to the confirmation that follows, not to the trigger.
 - Every action that cannot be undone asks first, in an `alert-dialog`. Its confirm button names the verb ("Delete", "Revoke"), never "OK" or "Confirm".
@@ -130,12 +131,12 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
 
 The chrome is grayscale, so a badge tells states apart by fill, not by hue. A category (a kind, a tag, a group) never looks like a state.
 
-| What it is | Badge |
-| --- | --- |
-| Open, active, running, done | `default` |
-| Waiting, closed, inactive, draft | `muted` |
-| Rejected or failed | `destructive` |
-| A category or tag, not a state | `outline` |
+| What it is                       | Badge         |
+| -------------------------------- | ------------- |
+| Open, active, running, done      | `default`     |
+| Waiting, closed, inactive, draft | `muted`       |
+| Rejected or failed               | `destructive` |
+| A category or tag, not a state   | `outline`     |
 
 - Each app maps its status values to these variants in one place, next to the status labels, and every page reads that map.
 - A status that only applies to some rows shows nothing on the others; do not add a "normal" badge.
@@ -195,7 +196,7 @@ Every zyx.tw site is written for people and for agents. A static export has no s
 ## Adding or changing a component
 
 1. Edit or add `packages/ui/src/components/ui/<name>.tsx`. Import siblings relatively.
-2. For a new one, add its item to `apps/ui/registry.json` (dependencies, `registryDependencies` by URL, keyframes in `css`) and its demo to `apps/ui/components/showcase.tsx`.
+2. For a new one, add its item to `apps/ui/registry.json` (dependencies, `registryDependencies` by URL, keyframes in `css`) its demo to `apps/ui/components/demos.tsx` and its name to a group in `apps/ui/lib/docs.ts`. The build fails while a component has no group, and each one gets a page at `/<name>` and `/<name>.md`.
 3. Run `bun run theme:check`, `bun run tokens:check` and `bun run build` (it runs `shadcn build`).
 4. Merge to `main`: Vercel builds and serves `main` only.
 

@@ -3,6 +3,7 @@
   "framework": null,
   "buildCommand": "bun run build",
   "outputDirectory": "out",
+  "cleanUrls": true,
   "trailingSlash": false,
   "git": {
     "deploymentEnabled": {
@@ -14,8 +15,14 @@
     {
       "source": "/r/(.*)",
       "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET, OPTIONS" },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, OPTIONS"
+        },
         {
           "key": "Cache-Control",
           "value": "public, max-age=0, must-revalidate"
@@ -32,26 +39,64 @@
       ]
     },
     {
+      "source": "/:slug([a-z0-9-]+)",
+      "headers": [
+        {
+          "key": "Link",
+          "value": "</:slug.md>; rel=\"alternate\"; type=\"text/markdown\""
+        }
+      ]
+    },
+    {
+      "source": "/:slug([a-z0-9-]+).md",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/markdown; charset=utf-8"
+        }
+      ]
+    },
+    {
       "source": "/index.md",
       "headers": [
-        { "key": "Content-Type", "value": "text/markdown; charset=utf-8" }
+        {
+          "key": "Content-Type",
+          "value": "text/markdown; charset=utf-8"
+        }
       ]
     },
     {
       "source": "/agent-instructions.md",
       "headers": [
-        { "key": "Content-Type", "value": "text/markdown; charset=utf-8" }
+        {
+          "key": "Content-Type",
+          "value": "text/markdown; charset=utf-8"
+        }
       ]
     },
     {
       "source": "/llms.txt",
       "headers": [
-        { "key": "Content-Type", "value": "text/plain; charset=utf-8" }
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        }
       ]
     },
     {
       "source": "/opengraph-image",
-      "headers": [{ "key": "Content-Type", "value": "image/png" }]
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "image/png"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/:slug([a-z0-9-]+).md",
+      "destination": "/md/:slug"
     }
   ]
 }
