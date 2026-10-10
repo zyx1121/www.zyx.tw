@@ -9,8 +9,18 @@ import { isIP } from "node:net"
 
 import { Agent, fetch, Headers, type RequestInit, type Response } from "undici"
 
+/** Why a request was refused, so an app can say it in its own words. */
+export type RefusedReason = "scheme" | "private" | "unresolved" | "redirects"
+
 export class FetchRefused extends Error {
   override name = "FetchRefused"
+  constructor(
+    message: string,
+    readonly reason: RefusedReason,
+    readonly host?: string
+  ) {
+    super(message)
+  }
 }
 
 function ipv4Bytes(address: string): number[] | null {
@@ -139,7 +149,14 @@ export function publicLookup(
     resolve(hostname, (error, addresses) => {
       if (error) return callback(error, "")
       if (addresses.length === 0)
-        return callback(new FetchRefused(`${hostname} does not resolve`), "")
+        return callback(
+          new FetchRefused(
+            `${hostname} does not resolve`,
+            "unresolved",
+            hostname
+          ),
+          ""
+        )
       const blocked = addresses.filter(
         (entry) =>
           !allow.has(normalize(hostname)) &&
@@ -148,7 +165,11 @@ export function publicLookup(
       )
       if (blocked.length > 0)
         return callback(
-          new FetchRefused(`${hostname} is not a public address`),
+          new FetchRefused(
+            `${hostname} is not a public address`,
+            "private",
+            hostname
+          ),
           ""
         )
       if (options.all) return callback(null, addresses)
@@ -190,11 +211,14 @@ export async function publicFetch(
   let request: RequestInit = { ...init, headers: new Headers(init.headers) }
   for (let hop = 0; ; hop++) {
     if (url.protocol !== "https:" && url.protocol !== "http:")
-      throw new FetchRefused("only http and https URLs can be fetched")
+      throw new FetchRefused(
+        "only http and https URLs can be fetched",
+        "scheme"
+      )
     // A literal address never reaches the lookup, so it is checked here.
     const host = normalize(url.hostname)
     if (isIP(host) && isPrivateAddress(host) && !allow.has(host))
-      throw new FetchRefused(`${host} is not a public address`)
+      throw new FetchRefused(`${host} is not a public address`, "private", host)
     const response = await fetch(url, {
       ...request,
       redirect: "manual",
@@ -209,7 +233,7 @@ export async function publicFetch(
       return response
     if (hop >= (options.maxRedirects ?? 5)) {
       await response.body?.cancel()
-      throw new FetchRefused("too many redirects")
+      throw new FetchRefused("too many redirects", "redirects")
     }
     await response.body?.cancel()
     const next = new URL(location, url)
