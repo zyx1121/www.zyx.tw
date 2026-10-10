@@ -34,6 +34,15 @@ jobs:
       - name: cn keeps the type scale next to a text color
         run: bun -e 'import { cn } from "./packages/ui/src/lib/utils"; const out = cn("text-body text-title", "text-caption text-foreground"); if (out !== "text-caption text-foreground") throw new Error(out)'
 
+      - name: Setup Node for the agent kit's network tests
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Agent kit tests
+        working-directory: packages/agent
+        run: bun run test
+
       - name: Lint
         run: bun run lint
 
@@ -87,8 +96,11 @@ jobs:
           grep -q -- '--radius-surface: calc(var(--radius) + 1.5rem)' app/globals.css
           grep -q '@utility duration-overlay' app/globals.css
           ! grep -q -- '--card:' app/globals.css
-          items=$(python3 -c 'import json; print(" ".join(f"http://localhost:8099/r/{i["name"]}.json" for i in json.load(open("../../registry/r/registry.json"))["items"] if i["type"] in ("registry:ui", "registry:component", "registry:block")))')
+          items=$(python3 -c 'import json; print(" ".join(f"http://localhost:8099/r/{i["name"]}.json" for i in json.load(open("../../registry/r/registry.json"))["items"] if i["type"] in ("registry:ui", "registry:component", "registry:block") or i["name"].startswith("agent-")))')
           bunx shadcn@latest add $items -y -o
+          for file in telemetry model tools seal public-fetch; do test -f "lib/agent/$file.ts"; done
+          grep -q 'from "./telemetry"' lib/agent/tools.ts
+          grep -q '"@modelcontextprotocol/server"' package.json
           grep -q 'createCn' lib/utils.ts
           grep -q 'from "./corner-tip"' components/corners.tsx
           grep -q 'corner-edge' app/globals.css

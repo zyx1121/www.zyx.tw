@@ -1,0 +1,34 @@
+{
+  "name": "@workspace/agent",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "description": "The agent kit ui.zyx.tw publishes: model, tools with MCP, sealing, public fetch and tracing for agent web apps",
+  "scripts": {
+    "lint": "eslint",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test model seal tools && tsx --test src/public-fetch.test.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.2",
+    "@types/node": "^26",
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "eslint": "^9.39.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^4.0.83",
+    "@modelcontextprotocol/server": "^2.3.1",
+    "@opentelemetry/api": "^1.9.1",
+    "@opentelemetry/context-async-hooks": "^2.11.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.222.0",
+    "@opentelemetry/resources": "^2.11.0",
+    "@opentelemetry/sdk-trace-base": "^2.11.0",
+    "ai": "^7.0.127",
+    "undici": "^8.11.2",
+    "zod": "^4.6.5"
+  }
+}

@@ -1,5 +1,11 @@
 import { docMarkdownPath, DOC_GROUPS, getDoc } from "@/lib/docs";
-import { COMPONENTS, getItem, ITEMS, type RegistryItem } from "@/lib/registry";
+import {
+  AGENT_KIT,
+  COMPONENTS,
+  getItem,
+  ITEMS,
+  type RegistryItem,
+} from "@/lib/registry";
 import {
   addCommand,
   AGENT_INSTRUCTIONS_PATH,
@@ -96,6 +102,11 @@ export function indexMarkdown() {
     "",
     itemSection(getItem("base")),
     COMPONENTS.flatMap((item) => itemSection(item)),
+    "## Agent kit",
+    "",
+    "Server code for web apps with an agent in them, installed into `lib/agent/`: one tool registry for the page, the chat and MCP, an OpenAI-compatible model that waits out rate limits, sealed credentials, fetch that reaches public addresses only, and tracing. The rules are in DESIGN.md, Agent kit.",
+    "",
+    AGENT_KIT.flatMap((item) => itemSection(item)),
     "## More",
     "",
     `- [llms.txt](${LLMS_URL}): the short index for agents`,
