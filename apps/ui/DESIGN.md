@@ -196,6 +196,26 @@ Every zyx.tw site is written for people and for agents. A static export has no s
 - **An agent-friendly 404** says nothing is there and where to look next.
 - **Privacy statements match what loads**, checked against the browser's network log.
 
+## Agent kit
+
+Web apps with an agent in them (Handy, Stamp, the FDE demos) share the server half too. The kit lives in `packages/agent/src/`, is published as `registry:lib` items named `agent-*`, and installs into a project's `lib/agent/`. Each file is the app's own afterwards, like a component.
+
+| Item                 | What it gives                                                                                                  |
+| -------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `agent-tools`        | `defineTool` and `createTools`: one registry, `run` for pages, `forChat` for `streamText`, `mcp` for `/mcp`     |
+| `agent-model`        | `modelConfigFromEnv(prefix)` and `buildModel`: any OpenAI-compatible endpoint, traced, waiting out 429s          |
+| `agent-seal`         | `seal`, `open` and `redact`: AES-256-GCM for stored credentials, and scrubbing their values from any output     |
+| `agent-public-fetch` | `publicFetch`: requests on an agent's behalf reach public addresses only, checked at connect time               |
+| `agent-telemetry`    | `registerTelemetry`, `inSpan` and the traced model fetch, to Sensorium over OTLP/HTTP                           |
+
+- **Every action is a tool**: what a person can do on the page goes through the registry, so the chat agent and MCP clients get it with the same parsing, permissions and span. A tool stays off MCP only with `mcpExcludedBecause` saying why.
+- **Errors say only what is safe**: a `ToolError` message reaches the person, the model or the MCP client as written; any other error becomes "The tool failed." and its name goes on the span.
+- **Mutations announce themselves**: `createTools(tools, { afterMutation })` is where an app sends `pg_notify`, so open pages refresh (nextjs-dev rule 14).
+- **Credentials never reach the model**: the model gets a credential's name, a step gets its values from `open`, and whatever comes back goes through `redact`.
+- **The server fetches public addresses only**, unless the operator allows a host by name.
+- **Spans carry names, ids, counts and timings**, never prompts, file content or credentials.
+- **Node.js runtime**: the kit uses `node:crypto`, `node:async_hooks` and undici; route handlers that use it run on Node.js, not the edge.
+
 ## Adding or changing a component
 
 1. Edit or add `packages/ui/src/components/ui/<name>.tsx`. Import siblings relatively.

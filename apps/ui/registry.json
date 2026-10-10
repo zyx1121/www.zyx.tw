@@ -136,6 +136,88 @@
       ]
     },
     {
+      "name": "agent-telemetry",
+      "type": "registry:lib",
+      "title": "Agent Telemetry",
+      "description": "OTLP tracing for agent apps: registerTelemetry for instrumentation.ts, inSpan, and a traced fetch for model calls that records the upstream provider. Off until OTEL_EXPORTER_OTLP_ENDPOINT is set; spans never carry content.",
+      "dependencies": [
+        "@opentelemetry/api",
+        "@opentelemetry/context-async-hooks",
+        "@opentelemetry/exporter-trace-otlp-http",
+        "@opentelemetry/resources",
+        "@opentelemetry/sdk-trace-base"
+      ],
+      "files": [
+        {
+          "path": "registry/zyx/agent/telemetry.ts",
+          "type": "registry:lib",
+          "target": "lib/agent/telemetry.ts"
+        }
+      ]
+    },
+    {
+      "name": "agent-model",
+      "type": "registry:lib",
+      "title": "Agent Model",
+      "description": "Any OpenAI-compatible model for the AI SDK, configured from <PREFIX>MODEL_* variables, traced, and waiting out 429 rate limits until the gateway resets.",
+      "dependencies": ["ai", "@ai-sdk/openai", "@opentelemetry/api"],
+      "registryDependencies": ["https://ui.zyx.tw/r/agent-telemetry.json"],
+      "files": [
+        {
+          "path": "registry/zyx/agent/model.ts",
+          "type": "registry:lib",
+          "target": "lib/agent/model.ts"
+        }
+      ]
+    },
+    {
+      "name": "agent-tools",
+      "type": "registry:lib",
+      "title": "Agent Tools",
+      "description": "One tool registry for the page, the chat agent and MCP: zod input parsed once, run as the signed-in person, traced, with streamText tools and a stateless MCP endpoint from the same definitions.",
+      "dependencies": [
+        "ai",
+        "zod",
+        "@modelcontextprotocol/server",
+        "@opentelemetry/api"
+      ],
+      "registryDependencies": ["https://ui.zyx.tw/r/agent-telemetry.json"],
+      "files": [
+        {
+          "path": "registry/zyx/agent/tools.ts",
+          "type": "registry:lib",
+          "target": "lib/agent/tools.ts"
+        }
+      ]
+    },
+    {
+      "name": "agent-seal",
+      "type": "registry:lib",
+      "title": "Agent Seal",
+      "description": "AES-256-GCM sealing for credentials an agent uses but never sees, and redact to scrub their values (and their JSON and URL forms) from anything returned.",
+      "files": [
+        {
+          "path": "registry/zyx/agent/seal.ts",
+          "type": "registry:lib",
+          "target": "lib/agent/seal.ts"
+        }
+      ]
+    },
+    {
+      "name": "agent-public-fetch",
+      "type": "registry:lib",
+      "title": "Agent Public Fetch",
+      "description": "fetch for requests made on an agent's behalf that reaches public addresses only, checked inside the connection's own DNS lookup so DNS rebinding cannot slip through. Node.js only.",
+      "dependencies": ["undici"],
+      "files": [
+        {
+          "path": "registry/zyx/agent/public-fetch.ts",
+          "type": "registry:lib",
+          "target": "lib/agent/public-fetch.ts"
+        }
+      ]
+    },
+    {
       "name": "font-inter",
       "type": "registry:font",
       "title": "Inter",
