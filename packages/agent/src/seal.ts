@@ -77,10 +77,15 @@ export function redact<T>(value: T, secrets: Record<string, string>): T {
   const pairs: [string, string][] = []
   for (const [name, secret] of Object.entries(secrets)) {
     if (secret.length < MIN_REDACTED) continue
+    const uri = encodeURIComponent(secret)
     const forms = new Set([
       secret,
       JSON.stringify(secret).slice(1, -1),
-      encodeURIComponent(secret),
+      uri,
+      uri.replace(/%[0-9A-F]{2}/g, (hex) => hex.toLowerCase()),
+      // application/x-www-form-urlencoded, as URLSearchParams writes it
+      new URLSearchParams({ v: secret }).toString().slice(2),
+      Buffer.from(secret).toString("base64"),
     ])
     for (const form of forms) pairs.push([form, `[${name}]`])
   }
@@ -90,6 +95,9 @@ export function redact<T>(value: T, secrets: Record<string, string>): T {
     pairs.reduce((out, [form, mask]) => out.split(form).join(mask), text)
   const walk = (item: unknown): unknown => {
     if (typeof item === "string") return scrub(item)
+    // A secret that is all digits may sit in JSON as a number.
+    if (typeof item === "number" && scrub(String(item)) !== String(item))
+      return scrub(String(item))
     if (Array.isArray(item)) return item.map(walk)
     if (item && typeof item === "object" && !(item instanceof Date))
       return Object.fromEntries(

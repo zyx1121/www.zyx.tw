@@ -9,7 +9,7 @@
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
-    "test": "bun test model seal tools && tsx --test src/public-fetch.test.ts"
+    "test": "bun test model seal tools telemetry public-fetch.bun && tsx --test src/public-fetch.test.ts"
   },
   "devDependencies": {
     "@types/bun": "^1.4.2",

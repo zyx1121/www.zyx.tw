@@ -114,6 +114,7 @@ export function isPrivateAddress(address: string): boolean {
   return (
     (b[0]! & 0xfe) === 0xfc ||
     (b[0] === 0xfe && (b[1]! & 0xc0) === 0x80) ||
+    (b[0] === 0xfe && (b[1]! & 0xc0) === 0xc0) ||
     b[0] === 0xff
   )
 }
@@ -188,25 +189,52 @@ export function publicAgent(
   })
 }
 
-// One dispatcher per allow list, so connections are pooled and none leak.
+// One dispatcher per allow list, so connections are pooled. Allow lists come
+// from configuration, so there are few; past 16 the oldest is closed.
 const agents = new Map<string, Agent>()
+
+function agentFor(allow: Set<string>) {
+  const key = [...allow].sort().join(",")
+  let agent = agents.get(key)
+  if (!agent) {
+    if (agents.size >= 16) {
+      const [oldest, closing] = agents.entries().next().value!
+      agents.delete(oldest)
+      void closing.close().catch(() => {})
+    }
+    agents.set(key, (agent = publicAgent({ allow })))
+  }
+  return agent
+}
+
+const DNS_FAILURES = new Set([
+  "ENOTFOUND",
+  "EAI_AGAIN",
+  "EAI_NODATA",
+  "EAI_NONAME",
+])
 
 /**
  * fetch to public addresses only, following up to maxRedirects redirects that
  * stay public. allow names hosts or exact addresses the operator permits
- * although they are private; with allow, a dispatcher is built per call.
+ * although they are private. Node.js only: Bun's fetch ignores the undici
+ * dispatcher, so the pinned lookup would never run; under Bun it throws.
  */
 export async function publicFetch(
   target: string | URL,
   init: RequestInit = {},
   options: { timeoutMs?: number; maxRedirects?: number; allow?: string[] } = {}
 ): Promise<Response> {
+  if (process.versions.bun)
+    throw new Error(
+      "agent-public-fetch needs Node.js: Bun's fetch ignores the undici dispatcher, so private addresses would not be refused"
+    )
   const allow = new Set((options.allow ?? []).map(normalize))
-  const key = [...allow].sort().join(",")
-  let dispatcher = agents.get(key)
-  if (!dispatcher) agents.set(key, (dispatcher = publicAgent({ allow })))
-  // One deadline for the request and every redirect it follows.
-  const signal = init.signal ?? AbortSignal.timeout(options.timeoutMs ?? 20_000)
+  const dispatcher = agentFor(allow)
+  // One deadline for the request and every redirect it follows, and the
+  // caller's own signal too.
+  const timeout = AbortSignal.timeout(options.timeoutMs ?? 20_000)
+  const signal = init.signal ? AbortSignal.any([init.signal, timeout]) : timeout
   let url = new URL(target)
   let request: RequestInit = { ...init, headers: new Headers(init.headers) }
   for (let hop = 0; ; hop++) {
@@ -225,8 +253,13 @@ export async function publicFetch(
       dispatcher,
       signal,
     }).catch((error: Error) => {
-      // A refusal from the lookup arrives wrapped in fetch's TypeError.
-      throw error.cause instanceof FetchRefused ? error.cause : error
+      // A refusal from the lookup arrives wrapped in fetch's TypeError, and
+      // so does a name that does not resolve.
+      const cause = error.cause as (Error & { code?: string }) | undefined
+      if (cause instanceof FetchRefused) throw cause
+      if (cause?.code && DNS_FAILURES.has(cause.code))
+        throw new FetchRefused(`${host} does not resolve`, "unresolved", host)
+      throw error
     })
     const location = response.headers.get("location")
     if (response.status < 300 || response.status >= 400 || !location)
@@ -237,7 +270,10 @@ export async function publicFetch(
     }
     await response.body?.cancel()
     const next = new URL(location, url)
-    // Credentials meant for one site never follow a redirect to another.
+    // Authorization, Cookie and Proxy-Authorization never follow a redirect
+    // to another site. Other headers (an x-api-key) and a 307/308 body do,
+    // as in fetch itself: put such credentials only on requests that do not
+    // redirect, or pass maxRedirects: 0.
     if (next.origin !== url.origin) {
       const headers = new Headers(request.headers)
       for (const name of ["authorization", "cookie", "proxy-authorization"])

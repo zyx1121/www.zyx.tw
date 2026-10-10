@@ -31,6 +31,7 @@ describe("isPrivateAddress", () => {
       "2002:a00:1::",
       "2001:0:4136:e378::1",
       "2001:db8::1",
+      "fec0::1",
       "not an address",
     ])
       assert.equal(isPrivateAddress(address), true, address)
@@ -88,6 +89,7 @@ describe("publicFetch", () => {
       )
     )
     first = createServer((request, response) => {
+      if (request.url === "/slow") return
       if (request.url === "/away") {
         response.writeHead(302, { location: `http://localhost:${secondPort}/` })
         return response.end()
@@ -126,6 +128,25 @@ describe("publicFetch", () => {
         error instanceof FetchRefused &&
         error.reason === "private" &&
         error.host === "localhost"
+    )
+  })
+  test("a name that does not resolve is refused as unresolved", async () => {
+    await assert.rejects(
+      publicFetch("http://nothing-here.invalid/"),
+      (error: unknown) =>
+        error instanceof FetchRefused && error.reason === "unresolved"
+    )
+  })
+  test("the timeout holds even when the caller passes a signal", async () => {
+    const caller = new AbortController()
+    await assert.rejects(
+      publicFetch(
+        `http://localhost:${firstPort}/slow`,
+        { signal: caller.signal },
+        { allow: ["localhost"], timeoutMs: 300 }
+      ),
+      (error: Error) =>
+        error.name === "TimeoutError" || String(error.cause).includes("Timeout")
     )
   })
   test("an allowed host connects, and credentials do not follow a redirect to another origin", async () => {

@@ -68,6 +68,20 @@ describe("run", () => {
     await tools.run(user, "add_item", { name: "b" }, "web")
     expect(changes).toEqual(["add_item"])
   })
+  test("a mutation announcement that never settles does not hold the call", async () => {
+    const hanging = createTools<User>(
+      {
+        add: tool({
+          kind: "mutation",
+          description: "",
+          input: z.object({}),
+          run: async () => "done",
+        }),
+      },
+      { afterMutation: () => new Promise(() => {}) }
+    )
+    expect(await hanging.run(user, "add", {}, "web")).toBe("done")
+  })
   test("names must be snake_case", () => {
     expect(() =>
       createTools({

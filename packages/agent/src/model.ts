@@ -37,7 +37,13 @@ export function modelConfigFromEnv(
   const api = env[`${prefix}MODEL_API`] || "chat"
   if (api !== "responses" && api !== "chat")
     throw new Error(`${prefix}MODEL_API must be "responses" or "chat"`)
-  const headers: unknown = JSON.parse(env[`${prefix}MODEL_HEADERS`] || "{}")
+  let headers: unknown
+  try {
+    headers = JSON.parse(env[`${prefix}MODEL_HEADERS`] || "{}")
+  } catch {
+    // The parser's message can quote the value, which may hold a key.
+    throw new Error(`${prefix}MODEL_HEADERS is not valid JSON`)
+  }
   if (
     typeof headers !== "object" ||
     headers === null ||

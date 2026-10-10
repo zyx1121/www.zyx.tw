@@ -61,7 +61,7 @@ export function createTools<Ctx>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tools: Record<string, Tool<Ctx, any, any>>,
   options: {
-    /** After a mutation succeeds: announce it so open pages refresh. Its failure never fails the call. */
+    /** After a mutation succeeds: announce it so open pages refresh. It runs in the background: it never delays, fails or hangs the call. */
     afterMutation?: (name: string, ctx: Ctx) => unknown
   } = {}
 ) {
@@ -89,7 +89,7 @@ export function createTools<Ctx>(
       async () => {
         const result = await tool.run(ctx, parsed.data)
         if (tool.kind === "mutation" && options.afterMutation)
-          await Promise.resolve()
+          void Promise.resolve()
             .then(() => options.afterMutation!(name, ctx))
             .catch(() => {})
         return result

@@ -134,23 +134,41 @@ export const tracedFetch = (async (
   const decoder = new TextDecoder()
   let head = ""
   let found = false
-  const body = response.body.pipeThrough(
-    new TransformStream<Uint8Array, Uint8Array>({
-      transform(chunk, controller) {
-        if (!found && head.length < 65_536) {
-          head += decoder.decode(chunk, { stream: true })
-          const match = UPSTREAM.exec(head)
-          if (match) {
-            span.setAttribute("model.upstream", match[1]!)
-            found = true
-            head = ""
-          }
+  const reader = response.body.getReader()
+  // The span ends when the body ends, fails or is cancelled (a 429 that is
+  // waited out cancels its body).
+  const body = new ReadableStream<Uint8Array>({
+    async pull(controller) {
+      let part: Awaited<ReturnType<typeof reader.read>>
+      try {
+        part = await reader.read()
+      } catch (error) {
+        failed(span, error)
+        end()
+        controller.error(error)
+        return
+      }
+      if (part.done) {
+        end()
+        controller.close()
+        return
+      }
+      if (!found && head.length < 65_536) {
+        head += decoder.decode(part.value, { stream: true })
+        const match = UPSTREAM.exec(head)
+        if (match) {
+          span.setAttribute("model.upstream", match[1]!)
+          found = true
+          head = ""
         }
-        controller.enqueue(chunk)
-      },
-      flush: end,
-    })
-  )
+      }
+      controller.enqueue(part.value)
+    },
+    cancel(reason) {
+      end()
+      return reader.cancel(reason)
+    },
+  })
   return new Response(body, {
     status: response.status,
     statusText: response.statusText,

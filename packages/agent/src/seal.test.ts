@@ -48,6 +48,17 @@ describe("redact", () => {
       "https://x.test/?p=[DB_PASSWORD]"
     )
   })
+  test("form encoding, lowercase escapes, base64 and numbers", () => {
+    expect(redact("p=p%22a%2Fss+w0rd", secrets)).toBe("p=[DB_PASSWORD]")
+    expect(redact("p=p%22a%2fss%20w0rd", secrets)).toBe("p=[DB_PASSWORD]")
+    expect(redact(Buffer.from('p"a/ss w0rd').toString("base64"), secrets)).toBe(
+      "[DB_PASSWORD]"
+    )
+    expect(redact<unknown>({ pin: 123456 }, { PIN: "123456" })).toEqual({
+      pin: "[PIN]",
+    })
+    expect(redact<unknown>({ n: 7 }, { PIN: "123456" })).toEqual({ n: 7 })
+  })
   test("values too short to be secrets are left alone", () => {
     expect(redact("call 123", secrets)).toBe("call 123")
   })
