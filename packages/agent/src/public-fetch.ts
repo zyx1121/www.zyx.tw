@@ -197,7 +197,8 @@ export function publicAgent(
 }
 
 // One dispatcher per allow list, so connections are pooled. Allow lists come
-// from configuration, so there are few; past 16 the oldest is closed.
+// from configuration, so there are few; past 16 the least recently used is
+// closed.
 // close() lets requests already sent finish, and publicFetch looks its
 // dispatcher up again on every redirect, so a closed one is never reused.
 const agents = new Map<string, Agent>()
@@ -205,7 +206,11 @@ const agents = new Map<string, Agent>()
 function agentFor(allow: Set<string>) {
   const key = [...allow].sort().join(",")
   let agent = agents.get(key)
-  if (!agent) {
+  // Map order is the eviction order: a dispatcher in use moves to the back.
+  if (agent) {
+    agents.delete(key)
+    agents.set(key, agent)
+  } else {
     if (agents.size >= 16) {
       const [oldest, closing] = agents.entries().next().value!
       agents.delete(oldest)
