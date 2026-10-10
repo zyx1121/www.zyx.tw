@@ -90,6 +90,13 @@ describe("publicFetch", () => {
     )
     first = createServer((request, response) => {
       if (request.url === "/slow") return
+      if (request.url === "/late") {
+        setTimeout(() => {
+          response.writeHead(302, { location: "/" })
+          response.end()
+        }, 600)
+        return
+      }
       if (request.url === "/away") {
         response.writeHead(302, { location: `http://localhost:${secondPort}/` })
         return response.end()
@@ -136,6 +143,26 @@ describe("publicFetch", () => {
       (error: unknown) =>
         error instanceof FetchRefused && error.reason === "unresolved"
     )
+  })
+  test("a request whose dispatcher is evicted from the pool still finishes, redirect included", async () => {
+    const late = publicFetch(
+      `http://localhost:${firstPort}/late`,
+      {},
+      { allow: ["localhost"] }
+    )
+    // 16 more allow lists push the localhost dispatcher out of the pool.
+    await Promise.all(
+      Array.from({ length: 16 }, (_, i) =>
+        publicFetch(
+          `http://localhost:${firstPort}/`,
+          {},
+          { allow: ["localhost", `other-${i}.test`] }
+        ).then((r) => r.text())
+      )
+    )
+    const response = await late
+    assert.equal(response.status, 200)
+    assert.deepEqual(await response.json(), { auth: null })
   })
   test("the timeout holds even when the caller passes a signal", async () => {
     const caller = new AbortController()

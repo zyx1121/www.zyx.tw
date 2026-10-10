@@ -179,10 +179,17 @@ export function publicLookup(
   }
 }
 
-/** An undici dispatcher whose every connection goes through publicLookup. */
+const BUN_REFUSAL =
+  "agent-public-fetch needs Node.js: Bun's fetch ignores the undici dispatcher, so private addresses would not be refused"
+
+/**
+ * An undici dispatcher whose every connection goes through publicLookup.
+ * Node.js only: under Bun it throws, because Bun's fetch would ignore it.
+ */
 export function publicAgent(
   options: { allow?: Iterable<string>; resolve?: Resolve } = {}
 ) {
+  if (process.versions.bun) throw new Error(BUN_REFUSAL)
   const allow = new Set([...(options.allow ?? [])].map(normalize))
   return new Agent({
     connect: { lookup: publicLookup(allow, options.resolve) },
@@ -191,6 +198,8 @@ export function publicAgent(
 
 // One dispatcher per allow list, so connections are pooled. Allow lists come
 // from configuration, so there are few; past 16 the oldest is closed.
+// close() lets requests already sent finish, and publicFetch looks its
+// dispatcher up again on every redirect, so a closed one is never reused.
 const agents = new Map<string, Agent>()
 
 function agentFor(allow: Set<string>) {
@@ -225,12 +234,8 @@ export async function publicFetch(
   init: RequestInit = {},
   options: { timeoutMs?: number; maxRedirects?: number; allow?: string[] } = {}
 ): Promise<Response> {
-  if (process.versions.bun)
-    throw new Error(
-      "agent-public-fetch needs Node.js: Bun's fetch ignores the undici dispatcher, so private addresses would not be refused"
-    )
+  if (process.versions.bun) throw new Error(BUN_REFUSAL)
   const allow = new Set((options.allow ?? []).map(normalize))
-  const dispatcher = agentFor(allow)
   // One deadline for the request and every redirect it follows, and the
   // caller's own signal too.
   const timeout = AbortSignal.timeout(options.timeoutMs ?? 20_000)
@@ -250,7 +255,7 @@ export async function publicFetch(
     const response = await fetch(url, {
       ...request,
       redirect: "manual",
-      dispatcher,
+      dispatcher: agentFor(allow),
       signal,
     }).catch((error: Error) => {
       // A refusal from the lookup arrives wrapped in fetch's TypeError, and
