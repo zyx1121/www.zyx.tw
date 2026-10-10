@@ -122,7 +122,10 @@ describe("publicFetch", () => {
   test("refuses a name that resolves to a private address, at connect time", async () => {
     await assert.rejects(
       publicFetch(`http://localhost:${firstPort}/`),
-      FetchRefused
+      (error: unknown) =>
+        error instanceof FetchRefused &&
+        error.reason === "private" &&
+        error.host === "localhost"
     )
   })
   test("an allowed host connects, and credentials do not follow a redirect to another origin", async () => {
