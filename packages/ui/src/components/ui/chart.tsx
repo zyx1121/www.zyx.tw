@@ -80,6 +80,23 @@ type TooltipEntry = {
   value?: unknown
 }
 
+// A series' dot in its config color.
+function Swatch({ color }: { color?: keyof typeof SERIES_COLORS }) {
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        "size-2 shrink-0 rounded-full",
+        color === "muted"
+          ? "bg-muted-foreground"
+          : color === "destructive"
+            ? "bg-destructive"
+            : "bg-primary"
+      )}
+    />
+  )
+}
+
 // The tooltip of a data point: a frosted layer-2 surface listing each series
 // with its color swatch.
 function ChartTooltipContent({
@@ -101,16 +118,7 @@ function ChartTooltipContent({
         const key = String(entry.dataKey ?? entry.name)
         return (
           <div key={key} className="flex items-center gap-2">
-            <span
-              className={cn(
-                "size-2 shrink-0 rounded-full",
-                config[key]?.color === "muted"
-                  ? "bg-muted-foreground"
-                  : config[key]?.color === "destructive"
-                    ? "bg-destructive"
-                    : "bg-primary"
-              )}
-            />
+            <Swatch color={config[key]?.color} />
             <span className="text-muted-foreground">
               {config[key]?.label ?? key}
             </span>
@@ -124,4 +132,47 @@ function ChartTooltipContent({
   )
 }
 
-export { ChartContainer, ChartTooltip, ChartTooltipContent }
+const ChartLegend = RechartsPrimitive.Legend
+
+// Series names under the chart, each beside its swatch, so color is never
+// the only label. Listed in the config's order, whatever order Recharts
+// passes them in.
+function ChartLegendContent({
+  payload,
+  className,
+}: {
+  payload?: readonly { dataKey?: string | number; value?: string }[]
+  className?: string
+}) {
+  const config = useChartConfig()
+  if (!payload?.length) return null
+  const order = Object.keys(config)
+  const keys = payload
+    .map((entry) => String(entry.dataKey ?? entry.value ?? ""))
+    .sort((a, b) => order.indexOf(a) - order.indexOf(b))
+
+  return (
+    <div
+      data-slot="chart-legend"
+      className={cn(
+        "flex flex-wrap items-center justify-center gap-4 pt-4 text-caption text-muted-foreground",
+        className
+      )}
+    >
+      {keys.map((key) => (
+        <span key={key} className="flex items-center gap-2">
+          <Swatch color={config[key]?.color} />
+          {config[key]?.label ?? key}
+        </span>
+      ))}
+    </div>
+  )
+}
+
+export {
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+}
