@@ -6,7 +6,8 @@ import { CheckIcon } from "lucide-react"
 import { cn } from "../../lib/utils"
 
 // Round, 20px, with a larger invisible hit area. A future radio shows a dot,
-// not a check, so the two stay apart.
+// not a check, so the two stay apart. The check stays mounted and fades with
+// the fill, so checking and unchecking take the same 150ms.
 function Checkbox({ className, ...props }: CheckboxPrimitive.Root.Props) {
   return (
     <CheckboxPrimitive.Root
@@ -18,8 +19,9 @@ function Checkbox({ className, ...props }: CheckboxPrimitive.Root.Props) {
       {...props}
     >
       <CheckboxPrimitive.Indicator
+        keepMounted
         data-slot="checkbox-indicator"
-        className="grid animate-in place-content-center text-current duration-state fade-in-0 zoom-in-50 [&>svg]:size-3.5"
+        className="grid place-content-center text-current transition-all duration-state data-unchecked:opacity-0 motion-safe:data-unchecked:scale-50 [&>svg]:size-3.5"
       >
         <CheckIcon strokeWidth={3} />
       </CheckboxPrimitive.Indicator>

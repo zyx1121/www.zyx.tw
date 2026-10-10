@@ -40,6 +40,8 @@ import { Button } from "@workspace/ui/components/ui/button";
 import { Calendar } from "@workspace/ui/components/ui/calendar";
 import {
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/ui/chart";
@@ -152,12 +154,12 @@ import { rowDelay } from "@workspace/ui/lib/layout";
 const PROJECTS = ["Plump", "Time", "Link", "Carrel", "Peck"];
 
 const VISITS = [
-  { month: "May", count: 186 },
-  { month: "Jun", count: 305 },
-  { month: "Jul", count: 237 },
-  { month: "Aug", count: 273 },
-  { month: "Sep", count: 209 },
-  { month: "Oct", count: 314 },
+  { month: "May", count: 186, last: 142 },
+  { month: "Jun", count: 305, last: 198 },
+  { month: "Jul", count: 237, last: 221 },
+  { month: "Aug", count: 273, last: 240 },
+  { month: "Sep", count: 209, last: 186 },
+  { month: "Oct", count: 314, last: 263 },
 ];
 
 const ROWS = [
@@ -531,14 +533,19 @@ const DEMOS: Record<string, React.ReactNode> = {
   ),
   chart: (
     <ChartContainer
-      config={{ count: { label: "Visits", color: "primary" } }}
+      config={{
+        count: { label: "This year", color: "primary" },
+        last: { label: "Last year", color: "muted" },
+      }}
       className="h-60 w-full"
     >
       <BarChart accessibilityLayer data={VISITS}>
         <CartesianGrid vertical={false} />
         <XAxis dataKey="month" tickLine={false} axisLine={false} />
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-        <Bar dataKey="count" fill="var(--color-count)" radius={8} />
+        <ChartLegend content={<ChartLegendContent />} />
+        <Bar dataKey="count" fill="var(--color-count)" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="last" fill="var(--color-last)" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ChartContainer>
   ),

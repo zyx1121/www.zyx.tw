@@ -72,6 +72,7 @@ A new container picks its radius from this rule, not by eye. If its padding is n
 | `transition-column` | 300ms          | The column easing its width between breakpoints                                        |
 
 - **Page entrance**: rows fade in over 300ms (tw-animate-css), 25ms apart in document order, counting the top corners as row 0: the title is row 1, the subtitle row 2, each block after them one row further. The bottom corners come in at row 15 (375ms). Use `enterRow(n)` and `enterFooter` from `@workspace/ui/lib/layout`; the delay is tw-animate-css's own variable, never `delay-*`, which would also delay transitions.
+- **Both directions alike**: every animation runs the same way in and out: what zooms in zooms out, what fades in fades out, at the same duration. A select menu that sits over its trigger only fades, opening and closing.
 - **Entrances never move layout**: they change opacity, masks, transforms and color only, so CLS stays 0.
 - **Reduced motion covers everything**: our animations sit behind `motion-safe:`, and globals.css cuts every animation and transition to 1ms under `prefers-reduced-motion: reduce` (1ms keeps the end events Base UI waits for).
 - `tokens:check` rejects other durations (`duration-300`) and delays.
@@ -112,7 +113,7 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
 - **Lines only where they carry meaning**: a line bounds a layer-2 surface or separates groups. It is 1px of `--border` (white at 10% in dark).
 - **Transparent borders reserve focus space**: a control keeps a 1px border that its focus state colors, so focusing moves nothing.
 - **Offsets live at the call site**: nudges such as `-ml-1` or `-m-3` depend on the surrounding layout, so they go in the caller's `className`, never inside a component. An icon button in a text row takes its icon inset back on every side (`-m-3` on a 40px button with a 16px icon), so layout sees only the icon.
-- **Menus follow their trigger**: a menu opens 4px under its trigger, as wide as the trigger plus its padding (`w-menu`).
+- **Menus follow their trigger**: a menu opens 4px under its trigger. A select menu is as wide as the trigger plus its padding (`w-menu`); a combobox menu keeps the popover's width and grows to the trigger's when that is wider, so a short trigger never truncates the options.
 
 ## Lists
 
@@ -166,7 +167,7 @@ Per item:
 
 - `scramble-text`: glyphs resolve left to right at `speed` ms per character (50) on `trigger` `mount` or `in-view`. The final text stays one untouched text node, painted transparent while an `aria-hidden` overlay draws one cell per character, pinned to that character's measured box before paint, so line breaks, size and the accessible text never change. The server text is held invisible for at most 1.5s until the client starts; reduced motion shows the text at once.
 - `mask-reveal`: a feathered mask three times the element's width sweeps from 100% to 0% over 600ms with `cubic-bezier(.16,1,.3,1)`. The delay comes from an `enter-row-<n>` class on the same element (`rowDelay(n)`), so it keeps time with the row fades. The mask exists only inside the keyframes, so focus rings and shadows are intact afterwards.
-- `chart`: series colors are `primary`, `muted` (muted-foreground) or `destructive`, set per key in the config and reaching Recharts as `--color-<key>`. More than two series to tell apart by color means small multiples or a table.
+- `chart`: series colors are `primary`, `muted` (muted-foreground) or `destructive`, set per key in the config and reaching Recharts as `--color-<key>`. Bars have 4px rounded ends at the top, lines are 2px, the grid is horizontal only, and two series always come with `ChartLegendContent`, so color is never the only label. More than two series to tell apart by color means small multiples or a table.
 - `toolbar`: a frosted bar of 40px controls over a working surface, `rounded-menu` around them.
 
 ## Content

@@ -37,7 +37,8 @@ function ComboboxTrigger({
   )
 }
 
-// As wide as the trigger, like a select menu.
+// At least as wide as the trigger and as wide as a popover, so a short
+// trigger never squeezes its menu and truncates the options.
 function ComboboxContent({
   className,
   ...props
@@ -45,7 +46,7 @@ function ComboboxContent({
   return (
     <PopoverContent
       data-slot="combobox-content"
-      className={cn("w-(--anchor-width)", className)}
+      className={cn("min-w-(--anchor-width)", className)}
       {...props}
     />
   )
