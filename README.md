@@ -1,115 +1,119 @@
-```
+<div align="center">
 
-███████╗██╗   ██╗██╗  ██╗████████╗██╗    ██╗
-╚══███╔╝╚██╗ ██╔╝╚██╗██╔╝╚══██╔══╝██║    ██║
-  ███╔╝  ╚████╔╝  ╚███╔╝    ██║   ██║ █╗ ██║
- ███╔╝    ╚██╔╝   ██╔██╗    ██║   ██║███╗██║
-███████╗   ██║   ██╔╝ ██╗██╗██║   ╚███╔███╔╝
-╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝    ╚══╝╚══╝
+<h1>www.zyx.tw</h1>
 
-```
+<p><strong>zyx.tw and its subdomain apps in one Turborepo, with one shared design system.</strong></p>
 
-# www.zyx.tw
+[![CI](https://img.shields.io/github/actions/workflow/status/zyx1121/www.zyx.tw/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/zyx1121/www.zyx.tw/actions)
+[![Live](https://img.shields.io/badge/live-zyx.tw-000000?style=flat-square)](https://zyx.tw)
+[![License](https://img.shields.io/github/license/zyx1121/www.zyx.tw?style=flat-square)](LICENSE)
 
-> Every idea that outgrows a scratch file gets its own subdomain here: one Turborepo, seven apps, one shared design system.
+**English** | [繁體中文](README.zh-TW.md) | [简体中文](README.zh-CN.md)
 
-`nextjs` · `turborepo` · `tailwind` · `shadcn` · `supabase`
-
-[![CI](https://github.com/zyx1121/www.zyx.tw/actions/workflows/ci.yml/badge.svg)](https://github.com/zyx1121/www.zyx.tw/actions) &nbsp;[![Live](https://img.shields.io/badge/live-zyx.tw-111111)](https://zyx.tw) &nbsp;[![version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzyx1121%2Fwww.zyx.tw%2Fmain%2Fpackage.json&query=%24.version&label=version&color=111111)](package.json) &nbsp;[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](#license)
+</div>
 
 ```
-zyx.tw          the site itself, home base
-link.zyx.tw     your URLs, but shorter
-time.zyx.tw     what time is it?
-good.zyx.tw     a digital 乖乖 taped onto servers
-plump.zyx.tw    Plump: SVG, given dimension
-ui.zyx.tw       the component registry every app above imports from
-1909            a shared-expense dashboard for three flatmates
+zyx.tw          the site: a 3D home, works, Made products and a resume
+link.zyx.tw     a URL shortener
+time.zyx.tw     a clock
+good.zyx.tw     a digital 乖乖, the snack that engineers tape onto servers
+plump.zyx.tw    Plump: SVG, shaped and lit in 3D
+ui.zyx.tw       the component registry that every app imports from
+stamp.zyx.tw    the Stamp product site
+1909            a private shared-expense dashboard for three flatmates
 ```
 
-<sub>One Turborepo, one CI pipeline, seven live apps.</sub>
+A new subdomain used to mean a new repo and another copy of the same lint config, design tokens and telemetry setup. Here, a new idea is a new folder under `apps/`.
 
-Every subdomain of zyx.tw used to mean a fresh repo and copying the same eslint config, Tailwind tokens, and OTel bootstrap into it by hand. This monorepo folds the personal site and every side-project subdomain into one Turborepo instead, so a new idea is a new folder under `apps/`, not a new setup decision.
+## Features
 
-## Quickstart
+- **Hosts 8 apps**: each app deploys to its own subdomain from one repo and one CI pipeline.
+- **Shares one design system**: every component lives once in `packages/ui`, and every app imports it from there.
+- **Enforces the design rules**: CI fails when an app drifts from the theme or uses a value that is not a design token.
+- **Serves agents**: the site and ui.zyx.tw give each page a Markdown version, plus `/llms.txt`, `/agent-instructions.md` and JSON-LD.
+- **Publishes the registry**: other projects install the components from ui.zyx.tw with the shadcn CLI.
 
-```bash
+## Quick start
+
+```sh
 git clone https://github.com/zyx1121/www.zyx.tw && cd www.zyx.tw
 bun install
-cp apps/web/.env.example apps/web/.env.local   # fill in the keys below
-bun dev --filter=web                            # -> http://localhost:3000
+cp apps/web/.env.example apps/web/.env.local
+bun dev --filter=web
 ```
 
-Plain `bun dev` boots turbo across all 7 apps at once. `--filter=<app>` (or `cd apps/<app> && bun dev`) runs just one.
+Open http://localhost:3000. You should see the zyx.tw home page.
 
-## What it gives you
+## Usage
 
-| App    | Live at                            | What it does                                              |
-| ------ | ---------------------------------- | --------------------------------------------------------- |
-| `web`  | [zyx.tw](https://zyx.tw)           | the site itself: a 3D home, works and a resume            |
-| `link` | [link.zyx.tw](https://link.zyx.tw) | your URLs, but shorter                                    |
-| `time` | [time.zyx.tw](https://time.zyx.tw) | what time is it?                                          |
-| `good` | [good.zyx.tw](https://good.zyx.tw) | a digital 乖乖, the snack engineers tape onto servers     |
-| `3d`   | [Plump](https://plump.zyx.tw)      | SVG, shaped and lit in 3D, saved as one scene.json        |
-| `ui`   | [ui.zyx.tw](https://ui.zyx.tw)     | the shadcn registry every app above pulls components from |
-| `1909` | (private)                          | a shared-expense dashboard for three flatmates            |
+| App | Folder | Live at |
+|-----|--------|---------|
+| Site | `apps/web` | [zyx.tw](https://zyx.tw) |
+| URL shortener | `apps/link` | [link.zyx.tw](https://link.zyx.tw) |
+| Clock | `apps/time` | [time.zyx.tw](https://time.zyx.tw) |
+| Snack | `apps/good` | [good.zyx.tw](https://good.zyx.tw) |
+| Plump | `apps/3d` | [plump.zyx.tw](https://plump.zyx.tw) |
+| Component registry | `apps/ui` | [ui.zyx.tw](https://ui.zyx.tw) |
+| Stamp site | `apps/stamp` | [stamp.zyx.tw](https://stamp.zyx.tw) |
+| Shared expenses | `apps/1909` | private |
 
-## Tech stack
+- Run one app: `bun dev --filter=<folder name>`. `bun dev` starts all of them.
+- Import a component in an app: `import { Button } from "@workspace/ui/components/ui/button"`.
+- Use the design system in another project:
 
-| Layer         | Choice                                                                                                 |
-| ------------- | ------------------------------------------------------------------------------------------------------ |
-| Framework     | Next.js 16.1 (App Router + Turbopack)                                                                  |
-| UI            | React 19, Tailwind CSS v4, Base UI, the [ui.zyx.tw](https://ui.zyx.tw) design system                   |
-| Language      | TypeScript 5.9, strict + `noUncheckedIndexedAccess`                                                    |
-| Backend       | Supabase (`1909`, `link`)                                                                              |
-| 3D            | three.js, React Three Fiber, drei and postprocessing (`good`, `3d`)                                    |
-| Observability | `@workspace/otel`, shared bootstrap shipping logs to Sensorium                                         |
-| Tooling       | Bun 1.3 workspaces + Turbo 2                                                                           |
+  ```sh
+  bunx shadcn@latest init https://ui.zyx.tw/r/base.json
+  bunx shadcn@latest add @zyx1121/button @zyx1121/dialog
+  ```
 
-Shared packages: `packages/ui` (design system + components) · `packages/3d` (scene.json v1, preset registries, `<Scene3D>`; see [its README](./packages/3d/README.md)) · `packages/otel` (the Sensorium bootstrap) · `packages/eslint-config` (flat config: base / next-js / react-internal) · `packages/typescript-config` (base / nextjs / react-library).
+- Publish a Made product: follow [apps/web/MADE.md](apps/web/MADE.md) and start from its [brief template](apps/web/templates/made-product.md).
 
-## Design system
+The design rules (theme, type scale, layout, motion and copy) are in [apps/ui/DESIGN.md](apps/ui/DESIGN.md).
 
-Every app follows [`apps/ui/DESIGN.md`](./apps/ui/DESIGN.md): stock shadcn/ui on the `base-nova` preset (Base UI primitives, so `asChild` is the `render` prop) and the grayscale ui.zyx.tw theme with `--radius: 1rem`. Apps start dark on a pure black background, whatever the OS prefers. Text is Inter (self-hosted, with open digits and a slashed zero), then Noto Sans JP and Noto Sans TC for CJK; Geist Mono is for code only, and numbers use Inter's `tabular-nums`. Plump uses Helvetica Neue, Helvetica and Arial for Latin, with the same CJK and code fonts. Base components are never forked; the CLI owns `components/ui/`.
+## Configuration
 
-The same file sets the page rules, which ui.zyx.tw and www.zyx.tw follow and the tool apps adopt when they are next rebuilt: one centered column on a 4px grid with a 20px module, framed by four fixed corners, the shared radius scale with concentric corners, lines only where they carry meaning, optical offsets at the call site, CSS-first motion that honors reduced motion everywhere, a strict 24/16/14px interface scale (titles, body/chrome, captions) plus 80px display text, weights 400 and 500 only, and English copy with no em dashes. Both sites also serve agents: a Markdown version of each page, `/llms.txt`, `/agent-instructions.md`, `Link` headers and JSON-LD. Every app already shares the corners (`@workspace/ui/components/corners`); until their rebuild, the tool apps take the theme, font and color rules for the rest.
+`apps/web` and `apps/link` each have a `.env.example`. `apps/1909` lists its variables in [its README](apps/1909/README.md#environment-variables).
 
-Apps on `@workspace/ui` load the fonts from `packages/ui/src/lib/fonts.ts` and put its `fontVariables` on `<html>`.
+`GITHUB_TOKEN` in `apps/web` is optional. It is a fine-grained token with `read:user`. Without it, the site hides the contribution heatmap and still shows the events list.
 
-For a new Made product, follow the [product publishing guide](./apps/web/MADE.md) and start with its [brief template](./apps/web/templates/made-product.md). They cover the index and campaign design, identity assets, desktop/mobile photography and motion, route registration, generation records and production acceptance.
+## How it works
 
-Every component lives once, in `packages/ui/src/components/ui/`, and every app imports it from there:
+| Layer | Choice |
+|-------|--------|
+| Framework | Next.js 16 (App Router, Turbopack) |
+| UI | React 19, Tailwind CSS 4, Base UI, [ui.zyx.tw](https://ui.zyx.tw) components |
+| Language | TypeScript, strict, with `noUncheckedIndexedAccess` |
+| Data | Supabase (`1909`, `link`) |
+| 3D | three.js, React Three Fiber (`good`, `3d`) |
+| Telemetry | `packages/otel` sends logs to [sensorium](https://github.com/zyx1121/sensorium) |
+| Tooling | Bun workspaces and Turborepo |
 
-```tsx
-import { Button } from "@workspace/ui/components/ui/button"
+Shared packages: `packages/ui` (design system), `packages/3d` (the Plump scene format and renderer), `packages/agent` (the agent kit), `packages/otel`, `packages/eslint-config` and `packages/typescript-config`.
+
+## For AI agents
+
+Facts for coding agents and LLM tools. The rules for changing the code are in [AGENTS.md](AGENTS.md).
+
+- **Summary**: Bun and Turborepo monorepo with 8 Next.js apps for zyx.tw and its subdomains, and the shared ui.zyx.tw design system.
+- **Type**: web
+- **Interfaces**: HTTP, the live sites in the Usage table. Each page also has a Markdown version, and `/llms.txt` lists them.
+- **Install**: `bun install --frozen-lockfile`
+- **Run**: `bun dev --filter=web`
+- **Verify**: `bun run theme:check && bun run tokens:check && bun run typecheck`
+- **Config**: `.env.example` in `apps/web` and `apps/link`, and the variables in `apps/1909/README.md`
+- **Secrets**: Supabase keys and the optional `GITHUB_TOKEN` in each app's `.env.local`, never in the repo
+- **Limits**: `apps/3d` and `apps/stamp` deploy with the Vercel CLI, not from Git. `apps/1909` is private.
+
+## Development
+
+```sh
+bun install --frozen-lockfile
+bun run theme:check && bun run tokens:check
+bun run lint && bun run format:check && bun run typecheck && bun run build
 ```
 
-They are our own lightweight rewrites on Base UI, not stock shadcn copies; [`apps/ui/DESIGN.md`](./apps/ui/DESIGN.md) is the contract. Every app imports the one stylesheet, `@workspace/ui/globals.css`. CI checks that it matches the `base` item in `apps/ui/registry.json` and that every app uses only the tokens:
-
-```bash
-bun run theme:check
-bun run tokens:check
-```
-
-## Pulling the design system into another project
-
-Outside this monorepo, init the project from the base, then add components by name:
-
-```bash
-bunx shadcn@latest init https://ui.zyx.tw/r/base.json
-bunx shadcn@latest add @zyx1121/button @zyx1121/dialog
-```
-
-See [`apps/ui/README.md`](./apps/ui/README.md).
-
-## Environment variables
-
-`web` and `link` each ship their own `.env.example`; `1909` lists its variables in [its README](./apps/1909/README.md#environment-variables). One gotcha worth knowing: `GITHUB_TOKEN` on `web` is optional, a fine-grained PAT with `read:user` scope. Without it the GitHub contribution heatmap is hidden but the events list still works.
-
-## Contributing
-
-Issues and PRs welcome: start with [CONTRIBUTING.md](https://github.com/zyx1121/.github/blob/main/CONTRIBUTING.md).
+CI runs the same steps, plus the agent kit tests in `packages/agent`.
 
 ## License
 
-[MIT](LICENSE) · one license file for six subdomains and counting.
+[MIT](LICENSE)
