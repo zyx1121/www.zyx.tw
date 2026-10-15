@@ -1,3 +1,4 @@
+import { HomeInk } from "@/components/home-ink"
 import { HomeStage } from "@/components/home-stage"
 import { HOME } from "@/lib/copy"
 import sceneFile from "@/lib/home-scene.json"
@@ -33,6 +34,14 @@ export default function Home() {
       <h1 className="sr-only">{HOME.title}</h1>
       <p className="sr-only">{SITE_DESCRIPTION}</p>
       <HomeStage />
+      {/* eslint-disable-next-line @next/next/no-img-element -- a cover
+          layer that has to line up with the CSS background, not a photo. */}
+      <img
+        src="/bliss-hill.webp"
+        alt=""
+        className="pointer-events-none absolute inset-0 size-full object-cover"
+      />
+      <HomeInk />
     </main>
   )
 }

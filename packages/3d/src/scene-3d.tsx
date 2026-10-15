@@ -14,6 +14,7 @@ import {
   useLayoutEffect,
   useMemo,
   useRef,
+  useState,
   type ReactNode,
 } from "react"
 import * as THREE from "three"
@@ -25,6 +26,7 @@ import {
   motionControls,
   stagingControls,
 } from "./controls"
+import { createDrift } from "./drift"
 import { effects as effectPresets } from "./effects"
 import { environments } from "./environments"
 import { FloorShadow } from "./floor-shadow"
@@ -77,6 +79,18 @@ export type Scene3DProps = {
    * effect when the environment is shown as the background.
    */
   transparent?: boolean
+  /**
+   * Tumble the shape slowly about an axis that changes every 10 to 20
+   * seconds, like the logo on dev.zyx.tw.
+   */
+  drift?: boolean
+  /**
+   * An image for glass to refract, cropped like CSS `center / cover`. With
+   * `transparent`, show the same image behind the canvas so the two match.
+   */
+  backgroundImage?: string
+  /** Move the shape up by this fraction of the canvas height. */
+  lift?: number
 }
 
 /** Renders a scene.json. Use it from a client component; it fills its parent. */
@@ -89,6 +103,9 @@ export function Scene3D({
   view: viewOverride,
   deviceTilt = false,
   transparent = false,
+  drift = false,
+  backgroundImage,
+  lift = 0,
 }: Scene3DProps) {
   const view = viewOverride ?? stagingOf(scene).view
   return (
@@ -104,6 +121,12 @@ export function Scene3D({
       gl={{ antialias: false }}
     >
       <FitCamera />
+      <Lift amount={lift} />
+      {backgroundImage && (
+        <Suspense fallback={null}>
+          <BackgroundImage url={backgroundImage} />
+        </Suspense>
+      )}
       <CameraView azimuth={view.azimuth} elevation={view.elevation} />
       <SceneContents
         scene={scene}
@@ -111,6 +134,7 @@ export function Scene3D({
         autoRotate={autoRotate}
         deviceTilt={deviceTilt}
         transparent={transparent}
+        drift={drift}
       />
       {controls && (
         <OrbitControls
@@ -121,6 +145,96 @@ export function Scene3D({
         />
       )}
     </Canvas>
+  )
+}
+
+/**
+ * Shifts the camera's view window down, so the whole picture, shape and
+ * background image alike, moves up without moving the canvas.
+ */
+function Lift({ amount }: { amount: number }) {
+  const camera = useThree((state) => state.camera)
+  const width = useThree((state) => state.size.width)
+  const height = useThree((state) => state.size.height)
+  useLayoutEffect(() => {
+    if (!amount || !(camera instanceof THREE.PerspectiveCamera)) return
+    camera.setViewOffset(width, height, 0, height * amount, width, height)
+    return () => camera.clearViewOffset()
+  }, [camera, width, height, amount])
+  return null
+}
+
+const backgroundVertex = /* glsl */ `
+uniform vec2 scale;
+varying vec2 vUv;
+void main() {
+  vUv = (uv - 0.5) * scale + 0.5;
+  gl_Position = vec4(position.xy, 1.0, 1.0);
+}
+`
+
+const backgroundFragment = /* glsl */ `
+uniform sampler2D map;
+varying vec2 vUv;
+void main() {
+  gl_FragColor = texture2D(map, vUv);
+  #include <colorspace_fragment>
+}
+`
+
+/**
+ * three draws transmission into a mipmapped target, which nothing else in
+ * this renderer uses; the composer's buffers are not mipmapped.
+ */
+function isTransmissionTarget(target: THREE.RenderTarget | null) {
+  return target?.texture.minFilter === THREE.LinearMipmapLinearFilter
+}
+
+/**
+ * An image behind the shape that only glass sees: a quad over the whole
+ * canvas, cropped like CSS `center / cover`, drawn into three's
+ * transmission target and left out of the frame. The composer's render pass
+ * clears scene.background for the whole render, transmission included, so
+ * this can't be scene.background. The quad sits in screen space, so it
+ * lines up with the page behind the canvas whatever the camera does.
+ */
+function BackgroundImage({ url }: { url: string }) {
+  const texture = useLoader(THREE.TextureLoader, url)
+  const aspect = useThree((state) => state.size.width / state.size.height)
+  const material = useMemo(() => {
+    texture.colorSpace = THREE.SRGBColorSpace
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        map: { value: texture },
+        scale: { value: new THREE.Vector2(1, 1) },
+      },
+      vertexShader: backgroundVertex,
+      fragmentShader: backgroundFragment,
+      depthTest: false,
+      depthWrite: false,
+      toneMapped: false,
+    })
+  }, [texture])
+  useEffect(() => () => material.dispose(), [material])
+  useLayoutEffect(() => {
+    const image = texture.image as HTMLImageElement
+    const ratio = aspect / (image.width / image.height)
+    material.uniforms.scale.value.set(
+      ratio > 1 ? 1 : ratio,
+      ratio > 1 ? 1 / ratio : 1
+    )
+  }, [material, texture, aspect])
+  return (
+    <mesh
+      frustumCulled={false}
+      renderOrder={-1}
+      material={material}
+      onBeforeRender={(renderer) => {
+        material.colorWrite = isTransmissionTarget(renderer.getRenderTarget())
+      }}
+    >
+      <planeGeometry args={[2, 2]} />
+    </mesh>
   )
 }
 
@@ -148,18 +262,22 @@ function SceneContents({
   autoRotate,
   deviceTilt,
   transparent,
+  drift,
 }: {
   scene: SceneV1
   envBaseUrl: string
   autoRotate: boolean
   deviceTilt: boolean
   transparent: boolean
+  drift: boolean
 }) {
   const geometry = useShapeGeometry(scene.shape)
   const spin = useRef<THREE.Group>(null)
+  const [driftStep] = useState(createDrift)
   useFrame((_, delta) => {
     if (autoRotate && spin.current)
       spin.current.rotation.y += delta * SPIN_SPEED
+    if (drift && spin.current) driftStep(spin.current, delta)
   })
 
   const material = findPreset(materials, scene.material.id) ?? materials[0]

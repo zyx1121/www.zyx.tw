@@ -17,8 +17,8 @@ const NAV = PAGES.filter((page) => page.nav)
 
 export function SiteHeader() {
   const pathname = usePathname()
-  // The home is a 3D stage over Bliss, so its corners take
-  // black ink in either theme, and nothing scrolls under them.
+  // The home is a 3D stage over Bliss, so its corners take the ink
+  // HomeInk picks for the picture under them, and nothing scrolls under them.
   const home = pathname === "/"
   const made = pathname.startsWith("/made/")
 
@@ -29,7 +29,7 @@ export function SiteHeader() {
       fade={!home}
       className={
         home
-          ? `[--foreground:var(--color-black)] [--muted-foreground:var(--color-black)] ${enter}`
+          ? `[--foreground:var(--home-ink-top,var(--color-black))] [--muted-foreground:var(--home-ink-top,var(--color-black))] ${enter}`
           : made
             ? `made-top-corner ${enter}`
             : enter

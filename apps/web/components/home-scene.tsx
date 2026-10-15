@@ -10,8 +10,11 @@ import {
 import sceneFile from "@/lib/home-scene.json"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 
-/** The zyx mark, as saved from 3d.zyx.tw. */
-const SCENE = parseScene(sceneFile)
+/** The zyx mark, as saved from 3d.zyx.tw, in clear glass. */
+const SCENE = {
+  ...parseScene(sceneFile),
+  material: { id: "glass", params: {} },
+} as SceneV1
 
 /** Straight on, so the mark sits square until the mouse or the phone tilts it. */
 const FRONT: SceneView = { azimuth: 0, elevation: 0 }
@@ -37,6 +40,9 @@ export function HomeScene() {
       controls={false}
       deviceTilt
       transparent
+      drift={!reduced}
+      backgroundImage="/bliss.webp"
+      lift={0.12}
       className="size-full"
     />
   )
