@@ -55,9 +55,9 @@ export function HomeInk() {
           const { data } = context.getImageData(x, y, WIDTH, ROW)
           for (let i = 0; i < data.length; i += 4) {
             sum +=
-              0.2126 * linear(data[i]) +
-              0.7152 * linear(data[i + 1]) +
-              0.0722 * linear(data[i + 2])
+              0.2126 * linear(data[i] ?? 0) +
+              0.7152 * linear(data[i + 1] ?? 0) +
+              0.0722 * linear(data[i + 2] ?? 0)
             count++
           }
         }

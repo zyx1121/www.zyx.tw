@@ -81,9 +81,12 @@ export type Scene3DProps = {
   transparent?: boolean
   /**
    * Tumble the shape slowly about an axis that changes every 10 to 20
-   * seconds, like the logo on dev.zyx.tw.
+   * seconds, like the logo on dev.zyx.tw, at this multiple of its speed.
+   * 0 leaves the shape still.
    */
-  drift?: boolean
+  drift?: number
+  /** Turn the shape by dragging it, and throw it into the drift. */
+  grab?: boolean
   /**
    * An image for glass to refract, cropped like CSS `center / cover`. With
    * `transparent`, show the same image behind the canvas so the two match.
@@ -103,7 +106,8 @@ export function Scene3D({
   view: viewOverride,
   deviceTilt = false,
   transparent = false,
-  drift = false,
+  drift = 0,
+  grab = false,
   backgroundImage,
   lift = 0,
 }: Scene3DProps) {
@@ -135,6 +139,7 @@ export function Scene3D({
         deviceTilt={deviceTilt}
         transparent={transparent}
         drift={drift}
+        grab={grab}
       />
       {controls && (
         <OrbitControls
@@ -201,12 +206,13 @@ function isTransmissionTarget(target: THREE.RenderTarget | null) {
 function BackgroundImage({ url }: { url: string }) {
   const texture = useLoader(THREE.TextureLoader, url)
   const aspect = useThree((state) => state.size.width / state.size.height)
+  const scale = useMemo(() => new THREE.Vector2(1, 1), [])
   const material = useMemo(() => {
     texture.colorSpace = THREE.SRGBColorSpace
     return new THREE.ShaderMaterial({
       uniforms: {
         map: { value: texture },
-        scale: { value: new THREE.Vector2(1, 1) },
+        scale: { value: scale },
       },
       vertexShader: backgroundVertex,
       fragmentShader: backgroundFragment,
@@ -214,16 +220,13 @@ function BackgroundImage({ url }: { url: string }) {
       depthWrite: false,
       toneMapped: false,
     })
-  }, [texture])
+  }, [texture, scale])
   useEffect(() => () => material.dispose(), [material])
   useLayoutEffect(() => {
     const image = texture.image as HTMLImageElement
     const ratio = aspect / (image.width / image.height)
-    material.uniforms.scale.value.set(
-      ratio > 1 ? 1 : ratio,
-      ratio > 1 ? 1 / ratio : 1
-    )
-  }, [material, texture, aspect])
+    scale.set(ratio > 1 ? 1 : ratio, ratio > 1 ? 1 / ratio : 1)
+  }, [scale, texture, aspect])
   return (
     <mesh
       frustumCulled={false}
@@ -263,22 +266,71 @@ function SceneContents({
   deviceTilt,
   transparent,
   drift,
+  grab,
 }: {
   scene: SceneV1
   envBaseUrl: string
   autoRotate: boolean
   deviceTilt: boolean
   transparent: boolean
-  drift: boolean
+  drift: number
+  grab: boolean
 }) {
   const geometry = useShapeGeometry(scene.shape)
   const spin = useRef<THREE.Group>(null)
-  const [driftStep] = useState(createDrift)
+  const [tumble] = useState(() => createDrift(drift))
+  const canvas = useThree((state) => state.gl.domElement)
+  useEffect(() => tumble.setSpeed(drift), [tumble, drift])
   useFrame((_, delta) => {
     if (autoRotate && spin.current)
       spin.current.rotation.y += delta * SPIN_SPEED
-    if (drift && spin.current) driftStep(spin.current, delta)
+    if ((drift || grab) && spin.current) tumble.step(spin.current, delta)
   })
+  useEffect(() => {
+    if (!grab) return
+    let pointer: number | null = null
+    let x = 0
+    let y = 0
+    const down = (event: PointerEvent) => {
+      if (pointer !== null) return
+      pointer = event.pointerId
+      x = event.clientX
+      y = event.clientY
+      // Keeps the drag when the pointer leaves the canvas; a pointer the
+      // browser no longer tracks can't be captured, and still drags.
+      try {
+        canvas.setPointerCapture(pointer)
+      } catch {}
+      canvas.style.cursor = "grabbing"
+      tumble.grab()
+    }
+    const move = (event: PointerEvent) => {
+      if (event.pointerId !== pointer) return
+      tumble.drag(event.clientX - x, event.clientY - y)
+      x = event.clientX
+      y = event.clientY
+    }
+    const up = (event: PointerEvent) => {
+      if (event.pointerId !== pointer) return
+      pointer = null
+      canvas.style.cursor = "grab"
+      tumble.release()
+    }
+    canvas.style.cursor = "grab"
+    canvas.style.touchAction = "none"
+    canvas.addEventListener("pointerdown", down)
+    canvas.addEventListener("pointermove", move)
+    canvas.addEventListener("pointerup", up)
+    canvas.addEventListener("pointercancel", up)
+    return () => {
+      canvas.removeEventListener("pointerdown", down)
+      canvas.removeEventListener("pointermove", move)
+      canvas.removeEventListener("pointerup", up)
+      canvas.removeEventListener("pointercancel", up)
+      canvas.style.cursor = ""
+      canvas.style.touchAction = ""
+    }
+  }, [grab, canvas, tumble])
 
   const material = findPreset(materials, scene.material.id) ?? materials[0]
   const environment =
