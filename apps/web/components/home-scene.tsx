@@ -36,6 +36,7 @@ export function HomeScene() {
       view={FRONT}
       controls={false}
       deviceTilt
+      transparent
       className="size-full"
     />
   )

@@ -20,12 +20,15 @@ export const metadata = {
  */
 export default function Home() {
   return (
-    // The scene's background, which also shows while the scene loads. The
-    // root layout paints the scrollbar gutter beside it the same color.
+    // Bliss behind a transparent scene, over the scene's background color,
+    // which shows while the image loads. The root layout paints the
+    // scrollbar gutter beside it that color.
     <main
       data-stage
       className="fixed inset-0"
-      style={{ background: sceneFile.staging.background }}
+      style={{
+        background: `url(/bliss.webp) center / cover, ${sceneFile.staging.background}`,
+      }}
     >
       <h1 className="sr-only">{HOME.title}</h1>
       <p className="sr-only">{SITE_DESCRIPTION}</p>
