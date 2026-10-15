@@ -22,7 +22,7 @@ export function SiteFooter() {
       fade={!home}
       className={
         home
-          ? `dark ${enterFooter}`
+          ? `[--foreground:var(--color-black)] [--muted-foreground:var(--color-black)] ${enterFooter}`
           : made
             ? `made-bottom-corner ${enterFooter}`
             : enterFooter

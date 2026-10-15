@@ -17,8 +17,8 @@ const NAV = PAGES.filter((page) => page.nav)
 
 export function SiteHeader() {
   const pathname = usePathname()
-  // The home is a dark 3D stage in either theme, so its corners take the
-  // dark tokens, and nothing scrolls under them.
+  // The home is a 3D stage over Bliss, so its corners take
+  // black ink in either theme, and nothing scrolls under them.
   const home = pathname === "/"
   const made = pathname.startsWith("/made/")
 
@@ -28,7 +28,11 @@ export function SiteHeader() {
       label="zyx, home"
       fade={!home}
       className={
-        home ? `dark ${enter}` : made ? `made-top-corner ${enter}` : enter
+        home
+          ? `[--foreground:var(--color-black)] [--muted-foreground:var(--color-black)] ${enter}`
+          : made
+            ? `made-top-corner ${enter}`
+            : enter
       }
       nav={
         <nav aria-label="Main">
