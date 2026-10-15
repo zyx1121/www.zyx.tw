@@ -71,6 +71,12 @@ export type Scene3DProps = {
    * canvas.
    */
   deviceTilt?: boolean
+  /**
+   * Leave the background out of the frame, so the page behind the canvas
+   * shows through. Glass still refracts the staging background color. Has no
+   * effect when the environment is shown as the background.
+   */
+  transparent?: boolean
 }
 
 /** Renders a scene.json. Use it from a client component; it fills its parent. */
@@ -82,6 +88,7 @@ export function Scene3D({
   autoRotate = false,
   view: viewOverride,
   deviceTilt = false,
+  transparent = false,
 }: Scene3DProps) {
   const view = viewOverride ?? stagingOf(scene).view
   return (
@@ -103,6 +110,7 @@ export function Scene3D({
         envBaseUrl={envBaseUrl}
         autoRotate={autoRotate}
         deviceTilt={deviceTilt}
+        transparent={transparent}
       />
       {controls && (
         <OrbitControls
@@ -139,11 +147,13 @@ function SceneContents({
   envBaseUrl,
   autoRotate,
   deviceTilt,
+  transparent,
 }: {
   scene: SceneV1
   envBaseUrl: string
   autoRotate: boolean
   deviceTilt: boolean
+  transparent: boolean
 }) {
   const geometry = useShapeGeometry(scene.shape)
   const spin = useRef<THREE.Group>(null)
@@ -256,7 +266,9 @@ function SceneContents({
       >
         {effectsAt("scene")}
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-        {backdrop ? <Backdrop color={staging.background} /> : null}
+        {backdrop && !transparent ? (
+          <Backdrop color={staging.background} />
+        ) : null}
         {effectsAt("display")}
       </EffectComposer>
     </>
