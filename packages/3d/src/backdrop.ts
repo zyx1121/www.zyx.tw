@@ -179,8 +179,7 @@ export class BackdropEffect extends Effect {
   /** Crops the image like `center / cover` for a canvas of this aspect. */
   setAspect(aspect: number) {
     const image = this.#uniform<THREE.Texture | null>("map").value?.image as
-      | { width: number; height: number }
-      | undefined
+      { width: number; height: number } | undefined
     this.#uniform<number>("aspect").value = aspect
     if (!image) return
     const ratio = aspect / (image.width / image.height)
@@ -194,7 +193,12 @@ export class BackdropEffect extends Effect {
    * The lens: a mipmapped silhouette of the mass, covering the whole frame,
    * and how hard it bends the image. 0 turns it off.
    */
-  setLens(mask: THREE.Texture | null, width: number, height: number, strength: number) {
+  setLens(
+    mask: THREE.Texture | null,
+    width: number,
+    height: number,
+    strength: number
+  ) {
     this.#uniform<THREE.Texture | null>("mask").value = mask
     this.#uniform<boolean>("useMask").value = mask !== null
     this.#uniform<THREE.Vector2>("maskTexel").value.set(1 / width, 1 / height)

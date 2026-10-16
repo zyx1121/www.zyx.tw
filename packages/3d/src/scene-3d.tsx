@@ -296,7 +296,9 @@ function ImageBackdrop({
         depthBuffer: true,
       })
   )
-  const [flat] = useState(() => new THREE.MeshBasicMaterial({ color: "#ffffff" }))
+  const [flat] = useState(
+    () => new THREE.MeshBasicMaterial({ color: "#ffffff" })
+  )
   const [clear] = useState(() => new THREE.Color())
   useEffect(
     () => () => {
@@ -334,13 +336,20 @@ function ImageBackdrop({
     const grown = t * t * (3 - 2 * t)
     // Holding the shape pulls harder.
     const strength = lens * grown * (1 + pointer.boost * HOLD_BOOST)
-    backdrop.setCursor(pointer.x, pointer.y, lens > 0 ? pointer.mass * grown : 0)
+    backdrop.setCursor(
+      pointer.x,
+      pointer.y,
+      lens > 0 ? pointer.mass * grown : 0
+    )
     if (!group || !mesh || strength <= 0) {
       backdrop.setLens(null, 1, 1, 0)
       backdrop.setRing(0)
       return
     }
-    const height = Math.max(1, Math.round((MASK_WIDTH * size.height) / size.width))
+    const height = Math.max(
+      1,
+      Math.round((MASK_WIDTH * size.height) / size.width)
+    )
     if (mask.height !== height) mask.setSize(MASK_WIDTH, height)
     const material = mesh.material
     const previous = gl.getRenderTarget()

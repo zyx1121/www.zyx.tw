@@ -58,13 +58,14 @@ export function HomeHill() {
   }, [reduced])
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element -- a cover layer over the scene, not a photo.
-    <img
-      ref={image}
-      src="/bliss-hill.webp"
-      alt=""
-      className="pointer-events-none absolute -top-4 -left-4 max-w-none object-cover"
-      style={{ width: "calc(100% + 2rem)", height: "calc(100% + 2rem)" }}
-    />
+    <div className="pointer-events-none absolute -inset-4">
+      {/* eslint-disable-next-line @next/next/no-img-element -- a cover layer over the scene, not a photo. */}
+      <img
+        ref={image}
+        src="/bliss-hill.webp"
+        alt=""
+        className="size-full max-w-none object-cover"
+      />
+    </div>
   )
 }
