@@ -14,17 +14,19 @@ import {
   useLayoutEffect,
   useMemo,
   useRef,
+  useState,
   type ReactNode,
 } from "react"
 import * as THREE from "three"
 
-import { Backdrop } from "./backdrop"
+import { Backdrop, BackdropEffect } from "./backdrop"
 import { CameraView } from "./camera-view"
 import {
   environmentControls,
   motionControls,
   stagingControls,
 } from "./controls"
+import { createDrift } from "./drift"
 import { effects as effectPresets } from "./effects"
 import { environments } from "./environments"
 import { FloorShadow } from "./floor-shadow"
@@ -38,6 +40,10 @@ import { stagings } from "./stagings"
 
 /** The editor at plump.zyx.tw serves the environment maps, with CORS open to other sites. */
 export const DEFAULT_ENV_BASE_URL = "https://plump.zyx.tw/env/"
+
+/** How far below its place a rising shape starts, in scene units, and how long it takes to arrive. */
+const RISE_DEPTH = 2.6
+const RISE_SECONDS = 2.4
 
 /** Radians per second when autoRotate turns the shape. */
 const SPIN_SPEED = 0.4
@@ -77,6 +83,41 @@ export type Scene3DProps = {
    * effect when the environment is shown as the background.
    */
   transparent?: boolean
+  /**
+   * Tumble the shape slowly about an axis that changes every 10 to 20
+   * seconds, like the logo on dev.zyx.tw, at this multiple of its speed.
+   * 0 leaves the shape still.
+   */
+  drift?: number
+  /** Turn the shape by dragging it, and throw it into the drift. */
+  grab?: boolean
+  /** Bring the shape up from below when it first appears, instead of popping in. */
+  rise?: boolean
+  /**
+   * An image for glass to refract, cropped like CSS `center / cover`. With
+   * `transparent`, show the same image behind the canvas so the two match.
+   */
+  backgroundImage?: string
+  /** Move the shape up by this fraction of the canvas height. */
+  lift?: number
+  /**
+   * With `transparent` and `backgroundImage`, draw the image into the frame
+   * and bend it around the shape like light past a black hole, this strong.
+   */
+  lens?: number
+  /**
+   * Light the shape with the environment map and the staging's light. A
+   * material that ignores light, like a flat black, can skip both and the
+   * map's download.
+   */
+  lighting?: boolean
+  /** Device pixel ratio range; a lower top end draws fewer pixels on retina screens. */
+  dpr?: [number, number]
+  /**
+   * With `lens`: let the background image drift slowly and shift a little
+   * with the mouse, for depth. The pointer bends the image either way.
+   */
+  ambient?: boolean
 }
 
 /** Renders a scene.json. Use it from a client component; it fills its parent. */
@@ -89,6 +130,15 @@ export function Scene3D({
   view: viewOverride,
   deviceTilt = false,
   transparent = false,
+  drift = 0,
+  grab = false,
+  rise = false,
+  backgroundImage,
+  lift = 0,
+  lens = 0,
+  lighting = true,
+  dpr = [1, 2],
+  ambient = false,
 }: Scene3DProps) {
   const view = viewOverride ?? stagingOf(scene).view
   return (
@@ -99,19 +149,32 @@ export function Scene3D({
         position: onSphere(view.azimuth, view.elevation, CAMERA_DISTANCE),
         fov: 35,
       }}
-      dpr={[1, 2]}
+      dpr={dpr}
       // Every frame goes through the composer, which antialiases on its own.
       gl={{ antialias: false }}
     >
       <FitCamera />
+      <Lift amount={lift} />
       <CameraView azimuth={view.azimuth} elevation={view.elevation} />
-      <SceneContents
-        scene={scene}
-        envBaseUrl={envBaseUrl}
-        autoRotate={autoRotate}
-        deviceTilt={deviceTilt}
-        transparent={transparent}
-      />
+      {/* Glass that shows before its background image has loaded refracts
+          the clear color, a dark flash; so the shape waits for the image. */}
+      <Suspense fallback={null}>
+        {backgroundImage && <BackgroundImage url={backgroundImage} />}
+        <SceneContents
+          scene={scene}
+          envBaseUrl={envBaseUrl}
+          autoRotate={autoRotate}
+          deviceTilt={deviceTilt}
+          transparent={transparent}
+          drift={drift}
+          grab={grab}
+          rise={rise}
+          backgroundImage={transparent ? backgroundImage : undefined}
+          lens={lens}
+          lighting={lighting}
+          ambient={ambient}
+        />
+      </Suspense>
       {controls && (
         <OrbitControls
           enablePan={false}
@@ -121,6 +184,260 @@ export function Scene3D({
         />
       )}
     </Canvas>
+  )
+}
+
+/**
+ * Shifts the camera's view window down, so the whole picture, shape and
+ * background image alike, moves up without moving the canvas.
+ */
+function Lift({ amount }: { amount: number }) {
+  const camera = useThree((state) => state.camera)
+  const width = useThree((state) => state.size.width)
+  const height = useThree((state) => state.size.height)
+  useLayoutEffect(() => {
+    if (!amount || !(camera instanceof THREE.PerspectiveCamera)) return
+    camera.setViewOffset(width, height, 0, height * amount, width, height)
+    return () => camera.clearViewOffset()
+  }, [camera, width, height, amount])
+  return null
+}
+
+/** Width of the silhouette the lens is computed from; its height follows the canvas. */
+const MASK_WIDTH = 512
+
+/** The pointer's own Einstein radius, as a fraction of the canvas height. */
+const CURSOR_MASS = 0.025
+
+/** How much harder the lens pulls while the shape is held. */
+const HOLD_BOOST = 1.5
+
+/** Image widths per second the clouds drift: one across about every 6 minutes. */
+const CLOUD_SPEED = 0.003
+
+/** Image widths the sky shifts with the mouse at the window's edge. */
+const SKY_SHIFT = 0.004
+
+/** Brightness of the photon ring around the silhouette. */
+const RING_BRIGHTNESS = 0.9
+
+/**
+ * The background image laid under the frame, bent around the target's
+ * silhouette like light past a black hole when lens is above 0. Each frame,
+ * before the composer, the target is drawn flat white into a small
+ * mipmapped mask the backdrop reads its lens from.
+ */
+function ImageBackdrop({
+  url,
+  lens,
+  target,
+  risen,
+  ambient,
+}: {
+  url: string
+  lens: number
+  target: React.RefObject<THREE.Group | null>
+  /** How far the shape has risen, 0 to 1; the lens grows with it. */
+  risen: React.RefObject<number>
+  ambient: boolean
+}) {
+  const canvas = useThree((state) => state.gl.domElement)
+  // Where the pointer is and what it does, eased in useFrame.
+  const [pointer] = useState(() => ({
+    x: 0.5,
+    y: 0.5,
+    inside: false,
+    held: false,
+    mass: 0,
+    boost: 0,
+    shiftX: 0,
+    shiftY: 0,
+    drifted: 0,
+  }))
+  useEffect(() => {
+    const move = (event: PointerEvent) => {
+      const box = canvas.getBoundingClientRect()
+      pointer.x = (event.clientX - box.left) / box.width
+      pointer.y = 1 - (event.clientY - box.top) / box.height
+      // A finger only counts while it drags; a mouse counts while it's over the page.
+      pointer.inside = event.pointerType === "mouse" || pointer.held
+    }
+    const down = () => {
+      pointer.held = true
+    }
+    const up = (event: PointerEvent) => {
+      pointer.held = false
+      if (event.pointerType !== "mouse") pointer.inside = false
+    }
+    const leave = () => {
+      pointer.inside = false
+    }
+    window.addEventListener("pointermove", move)
+    canvas.addEventListener("pointerdown", down)
+    window.addEventListener("pointerup", up)
+    window.addEventListener("pointercancel", up)
+    document.documentElement.addEventListener("pointerleave", leave)
+    return () => {
+      window.removeEventListener("pointermove", move)
+      canvas.removeEventListener("pointerdown", down)
+      window.removeEventListener("pointerup", up)
+      window.removeEventListener("pointercancel", up)
+      document.documentElement.removeEventListener("pointerleave", leave)
+    }
+  }, [canvas, pointer])
+  const texture = useLoader(THREE.TextureLoader, url)
+  const effect = useRef<BackdropEffect>(null)
+  const [mask] = useState(
+    () =>
+      new THREE.WebGLRenderTarget(MASK_WIDTH, MASK_WIDTH, {
+        generateMipmaps: true,
+        minFilter: THREE.LinearMipmapLinearFilter,
+        magFilter: THREE.LinearFilter,
+        depthBuffer: true,
+      })
+  )
+  const [flat] = useState(
+    () => new THREE.MeshBasicMaterial({ color: "#ffffff" })
+  )
+  const [clear] = useState(() => new THREE.Color())
+  useEffect(
+    () => () => {
+      mask.dispose()
+      flat.dispose()
+    },
+    [mask, flat]
+  )
+  useLayoutEffect(() => {
+    texture.colorSpace = THREE.SRGBColorSpace
+    texture.needsUpdate = true
+  }, [texture])
+  useFrame(({ gl, camera, size }, delta) => {
+    const backdrop = effect.current
+    if (!backdrop) return
+    backdrop.setAspect(size.width / size.height)
+    const ease = 1 - Math.exp(-delta * 4)
+    pointer.mass += ((pointer.inside ? CURSOR_MASS : 0) - pointer.mass) * ease
+    pointer.boost += ((pointer.held ? 1 : 0) - pointer.boost) * ease
+    const toward = ambient && pointer.inside
+    pointer.shiftX += ((toward ? pointer.x * 2 - 1 : 0) - pointer.shiftX) * ease
+    pointer.shiftY += ((toward ? pointer.y * 2 - 1 : 0) - pointer.shiftY) * ease
+    if (ambient) pointer.drifted += delta
+    backdrop.setPan(
+      pointer.drifted * CLOUD_SPEED + pointer.shiftX * SKY_SHIFT,
+      pointer.shiftY * SKY_SHIFT
+    )
+    const group = target.current
+    const mesh = group?.children.find(
+      (child): child is THREE.Mesh => child instanceof THREE.Mesh
+    )
+    // Grows in with the rise, so the bending doesn't snap on the moment the
+    // shape appears: none while it's under the hills, full once it's up.
+    const t = risen.current
+    const grown = t * t * (3 - 2 * t)
+    // Holding the shape pulls harder.
+    const strength = lens * grown * (1 + pointer.boost * HOLD_BOOST)
+    backdrop.setCursor(
+      pointer.x,
+      pointer.y,
+      lens > 0 ? pointer.mass * grown : 0
+    )
+    if (!group || !mesh || strength <= 0) {
+      backdrop.setLens(null, 1, 1, 0)
+      backdrop.setRing(0)
+      return
+    }
+    const height = Math.max(
+      1,
+      Math.round((MASK_WIDTH * size.height) / size.width)
+    )
+    if (mask.height !== height) mask.setSize(MASK_WIDTH, height)
+    const material = mesh.material
+    const previous = gl.getRenderTarget()
+    const alpha = gl.getClearAlpha()
+    gl.getClearColor(clear)
+    mesh.material = flat
+    gl.setRenderTarget(mask)
+    gl.setClearColor(0x000000, 0)
+    gl.clear()
+    gl.render(group, camera)
+    gl.setRenderTarget(previous)
+    gl.setClearColor(clear, alpha)
+    mesh.material = material
+    backdrop.setLens(mask.texture, MASK_WIDTH, height, strength)
+    backdrop.setRing(grown * RING_BRIGHTNESS)
+  })
+  return <Backdrop ref={effect} map={texture} />
+}
+
+const backgroundVertex = /* glsl */ `
+uniform vec2 scale;
+varying vec2 vUv;
+void main() {
+  vUv = (uv - 0.5) * scale + 0.5;
+  gl_Position = vec4(position.xy, 1.0, 1.0);
+}
+`
+
+const backgroundFragment = /* glsl */ `
+uniform sampler2D map;
+varying vec2 vUv;
+void main() {
+  gl_FragColor = texture2D(map, vUv);
+  #include <colorspace_fragment>
+}
+`
+
+/**
+ * three draws transmission into a mipmapped target, which nothing else in
+ * this renderer uses; the composer's buffers are not mipmapped.
+ */
+function isTransmissionTarget(target: THREE.RenderTarget | null) {
+  return target?.texture.minFilter === THREE.LinearMipmapLinearFilter
+}
+
+/**
+ * An image behind the shape that only glass sees: a quad over the whole
+ * canvas, cropped like CSS `center / cover`, drawn into three's
+ * transmission target and left out of the frame. The composer's render pass
+ * clears scene.background for the whole render, transmission included, so
+ * this can't be scene.background. The quad sits in screen space, so it
+ * lines up with the page behind the canvas whatever the camera does.
+ */
+function BackgroundImage({ url }: { url: string }) {
+  const texture = useLoader(THREE.TextureLoader, url)
+  const aspect = useThree((state) => state.size.width / state.size.height)
+  const scale = useMemo(() => new THREE.Vector2(1, 1), [])
+  const material = useMemo(() => {
+    texture.colorSpace = THREE.SRGBColorSpace
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        map: { value: texture },
+        scale: { value: scale },
+      },
+      vertexShader: backgroundVertex,
+      fragmentShader: backgroundFragment,
+      depthTest: false,
+      depthWrite: false,
+      toneMapped: false,
+    })
+  }, [texture, scale])
+  useEffect(() => () => material.dispose(), [material])
+  useLayoutEffect(() => {
+    const image = texture.image as HTMLImageElement
+    const ratio = aspect / (image.width / image.height)
+    scale.set(ratio > 1 ? 1 : ratio, ratio > 1 ? 1 / ratio : 1)
+  }, [scale, texture, aspect])
+  return (
+    <mesh
+      frustumCulled={false}
+      renderOrder={-1}
+      material={material}
+      onBeforeRender={(renderer) => {
+        material.colorWrite = isTransmissionTarget(renderer.getRenderTarget())
+      }}
+    >
+      <planeGeometry args={[2, 2]} />
+    </mesh>
   )
 }
 
@@ -148,19 +465,94 @@ function SceneContents({
   autoRotate,
   deviceTilt,
   transparent,
+  drift,
+  grab,
+  rise,
+  backgroundImage,
+  lens,
+  lighting,
+  ambient,
 }: {
   scene: SceneV1
   envBaseUrl: string
   autoRotate: boolean
   deviceTilt: boolean
   transparent: boolean
+  drift: number
+  grab: boolean
+  rise: boolean
+  backgroundImage: string | undefined
+  lens: number
+  lighting: boolean
+  ambient: boolean
 }) {
   const geometry = useShapeGeometry(scene.shape)
   const spin = useRef<THREE.Group>(null)
+  const [tumble] = useState(() => createDrift(drift))
+  const lifted = useRef<THREE.Group>(null)
+  const risen = useRef(rise ? 0 : 1)
+  const canvas = useThree((state) => state.gl.domElement)
+  useEffect(() => tumble.setSpeed(drift), [tumble, drift])
   useFrame((_, delta) => {
     if (autoRotate && spin.current)
       spin.current.rotation.y += delta * SPIN_SPEED
+    if ((drift || grab) && spin.current) tumble.step(spin.current, delta)
+    if (lifted.current && risen.current < 1) {
+      // A long frame, like a shader compiling, doesn't jump the rise ahead.
+      risen.current = Math.min(
+        1,
+        risen.current + Math.min(delta, 1 / 30) / RISE_SECONDS
+      )
+      // Ease out: fast from below, settling gently at its place.
+      const left = 1 - risen.current
+      lifted.current.position.y = -RISE_DEPTH * left * left * left
+    }
   })
+  useEffect(() => {
+    if (!grab) return
+    let pointer: number | null = null
+    let x = 0
+    let y = 0
+    const down = (event: PointerEvent) => {
+      if (pointer !== null) return
+      pointer = event.pointerId
+      x = event.clientX
+      y = event.clientY
+      // Keeps the drag when the pointer leaves the canvas; a pointer the
+      // browser no longer tracks can't be captured, and still drags.
+      try {
+        canvas.setPointerCapture(pointer)
+      } catch {}
+      canvas.style.cursor = "grabbing"
+      tumble.grab()
+    }
+    const move = (event: PointerEvent) => {
+      if (event.pointerId !== pointer) return
+      tumble.drag(event.clientX - x, event.clientY - y)
+      x = event.clientX
+      y = event.clientY
+    }
+    const up = (event: PointerEvent) => {
+      if (event.pointerId !== pointer) return
+      pointer = null
+      canvas.style.cursor = "grab"
+      tumble.release()
+    }
+    canvas.style.cursor = "grab"
+    canvas.style.touchAction = "none"
+    canvas.addEventListener("pointerdown", down)
+    canvas.addEventListener("pointermove", move)
+    canvas.addEventListener("pointerup", up)
+    canvas.addEventListener("pointercancel", up)
+    return () => {
+      canvas.removeEventListener("pointerdown", down)
+      canvas.removeEventListener("pointermove", move)
+      canvas.removeEventListener("pointerup", up)
+      canvas.removeEventListener("pointercancel", up)
+      canvas.style.cursor = ""
+      canvas.style.touchAction = ""
+    }
+  }, [grab, canvas, tumble])
 
   const material = findPreset(materials, scene.material.id) ?? materials[0]
   const environment =
@@ -205,43 +597,50 @@ function SceneContents({
 
   return (
     <>
-      {/* Keyed by URL, so picking another environment retries after a
-          failed one. */}
-      <EnvironmentBoundary key={envKey}>
-        <Suspense fallback={null}>
-          <EnvironmentMap
-            files={envFiles}
-            onReady={releasePreviousMap}
-            background={env.background}
-            intensity={env.intensity}
-            rotation={envRotation}
+      {lighting && (
+        <>
+          {/* Keyed by URL, so picking another environment retries after a
+              failed one. */}
+          <EnvironmentBoundary key={envKey}>
+            <Suspense fallback={null}>
+              <EnvironmentMap
+                files={envFiles}
+                onReady={releasePreviousMap}
+                background={env.background}
+                intensity={env.intensity}
+                rotation={envRotation}
+              />
+            </Suspense>
+          </EnvironmentBoundary>
+          <directionalLight
+            position={onSphere(stage.light.azimuth, stage.light.elevation, 10)}
+            intensity={stage.light.intensity}
           />
-        </Suspense>
-      </EnvironmentBoundary>
-      <directionalLight
-        position={onSphere(stage.light.azimuth, stage.light.elevation, 10)}
-        intensity={stage.light.intensity}
-      />
-      <group
-        ref={placed}
-        position={placement.position}
-        quaternion={placement.quaternion}
-      >
-        <HoverMotion enabled={motion.hover} deviceTilt={deviceTilt}>
-          <group ref={spin}>
-            {geometry && (
-              <mesh geometry={geometry}>
-                {/* Keyed so switching presets starts from a fresh material
-                    instead of inheriting the last preset's settings. */}
-                <Fragment key={material.id}>
-                  {material.render(
-                    resolveValues(material.params, scene.material.params)
-                  )}
-                </Fragment>
-              </mesh>
-            )}
-          </group>
-        </HoverMotion>
+        </>
+      )}
+      {/* Starts below its place when rising; useFrame brings it up. */}
+      <group ref={lifted} position-y={rise ? -RISE_DEPTH : 0}>
+        <group
+          ref={placed}
+          position={placement.position}
+          quaternion={placement.quaternion}
+        >
+          <HoverMotion enabled={motion.hover} deviceTilt={deviceTilt}>
+            <group ref={spin}>
+              {geometry && (
+                <mesh geometry={geometry}>
+                  {/* Keyed so switching presets starts from a fresh material
+                      instead of inheriting the last preset's settings. */}
+                  <Fragment key={material.id}>
+                    {material.render(
+                      resolveValues(material.params, scene.material.params)
+                    )}
+                  </Fragment>
+                </mesh>
+              )}
+            </group>
+          </HoverMotion>
+        </group>
       </group>
       {stage.floor && floorCenter && (
         <FloorShadow
@@ -266,7 +665,15 @@ function SceneContents({
       >
         {effectsAt("scene")}
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-        {backdrop && !transparent ? (
+        {backgroundImage ? (
+          <ImageBackdrop
+            url={backgroundImage}
+            lens={lens}
+            target={spin}
+            risen={risen}
+            ambient={ambient}
+          />
+        ) : backdrop && !transparent ? (
           <Backdrop color={staging.background} />
         ) : null}
         {effectsAt("display")}

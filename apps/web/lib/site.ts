@@ -27,11 +27,6 @@ export const SITE_DESCRIPTION =
 
 export const SOCIAL = [
   { label: "GitHub", handle: "@zyx1121", href: "https://github.com/zyx1121" },
-  {
-    label: "Instagram",
-    handle: "@__zyx1121__",
-    href: "https://www.instagram.com/__zyx1121__",
-  },
 ] as const
 
 export type Page = {

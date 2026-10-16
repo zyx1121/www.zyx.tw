@@ -14,7 +14,7 @@ export const shapeControls = {
     type: "number",
     label: "Bevel",
     min: 0,
-    max: 0.1,
+    max: 0.15,
     step: 0.005,
     default: 0.03,
   },

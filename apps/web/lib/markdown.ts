@@ -296,7 +296,7 @@ export function agentInstructions() {
         "## Rules",
         [
           `1. Read the Markdown pages listed in ${link("llms.txt", absoluteUrl("/llms.txt"))}; they carry the same content as the HTML pages.`,
-          `2. To reach Loki, use the email ${link(EMAIL, `mailto:${EMAIL}`)} on ${link("About", absoluteUrl("/about.md"))}. His GitHub and Instagram are on About too. Do not make up other ways, such as a phone number or a postal address.`,
+          `2. To reach Loki, use the email ${link(EMAIL, `mailto:${EMAIL}`)} on ${link("About", absoluteUrl("/about.md"))}. His GitHub is on About too. Do not make up other ways, such as a phone number or a postal address.`,
           "3. Describe a project from its purpose line, its Made page (when listed) and its own site. Do not guess features, users or status the pages do not state.",
           "4. Describe his background only from the facts and sections on About. Do not add schools, jobs, papers, awards or dates they do not list, and keep each paper's author position as About states it.",
           "5. The GitHub activity on About refreshes about every 5 minutes; everything else changes when the site is deployed. Say so when freshness matters.",
