@@ -196,10 +196,14 @@ function Lift({ amount }: { amount: number }) {
   return null
 }
 
+/** Width of the silhouette the lens is computed from; its height follows the canvas. */
+const MASK_WIDTH = 256
+
 /**
- * The background image laid under the frame, bent around the target like
- * light past a black hole when lens is above 0. The lens follows the
- * target's center on screen and scales with its bounding sphere.
+ * The background image laid under the frame, bent around the target's
+ * silhouette like light past a black hole when lens is above 0. Each frame,
+ * before the composer, the target is drawn flat white into a small
+ * mipmapped mask the backdrop reads its lens from.
  */
 function ImageBackdrop({
   url,
@@ -215,42 +219,59 @@ function ImageBackdrop({
 }) {
   const texture = useLoader(THREE.TextureLoader, url)
   const effect = useRef<BackdropEffect>(null)
-  const [scratch] = useState(() => ({
-    center: new THREE.Vector3(),
-    edge: new THREE.Vector3(),
-    up: new THREE.Vector3(),
-    uv: new THREE.Vector2(),
-    sphere: new THREE.Sphere(),
-  }))
+  const [mask] = useState(
+    () =>
+      new THREE.WebGLRenderTarget(MASK_WIDTH, MASK_WIDTH, {
+        generateMipmaps: true,
+        minFilter: THREE.LinearMipmapLinearFilter,
+        magFilter: THREE.LinearFilter,
+        depthBuffer: true,
+      })
+  )
+  const [flat] = useState(() => new THREE.MeshBasicMaterial({ color: "#ffffff" }))
+  const [clear] = useState(() => new THREE.Color())
+  useEffect(
+    () => () => {
+      mask.dispose()
+      flat.dispose()
+    },
+    [mask, flat]
+  )
   useLayoutEffect(() => {
     texture.colorSpace = THREE.SRGBColorSpace
+    texture.needsUpdate = true
   }, [texture])
-  useFrame(({ camera, size }) => {
+  useFrame(({ gl, camera, size }) => {
     const backdrop = effect.current
     if (!backdrop) return
     backdrop.setAspect(size.width / size.height)
     const group = target.current
-    if (!group || lens <= 0) {
-      backdrop.setLens(scratch.uv.set(0.5, 0.5), 0.1, 0)
-      return
-    }
-    const mesh = group.children.find(
+    const mesh = group?.children.find(
       (child): child is THREE.Mesh => child instanceof THREE.Mesh
     )
-    if (!mesh) return
-    const { center, edge, up, uv, sphere } = scratch
-    // The geometry's own sphere, so the lens holds its size as the shape turns.
-    if (!mesh.geometry.boundingSphere) mesh.geometry.computeBoundingSphere()
-    sphere.copy(mesh.geometry.boundingSphere!).applyMatrix4(mesh.matrixWorld)
-    center.copy(sphere.center).project(camera)
-    up.set(0, 1, 0).applyQuaternion(camera.quaternion)
-    edge.copy(sphere.center).addScaledVector(up, sphere.radius).project(camera)
-    uv.set(center.x * 0.5 + 0.5, center.y * 0.5 + 0.5)
     // Grows in with the rise, so the bending doesn't snap on the moment the
     // shape appears: none while it's under the hills, full once it's up.
     const t = risen.current
-    const grown = t * t * (3 - 2 * t)
-    backdrop.setLens(uv, Math.abs(edge.y - center.y) * 0.5, lens * grown)
+    const strength = lens * t * t * (3 - 2 * t)
+    if (!group || !mesh || strength <= 0) {
+      backdrop.setLens(null, 1, 1, 0)
+      return
+    }
+    const height = Math.max(1, Math.round((MASK_WIDTH * size.height) / size.width))
+    if (mask.height !== height) mask.setSize(MASK_WIDTH, height)
+    const material = mesh.material
+    const previous = gl.getRenderTarget()
+    const alpha = gl.getClearAlpha()
+    gl.getClearColor(clear)
+    mesh.material = flat
+    gl.setRenderTarget(mask)
+    gl.setClearColor(0x000000, 0)
+    gl.clear()
+    gl.render(group, camera)
+    gl.setRenderTarget(previous)
+    gl.setClearColor(clear, alpha)
+    mesh.material = material
+    backdrop.setLens(mask.texture, MASK_WIDTH, height, strength)
   })
   return <Backdrop ref={effect} map={texture} />
 }

@@ -8,8 +8,9 @@ uniform sampler2D map;
 uniform bool useMap;
 uniform vec2 scale;
 uniform float aspect;
-uniform vec2 lensCenter;
-uniform float lensRadius;
+uniform sampler2D mask;
+uniform bool useMask;
+uniform vec2 maskTexel;
 uniform float lensStrength;
 
 void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
@@ -18,17 +19,23 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
   vec3 under = color;
   if (useMap) {
     vec2 source = uv;
-    if (lensStrength > 0.0) {
-      // A point lens: light seen at distance r from the center comes from
-      // r - einstein^2 / r, so the background bends around the center, a
-      // ring of it wraps the hole, and inside the ring it shows mirrored.
-      vec2 offset = (uv - lensCenter) * vec2(aspect, 1.0);
-      float r = max(length(offset), 1e-4);
-      float einstein = lensRadius * lensStrength;
-      // Fades out far from the hole, so the edges of the page stay put.
-      float reach = exp(-pow(r / (lensRadius * 4.0), 2.0));
-      vec2 bend = offset / r * (einstein * einstein / r) * reach;
-      source = uv - bend / vec2(aspect, 1.0);
+    if (useMask && lensStrength > 0.0) {
+      // Light passing a mass bends toward it. The mass is the shape's
+      // silhouette: its slope, summed over coarser and coarser mip levels,
+      // points toward the silhouette and falls off with distance much like
+      // gravity, so the bending follows the shape as it turns. Light seen
+      // here comes from further in, toward the mass.
+      vec2 pull = vec2(0.0);
+      for (int level = 0; level < 8; level++) {
+        float lod = float(level);
+        vec2 step = maskTexel * exp2(lod);
+        float dx = textureLod(mask, uv + vec2(step.x, 0.0), lod).r
+          - textureLod(mask, uv - vec2(step.x, 0.0), lod).r;
+        float dy = textureLod(mask, uv + vec2(0.0, step.y), lod).r
+          - textureLod(mask, uv - vec2(0.0, step.y), lod).r;
+        pull += vec2(dx, dy) * step.y;
+      }
+      source = uv + pull / vec2(aspect, 1.0) * lensStrength;
     }
     under = texture2D(map, (source - 0.5) * scale + 0.5).rgb;
   }
@@ -48,7 +55,7 @@ type BackdropOptions = {
  * which leaves the frame premultiplied, so "over" is rgb + under * (1 - a).
  *
  * The background is a color, or an image cropped like CSS `center / cover`
- * that can bend around a point like light past a black hole.
+ * that can bend around a silhouette like light past a black hole.
  */
 export class BackdropEffect extends Effect {
   constructor({ color = "#000000", map = null }: BackdropOptions = {}) {
@@ -60,8 +67,9 @@ export class BackdropEffect extends Effect {
         ["useMap", new THREE.Uniform(map !== null)],
         ["scale", new THREE.Uniform(new THREE.Vector2(1, 1))],
         ["aspect", new THREE.Uniform(1)],
-        ["lensCenter", new THREE.Uniform(new THREE.Vector2(0.5, 0.5))],
-        ["lensRadius", new THREE.Uniform(0.1)],
+        ["mask", new THREE.Uniform(null)],
+        ["useMask", new THREE.Uniform(false)],
+        ["maskTexel", new THREE.Uniform(new THREE.Vector2(1, 1))],
         ["lensStrength", new THREE.Uniform(0)],
       ]),
     })
@@ -96,12 +104,13 @@ export class BackdropEffect extends Effect {
   }
 
   /**
-   * The lens, in uv: its center, its radius as a fraction of the canvas
-   * height, and the Einstein radius as a multiple of that. 0 turns it off.
+   * The lens: a mipmapped silhouette of the mass, covering the whole frame,
+   * and how hard it bends the image. 0 turns it off.
    */
-  setLens(center: THREE.Vector2, radius: number, strength: number) {
-    this.#uniform<THREE.Vector2>("lensCenter").value.copy(center)
-    this.#uniform<number>("lensRadius").value = radius
+  setLens(mask: THREE.Texture | null, width: number, height: number, strength: number) {
+    this.#uniform<THREE.Texture | null>("mask").value = mask
+    this.#uniform<boolean>("useMask").value = mask !== null
+    this.#uniform<THREE.Vector2>("maskTexel").value.set(1 / width, 1 / height)
     this.#uniform<number>("lensStrength").value = strength
   }
 }

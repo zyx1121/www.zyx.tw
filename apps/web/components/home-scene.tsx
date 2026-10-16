@@ -85,7 +85,8 @@ export function HomeScene() {
       drift={reduced ? 0 : 1.6}
       grab
       rise={!reduced}
-      backgroundImage="/bliss.webp"
+      // The sky alone: the hills are in front of the hole, not behind it.
+      backgroundImage="/bliss-sky.webp"
       lift={0.04}
       lens={lens}
       lighting={look !== "void"}
