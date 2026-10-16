@@ -18,6 +18,38 @@ uniform float cursorMass;
 uniform vec3 ringColor;
 uniform float ringStrength;
 
+vec4 cubic(float v) {
+  vec4 n = vec4(1.0, 2.0, 3.0, 4.0) - v;
+  vec4 s = n * n * n;
+  float x = s.x;
+  float y = s.y - 4.0 * s.x;
+  float z = s.z - 4.0 * s.y + 6.0 * s.x;
+  return vec4(x, y, z, 6.0 - x - y - z) * (1.0 / 6.0);
+}
+
+// The mask at a mip level through a cubic B-spline, from 4 bilinear reads.
+// Plain bilinear magnification of a coarse level shows its texels as
+// blocks; the spline keeps a soft edge smooth however far it's enlarged.
+float maskSmooth(vec2 uv, int level) {
+  vec2 size = vec2(textureSize(mask, level));
+  vec2 coord = uv * size - 0.5;
+  vec2 f = fract(coord);
+  coord -= f;
+  vec4 xc = cubic(f.x);
+  vec4 yc = cubic(f.y);
+  vec4 c = coord.xxyy + vec2(-0.5, 1.5).xyxy;
+  vec4 s = vec4(xc.xz + xc.yw, yc.xz + yc.yw);
+  vec4 o = (c + vec4(xc.yw, yc.yw) / s) / size.xxyy;
+  float lod = float(level);
+  float a = textureLod(mask, o.xz, lod).r;
+  float b = textureLod(mask, o.yz, lod).r;
+  float d = textureLod(mask, o.xw, lod).r;
+  float e = textureLod(mask, o.yw, lod).r;
+  float sx = s.x / (s.x + s.y);
+  float sy = s.z / (s.z + s.w);
+  return mix(mix(e, d, sx), mix(b, a, sx), sy);
+}
+
 void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
   // Clamped in case an effect upstream leaves alpha outside [0, 1].
   float coverage = clamp(inputColor.a, 0.0, 1.0);
@@ -57,11 +89,12 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
     if (useMask && ringStrength > 0.0) {
       // A photon ring: light hugging the silhouette just outside its edge, a
       // thin bright line over a wider, fainter glow.
-      float edge = smoothstep(0.2, 0.8, textureLod(mask, uv, 1.0).r);
-      float near = textureLod(mask, uv, 2.0).r;
-      float far = textureLod(mask, uv, 4.5).r;
-      float ring = smoothstep(0.0, 0.6, max(near - edge, 0.0)) * 0.8
-        + max(far - edge, 0.0) * 0.4;
+      // Its inner edge is the frame's own sharp silhouette; outward it
+      // fades with the blurred mask.
+      float near = maskSmooth(uv, 2);
+      float far = maskSmooth(uv, 4);
+      float ring = smoothstep(0.0, 0.6, max(near - coverage, 0.0)) * 0.8
+        + max(far - coverage, 0.0) * 0.4;
       under += ringColor * ring * ringStrength;
     }
   }
