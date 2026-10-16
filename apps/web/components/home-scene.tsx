@@ -91,6 +91,7 @@ export function HomeScene() {
       lens={lens}
       lighting={look !== "void"}
       dpr={[1, 1]}
+      ambient={!reduced}
       className="size-full"
     />
   )

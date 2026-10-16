@@ -113,6 +113,11 @@ export type Scene3DProps = {
   lighting?: boolean
   /** Device pixel ratio range; a lower top end draws fewer pixels on retina screens. */
   dpr?: [number, number]
+  /**
+   * With `lens`: let the background image drift slowly and shift a little
+   * with the mouse, for depth. The pointer bends the image either way.
+   */
+  ambient?: boolean
 }
 
 /** Renders a scene.json. Use it from a client component; it fills its parent. */
@@ -133,6 +138,7 @@ export function Scene3D({
   lens = 0,
   lighting = true,
   dpr = [1, 2],
+  ambient = false,
 }: Scene3DProps) {
   const view = viewOverride ?? stagingOf(scene).view
   return (
@@ -166,6 +172,7 @@ export function Scene3D({
           backgroundImage={transparent ? backgroundImage : undefined}
           lens={lens}
           lighting={lighting}
+          ambient={ambient}
         />
       </Suspense>
       {controls && (
@@ -197,7 +204,22 @@ function Lift({ amount }: { amount: number }) {
 }
 
 /** Width of the silhouette the lens is computed from; its height follows the canvas. */
-const MASK_WIDTH = 256
+const MASK_WIDTH = 512
+
+/** The pointer's own Einstein radius, as a fraction of the canvas height. */
+const CURSOR_MASS = 0.025
+
+/** How much harder the lens pulls while the shape is held. */
+const HOLD_BOOST = 1.5
+
+/** Image widths per second the clouds drift: one across about every 6 minutes. */
+const CLOUD_SPEED = 0.003
+
+/** Image widths the sky shifts with the mouse at the window's edge. */
+const SKY_SHIFT = 0.004
+
+/** Brightness of the photon ring around the silhouette. */
+const RING_BRIGHTNESS = 0.9
 
 /**
  * The background image laid under the frame, bent around the target's
@@ -210,13 +232,59 @@ function ImageBackdrop({
   lens,
   target,
   risen,
+  ambient,
 }: {
   url: string
   lens: number
   target: React.RefObject<THREE.Group | null>
   /** How far the shape has risen, 0 to 1; the lens grows with it. */
   risen: React.RefObject<number>
+  ambient: boolean
 }) {
+  const canvas = useThree((state) => state.gl.domElement)
+  // Where the pointer is and what it does, eased in useFrame.
+  const [pointer] = useState(() => ({
+    x: 0.5,
+    y: 0.5,
+    inside: false,
+    held: false,
+    mass: 0,
+    boost: 0,
+    shiftX: 0,
+    shiftY: 0,
+    drifted: 0,
+  }))
+  useEffect(() => {
+    const move = (event: PointerEvent) => {
+      const box = canvas.getBoundingClientRect()
+      pointer.x = (event.clientX - box.left) / box.width
+      pointer.y = 1 - (event.clientY - box.top) / box.height
+      // A finger only counts while it drags; a mouse counts while it's over the page.
+      pointer.inside = event.pointerType === "mouse" || pointer.held
+    }
+    const down = () => {
+      pointer.held = true
+    }
+    const up = (event: PointerEvent) => {
+      pointer.held = false
+      if (event.pointerType !== "mouse") pointer.inside = false
+    }
+    const leave = () => {
+      pointer.inside = false
+    }
+    window.addEventListener("pointermove", move)
+    canvas.addEventListener("pointerdown", down)
+    window.addEventListener("pointerup", up)
+    window.addEventListener("pointercancel", up)
+    document.documentElement.addEventListener("pointerleave", leave)
+    return () => {
+      window.removeEventListener("pointermove", move)
+      canvas.removeEventListener("pointerdown", down)
+      window.removeEventListener("pointerup", up)
+      window.removeEventListener("pointercancel", up)
+      document.documentElement.removeEventListener("pointerleave", leave)
+    }
+  }, [canvas, pointer])
   const texture = useLoader(THREE.TextureLoader, url)
   const effect = useRef<BackdropEffect>(null)
   const [mask] = useState(
@@ -241,10 +309,21 @@ function ImageBackdrop({
     texture.colorSpace = THREE.SRGBColorSpace
     texture.needsUpdate = true
   }, [texture])
-  useFrame(({ gl, camera, size }) => {
+  useFrame(({ gl, camera, size }, delta) => {
     const backdrop = effect.current
     if (!backdrop) return
     backdrop.setAspect(size.width / size.height)
+    const ease = 1 - Math.exp(-delta * 4)
+    pointer.mass += ((pointer.inside ? CURSOR_MASS : 0) - pointer.mass) * ease
+    pointer.boost += ((pointer.held ? 1 : 0) - pointer.boost) * ease
+    const toward = ambient && pointer.inside
+    pointer.shiftX += ((toward ? pointer.x * 2 - 1 : 0) - pointer.shiftX) * ease
+    pointer.shiftY += ((toward ? pointer.y * 2 - 1 : 0) - pointer.shiftY) * ease
+    if (ambient) pointer.drifted += delta
+    backdrop.setPan(
+      pointer.drifted * CLOUD_SPEED + pointer.shiftX * SKY_SHIFT,
+      pointer.shiftY * SKY_SHIFT
+    )
     const group = target.current
     const mesh = group?.children.find(
       (child): child is THREE.Mesh => child instanceof THREE.Mesh
@@ -252,9 +331,13 @@ function ImageBackdrop({
     // Grows in with the rise, so the bending doesn't snap on the moment the
     // shape appears: none while it's under the hills, full once it's up.
     const t = risen.current
-    const strength = lens * t * t * (3 - 2 * t)
+    const grown = t * t * (3 - 2 * t)
+    // Holding the shape pulls harder.
+    const strength = lens * grown * (1 + pointer.boost * HOLD_BOOST)
+    backdrop.setCursor(pointer.x, pointer.y, lens > 0 ? pointer.mass * grown : 0)
     if (!group || !mesh || strength <= 0) {
       backdrop.setLens(null, 1, 1, 0)
+      backdrop.setRing(0)
       return
     }
     const height = Math.max(1, Math.round((MASK_WIDTH * size.height) / size.width))
@@ -272,6 +355,7 @@ function ImageBackdrop({
     gl.setClearColor(clear, alpha)
     mesh.material = material
     backdrop.setLens(mask.texture, MASK_WIDTH, height, strength)
+    backdrop.setRing(grown * RING_BRIGHTNESS)
   })
   return <Backdrop ref={effect} map={texture} />
 }
@@ -378,6 +462,7 @@ function SceneContents({
   backgroundImage,
   lens,
   lighting,
+  ambient,
 }: {
   scene: SceneV1
   envBaseUrl: string
@@ -390,6 +475,7 @@ function SceneContents({
   backgroundImage: string | undefined
   lens: number
   lighting: boolean
+  ambient: boolean
 }) {
   const geometry = useShapeGeometry(scene.shape)
   const spin = useRef<THREE.Group>(null)
@@ -576,6 +662,7 @@ function SceneContents({
             lens={lens}
             target={spin}
             risen={risen}
+            ambient={ambient}
           />
         ) : backdrop && !transparent ? (
           <Backdrop color={staging.background} />

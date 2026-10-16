@@ -12,6 +12,11 @@ uniform sampler2D mask;
 uniform bool useMask;
 uniform vec2 maskTexel;
 uniform float lensStrength;
+uniform vec2 pan;
+uniform vec2 cursor;
+uniform float cursorMass;
+uniform vec3 ringColor;
+uniform float ringStrength;
 
 void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
   // Clamped in case an effect upstream leaves alpha outside [0, 1].
@@ -37,7 +42,28 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
       }
       source = uv + pull / vec2(aspect, 1.0) * lensStrength;
     }
-    under = texture2D(map, (source - 0.5) * scale + 0.5).rgb;
+    if (cursorMass > 0.0) {
+      // The pointer is a small mass too: light near it bends in toward it,
+      // less and less further out.
+      vec2 offset = (uv - cursor) * vec2(aspect, 1.0);
+      float r = max(length(offset), 1e-4);
+      float reach = exp(-pow(r / (cursorMass * 8.0), 2.0));
+      float bend = cursorMass * cursorMass / (r + cursorMass) * reach;
+      source -= offset / r * bend / vec2(aspect, 1.0);
+    }
+    // pan slides the picture: clouds drifting, and the sky's share of the
+    // parallax.
+    under = texture2D(map, (source - 0.5) * scale + 0.5 + pan).rgb;
+    if (useMask && ringStrength > 0.0) {
+      // A photon ring: light hugging the silhouette just outside its edge, a
+      // thin bright line over a wider, fainter glow.
+      float edge = smoothstep(0.2, 0.8, textureLod(mask, uv, 1.0).r);
+      float near = textureLod(mask, uv, 2.0).r;
+      float far = textureLod(mask, uv, 4.5).r;
+      float ring = smoothstep(0.0, 0.6, max(near - edge, 0.0)) * 0.8
+        + max(far - edge, 0.0) * 0.4;
+      under += ringColor * ring * ringStrength;
+    }
   }
   outputColor = vec4(inputColor.rgb + under * (1.0 - coverage), 1.0);
 }
@@ -71,6 +97,11 @@ export class BackdropEffect extends Effect {
         ["useMask", new THREE.Uniform(false)],
         ["maskTexel", new THREE.Uniform(new THREE.Vector2(1, 1))],
         ["lensStrength", new THREE.Uniform(0)],
+        ["pan", new THREE.Uniform(new THREE.Vector2(0, 0))],
+        ["cursor", new THREE.Uniform(new THREE.Vector2(0.5, 0.5))],
+        ["cursorMass", new THREE.Uniform(0)],
+        ["ringColor", new THREE.Uniform(new THREE.Color("#fff1d6"))],
+        ["ringStrength", new THREE.Uniform(0)],
       ]),
     })
   }
@@ -87,6 +118,29 @@ export class BackdropEffect extends Effect {
   set map(map: THREE.Texture | null) {
     this.#uniform<THREE.Texture | null>("map").value = map
     this.#uniform<boolean>("useMap").value = map !== null
+    if (map) {
+      // Sideways the image repeats, for drifting clouds; give it one that
+      // tiles. Up and down it only shifts a little, so the edge row holds.
+      map.wrapS = THREE.RepeatWrapping
+      map.wrapT = THREE.ClampToEdgeWrapping
+      map.needsUpdate = true
+    }
+  }
+
+  /** Slides the image, in uv of the image. */
+  setPan(x: number, y: number) {
+    this.#uniform<THREE.Vector2>("pan").value.set(x, y)
+  }
+
+  /** A point mass at the pointer, in canvas uv, with its Einstein radius as a fraction of the height. */
+  setCursor(x: number, y: number, mass: number) {
+    this.#uniform<THREE.Vector2>("cursor").value.set(x, y)
+    this.#uniform<number>("cursorMass").value = mass
+  }
+
+  /** How bright the photon ring around the silhouette is. 0 turns it off. */
+  setRing(strength: number) {
+    this.#uniform<number>("ringStrength").value = strength
   }
 
   /** Crops the image like `center / cover` for a canvas of this aspect. */
