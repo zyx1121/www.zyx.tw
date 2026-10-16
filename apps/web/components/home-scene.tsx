@@ -42,7 +42,7 @@ const SKY_LOOKS = new Set(["obsidian", "oil", "chrome", "velvet"])
 function sceneWith(look: string, env: string | null) {
   return {
     ...BASE,
-    shape: { ...BASE.shape, bevel: 0.08 },
+    shape: { ...BASE.shape, bevel: 0.12 },
     material: LOOKS[look] ?? LOOKS.clear,
     environment: {
       ...BASE.environment,
@@ -75,7 +75,7 @@ export function HomeScene() {
     [query]
   )
   const look = query.get("look") ?? "void"
-  const lens = Number(query.get("lens") ?? 1)
+  const lens = Number(query.get("lens") ?? 0.2)
   return (
     <Scene3D
       scene={scene}
