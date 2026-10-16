@@ -19,7 +19,7 @@ import {
 } from "react"
 import * as THREE from "three"
 
-import { Backdrop } from "./backdrop"
+import { Backdrop, BackdropEffect } from "./backdrop"
 import { CameraView } from "./camera-view"
 import {
   environmentControls,
@@ -100,6 +100,19 @@ export type Scene3DProps = {
   backgroundImage?: string
   /** Move the shape up by this fraction of the canvas height. */
   lift?: number
+  /**
+   * With `transparent` and `backgroundImage`, draw the image into the frame
+   * and bend it around the shape like light past a black hole, this strong.
+   */
+  lens?: number
+  /**
+   * Light the shape with the environment map and the staging's light. A
+   * material that ignores light, like a flat black, can skip both and the
+   * map's download.
+   */
+  lighting?: boolean
+  /** Device pixel ratio range; a lower top end draws fewer pixels on retina screens. */
+  dpr?: [number, number]
 }
 
 /** Renders a scene.json. Use it from a client component; it fills its parent. */
@@ -117,6 +130,9 @@ export function Scene3D({
   rise = false,
   backgroundImage,
   lift = 0,
+  lens = 0,
+  lighting = true,
+  dpr = [1, 2],
 }: Scene3DProps) {
   const view = viewOverride ?? stagingOf(scene).view
   return (
@@ -127,7 +143,7 @@ export function Scene3D({
         position: onSphere(view.azimuth, view.elevation, CAMERA_DISTANCE),
         fov: 35,
       }}
-      dpr={[1, 2]}
+      dpr={dpr}
       // Every frame goes through the composer, which antialiases on its own.
       gl={{ antialias: false }}
     >
@@ -147,6 +163,9 @@ export function Scene3D({
           drift={drift}
           grab={grab}
           rise={rise}
+          backgroundImage={transparent ? backgroundImage : undefined}
+          lens={lens}
+          lighting={lighting}
         />
       </Suspense>
       {controls && (
@@ -175,6 +194,58 @@ function Lift({ amount }: { amount: number }) {
     return () => camera.clearViewOffset()
   }, [camera, width, height, amount])
   return null
+}
+
+/**
+ * The background image laid under the frame, bent around the target like
+ * light past a black hole when lens is above 0. The lens follows the
+ * target's center on screen and scales with its bounding sphere.
+ */
+function ImageBackdrop({
+  url,
+  lens,
+  target,
+}: {
+  url: string
+  lens: number
+  target: React.RefObject<THREE.Group | null>
+}) {
+  const texture = useLoader(THREE.TextureLoader, url)
+  const effect = useRef<BackdropEffect>(null)
+  const [scratch] = useState(() => ({
+    center: new THREE.Vector3(),
+    edge: new THREE.Vector3(),
+    up: new THREE.Vector3(),
+    uv: new THREE.Vector2(),
+    sphere: new THREE.Sphere(),
+  }))
+  useLayoutEffect(() => {
+    texture.colorSpace = THREE.SRGBColorSpace
+  }, [texture])
+  useFrame(({ camera, size }) => {
+    const backdrop = effect.current
+    if (!backdrop) return
+    backdrop.setAspect(size.width / size.height)
+    const group = target.current
+    if (!group || lens <= 0) {
+      backdrop.setLens(scratch.uv.set(0.5, 0.5), 0.1, 0)
+      return
+    }
+    const mesh = group.children.find(
+      (child): child is THREE.Mesh => child instanceof THREE.Mesh
+    )
+    if (!mesh) return
+    const { center, edge, up, uv, sphere } = scratch
+    // The geometry's own sphere, so the lens holds its size as the shape turns.
+    if (!mesh.geometry.boundingSphere) mesh.geometry.computeBoundingSphere()
+    sphere.copy(mesh.geometry.boundingSphere!).applyMatrix4(mesh.matrixWorld)
+    center.copy(sphere.center).project(camera)
+    up.set(0, 1, 0).applyQuaternion(camera.quaternion)
+    edge.copy(sphere.center).addScaledVector(up, sphere.radius).project(camera)
+    uv.set(center.x * 0.5 + 0.5, center.y * 0.5 + 0.5)
+    backdrop.setLens(uv, Math.abs(edge.y - center.y) * 0.5, lens)
+  })
+  return <Backdrop ref={effect} map={texture} />
 }
 
 const backgroundVertex = /* glsl */ `
@@ -276,6 +347,9 @@ function SceneContents({
   drift,
   grab,
   rise,
+  backgroundImage,
+  lens,
+  lighting,
 }: {
   scene: SceneV1
   envBaseUrl: string
@@ -285,6 +359,9 @@ function SceneContents({
   drift: number
   grab: boolean
   rise: boolean
+  backgroundImage: string | undefined
+  lens: number
+  lighting: boolean
 }) {
   const geometry = useShapeGeometry(scene.shape)
   const spin = useRef<THREE.Group>(null)
@@ -298,7 +375,11 @@ function SceneContents({
       spin.current.rotation.y += delta * SPIN_SPEED
     if ((drift || grab) && spin.current) tumble.step(spin.current, delta)
     if (lifted.current && risen.current < 1) {
-      risen.current = Math.min(1, risen.current + delta / RISE_SECONDS)
+      // A long frame, like a shader compiling, doesn't jump the rise ahead.
+      risen.current = Math.min(
+        1,
+        risen.current + Math.min(delta, 1 / 30) / RISE_SECONDS
+      )
       // Ease out: fast from below, settling gently at its place.
       const left = 1 - risen.current
       lifted.current.position.y = -RISE_DEPTH * left * left * left
@@ -393,23 +474,27 @@ function SceneContents({
 
   return (
     <>
-      {/* Keyed by URL, so picking another environment retries after a
-          failed one. */}
-      <EnvironmentBoundary key={envKey}>
-        <Suspense fallback={null}>
-          <EnvironmentMap
-            files={envFiles}
-            onReady={releasePreviousMap}
-            background={env.background}
-            intensity={env.intensity}
-            rotation={envRotation}
+      {lighting && (
+        <>
+          {/* Keyed by URL, so picking another environment retries after a
+              failed one. */}
+          <EnvironmentBoundary key={envKey}>
+            <Suspense fallback={null}>
+              <EnvironmentMap
+                files={envFiles}
+                onReady={releasePreviousMap}
+                background={env.background}
+                intensity={env.intensity}
+                rotation={envRotation}
+              />
+            </Suspense>
+          </EnvironmentBoundary>
+          <directionalLight
+            position={onSphere(stage.light.azimuth, stage.light.elevation, 10)}
+            intensity={stage.light.intensity}
           />
-        </Suspense>
-      </EnvironmentBoundary>
-      <directionalLight
-        position={onSphere(stage.light.azimuth, stage.light.elevation, 10)}
-        intensity={stage.light.intensity}
-      />
+        </>
+      )}
       {/* Starts below its place when rising; useFrame brings it up. */}
       <group ref={lifted} position-y={rise ? -RISE_DEPTH : 0}>
         <group
@@ -457,7 +542,9 @@ function SceneContents({
       >
         {effectsAt("scene")}
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-        {backdrop && !transparent ? (
+        {backgroundImage ? (
+          <ImageBackdrop url={backgroundImage} lens={lens} target={spin} />
+        ) : backdrop && !transparent ? (
           <Backdrop color={staging.background} />
         ) : null}
         {effectsAt("display")}

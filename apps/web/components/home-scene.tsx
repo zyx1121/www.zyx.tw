@@ -48,6 +48,8 @@ function sceneWith(look: string, env: string | null) {
       ...BASE.environment,
       id: env ?? (SKY_LOOKS.has(look) ? "sky" : BASE.environment.id),
     },
+    // Glow and a vignette would tint the picture the frame now carries.
+    effects: [],
     motion: { hover: false },
   } as SceneV1
 }
@@ -69,9 +71,11 @@ export function HomeScene() {
       )
   )
   const scene = useMemo(
-    () => sceneWith(query.get("look") ?? "clear", query.get("env")),
+    () => sceneWith(query.get("look") ?? "void", query.get("env")),
     [query]
   )
+  const look = query.get("look") ?? "void"
+  const lens = Number(query.get("lens") ?? 1)
   return (
     <Scene3D
       scene={scene}
@@ -83,6 +87,9 @@ export function HomeScene() {
       rise={!reduced}
       backgroundImage="/bliss.webp"
       lift={0.04}
+      lens={lens}
+      lighting={look !== "void"}
+      dpr={[1, 1]}
       className="size-full"
     />
   )
