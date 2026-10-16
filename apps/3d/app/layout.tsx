@@ -67,10 +67,7 @@ export default async function RootLayout({
             <TopCorners
               nav={
                 <CornerTip tip="Every project and its link">
-                  <a
-                    href="https://www.zyx.tw/works"
-                    className={cornerLink}
-                  >
+                  <a href="https://www.zyx.tw/works" className={cornerLink}>
                     {SITE_NAME}
                   </a>
                 </CornerTip>
