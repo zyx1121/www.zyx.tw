@@ -126,21 +126,21 @@ export function Scene3D({
     >
       <FitCamera />
       <Lift amount={lift} />
-      {backgroundImage && (
-        <Suspense fallback={null}>
-          <BackgroundImage url={backgroundImage} />
-        </Suspense>
-      )}
       <CameraView azimuth={view.azimuth} elevation={view.elevation} />
-      <SceneContents
-        scene={scene}
-        envBaseUrl={envBaseUrl}
-        autoRotate={autoRotate}
-        deviceTilt={deviceTilt}
-        transparent={transparent}
-        drift={drift}
-        grab={grab}
-      />
+      {/* Glass that shows before its background image has loaded refracts
+          the clear color, a dark flash; so the shape waits for the image. */}
+      <Suspense fallback={null}>
+        {backgroundImage && <BackgroundImage url={backgroundImage} />}
+        <SceneContents
+          scene={scene}
+          envBaseUrl={envBaseUrl}
+          autoRotate={autoRotate}
+          deviceTilt={deviceTilt}
+          transparent={transparent}
+          drift={drift}
+          grab={grab}
+        />
+      </Suspense>
       {controls && (
         <OrbitControls
           enablePan={false}
