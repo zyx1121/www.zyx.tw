@@ -26,6 +26,9 @@ const LOOKS: Record<string, SceneV1["material"]> = {
   frosted: { id: "frosted", params: {} },
   candy: { id: "liquid", params: { color: "#ff6fb5", tintDepth: 0.6 } },
   sea: { id: "liquid", params: { color: "#38c7ff", tintDepth: 0.6 } },
+  orange: { id: "liquid", params: { color: "#ff7a1a", tintDepth: 1.4 } },
+  magenta: { id: "liquid", params: { color: "#ff2d8a", tintDepth: 1.4 } },
+  coral: { id: "liquid", params: { color: "#ff5a4e", tintDepth: 1.4 } },
 }
 
 function sceneWith(look: string) {
