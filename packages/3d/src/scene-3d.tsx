@@ -205,10 +205,13 @@ function ImageBackdrop({
   url,
   lens,
   target,
+  risen,
 }: {
   url: string
   lens: number
   target: React.RefObject<THREE.Group | null>
+  /** How far the shape has risen, 0 to 1; the lens grows with it. */
+  risen: React.RefObject<number>
 }) {
   const texture = useLoader(THREE.TextureLoader, url)
   const effect = useRef<BackdropEffect>(null)
@@ -243,7 +246,11 @@ function ImageBackdrop({
     up.set(0, 1, 0).applyQuaternion(camera.quaternion)
     edge.copy(sphere.center).addScaledVector(up, sphere.radius).project(camera)
     uv.set(center.x * 0.5 + 0.5, center.y * 0.5 + 0.5)
-    backdrop.setLens(uv, Math.abs(edge.y - center.y) * 0.5, lens)
+    // Grows in with the rise, so the bending doesn't snap on the moment the
+    // shape appears: none while it's under the hills, full once it's up.
+    const t = risen.current
+    const grown = t * t * (3 - 2 * t)
+    backdrop.setLens(uv, Math.abs(edge.y - center.y) * 0.5, lens * grown)
   })
   return <Backdrop ref={effect} map={texture} />
 }
@@ -543,7 +550,12 @@ function SceneContents({
         {effectsAt("scene")}
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
         {backgroundImage ? (
-          <ImageBackdrop url={backgroundImage} lens={lens} target={spin} />
+          <ImageBackdrop
+            url={backgroundImage}
+            lens={lens}
+            target={spin}
+            risen={risen}
+          />
         ) : backdrop && !transparent ? (
           <Backdrop color={staging.background} />
         ) : null}
