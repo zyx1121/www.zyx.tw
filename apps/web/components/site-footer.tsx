@@ -10,13 +10,13 @@ import {
   LEGAL_TIPS,
 } from "@workspace/ui/components/corners"
 import { enterFooter } from "@workspace/ui/lib/layout"
+
 import { instrumentSans } from "@/lib/corner-font"
 
 /** The bottom corners: Privacy and Terms, which cover every zyx.tw site. */
 export function SiteFooter() {
   const pathname = usePathname()
   const home = pathname === "/"
-  const made = pathname.startsWith("/made/")
 
   return (
     <BottomCorners
@@ -24,9 +24,7 @@ export function SiteFooter() {
       className={
         home
           ? `[--foreground:var(--home-ink-bottom,var(--color-black))] [--muted-foreground:var(--home-ink-bottom,var(--color-black))] ${instrumentSans.className} ${enterFooter}`
-          : made
-            ? `made-bottom-corner ${enterFooter}`
-            : enterFooter
+          : enterFooter
       }
       links={
         <>

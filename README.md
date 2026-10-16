@@ -13,7 +13,7 @@
 </div>
 
 ```
-zyx.tw          the site: a 3D home, works, Made products and a resume
+zyx.tw          the site: a 3D home, works and a resume
 link.zyx.tw     a URL shortener
 time.zyx.tw     a clock
 good.zyx.tw     a digital 乖乖, the snack that engineers tape onto servers
@@ -66,7 +66,6 @@ Open http://localhost:3000. You should see the zyx.tw home page.
   bunx shadcn@latest add @zyx1121/button @zyx1121/dialog
   ```
 
-- Publish a Made product: follow [apps/web/MADE.md](apps/web/MADE.md) and start from its [brief template](apps/web/templates/made-product.md).
 
 The design rules (theme, type scale, layout, motion and copy) are in [apps/ui/DESIGN.md](apps/ui/DESIGN.md).
 

@@ -7,7 +7,7 @@ This file is the design contract for every zyx.tw app. `bun run theme:check` and
 ## Architecture
 
 - **One source**: the components live in `packages/ui/src/components/ui/`. Every app in this repo imports them from `@workspace/ui/components/ui/<name>`; no app keeps its own copy.
-- **One stylesheet**: `packages/ui/src/styles/globals.css` holds the tokens, the utilities and the keyframes. Every app imports `@workspace/ui/globals.css`. An app may add a stylesheet only for its own content (Plump's font stack, the Made pages), never to restyle a component.
+- **One stylesheet**: `packages/ui/src/styles/globals.css` holds the tokens, the utilities and the keyframes. Every app imports `@workspace/ui/globals.css`. An app may add a stylesheet only for its own content (Plump's font stack), never to restyle a component.
 - **The registry**: `apps/ui/registry.json` publishes the same files to projects outside this repo. `registry/zyx/ui` is a symlink to `packages/ui/src/components/ui`, and `shadcn build` writes `public/r/` from it. The `base` item (`registry:base`, `extends: "none"`) carries the tokens, utilities and fonts; `shadcn init https://ui.zyx.tw/r/base.json` sets up a project and registers `@zyx1121`.
 - **In sync by check**: `theme:check` fails when globals.css and the `base` item (plus the components' keyframes and animations) drift. CI also inits a fresh project from the built base, adds every component and builds it.
 - **Components import each other relatively** (`./button`), so the files work both in `packages/ui` and in a project's `components/ui`. `cn` comes from `lib/utils` (`../../lib/utils`), which extends the `cn` package so the four type sizes survive next to a text color.
@@ -26,7 +26,7 @@ Grayscale. The only chroma on screen is `destructive` and content itself (photos
 | `destructive`                    | Errors and deleting                      |
 | `border` / `input` / `ring`      | Lines, control outlines, focus rings     |
 
-There is no `secondary`, `accent` or `card` (they duplicated `muted` or `background`), no `popover` (overlays are frosted glass), no `sidebar-*` (the chrome is the four corners) and no `chart-*` (charts use the colors above). `tokens:check` rejects them, Tailwind palette colors (`bg-gray-500`, `bg-black`) and color literals. The few literals that are content rather than chrome (the Made pages' photo-matched paper tones, Open Graph images, a sample SVG) are waived file by file in `scripts/check-tokens.mjs`, each with its reason.
+There is no `secondary`, `accent` or `card` (they duplicated `muted` or `background`), no `popover` (overlays are frosted glass), no `sidebar-*` (the chrome is the four corners) and no `chart-*` (charts use the colors above). `tokens:check` rejects them, Tailwind palette colors (`bg-gray-500`, `bg-black`) and color literals. The few literals that are content rather than chrome (Open Graph images, a scene's background color) are waived file by file in `scripts/check-tokens.mjs`, each with its reason.
 
 - **Dark first, pure black**: every app server-renders `<html class="dark">` and starts dark (`ThemeProvider` from `@workspace/ui/components/theme-provider`); the `d` key toggles. Dark `background` is `oklch(0 0 0)`.
 - **Muted text at 4.5:1**: `muted-foreground` reaches at least 4.5:1 on `background` and `muted` in both themes: light `oklch(0.54 0 0)`, dark `oklch(0.65 0 0)`. Readable text never goes lighter (no `text-muted-foreground/50`); disabled controls are the only exception.
@@ -47,7 +47,7 @@ Four sizes by role, the same on phones and desktops. Tailwind's own sizes are cl
 - **CSS** may only name the scale: `font-size: var(--text-body); line-height: var(--text-body--line-height)`.
 - **Fonts**: Inter for Latin (self-hosted 4.1 in this repo for `ss01` open digits and the `zero` slashed zero; the registry's `font-inter` is the Google build), then Noto Sans JP, then Noto Sans TC for CJK, and Geist Mono for code only. Noto Sans JP comes first so Han characters take Japanese forms; TC fills the characters JP lacks. Numbers use Inter with `tabular-nums` wherever digits line up or change.
 - **Real styles only**: bold and italic come from the variable fonts, never synthesis. CJK text is never set in italic.
-- **No content exceptions**: Markdown, code, charts, notices and the Made pages use the same four sizes; change wrapping and layout instead.
+- **No content exceptions**: Markdown, code, charts and notices use the same four sizes; change wrapping and layout instead.
 
 ### Radius
 

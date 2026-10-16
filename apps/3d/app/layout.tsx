@@ -66,9 +66,9 @@ export default async function RootLayout({
           <TooltipProvider>
             <TopCorners
               nav={
-                <CornerTip tip="About this product">
+                <CornerTip tip="Every project and its link">
                   <a
-                    href="https://www.zyx.tw/made/plump"
+                    href="https://www.zyx.tw/works"
                     className={cornerLink}
                   >
                     {SITE_NAME}
