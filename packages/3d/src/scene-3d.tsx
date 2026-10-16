@@ -41,6 +41,10 @@ import { stagings } from "./stagings"
 /** The editor at plump.zyx.tw serves the environment maps, with CORS open to other sites. */
 export const DEFAULT_ENV_BASE_URL = "https://plump.zyx.tw/env/"
 
+/** How far below its place a rising shape starts, in scene units, and how long it takes to arrive. */
+const RISE_DEPTH = 2.6
+const RISE_SECONDS = 2.4
+
 /** Radians per second when autoRotate turns the shape. */
 const SPIN_SPEED = 0.4
 
@@ -87,6 +91,8 @@ export type Scene3DProps = {
   drift?: number
   /** Turn the shape by dragging it, and throw it into the drift. */
   grab?: boolean
+  /** Bring the shape up from below when it first appears, instead of popping in. */
+  rise?: boolean
   /**
    * An image for glass to refract, cropped like CSS `center / cover`. With
    * `transparent`, show the same image behind the canvas so the two match.
@@ -108,6 +114,7 @@ export function Scene3D({
   transparent = false,
   drift = 0,
   grab = false,
+  rise = false,
   backgroundImage,
   lift = 0,
 }: Scene3DProps) {
@@ -139,6 +146,7 @@ export function Scene3D({
           transparent={transparent}
           drift={drift}
           grab={grab}
+          rise={rise}
         />
       </Suspense>
       {controls && (
@@ -267,6 +275,7 @@ function SceneContents({
   transparent,
   drift,
   grab,
+  rise,
 }: {
   scene: SceneV1
   envBaseUrl: string
@@ -275,16 +284,25 @@ function SceneContents({
   transparent: boolean
   drift: number
   grab: boolean
+  rise: boolean
 }) {
   const geometry = useShapeGeometry(scene.shape)
   const spin = useRef<THREE.Group>(null)
   const [tumble] = useState(() => createDrift(drift))
+  const lifted = useRef<THREE.Group>(null)
+  const risen = useRef(rise ? 0 : 1)
   const canvas = useThree((state) => state.gl.domElement)
   useEffect(() => tumble.setSpeed(drift), [tumble, drift])
   useFrame((_, delta) => {
     if (autoRotate && spin.current)
       spin.current.rotation.y += delta * SPIN_SPEED
     if ((drift || grab) && spin.current) tumble.step(spin.current, delta)
+    if (lifted.current && risen.current < 1) {
+      risen.current = Math.min(1, risen.current + delta / RISE_SECONDS)
+      // Ease out: fast from below, settling gently at its place.
+      const left = 1 - risen.current
+      lifted.current.position.y = -RISE_DEPTH * left * left * left
+    }
   })
   useEffect(() => {
     if (!grab) return
@@ -392,26 +410,29 @@ function SceneContents({
         position={onSphere(stage.light.azimuth, stage.light.elevation, 10)}
         intensity={stage.light.intensity}
       />
-      <group
-        ref={placed}
-        position={placement.position}
-        quaternion={placement.quaternion}
-      >
-        <HoverMotion enabled={motion.hover} deviceTilt={deviceTilt}>
-          <group ref={spin}>
-            {geometry && (
-              <mesh geometry={geometry}>
-                {/* Keyed so switching presets starts from a fresh material
-                    instead of inheriting the last preset's settings. */}
-                <Fragment key={material.id}>
-                  {material.render(
-                    resolveValues(material.params, scene.material.params)
-                  )}
-                </Fragment>
-              </mesh>
-            )}
-          </group>
-        </HoverMotion>
+      {/* Starts below its place when rising; useFrame brings it up. */}
+      <group ref={lifted} position-y={rise ? -RISE_DEPTH : 0}>
+        <group
+          ref={placed}
+          position={placement.position}
+          quaternion={placement.quaternion}
+        >
+          <HoverMotion enabled={motion.hover} deviceTilt={deviceTilt}>
+            <group ref={spin}>
+              {geometry && (
+                <mesh geometry={geometry}>
+                  {/* Keyed so switching presets starts from a fresh material
+                      instead of inheriting the last preset's settings. */}
+                  <Fragment key={material.id}>
+                    {material.render(
+                      resolveValues(material.params, scene.material.params)
+                    )}
+                  </Fragment>
+                </mesh>
+              )}
+            </group>
+          </HoverMotion>
+        </group>
       </group>
       {stage.floor && floorCenter && (
         <FloorShadow

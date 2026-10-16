@@ -7,6 +7,8 @@ import {
   type SceneView,
 } from "@workspace/3d"
 
+import { useMemo, useState } from "react"
+
 import sceneFile from "@/lib/home-scene.json"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 
@@ -14,15 +16,26 @@ import { useReducedMotion } from "@/lib/use-reduced-motion"
  * The zyx mark, as saved from 3d.zyx.tw, in liquid glass with rounder
  * edges. It turns by itself and by hand, so it doesn't follow the pointer.
  */
-const SCENE = (() => {
-  const scene = parseScene(sceneFile)
+const BASE = parseScene(sceneFile)
+
+/** The material, and its tint, by `?look=` while the look is being picked. */
+const LOOKS: Record<string, SceneV1["material"]> = {
+  clear: { id: "liquid", params: {} },
+  bubble: { id: "bubble", params: {} },
+  prism: { id: "prism", params: {} },
+  frosted: { id: "frosted", params: {} },
+  candy: { id: "liquid", params: { color: "#ff6fb5", tintDepth: 0.6 } },
+  sea: { id: "liquid", params: { color: "#38c7ff", tintDepth: 0.6 } },
+}
+
+function sceneWith(look: string) {
   return {
-    ...scene,
-    shape: { ...scene.shape, bevel: 0.08 },
-    material: { id: "liquid", params: {} },
+    ...BASE,
+    shape: { ...BASE.shape, bevel: 0.08 },
+    material: LOOKS[look] ?? LOOKS.clear,
     motion: { hover: false },
   } as SceneV1
-})()
+}
 
 /** Straight on, so the mark starts square. */
 const FRONT: SceneView = { azimuth: 0, elevation: 0 }
@@ -34,14 +47,21 @@ const FRONT: SceneView = { azimuth: 0, elevation: 0 }
  */
 export function HomeScene() {
   const reduced = useReducedMotion()
+  const [look] = useState(() =>
+    typeof window === "undefined"
+      ? "clear"
+      : (new URLSearchParams(window.location.search).get("look") ?? "clear")
+  )
+  const scene = useMemo(() => sceneWith(look), [look])
   return (
     <Scene3D
-      scene={SCENE}
+      scene={scene}
       view={FRONT}
       controls={false}
       transparent
       drift={reduced ? 0 : 1.6}
       grab
+      rise={!reduced}
       backgroundImage="/bliss.webp"
       lift={0.04}
       className="size-full"
