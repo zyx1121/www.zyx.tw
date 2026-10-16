@@ -12,6 +12,7 @@ import {
 import { enter } from "@workspace/ui/lib/layout"
 
 import { PAGES } from "@/lib/site"
+import { instrumentSans } from "@/lib/corner-font"
 
 const NAV = PAGES.filter((page) => page.nav)
 
@@ -29,7 +30,7 @@ export function SiteHeader() {
       fade={!home}
       className={
         home
-          ? `[--foreground:var(--home-ink-top,var(--color-black))] [--muted-foreground:var(--home-ink-top,var(--color-black))] ${enter}`
+          ? `[--foreground:var(--home-ink-top,var(--color-black))] [--muted-foreground:var(--home-ink-top,var(--color-black))] ${instrumentSans.className} ${enter}`
           : made
             ? `made-top-corner ${enter}`
             : enter
