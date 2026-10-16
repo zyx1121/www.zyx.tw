@@ -15,7 +15,7 @@
 </div>
 
 ```
-zyx.tw          the site: a 3D home, works, Made products and a resume
+zyx.tw          the site: a 3D home, works and a resume
 link.zyx.tw     a URL shortener
 time.zyx.tw     a clock
 good.zyx.tw     a digital 乖乖, the snack that engineers tape onto servers
@@ -68,7 +68,6 @@ bun dev --filter=web
   bunx shadcn@latest add @zyx1121/button @zyx1121/dialog
   ```
 
-- 发布 Made 产品：按照 [apps/web/MADE.md](apps/web/MADE.md)，从它的[产品简介模板](apps/web/templates/made-product.md)开始。
 
 设计规则(主题、字号、版面、动效和文案)在 [apps/ui/DESIGN.md](apps/ui/DESIGN.md)。
 

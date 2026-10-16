@@ -11,8 +11,8 @@ import {
 } from "@workspace/ui/components/corners"
 import { enter } from "@workspace/ui/lib/layout"
 
-import { PAGES } from "@/lib/site"
 import { instrumentSans } from "@/lib/corner-font"
+import { PAGES } from "@/lib/site"
 
 const NAV = PAGES.filter((page) => page.nav)
 
@@ -21,7 +21,6 @@ export function SiteHeader() {
   // The home is a 3D stage over Bliss, so its corners take the ink
   // HomeInk picks for the picture under them, and nothing scrolls under them.
   const home = pathname === "/"
-  const made = pathname.startsWith("/made/")
 
   return (
     <TopCorners
@@ -31,9 +30,7 @@ export function SiteHeader() {
       className={
         home
           ? `[--foreground:var(--home-ink-top,var(--color-black))] [--muted-foreground:var(--home-ink-top,var(--color-black))] ${instrumentSans.className} ${enter}`
-          : made
-            ? `made-top-corner ${enter}`
-            : enter
+          : enter
       }
       nav={
         <nav aria-label="Main">

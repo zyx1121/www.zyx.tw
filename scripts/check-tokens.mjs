@@ -44,23 +44,14 @@ const exempt = {
   "apps/web/app/page.tsx": ["inline style"],
   "apps/web/app/layout.tsx": ["inline style"],
   "apps/3d/components/editor-loader.tsx": ["color literal", "arbitrary value"],
-  // Each product's mark is its own SVG from PRODUCTS (lib/made.ts), passed
-  // as a mask URL.
-  "apps/web/components/made-experience.tsx": ["inline style"],
   // Each preview image is framed on its own focal point from projects.json.
   "apps/web/components/preview-stage.tsx": ["inline style"],
-  // The Made campaign pages lay paper tones matched to their photographs
-  // under the text; they are part of the artwork, not chrome.
-  "apps/web/app/made/made.css": ["color literal"],
-  "apps/web/app/made/carrel/carrel.css": ["color literal"],
   // Stamp's seal is the product's mark: vermilion ink and glyphs sized in
   // the seal's own SVG units, the same in both themes.
   "apps/stamp/components/seal.tsx": ["color literal", "raw font size"],
   // Loki waived the type scale for Stamp's campaign page (2026-10-08): each
   // screen says one thing, set large.
   "apps/stamp/app/stamp.css": ["raw font size"],
-  // Plump's printed outline is exported into a downloadable SVG file.
-  "apps/web/lib/plump.ts": ["color literal"],
 }
 
 const palette =

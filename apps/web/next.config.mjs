@@ -22,6 +22,10 @@ const nextConfig = {
     return [
       { source: "/contact", destination: "/about", permanent: true },
       { source: "/contact.md", destination: "/about.md", permanent: true },
+      // The Made product pages were removed on 2026-10-16; Works lists them.
+      { source: "/made", destination: "/works", permanent: true },
+      { source: "/made.md", destination: "/works.md", permanent: true },
+      { source: "/made/:path*", destination: "/works", permanent: true },
     ]
   },
   // Content negotiation in the router, so no function runs for it: a page
