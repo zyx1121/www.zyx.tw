@@ -29,13 +29,25 @@ const LOOKS: Record<string, SceneV1["material"]> = {
   orange: { id: "liquid", params: { color: "#ff7a1a", tintDepth: 1.4 } },
   magenta: { id: "liquid", params: { color: "#ff2d8a", tintDepth: 1.4 } },
   coral: { id: "liquid", params: { color: "#ff5a4e", tintDepth: 1.4 } },
+  void: { id: "void", params: {} },
+  obsidian: { id: "obsidian", params: {} },
+  oil: { id: "oil", params: {} },
+  chrome: { id: "chrome", params: {} },
+  velvet: { id: "velvet", params: {} },
 }
 
-function sceneWith(look: string) {
+/** Looks that mirror their surroundings take the sky, not the violet studio. */
+const SKY_LOOKS = new Set(["obsidian", "oil", "chrome", "velvet"])
+
+function sceneWith(look: string, env: string | null) {
   return {
     ...BASE,
     shape: { ...BASE.shape, bevel: 0.08 },
     material: LOOKS[look] ?? LOOKS.clear,
+    environment: {
+      ...BASE.environment,
+      id: env ?? (SKY_LOOKS.has(look) ? "sky" : BASE.environment.id),
+    },
     motion: { hover: false },
   } as SceneV1
 }
@@ -50,12 +62,16 @@ const FRONT: SceneView = { azimuth: 0, elevation: 0 }
  */
 export function HomeScene() {
   const reduced = useReducedMotion()
-  const [look] = useState(() =>
-    typeof window === "undefined"
-      ? "clear"
-      : (new URLSearchParams(window.location.search).get("look") ?? "clear")
+  const [query] = useState(
+    () =>
+      new URLSearchParams(
+        typeof window === "undefined" ? "" : window.location.search
+      )
   )
-  const scene = useMemo(() => sceneWith(look), [look])
+  const scene = useMemo(
+    () => sceneWith(query.get("look") ?? "clear", query.get("env")),
+    [query]
+  )
   return (
     <Scene3D
       scene={scene}

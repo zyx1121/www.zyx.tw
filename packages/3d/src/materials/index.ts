@@ -1,4 +1,11 @@
 import type { MaterialPreset, Registry } from "../registry"
+import {
+  blackChrome,
+  obsidian,
+  oilSlick,
+  velvet,
+  voidBlack,
+} from "./black-looks"
 import { glass } from "./glass"
 import { bubble, frosted, prism } from "./glass-looks"
 import { liquid } from "./liquid"
@@ -13,5 +20,10 @@ export const materials: Registry<MaterialPreset> = [
   bubble,
   prism,
   frosted,
+  obsidian,
+  oilSlick,
+  blackChrome,
+  velvet,
+  voidBlack,
   plastic,
 ]
