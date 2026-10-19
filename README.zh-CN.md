@@ -21,7 +21,6 @@ time.zyx.tw     a clock
 good.zyx.tw     a digital 乖乖, the snack that engineers tape onto servers
 plump.zyx.tw    Plump: SVG, shaped and lit in 3D
 ui.zyx.tw       the component registry that every app imports from
-stamp.zyx.tw    the Stamp product site
 1909            a private shared-expense dashboard for three flatmates
 ```
 
@@ -29,7 +28,7 @@ stamp.zyx.tw    the Stamp product site
 
 ## 功能
 
-- **放 8 个应用**：同一个 repo、同一条 CI，各自部署到自己的子域名。
+- **放 7 个应用**：同一个 repo、同一条 CI，各自部署到自己的子域名。
 - **共用一套设计系统**：每个组件只在 `packages/ui` 存一份，所有应用都从那里引用。
 - **强制设计规则**：应用偏离主题，或用了不是设计 token 的值，CI 就会失败。
 - **也给 agent 读**：主站和 ui.zyx.tw 每一页都有 Markdown 版本，另外有 `/llms.txt`、`/agent-instructions.md` 和 JSON-LD。
@@ -56,7 +55,6 @@ bun dev --filter=web
 | 乖乖 | `apps/good` | [good.zyx.tw](https://good.zyx.tw) |
 | Plump | `apps/3d` | [plump.zyx.tw](https://plump.zyx.tw) |
 | 组件库 | `apps/ui` | [ui.zyx.tw](https://ui.zyx.tw) |
-| Stamp 官网 | `apps/stamp` | [stamp.zyx.tw](https://stamp.zyx.tw) |
 | 分账 | `apps/1909` | 不公开 |
 
 - 只运行一个应用：`bun dev --filter=<文件夹名称>`。`bun dev` 会全部一起运行。

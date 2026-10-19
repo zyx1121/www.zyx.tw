@@ -19,7 +19,6 @@ time.zyx.tw     a clock
 good.zyx.tw     a digital 乖乖, the snack that engineers tape onto servers
 plump.zyx.tw    Plump: SVG, shaped and lit in 3D
 ui.zyx.tw       the component registry that every app imports from
-stamp.zyx.tw    the Stamp product site
 1909            a private shared-expense dashboard for three flatmates
 ```
 
@@ -27,7 +26,7 @@ A new subdomain used to mean a new repo and another copy of the same lint config
 
 ## Features
 
-- **Hosts 8 apps**: each app deploys to its own subdomain from one repo and one CI pipeline.
+- **Hosts 7 apps**: each app deploys to its own subdomain from one repo and one CI pipeline.
 - **Shares one design system**: every component lives once in `packages/ui`, and every app imports it from there.
 - **Enforces the design rules**: CI fails when an app drifts from the theme or uses a value that is not a design token.
 - **Serves agents**: the site and ui.zyx.tw give each page a Markdown version, plus `/llms.txt`, `/agent-instructions.md` and JSON-LD.
@@ -54,7 +53,6 @@ Open http://localhost:3000. You should see the zyx.tw home page.
 | Snack | `apps/good` | [good.zyx.tw](https://good.zyx.tw) |
 | Plump | `apps/3d` | [plump.zyx.tw](https://plump.zyx.tw) |
 | Component registry | `apps/ui` | [ui.zyx.tw](https://ui.zyx.tw) |
-| Stamp site | `apps/stamp` | [stamp.zyx.tw](https://stamp.zyx.tw) |
 | Shared expenses | `apps/1909` | private |
 
 - Run one app: `bun dev --filter=<folder name>`. `bun dev` starts all of them.
