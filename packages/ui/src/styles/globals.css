@@ -35,6 +35,7 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-destructive: var(--destructive);
   --color-border: var(--border);
+  --color-overlay: var(--overlay);
   --color-input: var(--input);
   --color-ring: var(--ring);
   --radius-control: var(--radius);
@@ -53,6 +54,7 @@
   --muted-foreground: oklch(0.54 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
+  --overlay: oklch(1 0 0 / 85%);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --radius: 1rem;
@@ -67,6 +69,7 @@
   --muted-foreground: oklch(0.65 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
+  --overlay: oklch(0.145 0 0 / 85%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
 }

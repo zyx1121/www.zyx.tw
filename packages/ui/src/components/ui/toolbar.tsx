@@ -10,7 +10,7 @@ function Toolbar({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="toolbar"
       className={cn(
-        "flex items-center gap-1 rounded-menu border border-border bg-transparent p-1 text-body shadow-lg backdrop-blur-md",
+        "flex items-center gap-1 rounded-menu border border-border bg-overlay p-1 text-body shadow-lg backdrop-blur-md",
         className
       )}
       {...props}
