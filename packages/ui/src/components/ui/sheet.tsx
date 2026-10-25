@@ -55,7 +55,7 @@ function SheetContent({
         data-slot="sheet-content"
         data-side={side}
         className={cn(
-          "fixed inset-y-0 z-50 flex w-3/4 max-w-sm flex-col gap-6 overflow-y-auto border-border bg-transparent p-6 text-body text-foreground shadow-lg backdrop-blur-md transition duration-overlay data-ending-style:opacity-0 data-starting-style:opacity-0 data-[side=left]:left-0 data-[side=left]:border-r data-[side=left]:data-ending-style:-translate-x-10 data-[side=left]:data-starting-style:-translate-x-10 data-[side=right]:right-0 data-[side=right]:border-l data-[side=right]:data-ending-style:translate-x-10 data-[side=right]:data-starting-style:translate-x-10",
+          "fixed inset-y-0 z-50 flex w-3/4 max-w-sm flex-col gap-6 overflow-y-auto border-border bg-overlay p-6 text-body text-foreground shadow-lg backdrop-blur-md transition duration-overlay data-ending-style:opacity-0 data-starting-style:opacity-0 data-[side=left]:left-0 data-[side=left]:border-r data-[side=left]:data-ending-style:-translate-x-10 data-[side=left]:data-starting-style:-translate-x-10 data-[side=right]:right-0 data-[side=right]:border-l data-[side=right]:data-ending-style:translate-x-10 data-[side=right]:data-starting-style:translate-x-10",
           className
         )}
         {...props}
