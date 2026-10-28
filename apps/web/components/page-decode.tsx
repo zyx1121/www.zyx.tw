@@ -45,7 +45,11 @@ function reducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches
 }
 
-/** Every text node in the page, with the delay of the row it sits in. */
+/**
+ * Every text node in the page that has something to scramble, with the delay
+ * of the row it sits in. Nodes of symbols alone are left to their owners, as
+ * the works window's frame.
+ */
 function collect(main: HTMLElement): Line[] {
   const lines: Line[] = []
   const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, {
@@ -61,17 +65,19 @@ function collect(main: HTMLElement): Line[] {
       ?.closest("[class*='enter-row-']")
       ?.className.match(/enter-row-(\d+)/)?.[1]
     const chars = Array.from(text.data)
+    const kinds = chars.map((char) =>
+      !LETTER.test(char)
+        ? KEEP
+        : WIDE_CHAR.test(char)
+          ? WIDE_GLYPH
+          : NARROW_GLYPH
+    )
+    if (kinds.every((kind) => kind === KEEP)) continue
     lines.push({
       node: text,
       text: text.data,
       chars,
-      kinds: chars.map((char) =>
-        !LETTER.test(char)
-          ? KEEP
-          : WIDE_CHAR.test(char)
-            ? WIDE_GLYPH
-            : NARROW_GLYPH
-      ),
+      kinds,
       delay: Number(row ?? 0) * ROW,
       step: Math.min(STEP, LONGEST / chars.length),
     })
@@ -177,7 +183,7 @@ export function decodeText(element: HTMLElement) {
  * text starts scrambled and resolves row by row, 25ms apart, top to bottom.
  * Following a link on the site first scrambles the page being left, then the
  * next one decodes in, both ways; the home's mark takes part through
- * LEAVE_EVENT. Reduced motion skips all of it. The rows' fades in
+ * LEAVE_EVENT, the works window likewise. Reduced motion skips all of it. The rows' fades in
  * globals.css step aside once this runs.
  */
 export function PageDecode() {
