@@ -159,6 +159,15 @@ function play(
 }
 
 /**
+ * Decodes one element's text in at once, for text that changes after the
+ * page has entered. Returns a cancel that puts the final text back.
+ */
+export function decodeText(element: HTMLElement) {
+  const lines = collect(element).map((line) => ({ ...line, delay: 0 }))
+  return play(element, lines, "in")
+}
+
+/**
  * The site's one motion: text decodes as a terminal prints it. A page's
  * text starts scrambled and resolves row by row, 25ms apart, top to bottom.
  * Following a link on the site first scrambles the page being left, then the

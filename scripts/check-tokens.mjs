@@ -48,8 +48,9 @@ const exempt = {
   "apps/web/app/page.tsx": ["inline style"],
   "apps/web/app/layout.tsx": ["inline style"],
   "apps/3d/components/editor-loader.tsx": ["color literal", "arbitrary value"],
-  // Each preview image is framed on its own focal point from projects.json.
-  "apps/web/components/preview-stage.tsx": ["inline style"],
+  // The works window draws each screenshot as characters in the
+  // screenshot's own colors.
+  "apps/web/lib/ascii-preview.ts": ["color literal"],
   // www.zyx.tw tries its own neutrals: no pure white or black.
   "apps/web/app/globals.css": ["color literal"],
   // The Works backdrop is content: ASCII koi in their own colors, drawn on

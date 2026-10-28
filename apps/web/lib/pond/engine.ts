@@ -77,8 +77,11 @@ export class OceanEngine {
 
     this.resize()
     // Canvas text can't trigger a webfont load; once the mono face is in, redraw.
+    // The load rejects when a fallback face is missing (no Arial on Linux),
+    // and the mono face is in all the same.
     document.fonts
       ?.load(`600 16px ${getComputedStyle(canvas).fontFamily}`)
+      .catch(() => undefined)
       .then(() => {
         if (!this.disposed && this.reducedMotion.matches) this.drawStill()
       })
