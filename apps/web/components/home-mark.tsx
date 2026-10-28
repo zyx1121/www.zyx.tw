@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react"
 
 import type { SceneV1 } from "@workspace/3d"
 
+import { LEAVE_EVENT, OUT } from "@/components/page-decode"
 import { POND_CELL_SCALE } from "@/components/pond-background"
 import type { AsciiMark } from "@/lib/ascii-mark"
 import sceneFile from "@/lib/home-scene.json"
@@ -19,7 +20,8 @@ const REDUCED_MOTION = "(prefers-reduced-motion: reduce)"
 /**
  * The zyx mark in characters on the pond's grid, swaying slowly over the
  * water; a drag on it turns it and throws it. The fish and koi swim around
- * it (lib/ascii-mark.ts). three.js loads after the page, and without WebGL
+ * it (lib/ascii-mark.ts). It decodes in once three.js is up, and scrambles
+ * out with the page when a link leaves the home. three.js loads after the page, and without WebGL
  * the home is the pond alone. Decorative: the page's heading names the site.
  */
 export function HomeMark() {
@@ -67,8 +69,12 @@ export function HomeMark() {
           if (!cancelled) mark.resize(family)
         })
       mark.setMotion(!window.matchMedia(REDUCED_MOTION).matches)
+      mark.enter()
+      const leave = () => mark.leave(OUT)
+      document.addEventListener(LEAVE_EVENT, leave)
       markRef.current = mark
       stop = () => {
+        document.removeEventListener(LEAVE_EVENT, leave)
         resize.disconnect()
         theme.disconnect()
         mark.destroy()

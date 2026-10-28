@@ -32,7 +32,8 @@ export const ART = {
 const LAST = ART.ramp.length - 1
 // Brightness buckets for finding a screenshot's page color.
 const BINS = 32
-const LENGTH = ART.sweep + ART.columnJitter + ART.cellJitter
+/** Milliseconds until the last cell of a decode has resolved. */
+export const DECODE_LENGTH = ART.sweep + ART.columnJitter + ART.cellJitter
 
 // A small integer hash to [0, 1), so every run is random but every frame of a
 // run agrees with the one before it.
@@ -140,7 +141,7 @@ export class AsciiPreview {
     const frame = (now: number) => {
       start ??= now
       const elapsed = now - start
-      if (elapsed >= LENGTH) {
+      if (elapsed >= DECODE_LENGTH) {
         this.shown = target
         this.paint(target, null, 0)
         return

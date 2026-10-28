@@ -3,6 +3,7 @@ import * as THREE from "three"
 import type { SceneV1 } from "@workspace/3d"
 import { buildShapeGeometry } from "@workspace/3d/geometry"
 
+import { ART, DECODE_LENGTH } from "@/lib/ascii-preview"
 import type { Obstacle } from "@/lib/pond/obstacle"
 import { cellSize, glyphFont } from "@/lib/pond/renderer"
 
@@ -12,7 +13,10 @@ import { cellSize, glyphFont } from "@/lib/pond/renderer"
  * mesh at one pixel per cell, then a pass over the screen draws each covered
  * cell as a glyph from the ramp, denser where the face catches more light,
  * over the page color. The covered cells go to the pond as an obstacle, so
- * the fish and koi swim around the mark.
+ * the fish and koi swim around the mark. It arrives and leaves as the page's
+ * text does: in, every cell starts as noise and resolves as a frontier
+ * crosses it from left to right, on the Works window's timing; out, the
+ * cells turn to noise from the right before the next page.
  */
 export const MARK = {
   /** Glyphs from empty to full. */
@@ -33,6 +37,10 @@ export const MARK = {
   /** Vertical field of view, in degrees. */
   fov: 30,
 } as const
+
+const STILL = 0
+const ENTER = 1
+const LEAVE = 2
 
 const SHADE_VERTEX = /* glsl */ `
 varying vec3 vNormal;
@@ -66,6 +74,21 @@ uniform float uHeight;
 uniform float uGlyphs;
 uniform vec3 uInk;
 uniform vec3 uPage;
+uniform float uPhase;
+uniform float uElapsed;
+uniform float uRun;
+uniform vec2 uSpan;
+uniform vec4 uTiming;
+uniform float uOut;
+
+// A small integer hash to [0, 1): random per run, steady within one.
+float hash(float x, float y, float z) {
+  uint h = (uint(x) * 374761393u) ^ (uint(y) * 668265263u) ^ (uint(z) * 2246822519u);
+  h = (h ^ (h >> 13u)) * 1274126177u;
+  h ^= h >> 16u;
+  return float(h) / 4294967296.0;
+}
+
 void main() {
   vec2 p = vec2(gl_FragCoord.x, uHeight - gl_FragCoord.y);
   vec2 cell = floor(p / uCell);
@@ -73,6 +96,23 @@ void main() {
   vec4 shade = texelFetch(uShade, ivec2(cell.x, uGrid.y - 1.0 - cell.y), 0);
   if (shade.a < 0.5) discard;
   float glyph = clamp(floor(shade.r * (uGlyphs - 1.0) + 0.5), 1.0, uGlyphs - 1.0);
+  if (uPhase > 0.5) {
+    float x = clamp((cell.x - uSpan.x) / max(uSpan.y - uSpan.x, 1.0), 0.0, 1.0);
+    bool noise;
+    if (uPhase < 1.5) {
+      // uTiming: sweep, column jitter, cell jitter, tick.
+      float at = x * uTiming.x + hash(cell.x, 0.0, uRun) * uTiming.y +
+        hash(cell.x, cell.y, uRun + 1.0) * uTiming.z;
+      noise = uElapsed < at;
+    } else {
+      float at = ((1.0 - x) * 0.75 + hash(cell.x, cell.y, uRun + 1.0) * 0.25) * uOut;
+      noise = uElapsed >= at;
+    }
+    if (noise) {
+      float tick = floor(uElapsed / uTiming.w);
+      glyph = 1.0 + floor(hash(cell.x, cell.y, tick + uRun * 7919.0) * (uGlyphs - 1.0));
+    }
+  }
   vec2 inCell = fract(p / uCell);
   float ink = texture2D(uAtlas, vec2((glyph + inCell.x) / uGlyphs, inCell.y)).r;
   gl_FragColor = vec4(mix(uPage, uInk, ink), 1.0);
@@ -120,6 +160,9 @@ export class AsciiMark {
   private dragging: { x: number; t: number; id: number } | null = null
   /** Sway amplitude, 0 for reduced motion. */
   private motion = 1
+  private phase = STILL
+  private phaseStart = 0
+  private run = 0
 
   constructor(
     private canvas: HTMLCanvasElement,
@@ -161,6 +204,19 @@ export class AsciiMark {
         uGlyphs: { value: MARK.ramp.length },
         uInk: { value: new THREE.Vector3(1, 1, 1) },
         uPage: { value: new THREE.Vector3(0, 0, 0) },
+        uPhase: { value: STILL },
+        uElapsed: { value: 0 },
+        uRun: { value: 0 },
+        uSpan: { value: new THREE.Vector2() },
+        uTiming: {
+          value: new THREE.Vector4(
+            ART.sweep,
+            ART.columnJitter,
+            ART.cellJitter,
+            ART.tick
+          ),
+        },
+        uOut: { value: 0 },
       },
     })
     this.glyphScene.add(
@@ -236,6 +292,17 @@ export class AsciiMark {
     this.start()
   }
 
+  /** Decode in. Reduced motion shows the mark at once. */
+  enter() {
+    this.begin(ENTER)
+  }
+
+  /** Scramble out over `duration` ms; the noise stays until the page goes. */
+  leave(duration: number) {
+    this.glyphMaterial.uniforms.uOut!.value = duration
+    this.begin(LEAVE)
+  }
+
   start() {
     cancelAnimationFrame(this.raf)
     this.last = performance.now()
@@ -293,8 +360,52 @@ export class AsciiMark {
     renderer.setRenderTarget(this.target)
     renderer.render(this.shadeScene, this.camera)
     if (this.frame++ % MARK.maskEvery === 0 && !this.reading) this.readMask()
+    const uniforms = this.glyphMaterial.uniforms
+    if (this.phase !== STILL) {
+      const elapsed = performance.now() - this.phaseStart
+      if (this.phase === ENTER && elapsed >= DECODE_LENGTH) this.phase = STILL
+      uniforms.uElapsed!.value = elapsed
+    }
+    uniforms.uPhase!.value = this.phase
     renderer.setRenderTarget(null)
     renderer.render(this.glyphScene, this.glyphCamera)
+  }
+
+  private begin(phase: number) {
+    if (!this.motion || !this.cols) return
+    this.phase = phase
+    this.phaseStart = performance.now()
+    const uniforms = this.glyphMaterial.uniforms
+    uniforms.uRun!.value = ++this.run
+    uniforms.uSpan!.value.copy(this.span())
+    this.start()
+  }
+
+  /** The first and last columns the mark covers now, from its bounding box. */
+  private span() {
+    const { mesh, camera, cols } = this
+    const geometry = mesh.geometry
+    if (!geometry.boundingBox) geometry.computeBoundingBox()
+    const { min, max } = geometry.boundingBox!
+    mesh.updateMatrixWorld()
+    camera.updateMatrixWorld()
+    const corner = new THREE.Vector3()
+    let left = Infinity
+    let right = -Infinity
+    for (let i = 0; i < 8; i++) {
+      corner
+        .set(
+          i & 1 ? max.x : min.x,
+          i & 2 ? max.y : min.y,
+          i & 4 ? max.z : min.z
+        )
+        .applyMatrix4(mesh.matrixWorld)
+        .project(camera)
+      const col = ((corner.x + 1) / 2) * cols
+      left = Math.min(left, col)
+      right = Math.max(right, col)
+    }
+    return new THREE.Vector2(Math.floor(left), Math.ceil(right))
   }
 
   /**
