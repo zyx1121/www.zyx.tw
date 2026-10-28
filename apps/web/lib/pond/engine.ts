@@ -1,5 +1,6 @@
 // Adapted from stackedlol/ascii-sharks (MIT, see LICENSE in this folder):
 // koi, GPU rasterising and simulation, and a dim backdrop mode added.
+import type { Obstacle } from "./obstacle"
 import { AsciiRenderer } from "./renderer"
 import { World, type SharkSpec } from "./world"
 
@@ -38,9 +39,12 @@ export class OceanEngine {
       intensity?: number
       glyphOnly?: boolean
       grid?: boolean
+      /** Something solid for the fish and koi to swim around. */
+      obstacle?: Obstacle
     } = {}
   ) {
     this.world = new World(sharks)
+    this.world.obstacle = options.obstacle ?? null
     this.renderer = new AsciiRenderer(canvas)
     if (options.cellScale) this.renderer.cellScale = options.cellScale
     if (options.gpu === false) this.renderer.useGpu = false
@@ -77,8 +81,11 @@ export class OceanEngine {
 
     this.resize()
     // Canvas text can't trigger a webfont load; once the mono face is in, redraw.
+    // The load rejects when a fallback face is missing (no Arial on Linux),
+    // and the mono face is in all the same.
     document.fonts
       ?.load(`600 16px ${getComputedStyle(canvas).fontFamily}`)
+      .catch(() => undefined)
       .then(() => {
         if (!this.disposed && this.reducedMotion.matches) this.drawStill()
       })

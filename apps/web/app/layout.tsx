@@ -2,17 +2,20 @@ import type { Metadata } from "next"
 
 import { cn } from "@workspace/ui/lib/utils"
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
-import "@workspace/ui/globals.css"
 import { MotionProvider } from "@workspace/ui/components/motion-provider"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 import { fontVariables } from "@workspace/ui/lib/fonts"
 
 import { SiteJsonLd } from "@/components/json-ld"
+import { PageDecode } from "@/components/page-decode"
+import { PondBackground } from "@/components/pond-background"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
-import sceneFile from "@/lib/home-scene.json"
+import { sarasaMono } from "@/lib/fonts"
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
+
+import "./globals.css"
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -48,14 +51,12 @@ export default async function RootLayout({
       suppressHydrationWarning
       // A stable gutter keeps the centered column from moving when a page
       // gains or loses its scrollbar. One edge only, so the left corners stay
-      // 20 px from the window's edge on every page and every site. Under the
-      // home's 3D stage the gutter takes the scene's background, so the stage
-      // meets the window's edge in either theme.
-      style={{ "--stage": sceneFile.staging.background } as React.CSSProperties}
+      // 20 px from the window's edge on every page and every site.
       className={cn(
         "dark",
-        "antialiased [scrollbar-gutter:stable] has-[main[data-stage]]:bg-(--stage)",
+        "antialiased [scrollbar-gutter:stable]",
         fontVariables,
+        sarasaMono.variable,
         "font-sans"
       )}
     >
@@ -66,6 +67,8 @@ export default async function RootLayout({
         <ThemeProvider>
           <TooltipProvider>
             <MotionProvider>
+              <PageDecode />
+              <PondBackground />
               <SiteHeader />
               {children}
               <SiteFooter />

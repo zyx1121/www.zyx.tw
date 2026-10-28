@@ -1,0 +1,45 @@
+@import "@workspace/ui/globals.css";
+
+/* Trial of a terminal look on this site only; the other sites keep the
+ * shared design system's tokens. */
+
+/* Text in Sarasa Mono TC (lib/fonts.ts); Han characters outside its subset
+ * fall back to Noto Sans TC. */
+@theme inline {
+  --font-sans:
+    var(--font-sarasa-mono), var(--font-noto-sans-tc), ui-monospace, monospace;
+}
+
+/* No pure white or pure black: the light theme sits on warm paper and the
+ * dark theme on near black, and text steps back from the extremes, so
+ * contrast drops from about 20:1 to about 14:1 (WCAG AAA asks for 7:1). */
+:root {
+  --background: oklch(0.97 0.005 85);
+  --foreground: oklch(0.25 0 0);
+  --muted: oklch(0.93 0.005 85);
+  --muted-foreground: oklch(0.52 0 0);
+  --border: oklch(0.89 0.005 85);
+  --overlay: oklch(0.97 0.005 85 / 85%);
+  --input: oklch(0.89 0.005 85);
+}
+
+.dark {
+  --background: oklch(0.17 0 0);
+  --foreground: oklch(0.88 0 0);
+  --muted: oklch(0.26 0 0);
+  --muted-foreground: oklch(0.62 0 0);
+  --overlay: oklch(0.17 0 0 / 85%);
+}
+
+/* The page decoder (components/page-decode.tsx) draws each row's entrance:
+ * its text starts scrambled and resolves. Until the decoder starts, rows are
+ * held invisible (at most 1.5s, so they still show if scripts fail); once it
+ * runs, their fades step aside. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-decoder]) main [class*="enter-row-"] {
+    animation: scramble-text-hold 1.5s;
+  }
+  html[data-decoder] main [class*="enter-row-"] {
+    animation: none;
+  }
+}

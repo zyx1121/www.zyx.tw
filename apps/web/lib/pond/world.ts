@@ -16,6 +16,7 @@
 import { angleDiff, clamp, current, rand, randInt, TAU } from "./math"
 import { pickSpecies, SPECIES } from "./species"
 import { GPU_MAX_FISH, GpuFish } from "./gpu-fish"
+import type { Obstacle } from "./obstacle"
 
 export const SHARK_NODES = 20
 
@@ -107,6 +108,7 @@ const FISH_ALIGN_K = 1.4
 const FISH_COHESION_K = 1
 const FISH_FLEE_K = 1100
 const BLIND_COS = -0.6 // ~127° either side of the heading is visible
+const FISH_AVOID_K = 900
 
 export class World {
   width = 0
@@ -116,6 +118,9 @@ export class World {
   sharks: Shark[] = []
   events: WorldEvent[] = []
   pointer = { x: 0, y: 0, active: false }
+  /** Something solid the fish and koi swim around, such as the home's mark. */
+  obstacle: Obstacle | null = null
+  private probe = { d: 0, gx: 0, gy: 0 }
   /** Run the fish boids on the GPU (WebGL2) when available; false keeps the CPU loop. */
   useGpu = false
   private gpu: GpuFish | null | undefined
@@ -268,6 +273,7 @@ export class World {
     this.time += dt
     this.rebuildHash()
     this.stepFish(dt)
+    this.avoidObstacle(dt)
     this.stepSharks(dt)
     this.respawn()
   }
@@ -503,6 +509,38 @@ export class World {
     }
   }
 
+  /**
+   * Fish near the obstacle turn along its edge: a push out, and a pull along
+   * the edge in whichever direction they already swim. One pass after either
+   * boids path, so the GPU and the CPU fish behave the same. A fish the
+   * obstacle moved over is lifted back out.
+   */
+  private avoidObstacle(dt: number) {
+    const obstacle = this.obstacle
+    if (!obstacle?.active) return
+    const probe = this.probe
+    const margin = this.perception * 1.2
+    for (const f of this.fish) {
+      if (!f.alive) continue
+      obstacle.sample(f.x, f.y, probe)
+      if (probe.d >= margin) continue
+      let tx = -probe.gy
+      let ty = probe.gx
+      if (tx * f.vx + ty * f.vy < 0) {
+        tx = -tx
+        ty = -ty
+      }
+      const w = probe.d <= 0 ? 1 : (1 - probe.d / margin) ** 2
+      f.vx += (probe.gx * 0.8 + tx * 0.6) * FISH_AVOID_K * w * dt
+      f.vy += (probe.gy * 0.8 + ty * 0.6) * FISH_AVOID_K * w * dt
+      if (probe.d < 0) {
+        const lift = -probe.d * Math.min(1, dt * 8)
+        f.x += probe.gx * lift
+        f.y += probe.gy * lift
+      }
+    }
+  }
+
   /** Returns false when the GPU path is unavailable, so the caller runs the CPU loop. */
   private stepFishGpu(dt: number) {
     if (this.gpu === undefined) this.gpu = GpuFish.create()
@@ -606,15 +644,39 @@ export class World {
         }
       }
 
-      // Keep the headline mostly clear: a soft elliptical no-swim zone.
-      const ex = (hx - cxW) / (W * 0.3)
-      const ey = (hy - cyW) / (H * 0.16)
-      const e2 = ex * ex + ey * ey
-      if (e2 < 1) {
-        const e = Math.sqrt(e2) || 1e-3
-        const w = (1 - e) * (hunting ? 1 : 2.5)
-        dx += (ex / e) * w
-        dy += (ey / e) * w
+      const obstacle = this.obstacle
+      if (obstacle?.active) {
+        // Swim around the obstacle: probe at the snout and ahead of it, so
+        // the turn starts before the body gets there, and follow the edge
+        // the way the koi already heads.
+        const probe = this.probe
+        const margin = L * 0.4
+        const fx = Math.cos(sh.heading)
+        const fy = Math.sin(sh.heading)
+        for (const ahead of [0, 0.3, 0.6]) {
+          obstacle.sample(hx + fx * L * ahead, hy + fy * L * ahead, probe)
+          if (probe.d >= margin) continue
+          const w = (1 - Math.max(0, probe.d) / margin) * (1 - ahead * 0.5)
+          let tx = -probe.gy
+          let ty = probe.gx
+          if (tx * fx + ty * fy < 0) {
+            tx = -tx
+            ty = -ty
+          }
+          dx += (probe.gx * 1.2 + tx * 1.6) * w * 2.5
+          dy += (probe.gy * 1.2 + ty * 1.6) * w * 2.5
+        }
+      } else {
+        // Keep the headline mostly clear: a soft elliptical no-swim zone.
+        const ex = (hx - cxW) / (W * 0.3)
+        const ey = (hy - cyW) / (H * 0.16)
+        const e2 = ex * ex + ey * ey
+        if (e2 < 1) {
+          const e = Math.sqrt(e2) || 1e-3
+          const w = (1 - e) * (hunting ? 1 : 2.5)
+          dx += (ex / e) * w
+          dy += (ey / e) * w
+        }
       }
 
       // Turn back once the snout leaves the frame, so bodies dip off-screen

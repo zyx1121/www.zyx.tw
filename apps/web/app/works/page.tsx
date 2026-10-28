@@ -1,11 +1,10 @@
 import { cn } from "@workspace/ui/lib/utils"
-import { column, page } from "@workspace/ui/lib/layout"
+import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
 import { Hero, HeroTitle } from "@/components/hero"
-import { PondBackground } from "@/components/pond-background"
 import { ProjectsJsonLd } from "@/components/json-ld"
-import { PreviewStage } from "@/components/preview-stage"
 import { ProjectList } from "@/components/project-list"
+import { ProjectWindow } from "@/components/project-window"
 import { Showcase } from "@/components/showcase"
 import { WORKS } from "@/lib/copy"
 import { projects } from "@/lib/projects"
@@ -17,19 +16,24 @@ export const dynamic = "force-static"
 
 export default function Works() {
   return (
-    // The stage takes the space between the title and the list, so the list
-    // sits at the bottom of the viewport, but it never gets shorter than 45%
-    // of the column (45cqw of this container) or 200 px: past that, the page
-    // scrolls.
-    <main className={cn(column, page, "@container flex flex-1 flex-col")}>
+    // The window takes the space the title and the list leave, but never
+    // less than its min-height: past that, the page scrolls.
+    <main className={cn(column, page, "flex flex-1 flex-col")}>
       <ProjectsJsonLd projects={projects} />
-      <PondBackground />
       <Showcase projects={projects}>
-        <Hero title={<HeroTitle>{WORKS.title}</HeroTitle>} />
-        {/* No entrance fade: the first dither can be the page's largest
-            paint, and Chrome skipped it as LCP while it faded in. */}
-        <PreviewStage className="mt-10 mb-5 min-h-60 flex-1 lg:min-h-82 2xl:min-h-110" />
-        <ProjectList />
+        <Hero title={<HeroTitle text={WORKS.title} />} />
+        {/* Below lg the window sits above the list and takes the height
+            between the title and the list; from lg the list is the left
+            column and the window fills the rest. */}
+        <div className="mt-10 flex flex-1 flex-col gap-5 lg:flex-row lg:gap-10">
+          <ProjectWindow
+            className={cn(
+              "min-h-60 flex-1 lg:order-last lg:min-h-82 2xl:min-h-110",
+              enterRow(2)
+            )}
+          />
+          <ProjectList className="lg:w-52 lg:shrink-0" />
+        </div>
       </Showcase>
     </main>
   )

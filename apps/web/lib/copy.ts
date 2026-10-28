@@ -3,7 +3,7 @@
  * lib/resume.ts or lib/projects.json, so every page and its Markdown twin read
  * one string.
  */
-export const HOME = { title: "loki, 詹詠翔." } as const
+export const HOME = { title: "Loki, 詹詠翔." } as const
 
 export const WORKS = { title: "Works" } as const
 

@@ -37,15 +37,22 @@ const exempt = {
   // literal colors, not Tailwind classes or CSS variables.
   "packages/ui/src/components/og-image.tsx": "all",
   "apps/ui/app/opengraph-image.tsx": "all",
-  // The GitHub contribution grid is data: one cell per day, laid out by
-  // inline grid columns and drawn at fixed 10px cells.
-  "packages/ui/src/components/status.tsx": ["inline style", "arbitrary value"],
+  // The GitHub contribution grid is data: one character per day, laid out by
+  // inline grid columns and set at the size that makes a week one column.
+  "packages/ui/src/components/status.tsx": [
+    "inline style",
+    "arbitrary value",
+    "raw font size",
+  ],
   // The 3D stage's background comes from the exported scene, at runtime.
   "apps/web/app/page.tsx": ["inline style"],
   "apps/web/app/layout.tsx": ["inline style"],
   "apps/3d/components/editor-loader.tsx": ["color literal", "arbitrary value"],
-  // Each preview image is framed on its own focal point from projects.json.
-  "apps/web/components/preview-stage.tsx": ["inline style"],
+  // The works window draws each screenshot as characters in the
+  // screenshot's own colors.
+  "apps/web/lib/ascii-preview.ts": ["color literal"],
+  // www.zyx.tw tries its own neutrals: no pure white or black.
+  "apps/web/app/globals.css": ["color literal"],
   // The Works backdrop is content: ASCII koi in their own colors, drawn on
   // a canvas.
   "apps/web/lib/pond/renderer.ts": ["color literal"],

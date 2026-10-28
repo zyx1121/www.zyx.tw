@@ -57,6 +57,17 @@ const MARK_GLYPHS = "#%@"
 // Sub-cell sample offsets for anti-aliased silhouettes.
 const SUBSAMPLES = [0.25, 0.3, 0.75, 0.3, 0.25, 0.72, 0.75, 0.72]
 
+/** The grid's cell in CSS pixels on a canvas `width` wide, at `scale`. */
+export function cellSize(width: number, scale: number) {
+  const cw = clamp(Math.round((width / 124) * scale), 5, 13)
+  return { width: cw, height: Math.round(cw * 1.45) }
+}
+
+/** The canvas font for the grid's glyphs in cells `height` tall. */
+export function glyphFont(height: number, family: string) {
+  return `600 ${Math.round(height * 0.74)}px ${family}`
+}
+
 /** Classic top-down half-width at s ∈ [0, 1] (snout → tail), as a fraction of length. */
 function classicHalfWidth(s: number) {
   if (s < 0.13)
@@ -548,7 +559,7 @@ export class AsciiRenderer {
   private fishStyles = FISH_ALPHAS.map((a) => `rgba(230,238,255,${a})`)
 
   constructor(private canvas: HTMLCanvasElement) {
-    const ctx = canvas.getContext("2d", { alpha: false })
+    const ctx = canvas.getContext("2d")
     if (!ctx) throw new Error("2D canvas unavailable")
     this.ctx = ctx
     this.bg = document.createElement("canvas")
@@ -580,8 +591,9 @@ export class AsciiRenderer {
     this.width = width
     this.height = height
     this.dpr = dpr
-    this.cw = clamp(Math.round((width / 124) * this.cellScale), 5, 13)
-    this.ch = Math.round(this.cw * 1.45)
+    const cell = cellSize(width, this.cellScale)
+    this.cw = cell.width
+    this.ch = cell.height
     this.cols = Math.ceil(width / this.cw)
     this.rows = Math.ceil(height / this.ch)
 
@@ -627,8 +639,8 @@ export class AsciiRenderer {
     if (!g) return
     const { width: W, height: H, dpr, cw, ch } = this
     g.setTransform(dpr, 0, 0, dpr, 0, 0)
-    g.fillStyle = "#000"
-    g.fillRect(0, 0, W, H)
+    // Transparent, so the water takes the page's background.
+    g.clearRect(0, 0, W, H)
     if (this.grid) paintGrid(g, W, H, cw, ch, dpr)
   }
 
@@ -644,6 +656,7 @@ export class AsciiRenderer {
 
     ctx.setTransform(1, 0, 0, 1, 0, 0)
     ctx.globalAlpha = 1
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     ctx.drawImage(this.bg, 0, 0)
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     ctx.globalAlpha = this.intensity
@@ -651,7 +664,7 @@ export class AsciiRenderer {
     this.markFish(world)
     this.drawDots(t)
 
-    ctx.font = `600 ${Math.round(ch * 0.74)}px ${this.fontFamily}`
+    ctx.font = glyphFont(ch, this.fontFamily)
     ctx.textAlign = "center"
     ctx.textBaseline = "middle"
 

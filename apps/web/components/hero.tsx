@@ -1,9 +1,12 @@
 import { cn } from "@workspace/ui/lib/utils"
 import { enterRow } from "@workspace/ui/lib/layout"
 
-/** The page title at hero size. Pages without an animated title use this. */
-export function HeroTitle({ children }: { children: React.ReactNode }) {
-  return <h1 className="text-title font-medium text-pretty">{children}</h1>
+/**
+ * The page title at hero size. It decodes in with the rest of the page
+ * (page-decode.tsx).
+ */
+export function HeroTitle({ text }: { text: string }) {
+  return <h1 className="text-title font-medium text-pretty">{text}</h1>
 }
 
 /**

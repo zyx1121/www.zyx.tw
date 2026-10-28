@@ -35,13 +35,17 @@ const ICON: Record<EventKind, IconType> = {
   tag: VscTag,
 }
 
+// Each day is one character, so the heatmap reads like terminal output.
+// The glyph is full width in CJK monospace fonts, so a cell is square.
 const LEVEL_CLASS: Record<HeatmapDay["contributionLevel"], string> = {
-  NONE: "bg-muted",
-  FIRST_QUARTILE: "bg-foreground/25",
-  SECOND_QUARTILE: "bg-foreground/50",
-  THIRD_QUARTILE: "bg-foreground/75",
-  FOURTH_QUARTILE: "bg-foreground",
+  NONE: "text-muted",
+  FIRST_QUARTILE: "text-foreground/25",
+  SECOND_QUARTILE: "text-foreground/50",
+  THIRD_QUARTILE: "text-foreground/75",
+  FOURTH_QUARTILE: "text-foreground",
 }
+
+const GLYPH = "\u25a0"
 
 const dateFmt = new Intl.DateTimeFormat("en-US", {
   month: "short",
@@ -52,24 +56,28 @@ const dateFmt = new Intl.DateTimeFormat("en-US", {
 function HeatmapGrid({ heatmap }: { heatmap: Heatmap }) {
   const days = heatmap.weeks.flatMap((w) => w.contributionDays)
   return (
-    <div
-      className="grid w-full grid-flow-col grid-rows-7 gap-[3px]"
-      style={{
-        gridTemplateColumns: `repeat(${heatmap.weeks.length}, minmax(0, 1fr))`,
-      }}
-    >
-      {days.map((day) => (
-        <div
-          key={day.date}
-          title={`${dateFmt.format(new Date(day.date))}: ${day.contributionCount} contribution${
-            day.contributionCount === 1 ? "" : "s"
-          }`}
-          className={cn(
-            "aspect-square rounded-[2px]",
-            LEVEL_CLASS[day.contributionLevel]
-          )}
-        />
-      ))}
+    // One column per week; the font size makes each character one column
+    // wide, so the grid fills the width at any screen size.
+    <div className="@container w-full">
+      <div
+        className="grid grid-flow-col grid-rows-7 leading-none select-none"
+        style={{
+          gridTemplateColumns: `repeat(${heatmap.weeks.length}, minmax(0, 1fr))`,
+          fontSize: `${100 / heatmap.weeks.length}cqw`,
+        }}
+      >
+        {days.map((day) => (
+          <span
+            key={day.date}
+            title={`${dateFmt.format(new Date(day.date))}: ${day.contributionCount} contribution${
+              day.contributionCount === 1 ? "" : "s"
+            }`}
+            className={cn("text-center", LEVEL_CLASS[day.contributionLevel])}
+          >
+            {GLYPH}
+          </span>
+        ))}
+      </div>
     </div>
   )
 }

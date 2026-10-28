@@ -19,7 +19,7 @@ export default function NotFound() {
   return (
     <main className={cn(column, page, "flex-1")}>
       <Hero
-        title={<HeroTitle>{NOT_FOUND.title}</HeroTitle>}
+        title={<HeroTitle text={NOT_FOUND.title} />}
         subtitle={NOT_FOUND.lead}
         className="pb-25"
       />

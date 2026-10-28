@@ -14,7 +14,7 @@ import {
 import type { Project } from "@/lib/projects"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 
-/** How long each project stays on the stage while the rotation runs. */
+/** How long each project stays in the window while the rotation runs. */
 const ADVANCE_MS = 3200
 
 /** How long rotation stays paused after the pointer or focus leaves a row. */
@@ -36,18 +36,16 @@ function usePageVisible() {
 
 type Showcase = {
   projects: Project[]
-  /** The project on the stage, marked in the list. */
+  /** The project in the window, marked in the list. */
   active: number
-  /** A row is hovered or focused, or the stage was tapped: show color. */
+  /** A row is hovered or focused, or the window was tapped: show color. */
   decoded: boolean
-  /** Bumped on every hover, focus or tap, so the stage replays its decode. */
+  /** Bumped on every hover, focus or tap, so the window replays its decode. */
   engagement: number
-  /** Rows whose color screenshot has been asked for; nothing loads before. */
-  requested: ReadonlySet<number>
   engage: (index: number) => void
   release: (index: number) => void
-  /** Touch screens have no hover: a tap on the stage decodes and pauses. */
-  toggleHold: (index: number) => void
+  /** Touch screens have no hover: a tap on the window decodes and pauses. */
+  toggleHold: () => void
 }
 
 const ShowcaseContext = createContext<Showcase | null>(null)
@@ -59,10 +57,10 @@ export function useShowcase() {
 }
 
 /**
- * Shared state for the works page's preview stage and project list. The stage
+ * Shared state for the works page's project window and list. The window
  * advances to the next project every ADVANCE_MS; hovering or focusing a row
- * (or tapping the stage on touch screens) takes over, pauses the rotation and
- * decodes the stage to color. Leaving hands control back after RESUME_MS.
+ * (or tapping the window on touch screens) takes over, pauses the rotation and
+ * decodes the window to color. Leaving hands control back after RESUME_MS.
  * Hidden tabs pause, and reduced motion never advances on its own.
  */
 export function Showcase({
@@ -77,16 +75,13 @@ export function Showcase({
   const [held, setHeld] = useState(false)
   const [resuming, setResuming] = useState(false)
   const [engagement, setEngagement] = useState(0)
-  const [requested, setRequested] = useState<ReadonlySet<number>>(
-    () => new Set()
-  )
   const engagedRef = useRef<number | null>(null)
   const heldRef = useRef(false)
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   useEffect(() => () => clearTimeout(timer.current), [])
 
-  // One timeout per project on the stage, so every project, including one a
+  // One timeout per project in the window, so every project, including one a
   // visitor just left, gets the full ADVANCE_MS.
   const paused = engaged !== null || held || resuming
   const reducedMotion = useReducedMotion()
@@ -100,12 +95,6 @@ export function Showcase({
     )
     return () => clearTimeout(id)
   }, [active, paused, reducedMotion, visible, count])
-
-  const request = useCallback((index: number) => {
-    setRequested((previous) =>
-      previous.has(index) ? previous : new Set(previous).add(index)
-    )
-  }, [])
 
   const hold = useCallback(() => {
     clearTimeout(timer.current)
@@ -123,13 +112,12 @@ export function Showcase({
     (index: number) => {
       engagedRef.current = index
       heldRef.current = false
-      request(index)
       setActive(index)
       setEngaged(index)
       setHeld(false)
       hold()
     },
-    [hold, request]
+    [hold]
   )
 
   const release = useCallback(
@@ -142,21 +130,17 @@ export function Showcase({
     [letGo]
   )
 
-  const toggleHold = useCallback(
-    (index: number) => {
-      if (heldRef.current) {
-        heldRef.current = false
-        setHeld(false)
-        letGo()
-        return
-      }
-      heldRef.current = true
-      request(index)
-      setHeld(true)
-      hold()
-    },
-    [hold, letGo, request]
-  )
+  const toggleHold = useCallback(() => {
+    if (heldRef.current) {
+      heldRef.current = false
+      setHeld(false)
+      letGo()
+      return
+    }
+    heldRef.current = true
+    setHeld(true)
+    hold()
+  }, [hold, letGo])
 
   const value = useMemo<Showcase>(
     () => ({
@@ -164,22 +148,11 @@ export function Showcase({
       active,
       decoded: engaged !== null || held,
       engagement,
-      requested,
       engage,
       release,
       toggleHold,
     }),
-    [
-      projects,
-      active,
-      engaged,
-      held,
-      engagement,
-      requested,
-      engage,
-      release,
-      toggleHold,
-    ]
+    [projects, active, engaged, held, engagement, engage, release, toggleHold]
   )
 
   return <ShowcaseContext value={value}>{children}</ShowcaseContext>

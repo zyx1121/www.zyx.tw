@@ -1,8 +1,5 @@
-import { HomeHill } from "@/components/home-hill"
-import { HomeInk } from "@/components/home-ink"
-import { HomeStage } from "@/components/home-stage"
+import { HomeMark } from "@/components/home-mark"
 import { HOME } from "@/lib/copy"
-import sceneFile from "@/lib/home-scene.json"
 import { pageMetadata, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site"
 
 export const dynamic = "force-static"
@@ -17,27 +14,16 @@ export const metadata = {
 }
 
 /**
- * The home is the 3D mark alone, on a stage that fills the viewport under
- * the corners. Everything else about Loki is on About.
+ * The home is the mark alone, in characters, over the pond that swims behind
+ * the site, filling the viewport under the corners. Everything else about
+ * Loki is on About.
  */
 export default function Home() {
   return (
-    // Bliss's sky behind the scene, which draws the same sky bent around
-    // the mark, with the hills on top; the scene's background color shows
-    // while the image loads. The root layout paints the scrollbar gutter
-    // beside it that color.
-    <main
-      data-stage
-      className="fixed inset-0"
-      style={{
-        background: `url(/bliss-sky.webp) center / cover, ${sceneFile.staging.background}`,
-      }}
-    >
+    <main className="fixed inset-0">
       <h1 className="sr-only">{HOME.title}</h1>
       <p className="sr-only">{SITE_DESCRIPTION}</p>
-      <HomeStage />
-      <HomeHill />
-      <HomeInk />
+      <HomeMark />
     </main>
   )
 }
