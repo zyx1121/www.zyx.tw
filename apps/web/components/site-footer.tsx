@@ -32,7 +32,7 @@ export function SiteFooter() {
             <Link
               href="/privacy"
               aria-current={pathname === "/privacy" ? "page" : undefined}
-              className={cornerLink}
+              className={`${cornerLink} lowercase`}
             >
               Privacy
             </Link>
@@ -41,7 +41,7 @@ export function SiteFooter() {
             <Link
               href="/terms"
               aria-current={pathname === "/terms" ? "page" : undefined}
-              className={cornerLink}
+              className={`${cornerLink} lowercase`}
             >
               Terms
             </Link>
