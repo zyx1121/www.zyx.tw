@@ -2,7 +2,6 @@ import { cn } from "@workspace/ui/lib/utils"
 import { column, page } from "@workspace/ui/lib/layout"
 
 import { Hero, HeroTitle } from "@/components/hero"
-import { PondBackground } from "@/components/pond-background"
 import { ProjectsJsonLd } from "@/components/json-ld"
 import { PreviewStage } from "@/components/preview-stage"
 import { ProjectList } from "@/components/project-list"
@@ -23,7 +22,6 @@ export default function Works() {
     // scrolls.
     <main className={cn(column, page, "@container flex flex-1 flex-col")}>
       <ProjectsJsonLd projects={projects} />
-      <PondBackground />
       <Showcase projects={projects}>
         <Hero title={<HeroTitle>{WORKS.title}</HeroTitle>} />
         {/* No entrance fade: the first dither can be the page's largest

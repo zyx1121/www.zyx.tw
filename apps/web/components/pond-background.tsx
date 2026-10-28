@@ -1,6 +1,9 @@
 "use client"
 
+import { usePathname } from "next/navigation"
 import { useEffect, useRef } from "react"
+
+import { cn } from "@workspace/ui/lib/utils"
 
 import { OceanEngine } from "@/lib/pond/engine"
 import type { SharkSpec } from "@/lib/pond/world"
@@ -14,13 +17,23 @@ function randomKoi(): SharkSpec[] {
   ]
 }
 
+/** The pages the pond swims behind. */
+const POND_PATHS = ["/works", "/about"]
+
 /**
- * ASCII koi swimming behind the page, dimmed so they stay a backdrop. Dark
- * theme only: the water is black. The canvas is hidden in light theme, and
- * the engine stops drawing while it is out of view.
+ * ASCII koi swimming behind the page, dimmed so they stay a backdrop. It
+ * lives in the root layout, so the same pond carries on across the pages
+ * above instead of restarting on each. Elsewhere the canvas is hidden, and
+ * the engine stops drawing while it is out of view. The water is
+ * transparent; in light theme the canvas is inverted, with the hue turned
+ * back, so light ink on dark becomes dark ink on paper.
  */
 export function PondBackground() {
   const ref = useRef<HTMLCanvasElement>(null)
+  const pathname = usePathname()
+  const shown = POND_PATHS.some(
+    (path) => pathname === path || pathname.startsWith(`${path}/`)
+  )
 
   useEffect(() => {
     const canvas = ref.current
@@ -39,7 +52,10 @@ export function PondBackground() {
     <canvas
       ref={ref}
       aria-hidden
-      className="pointer-events-none fixed inset-0 -z-10 hidden size-full font-mono dark:block"
+      className={cn(
+        "pointer-events-none fixed inset-0 -z-10 size-full font-mono hue-rotate-180 invert dark:hue-rotate-0 dark:invert-0",
+        !shown && "hidden"
+      )}
     />
   )
 }
