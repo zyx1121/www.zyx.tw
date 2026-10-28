@@ -46,6 +46,9 @@ const exempt = {
   "apps/3d/components/editor-loader.tsx": ["color literal", "arbitrary value"],
   // Each preview image is framed on its own focal point from projects.json.
   "apps/web/components/preview-stage.tsx": ["inline style"],
+  // The Works backdrop is content: ASCII koi in their own colors, drawn on
+  // a canvas.
+  "apps/web/lib/pond/renderer.ts": ["color literal"],
   // Stamp's seal is the product's mark: vermilion ink and glyphs sized in
   // the seal's own SVG units, the same in both themes.
   "apps/stamp/components/seal.tsx": ["color literal", "raw font size"],
