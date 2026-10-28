@@ -11,6 +11,7 @@ import { fontVariables } from "@workspace/ui/lib/fonts"
 import { SiteJsonLd } from "@/components/json-ld"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
+import { sarasaMono } from "@/lib/fonts"
 import sceneFile from "@/lib/home-scene.json"
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
 
@@ -51,12 +52,22 @@ export default async function RootLayout({
       // 20 px from the window's edge on every page and every site. Under the
       // home's 3D stage the gutter takes the scene's background, so the stage
       // meets the window's edge in either theme.
-      style={{ "--stage": sceneFile.staging.background } as React.CSSProperties}
+      // This site sets its text in Sarasa Mono TC; the other sites keep the
+      // design system's Inter stack. The theme inlines --font-sans, so the
+      // stack goes in its own variable.
+      style={
+        {
+          "--stage": sceneFile.staging.background,
+          "--font-site":
+            "var(--font-sarasa-mono), var(--font-noto-sans-tc), ui-monospace, monospace",
+        } as React.CSSProperties
+      }
       className={cn(
         "dark",
         "antialiased [scrollbar-gutter:stable] has-[main[data-stage]]:bg-(--stage)",
         fontVariables,
-        "font-sans"
+        sarasaMono.variable,
+        "font-(family-name:--font-site)"
       )}
     >
       {/* Body text is 16px at every width, phones included. Pages fill the
