@@ -548,7 +548,7 @@ export class AsciiRenderer {
   private fishStyles = FISH_ALPHAS.map((a) => `rgba(230,238,255,${a})`)
 
   constructor(private canvas: HTMLCanvasElement) {
-    const ctx = canvas.getContext("2d", { alpha: false })
+    const ctx = canvas.getContext("2d")
     if (!ctx) throw new Error("2D canvas unavailable")
     this.ctx = ctx
     this.bg = document.createElement("canvas")
@@ -627,8 +627,8 @@ export class AsciiRenderer {
     if (!g) return
     const { width: W, height: H, dpr, cw, ch } = this
     g.setTransform(dpr, 0, 0, dpr, 0, 0)
-    g.fillStyle = "#000"
-    g.fillRect(0, 0, W, H)
+    // Transparent, so the water takes the page's background.
+    g.clearRect(0, 0, W, H)
     if (this.grid) paintGrid(g, W, H, cw, ch, dpr)
   }
 
@@ -644,6 +644,7 @@ export class AsciiRenderer {
 
     ctx.setTransform(1, 0, 0, 1, 0, 0)
     ctx.globalAlpha = 1
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     ctx.drawImage(this.bg, 0, 0)
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     ctx.globalAlpha = this.intensity

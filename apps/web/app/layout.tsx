@@ -2,7 +2,6 @@ import type { Metadata } from "next"
 
 import { cn } from "@workspace/ui/lib/utils"
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
-import "@workspace/ui/globals.css"
 import { MotionProvider } from "@workspace/ui/components/motion-provider"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
@@ -14,6 +13,8 @@ import { SiteHeader } from "@/components/site-header"
 import { sarasaMono } from "@/lib/fonts"
 import sceneFile from "@/lib/home-scene.json"
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
+
+import "./globals.css"
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -52,22 +53,13 @@ export default async function RootLayout({
       // 20 px from the window's edge on every page and every site. Under the
       // home's 3D stage the gutter takes the scene's background, so the stage
       // meets the window's edge in either theme.
-      // This site sets its text in Sarasa Mono TC; the other sites keep the
-      // design system's Inter stack. The theme inlines --font-sans, so the
-      // stack goes in its own variable.
-      style={
-        {
-          "--stage": sceneFile.staging.background,
-          "--font-site":
-            "var(--font-sarasa-mono), var(--font-noto-sans-tc), ui-monospace, monospace",
-        } as React.CSSProperties
-      }
+      style={{ "--stage": sceneFile.staging.background } as React.CSSProperties}
       className={cn(
         "dark",
         "antialiased [scrollbar-gutter:stable] has-[main[data-stage]]:bg-(--stage)",
         fontVariables,
         sarasaMono.variable,
-        "font-(family-name:--font-site)"
+        "font-sans"
       )}
     >
       {/* Body text is 16px at every width, phones included. Pages fill the

@@ -50,6 +50,8 @@ const exempt = {
   "apps/3d/components/editor-loader.tsx": ["color literal", "arbitrary value"],
   // Each preview image is framed on its own focal point from projects.json.
   "apps/web/components/preview-stage.tsx": ["inline style"],
+  // www.zyx.tw tries its own neutrals: no pure white or black.
+  "apps/web/app/globals.css": ["color literal"],
   // The Works backdrop is content: ASCII koi in their own colors, drawn on
   // a canvas.
   "apps/web/lib/pond/renderer.ts": ["color literal"],
