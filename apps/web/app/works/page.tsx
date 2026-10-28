@@ -23,7 +23,7 @@ export default function Works() {
     <main className={cn(column, page, "@container flex flex-1 flex-col")}>
       <ProjectsJsonLd projects={projects} />
       <Showcase projects={projects}>
-        <Hero title={<HeroTitle>{WORKS.title}</HeroTitle>} />
+        <Hero title={<HeroTitle text={WORKS.title} />} />
         {/* No entrance fade: the first dither can be the page's largest
             paint, and Chrome skipped it as LCP while it faded in. */}
         <PreviewStage className="mt-10 mb-5 min-h-60 flex-1 lg:min-h-82 2xl:min-h-110" />

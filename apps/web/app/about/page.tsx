@@ -1,9 +1,8 @@
 import { cn } from "@workspace/ui/lib/utils"
 import { Status } from "@workspace/ui/components/status"
-import { ScrambleText } from "@workspace/ui/components/ui/scramble-text"
 import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
-import { Hero } from "@/components/hero"
+import { Hero, HeroTitle } from "@/components/hero"
 import { ABOUT, HOME } from "@/lib/copy"
 import { getGithubStatus } from "@/lib/github"
 import { FACTS, SECTIONS } from "@/lib/resume"
@@ -19,8 +18,17 @@ export const metadata = pageMetadata({ title: ABOUT.title, path: "/about" })
 export const revalidate = 300
 export const dynamic = "force-static"
 
-// Content blocks enter one row apart after the title: step 1 is row 2.
-const block = (step: number) => enterRow(1 + step)
+// Every line enters as its own row, 25ms apart, as on Works: the title is
+// row 1, then each fact, then each section's heading and its entries, and
+// the GitHub status last.
+const FIRST_FACT_ROW = 2
+let nextRow = FIRST_FACT_ROW + FACTS.length
+const SECTION_ROWS = SECTIONS.map(({ entries }) => {
+  const heading = nextRow
+  nextRow += 1 + entries.length
+  return heading
+})
+const STATUS_ROW = nextRow
 
 const LINK =
   "rounded-control underline decoration-muted-foreground/40 underline-offset-4 outline-offset-2 transition-colors hover:decoration-foreground focus-visible:outline-2"
@@ -63,21 +71,15 @@ export default async function About() {
 
   return (
     <main className={cn(column, page, "flex-1")}>
-      <Hero
-        title={
-          <ScrambleText
-            element="h1"
-            text={HOME.title}
-            className="text-title font-medium"
-          />
-        }
-        className="pb-25"
-      />
+      <Hero title={<HeroTitle text={HOME.title} />} className="pb-25" />
 
       {/* Facts: a muted label column, then the value. */}
-      <dl className={cn("flex flex-col gap-y-3", block(1))}>
-        {FACTS.map(({ label, value, href }) => (
-          <div key={label} className="flex gap-x-5">
+      <dl className="flex flex-col gap-y-3">
+        {FACTS.map(({ label, value, href }, index) => (
+          <div
+            key={label}
+            className={cn("flex gap-x-5", enterRow(FIRST_FACT_ROW + index))}
+          >
             <dt className="w-28 shrink-0 text-muted-foreground">{label}</dt>
             <dd>
               <Value text={value} href={href} />
@@ -87,17 +89,22 @@ export default async function About() {
       </dl>
 
       {SECTIONS.map(({ id, title, entries }, index) => (
-        <section
-          key={id}
-          aria-labelledby={`${id}-heading`}
-          className={cn("mt-20", block(2 + index))}
-        >
-          <h2 id={`${id}-heading`} className={HEADING}>
+        <section key={id} aria-labelledby={`${id}-heading`} className="mt-20">
+          <h2
+            id={`${id}-heading`}
+            className={cn(HEADING, enterRow(SECTION_ROWS[index]!))}
+          >
             {title}
           </h2>
           <ol className="mt-5 flex flex-col gap-y-3">
-            {entries.map(({ when, what, note, where, href }) => (
-              <li key={`${when} ${what}`} className="flex gap-x-5">
+            {entries.map(({ when, what, note, where, href }, row) => (
+              <li
+                key={`${when} ${what}`}
+                className={cn(
+                  "flex gap-x-5",
+                  enterRow(SECTION_ROWS[index]! + 1 + row)
+                )}
+              >
                 <span className="w-28 shrink-0 text-caption whitespace-nowrap text-muted-foreground tabular-nums">
                   {when}
                 </span>
@@ -122,10 +129,7 @@ export default async function About() {
         </section>
       ))}
 
-      <Status
-        data={status}
-        className={cn("mt-20", block(2 + SECTIONS.length))}
-      />
+      <Status data={status} className={cn("mt-20", enterRow(STATUS_ROW))} />
     </main>
   )
 }

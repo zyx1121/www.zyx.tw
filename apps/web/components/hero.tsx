@@ -1,9 +1,19 @@
 import { cn } from "@workspace/ui/lib/utils"
+import { ScrambleText } from "@workspace/ui/components/ui/scramble-text"
 import { enterRow } from "@workspace/ui/lib/layout"
 
-/** The page title at hero size. Pages without an animated title use this. */
-export function HeroTitle({ children }: { children: React.ReactNode }) {
-  return <h1 className="text-title font-medium text-pretty">{children}</h1>
+/**
+ * The page title at hero size. Every page's title decodes in, as a terminal
+ * prints, while the rows below it fade in one after another.
+ */
+export function HeroTitle({ text }: { text: string }) {
+  return (
+    <ScrambleText
+      element="h1"
+      text={text}
+      className="text-title font-medium text-pretty"
+    />
+  )
 }
 
 /**

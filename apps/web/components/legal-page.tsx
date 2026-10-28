@@ -35,7 +35,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
   return (
     <main className={cn(column, page, "flex-1 text-body")}>
       <Hero
-        title={<HeroTitle>{doc.title}</HeroTitle>}
+        title={<HeroTitle text={doc.title} />}
         subtitle={
           <>
             Last updated{" "}
