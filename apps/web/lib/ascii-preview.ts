@@ -5,7 +5,9 @@
  * its piece of the screenshot. Changes decode as the page's text does: a
  * frontier crosses from left to right, each column a little early or late,
  * each cell a little more, and cells about to resolve flicker through
- * random glyphs.
+ * random glyphs. The first picture decodes out of noise in its own shape,
+ * and on leaving the page the picture scrambles back into noise from the
+ * right, as the home's mark does.
  */
 export const ART = {
   /** Glyphs from empty to full. */
@@ -73,6 +75,17 @@ type Grid = {
   color: string[]
 }
 
+/** How far a paint is into a decode, or into the scramble out. */
+type Motion =
+  | {
+      kind: "decode"
+      /** What was on screen before; none decodes out of noise. */
+      from: Grid | null
+      elapsed: number
+      run: number
+    }
+  | { kind: "leave"; duration: number; elapsed: number; run: number }
+
 export type Source = {
   image: HTMLImageElement
   /** The CSS object-position that keeps the screenshot's content in frame. */
@@ -90,9 +103,12 @@ export class AsciiPreview {
   private ch = 0
   private dpr = 1
   private shown: Grid | null = null
+  /** The grid last drawn, which a decode may not have finished. */
+  private drawn: Grid | null = null
   private source: Source | null = null
   private raf = 0
   private run = 0
+  private leaving = false
 
   constructor(private canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext("2d")
@@ -103,7 +119,7 @@ export class AsciiPreview {
   /** Fit the grid to the canvas's box; the picture redraws without a decode. */
   resize() {
     const { width, height } = this.canvas.getBoundingClientRect()
-    if (width < 1 || height < 1) return
+    if (width < 1 || height < 1 || this.leaving) return
     this.dpr = Math.min(window.devicePixelRatio || 1, 2)
     this.canvas.width = Math.round(width * this.dpr)
     this.canvas.height = Math.round(height * this.dpr)
@@ -121,21 +137,22 @@ export class AsciiPreview {
     this.rows = Math.max(1, Math.floor(height / this.ch))
     cancelAnimationFrame(this.raf)
     this.shown = this.source ? this.sample(this.source) : null
-    this.paint(this.shown, null, 0)
+    this.paint(this.shown)
   }
 
   /** Show a source, decoding from what is on screen unless `animate` is off. */
   show(source: Source, animate: boolean) {
     this.source = source
+    if (this.leaving) return
     if (!this.cols) this.resize()
     const target = this.sample(source)
     cancelAnimationFrame(this.raf)
     if (!animate) {
       this.shown = target
-      this.paint(target, null, 0)
+      this.paint(target)
       return
     }
-    const from = this.shown ?? this.blank()
+    const from = this.shown
     const run = ++this.run
     let start: number | undefined
     const frame = (now: number) => {
@@ -143,10 +160,29 @@ export class AsciiPreview {
       const elapsed = now - start
       if (elapsed >= DECODE_LENGTH) {
         this.shown = target
-        this.paint(target, null, 0)
+        this.paint(target)
         return
       }
-      this.paint(target, from, elapsed, run)
+      this.paint(target, { kind: "decode", from, elapsed, run })
+      this.raf = requestAnimationFrame(frame)
+    }
+    this.raf = requestAnimationFrame(frame)
+  }
+
+  /**
+   * Scramble what is on screen into noise over `duration`, from the right,
+   * each cell a little early or late; the noise moves until the canvas goes.
+   */
+  leave(duration: number) {
+    const shown = this.drawn
+    if (!shown || this.leaving) return
+    this.leaving = true
+    cancelAnimationFrame(this.raf)
+    const run = ++this.run
+    let start: number | undefined
+    const frame = (now: number) => {
+      start ??= now
+      this.paint(shown, { kind: "leave", duration, elapsed: now - start, run })
       this.raf = requestAnimationFrame(frame)
     }
     this.raf = requestAnimationFrame(frame)
@@ -154,10 +190,10 @@ export class AsciiPreview {
 
   /** Sample again (after a theme change) and redraw at once. */
   refresh() {
-    if (!this.source) return
+    if (!this.source || this.leaving) return
     cancelAnimationFrame(this.raf)
     this.shown = this.sample(this.source)
-    this.paint(this.shown, null, 0)
+    this.paint(this.shown)
   }
 
   destroy() {
@@ -236,20 +272,18 @@ export class AsciiPreview {
   }
 
   /**
-   * Draw `target`, or, with `from`, the decode `elapsed` ms in: cells the
-   * frontier has passed show the target, cells within `band` of it flicker,
-   * the rest still show `from`.
+   * Draw `target`, or a moment of a motion over it. A decode `elapsed` ms in
+   * shows the target where the frontier has passed, flickers within `band`
+   * of it, and shows `from` beyond; from nothing, the target's own cells
+   * flicker until the frontier reaches them. Leaving, the target's cells turn
+   * to noise from the right over `duration`.
    */
-  private paint(
-    target: Grid | null,
-    from: Grid | null,
-    elapsed: number,
-    run = 0
-  ) {
+  private paint(target: Grid | null, motion?: Motion) {
     const { ctx, cols, rows, cw, ch } = this
     const width = this.canvas.width / this.dpr
     const height = this.canvas.height / this.dpr
     ctx.clearRect(0, 0, width, height)
+    this.drawn = target
     if (!target) return
     ctx.font = this.font()
     ctx.textAlign = "center"
@@ -257,24 +291,34 @@ export class AsciiPreview {
     const ink = getComputedStyle(this.canvas).color
     const left = (width - cols * cw) / 2 + cw / 2
     const top = (height - rows * ch) / 2 + ch / 2
+    const run = motion?.run ?? 0
+    const elapsed = motion?.elapsed ?? 0
     const tick = Math.floor(elapsed / ART.tick)
     let fill = ""
     for (let col = 0; col < cols; col++) {
-      const columnAt =
-        (cols > 1 ? (col / (cols - 1)) * ART.sweep : 0) +
-        hash(col, 0, run) * ART.columnJitter
+      const x = cols > 1 ? col / (cols - 1) : 0
+      const columnAt = x * ART.sweep + hash(col, 0, run) * ART.columnJitter
       for (let row = 0; row < rows; row++) {
         const i = row * cols + col
         let glyph = target.glyph[i]!
         let color = target.color[i]!
-        if (from) {
+        const noise = 1 + Math.floor(hash(col, row, tick + run * 7919) * LAST)
+        if (motion?.kind === "decode") {
           const at = columnAt + hash(col, row, run + 1) * ART.cellJitter
-          if (elapsed < at - ART.band) {
-            glyph = from.glyph[i]!
-            color = from.color[i]!
-          } else if (elapsed < at) {
-            glyph = 1 + Math.floor(hash(col, row, tick + run * 7919) * LAST)
+          if (elapsed >= at) {
+            // Resolved.
+          } else if (!motion.from) {
+            if (glyph) glyph = noise
+          } else if (elapsed < at - ART.band) {
+            glyph = motion.from.glyph[i]!
+            color = motion.from.color[i]!
+          } else {
+            glyph = noise
           }
+        } else if (motion && glyph) {
+          const at =
+            ((1 - x) * 0.75 + hash(col, row, run + 1) * 0.25) * motion.duration
+          if (elapsed >= at) glyph = noise
         }
         if (!glyph) continue
         const style = color || ink

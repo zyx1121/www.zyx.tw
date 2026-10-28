@@ -4,8 +4,9 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react"
 
 import { cn } from "@workspace/ui/lib/utils"
 
-import { decodeText } from "@/components/page-decode"
+import { decodeText, LEAVE_EVENT, OUT } from "@/components/page-decode"
 import { useShowcase } from "@/components/showcase"
+import { scrambleFrame } from "@/lib/ascii-frame"
 import { AsciiPreview } from "@/lib/ascii-preview"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 
@@ -18,12 +19,15 @@ const VERTICAL = "│".repeat(200)
  * the project on stage and its purpose, around the project's screenshot drawn
  * in characters (lib/ascii-preview.ts). At rest the picture takes the text
  * color; a hovered or focused row, or a tap on touch screens, decodes it to
- * the screenshot's colors. Decorative: the list carries the links, so the
+ * the screenshot's colors. The frame (lib/ascii-frame.ts) and the picture
+ * decode in and scramble out with the page. Decorative: the list carries the
+ * links, so the
  * whole window is hidden from assistive tech.
  */
 export function ProjectWindow({ className }: { className?: string }) {
   const { projects, active, decoded, engagement, toggleHold } = useShowcase()
   const reducedMotion = useReducedMotion()
+  const rootRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const titleRef = useRef<HTMLDivElement>(null)
   const previewRef = useRef<AsciiPreview | null>(null)
@@ -100,6 +104,24 @@ export function ProjectWindow({ className }: { className?: string }) {
     previewRef.current?.refresh()
   }, [theme])
 
+  // The frame decodes in with the page, and it and the picture scramble out
+  // with the page's text.
+  useLayoutEffect(() => {
+    const root = rootRef.current
+    if (!root || reducedMotion) return
+    let cancel = scrambleFrame(root, "in")
+    const leave = () => {
+      previewRef.current?.leave(OUT)
+      cancel()
+      cancel = scrambleFrame(root, "out", OUT)
+    }
+    document.addEventListener(LEAVE_EVENT, leave)
+    return () => {
+      document.removeEventListener(LEAVE_EVENT, leave)
+      cancel()
+    }
+  }, [reducedMotion])
+
   // A new project's title decodes in with its picture. The first one decodes
   // with the rest of the page.
   const first = useRef(true)
@@ -115,6 +137,7 @@ export function ProjectWindow({ className }: { className?: string }) {
 
   return (
     <div
+      ref={rootRef}
       aria-hidden
       data-slot="project-window"
       className={cn(
