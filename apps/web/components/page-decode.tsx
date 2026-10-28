@@ -211,7 +211,7 @@ export function PageDecode() {
         return
       }
       const url = new URL(link.href)
-      // The home is a 3D stage with no text to scramble.
+      // The home is the mark alone, with no text to scramble.
       if (
         url.origin !== location.origin ||
         url.pathname === location.pathname ||

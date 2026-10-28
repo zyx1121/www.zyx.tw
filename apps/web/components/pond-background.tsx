@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react"
 import { cn } from "@workspace/ui/lib/utils"
 
 import { OceanEngine } from "@/lib/pond/engine"
+import { markObstacle } from "@/lib/pond/obstacle"
 import type { SharkSpec } from "@/lib/pond/world"
 
 /** Two koi of random variety and pattern, the second a little smaller. */
@@ -18,7 +19,10 @@ function randomKoi(): SharkSpec[] {
 }
 
 /** The pages the pond swims behind. */
-const POND_PATHS = ["/works", "/about"]
+const POND_PATHS = ["/", "/works", "/about"]
+
+/** The pond's cell size, which the home's mark draws on as well. */
+export const POND_CELL_SCALE = 0.6
 
 /**
  * ASCII koi swimming behind the page, dimmed so they stay a backdrop. It
@@ -39,11 +43,12 @@ export function PondBackground() {
     const canvas = ref.current
     if (!canvas) return
     const engine = new OceanEngine(canvas, randomKoi(), {
-      cellScale: 0.6,
+      cellScale: POND_CELL_SCALE,
       intensity: 0.75,
       glyphOnly: true,
       grid: false,
       speed: 0.6,
+      obstacle: markObstacle,
     })
     return () => engine.destroy()
   }, [])

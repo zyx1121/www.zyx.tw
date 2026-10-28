@@ -13,7 +13,6 @@ import { PondBackground } from "@/components/pond-background"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { sarasaMono } from "@/lib/fonts"
-import sceneFile from "@/lib/home-scene.json"
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
 
 import "./globals.css"
@@ -52,13 +51,10 @@ export default async function RootLayout({
       suppressHydrationWarning
       // A stable gutter keeps the centered column from moving when a page
       // gains or loses its scrollbar. One edge only, so the left corners stay
-      // 20 px from the window's edge on every page and every site. Under the
-      // home's 3D stage the gutter takes the scene's background, so the stage
-      // meets the window's edge in either theme.
-      style={{ "--stage": sceneFile.staging.background } as React.CSSProperties}
+      // 20 px from the window's edge on every page and every site.
       className={cn(
         "dark",
-        "antialiased [scrollbar-gutter:stable] has-[main[data-stage]]:bg-(--stage)",
+        "antialiased [scrollbar-gutter:stable]",
         fontVariables,
         sarasaMono.variable,
         "font-sans"

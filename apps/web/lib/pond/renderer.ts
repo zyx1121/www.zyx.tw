@@ -57,6 +57,17 @@ const MARK_GLYPHS = "#%@"
 // Sub-cell sample offsets for anti-aliased silhouettes.
 const SUBSAMPLES = [0.25, 0.3, 0.75, 0.3, 0.25, 0.72, 0.75, 0.72]
 
+/** The grid's cell in CSS pixels on a canvas `width` wide, at `scale`. */
+export function cellSize(width: number, scale: number) {
+  const cw = clamp(Math.round((width / 124) * scale), 5, 13)
+  return { width: cw, height: Math.round(cw * 1.45) }
+}
+
+/** The canvas font for the grid's glyphs in cells `height` tall. */
+export function glyphFont(height: number, family: string) {
+  return `600 ${Math.round(height * 0.74)}px ${family}`
+}
+
 /** Classic top-down half-width at s ∈ [0, 1] (snout → tail), as a fraction of length. */
 function classicHalfWidth(s: number) {
   if (s < 0.13)
@@ -580,8 +591,9 @@ export class AsciiRenderer {
     this.width = width
     this.height = height
     this.dpr = dpr
-    this.cw = clamp(Math.round((width / 124) * this.cellScale), 5, 13)
-    this.ch = Math.round(this.cw * 1.45)
+    const cell = cellSize(width, this.cellScale)
+    this.cw = cell.width
+    this.ch = cell.height
     this.cols = Math.ceil(width / this.cw)
     this.rows = Math.ceil(height / this.ch)
 
@@ -652,7 +664,7 @@ export class AsciiRenderer {
     this.markFish(world)
     this.drawDots(t)
 
-    ctx.font = `600 ${Math.round(ch * 0.74)}px ${this.fontFamily}`
+    ctx.font = glyphFont(ch, this.fontFamily)
     ctx.textAlign = "center"
     ctx.textBaseline = "middle"
 

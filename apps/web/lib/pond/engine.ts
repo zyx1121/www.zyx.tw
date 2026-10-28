@@ -1,5 +1,6 @@
 // Adapted from stackedlol/ascii-sharks (MIT, see LICENSE in this folder):
 // koi, GPU rasterising and simulation, and a dim backdrop mode added.
+import type { Obstacle } from "./obstacle"
 import { AsciiRenderer } from "./renderer"
 import { World, type SharkSpec } from "./world"
 
@@ -38,9 +39,12 @@ export class OceanEngine {
       intensity?: number
       glyphOnly?: boolean
       grid?: boolean
+      /** Something solid for the fish and koi to swim around. */
+      obstacle?: Obstacle
     } = {}
   ) {
     this.world = new World(sharks)
+    this.world.obstacle = options.obstacle ?? null
     this.renderer = new AsciiRenderer(canvas)
     if (options.cellScale) this.renderer.cellScale = options.cellScale
     if (options.gpu === false) this.renderer.useGpu = false

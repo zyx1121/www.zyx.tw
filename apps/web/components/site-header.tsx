@@ -16,8 +16,7 @@ const NAV = PAGES.filter((page) => page.nav)
 
 export function SiteHeader() {
   const pathname = usePathname()
-  // The home is a 3D stage over Bliss, so its corners take the ink
-  // HomeInk picks for the picture under them, and nothing scrolls under them.
+  // Nothing scrolls under the home's corners, so they need no fade.
   const home = pathname === "/"
 
   return (
@@ -25,11 +24,7 @@ export function SiteHeader() {
       home="/"
       label="zyx, home"
       fade={!home}
-      className={
-        home
-          ? `[--foreground:var(--home-ink-top,var(--color-black))] [--muted-foreground:var(--home-ink-top,var(--color-black))] ${enter}`
-          : enter
-      }
+      className={enter}
       nav={
         <nav aria-label="Main">
           <ul className="flex gap-2">

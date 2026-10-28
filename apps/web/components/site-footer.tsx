@@ -19,11 +19,7 @@ export function SiteFooter() {
   return (
     <BottomCorners
       fade={!home}
-      className={
-        home
-          ? `[--foreground:var(--home-ink-bottom,var(--color-black))] [--muted-foreground:var(--home-ink-bottom,var(--color-black))] ${enterFooter}`
-          : enterFooter
-      }
+      className={enterFooter}
       links={
         <>
           <CornerTip tip={LEGAL_TIPS.privacy}>
