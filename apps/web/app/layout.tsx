@@ -8,6 +8,7 @@ import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 import { fontVariables } from "@workspace/ui/lib/fonts"
 
 import { SiteJsonLd } from "@/components/json-ld"
+import { PageDecode } from "@/components/page-decode"
 import { PondBackground } from "@/components/pond-background"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
@@ -70,6 +71,7 @@ export default async function RootLayout({
         <ThemeProvider>
           <TooltipProvider>
             <MotionProvider>
+              <PageDecode />
               <PondBackground />
               <SiteHeader />
               {children}

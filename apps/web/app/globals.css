@@ -30,3 +30,16 @@
   --muted-foreground: oklch(0.62 0 0);
   --overlay: oklch(0.17 0 0 / 85%);
 }
+
+/* The page decoder (components/page-decode.tsx) draws each row's entrance:
+ * its text starts scrambled and resolves. Until the decoder starts, rows are
+ * held invisible (at most 1.5s, so they still show if scripts fail); once it
+ * runs, their fades step aside. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-decoder]) main [class*="enter-row-"] {
+    animation: scramble-text-hold 1.5s;
+  }
+  html[data-decoder] main [class*="enter-row-"] {
+    animation: none;
+  }
+}
