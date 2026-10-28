@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-import { ActiveMark } from "@workspace/ui/components/active-mark"
 import {
   cornerLink,
   CornerTip,
@@ -34,28 +33,31 @@ export function SiteHeader() {
       }
       nav={
         <nav aria-label="Main">
-          <ul className="flex gap-4">
+          <ul className="flex gap-2">
             {NAV.map(({ path, label, tip }) => {
               const current =
                 pathname === path || pathname.startsWith(`${path}/`)
+              // Brackets mark the current page, as in a terminal menu. The
+              // other items keep theirs invisible, so nothing shifts on
+              // navigation.
+              const bracket = current ? undefined : "invisible"
               return (
-                <li key={path} className="relative flex">
+                <li key={path} className="flex">
                   <CornerTip tip={tip}>
                     <Link
                       href={path}
                       aria-current={current ? "page" : undefined}
-                      className={cornerLink}
+                      className={`${cornerLink} lowercase`}
                     >
+                      <span aria-hidden="true" className={bracket}>
+                        [
+                      </span>
                       {label}
+                      <span aria-hidden="true" className={bracket}>
+                        ]
+                      </span>
                     </Link>
                   </CornerTip>
-                  {/* Springs to the new page's item on navigation. */}
-                  {current && (
-                    <ActiveMark
-                      layoutId="site-header-mark"
-                      className="absolute -bottom-2 left-1/2 -ml-0.5"
-                    />
-                  )}
                 </li>
               )
             })}

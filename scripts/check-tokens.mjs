@@ -37,9 +37,13 @@ const exempt = {
   // literal colors, not Tailwind classes or CSS variables.
   "packages/ui/src/components/og-image.tsx": "all",
   "apps/ui/app/opengraph-image.tsx": "all",
-  // The GitHub contribution grid is data: one cell per day, laid out by
-  // inline grid columns and drawn at fixed 10px cells.
-  "packages/ui/src/components/status.tsx": ["inline style", "arbitrary value"],
+  // The GitHub contribution grid is data: one character per day, laid out by
+  // inline grid columns and set at the size that makes a week one column.
+  "packages/ui/src/components/status.tsx": [
+    "inline style",
+    "arbitrary value",
+    "raw font size",
+  ],
   // The 3D stage's background comes from the exported scene, at runtime.
   "apps/web/app/page.tsx": ["inline style"],
   "apps/web/app/layout.tsx": ["inline style"],
