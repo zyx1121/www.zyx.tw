@@ -11,8 +11,6 @@ import {
 } from "@workspace/ui/components/corners"
 import { enterFooter } from "@workspace/ui/lib/layout"
 
-import { instrumentSans } from "@/lib/corner-font"
-
 /** The bottom corners: Privacy and Terms, which cover every zyx.tw site. */
 export function SiteFooter() {
   const pathname = usePathname()
@@ -23,7 +21,7 @@ export function SiteFooter() {
       fade={!home}
       className={
         home
-          ? `[--foreground:var(--home-ink-bottom,var(--color-black))] [--muted-foreground:var(--home-ink-bottom,var(--color-black))] ${instrumentSans.className} ${enterFooter}`
+          ? `[--foreground:var(--home-ink-bottom,var(--color-black))] [--muted-foreground:var(--home-ink-bottom,var(--color-black))] ${enterFooter}`
           : enterFooter
       }
       links={

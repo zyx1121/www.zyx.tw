@@ -46,7 +46,7 @@ export const SECTIONS: Section[] = [
     title: "Education",
     entries: [
       {
-        when: "2025–now",
+        when: "2025–NOW",
         what: "M.S. Computer Science",
         where: "NYCU WinLab",
         href: "https://www.winlab.tw",
