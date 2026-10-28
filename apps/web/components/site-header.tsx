@@ -47,7 +47,7 @@ export function SiteHeader() {
                     <Link
                       href={path}
                       aria-current={current ? "page" : undefined}
-                      className={`${cornerLink} lowercase`}
+                      className={`${cornerLink} uppercase`}
                     >
                       <span aria-hidden="true" className={bracket}>
                         [
