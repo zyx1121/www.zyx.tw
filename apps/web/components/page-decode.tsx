@@ -21,7 +21,12 @@ const LONGEST = 600
 /** Milliseconds between rows, as enterRow. */
 const ROW = 25
 /** Milliseconds to scramble the page before leaving it. */
-const OUT = 200
+export const OUT = 200
+/**
+ * Dispatched on the document as the page starts to scramble out, for what
+ * draws its own characters (the home's mark) to scramble with it over OUT.
+ */
+export const LEAVE_EVENT = "page-decode:leave"
 
 const KEEP = 0
 const NARROW_GLYPH = 1
@@ -171,8 +176,9 @@ export function decodeText(element: HTMLElement) {
  * The site's one motion: text decodes as a terminal prints it. A page's
  * text starts scrambled and resolves row by row, 25ms apart, top to bottom.
  * Following a link on the site first scrambles the page being left, then the
- * next one decodes in, both ways. Reduced motion skips all of it. The rows'
- * fades in globals.css step aside once this runs.
+ * next one decodes in, both ways; the home's mark takes part through
+ * LEAVE_EVENT. Reduced motion skips all of it. The rows' fades in
+ * globals.css step aside once this runs.
  */
 export function PageDecode() {
   const pathname = usePathname()
@@ -211,11 +217,9 @@ export function PageDecode() {
         return
       }
       const url = new URL(link.href)
-      // The home is the mark alone, with no text to scramble.
       if (
         url.origin !== location.origin ||
-        url.pathname === location.pathname ||
-        location.pathname === "/"
+        url.pathname === location.pathname
       ) {
         return
       }
@@ -224,6 +228,7 @@ export function PageDecode() {
       event.preventDefault()
       event.stopPropagation()
       cancel.current()
+      document.dispatchEvent(new Event(LEAVE_EVENT))
       cancel.current = play(main, collect(main), "out", () =>
         router.push(url.pathname + url.search + url.hash)
       )
