@@ -136,8 +136,8 @@ export class ScanPreview {
     const [fx, fy] = focus
       .split(/\s+/)
       .map((part) => (Number.parseFloat(part) || 0) / 100)
-    // object-fit: cover, placed by the focus as object-position places it.
-    const scale = Math.max(
+    // Match the 16:10 captures without cropping other sources, such as OG cards.
+    const scale = Math.min(
       width / image.naturalWidth,
       height / image.naturalHeight
     )

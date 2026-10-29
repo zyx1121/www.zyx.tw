@@ -9,9 +9,9 @@ export type Project = {
   purpose: string
   /**
    * Written by `bun run previews` (scripts/previews.py): a 1440x900 color
-   * screenshot and its dithered twin that the preview stage shows at rest.
-   * `focus` is the CSS object-position that keeps the screenshot's content in
-   * frame, as two percentages ("50% 0%" keeps the top edge).
+   * screenshot and its dithered twin. The window uses a matching 16:10 image
+   * area and contains other aspect ratios without cropping.
+   * `focus` places any spare space as two percentages ("50% 0%" aligns top).
    */
   preview: { image: string; dither: string; focus: string }
 }

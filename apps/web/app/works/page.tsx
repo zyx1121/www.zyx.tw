@@ -16,19 +16,17 @@ export const dynamic = "force-static"
 
 export default function Works() {
   return (
-    // The window takes the space the title and the list leave, but never
-    // less than its min-height: past that, the page scrolls.
+    // The picture keeps the capture's aspect ratio at every viewport size.
     <main className={cn(column, page, "flex flex-1 flex-col")}>
       <ProjectsJsonLd projects={projects} />
       <Showcase projects={projects}>
         <Hero title={<HeroTitle text={WORKS.title} />} />
-        {/* Below lg the window sits above the list and takes the height
-            between the title and the list; from lg the list is the left
-            column and the window fills the rest. */}
+        {/* Below lg the window sits above the list; from lg the list is the
+            left column and the window takes the remaining width. */}
         <div className="mt-10 flex flex-1 flex-col gap-5 lg:flex-row lg:gap-10">
           <ProjectWindow
             className={cn(
-              "min-h-60 flex-1 lg:order-last lg:min-h-82 2xl:min-h-110",
+              "w-full self-start lg:order-last lg:flex-1",
               enterRow(2)
             )}
           />
