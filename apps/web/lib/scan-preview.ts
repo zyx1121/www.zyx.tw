@@ -7,15 +7,15 @@
  */
 export const SCAN = {
   /** Milliseconds between bands. */
-  tick: 45,
+  tick: 25,
   /** Band height in CSS pixels, from this... */
-  minBand: 6,
+  minBand: 12,
   /** ...to this. */
-  maxBand: 26,
+  maxBand: 20,
   /** Chance that a band waits on the line first. */
-  stallChance: 0.12,
+  stallChance: 0.08,
   /** Up to this many milliseconds of a stall. */
-  maxStall: 380,
+  maxStall: 160,
 } as const
 
 export type Source = {
@@ -136,8 +136,8 @@ export class ScanPreview {
     const [fx, fy] = focus
       .split(/\s+/)
       .map((part) => (Number.parseFloat(part) || 0) / 100)
-    // object-fit: cover, placed by the focus as object-position places it.
-    const scale = Math.max(
+    // Match the 16:10 captures without cropping other sources, such as OG cards.
+    const scale = Math.min(
       width / image.naturalWidth,
       height / image.naturalHeight
     )
