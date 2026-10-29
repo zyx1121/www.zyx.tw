@@ -1,0 +1,9 @@
+# www.zyx.tw. The image is built by CI from apps/web/Dockerfile; settings go
+# in .env next to this file (see apps/web/.env.example).
+services:
+  web:
+    image: ghcr.io/zyx1121/www.zyx.tw:${WEB_VERSION:-main}
+    env_file: .env
+    ports:
+      - "${WEB_BIND:-127.0.0.1:3000}:3000"
+    restart: unless-stopped
