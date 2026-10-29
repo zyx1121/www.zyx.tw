@@ -1,21 +1,17 @@
 import type { Metadata, MetadataRoute } from "next"
 
-import {
-  OG_ALT,
-  OG_CONTENT_TYPE,
-  OG_SIZE,
-} from "@workspace/ui/components/og-image"
+import { OG_ALT } from "@workspace/ui/components/og-image"
 import { EMAIL } from "@workspace/ui/lib/profile"
 
 import site from "./site.json"
 
-// app/opengraph-image.png, from scripts/og-image.py. Pages restate openGraph
-// (see pageMetadata), which drops the root file's image, so they point at it
-// themselves.
+// The share card: app/og.gif/route.ts sends it to one of the GIFs that
+// scripts/og-image.py records, 800x420.
 const OG_IMAGE = {
-  url: "/opengraph-image.png",
-  ...OG_SIZE,
-  type: OG_CONTENT_TYPE,
+  url: "/og.gif",
+  width: 800,
+  height: 420,
+  type: "image/gif",
   alt: OG_ALT,
 }
 
