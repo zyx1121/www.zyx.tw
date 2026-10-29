@@ -7,7 +7,7 @@ import { cn } from "@workspace/ui/lib/utils"
 import { decodeText, LEAVE_EVENT, OUT } from "@/components/page-decode"
 import { useShowcase } from "@/components/showcase"
 import { scrambleFrame } from "@/lib/ascii-frame"
-import { AsciiPreview } from "@/lib/ascii-preview"
+import { ScanPreview } from "@/lib/scan-preview"
 import { useReducedMotion } from "@/lib/use-reduced-motion"
 
 // Long enough to outrun any frame; the boxes clip the rest.
@@ -16,24 +16,21 @@ const VERTICAL = "│".repeat(200)
 
 /**
  * The works page's terminal window: a box-drawn frame whose title bar names
- * the project on stage and its purpose, around the project's screenshot drawn
- * in characters (lib/ascii-preview.ts). At rest the picture takes the text
- * color; a hovered or focused row, or a tap on touch screens, decodes it to
- * the screenshot's colors. The frame (lib/ascii-frame.ts) and the picture
- * decode in and scramble out with the page. Decorative: the list carries the
- * links, so the
- * whole window is hidden from assistive tech.
+ * the project on stage and its purpose, around the project's screenshot,
+ * which loads in from the top as over a slow line (lib/scan-preview.ts). The
+ * frame (lib/ascii-frame.ts) decodes in and scrambles out with the page, and
+ * the picture leaves from the bottom up. Decorative: the list carries the
+ * links, so the whole window is hidden from assistive tech.
  */
 export function ProjectWindow({ className }: { className?: string }) {
-  const { projects, active, decoded, engagement, toggleHold } = useShowcase()
+  const { projects, active, toggleHold } = useShowcase()
   const reducedMotion = useReducedMotion()
   const rootRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const titleRef = useRef<HTMLDivElement>(null)
-  const previewRef = useRef<AsciiPreview | null>(null)
+  const previewRef = useRef<ScanPreview | null>(null)
   const images = useRef<(HTMLImageElement | undefined)[]>([])
   const [loaded, setLoaded] = useState<ReadonlySet<number>>(() => new Set())
-  const [theme, setTheme] = useState(0)
   const project = projects[active]
 
   // One image per project, the one on stage first and the rest when idle.
@@ -63,46 +60,28 @@ export function ProjectWindow({ className }: { className?: string }) {
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-    const preview = new AsciiPreview(canvas)
+    const preview = new ScanPreview(canvas)
     previewRef.current = preview
     const resize = new ResizeObserver(() => preview.resize())
     resize.observe(canvas)
-    // The ramp runs the other way in light theme.
-    const themeObserver = new MutationObserver(() => setTheme((n) => n + 1))
-    themeObserver.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    })
-    // Canvas text cannot start a webfont load; once the face is in, redraw.
-    // The load rejects when a fallback face is missing (no Arial on Linux),
-    // and the face is in all the same.
-    document.fonts
-      ?.load(`10px ${getComputedStyle(canvas).fontFamily}`)
-      .catch(() => undefined)
-      .then(() => preview.resize())
     return () => {
       resize.disconnect()
-      themeObserver.disconnect()
       preview.destroy()
       previewRef.current = null
     }
   }, [])
 
-  // Show the project on stage, decoding from the one before.
+  // Show the project on stage, scanning in over the one before.
   const isLoaded = loaded.has(active)
   useEffect(() => {
     const image = images.current[active]
     const preview = previewRef.current
     if (!isLoaded || !image || !preview) return
     preview.show(
-      { image, focus: project?.preview.focus ?? "50% 50%", color: decoded },
+      { image, focus: project?.preview.focus ?? "50% 50%" },
       !reducedMotion
     )
-  }, [active, isLoaded, decoded, engagement, reducedMotion, project])
-
-  useEffect(() => {
-    previewRef.current?.refresh()
-  }, [theme])
+  }, [active, isLoaded, reducedMotion, project])
 
   // The frame decodes in with the page, and it and the picture scramble out
   // with the page's text.
@@ -166,10 +145,7 @@ export function ProjectWindow({ className }: { className?: string }) {
           <span className="absolute inset-x-0 top-0 break-all">{VERTICAL}</span>
         </span>
         <span className="relative min-w-0 flex-1">
-          <canvas
-            ref={canvasRef}
-            className="absolute inset-0 size-full text-foreground"
-          />
+          <canvas ref={canvasRef} className="absolute inset-0 size-full" />
         </span>
         <span className="relative w-2 shrink-0 overflow-hidden">
           <span className="absolute inset-x-0 top-0 break-all">{VERTICAL}</span>
