@@ -8,6 +8,7 @@ import {
   LegalLinks,
   TopCorners,
 } from "@workspace/ui/components/corners"
+import { PageDecode } from "@workspace/ui/components/page-decode"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 import { fontVariables } from "@workspace/ui/lib/fonts"
@@ -62,6 +63,7 @@ export default async function RootLayout({
       </head>
       <body>
         <ThemeProvider>
+          <PageDecode />
           <TooltipProvider>
             <TopCorners />
             {children}

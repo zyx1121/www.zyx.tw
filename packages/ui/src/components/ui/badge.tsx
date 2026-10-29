@@ -6,7 +6,7 @@ import { cn } from "../../lib/utils"
 
 // Status variants share one shape: a tinted background with text in the same color.
 const badgeVariants = cva(
-  "inline-flex h-6 w-fit shrink-0 items-center justify-center gap-1 rounded-full border border-transparent px-2.5 text-body font-medium whitespace-nowrap [&>svg]:pointer-events-none [&>svg]:size-4",
+  "inline-flex h-6 w-fit shrink-0 items-center justify-center gap-1 border border-transparent px-2.5 text-body font-medium whitespace-nowrap [&>svg]:pointer-events-none [&>svg]:size-4",
   {
     variants: {
       variant: {

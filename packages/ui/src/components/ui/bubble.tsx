@@ -11,7 +11,7 @@ const bubbleVariants = cva(
   {
     variants: {
       variant: {
-        muted: "max-w-4/5 rounded-control bg-muted px-4 py-2",
+        muted: "max-w-4/5 bg-muted px-4 py-2",
         ghost: "w-full",
       },
     },

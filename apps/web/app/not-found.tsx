@@ -3,7 +3,7 @@ import Link from "next/link"
 import { cn } from "@workspace/ui/lib/utils"
 import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
-import { Command, Cursor, RequestedPath } from "@/components/shell"
+import { Command, Cursor, RequestedPath } from "@workspace/ui/components/shell"
 import { NOT_FOUND } from "@/lib/copy"
 import { PAGES } from "@/lib/site"
 

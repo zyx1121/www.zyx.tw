@@ -11,7 +11,7 @@
 
 The zyx.tw design system: one base of grayscale tokens and lightweight components on Base UI, served as a shadcn registry.
 
-Every component is our own rewrite that keeps only the variants the zyx.tw apps use and takes every value from the tokens: four type sizes, a concentric radius scale, two motion durations. The rules behind it live in [`DESIGN.md`](DESIGN.md).
+Every component is our own rewrite that keeps only the variants the zyx.tw apps use and takes every value from the tokens: a terminal look in one monospace face, four type sizes, square corners, two motion durations. The rules behind it live in [`DESIGN.md`](DESIGN.md).
 
 ## Use it
 

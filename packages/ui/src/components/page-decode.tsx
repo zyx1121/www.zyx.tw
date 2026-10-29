@@ -6,7 +6,7 @@ import { useEffect, useLayoutEffect, useRef } from "react"
 // Glyphs for characters that have not resolved, as ScrambleText draws them,
 // minus the ones a line may break at ("-", "/", "!", "?", brackets), so no
 // line rewraps mid-effect. Han characters take Han glyphs from the font's
-// subset (fonts/cjk.txt): in the monospace face each glyph keeps its cell's
+// subset (../fonts/cjk.txt): in the monospace face each glyph keeps its cell's
 // width, so nothing on the page moves. Punctuation and symbols stay as they
 // are.
 const NARROW = Array.from("#$%&*+<=>@^~")
@@ -47,15 +47,17 @@ function reducedMotion() {
 
 /**
  * Every text node in the page that has something to scramble, with the delay
- * of the row it sits in. Nodes of symbols alone are left to their owners, as
- * the works window's frame.
+ * of the row it sits in. Nodes of symbols alone are left to their owners (the
+ * works window's frame on www.zyx.tw), and ScrambleText runs its own effect.
  */
 function collect(main: HTMLElement): Line[] {
   const lines: Line[] = []
   const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, {
     acceptNode: (node) =>
       (node as Text).data.trim() &&
-      !node.parentElement?.closest("script, style, noscript")
+      !node.parentElement?.closest(
+        "script, style, noscript, [data-slot=scramble-text]"
+      )
         ? NodeFilter.FILTER_ACCEPT
         : NodeFilter.FILTER_REJECT,
   })
@@ -179,12 +181,13 @@ export function decodeText(element: HTMLElement) {
 }
 
 /**
- * The site's one motion: text decodes as a terminal prints it. A page's
- * text starts scrambled and resolves row by row, 25ms apart, top to bottom.
- * Following a link on the site first scrambles the page being left, then the
- * next one decodes in, both ways; the home's mark takes part through
- * LEAVE_EVENT, the works window likewise. Reduced motion skips all of it. The rows' fades in
- * globals.css step aside once this runs.
+ * The page motion of every zyx.tw app: text decodes as a terminal prints it.
+ * A page's text starts scrambled and resolves row by row (its `enter-row-<n>`
+ * class), 25ms apart, top to bottom. Following a link within the app first
+ * scrambles the page being left, then the next one decodes in; what draws its
+ * own characters takes part through LEAVE_EVENT. Reduced motion skips all of
+ * it. Mount it once in the root layout: the marker it renders tells
+ * globals.css to hold the rows until it starts, then their fades step aside.
  */
 export function PageDecode() {
   const pathname = usePathname()
@@ -243,5 +246,5 @@ export function PageDecode() {
     return () => document.removeEventListener("click", onClick, true)
   }, [router])
 
-  return null
+  return <span hidden data-slot="page-decode" />
 }

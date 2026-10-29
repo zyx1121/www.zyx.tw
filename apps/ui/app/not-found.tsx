@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { RequestedPath } from "@workspace/ui/components/shell";
 import { StatusPage } from "@workspace/ui/components/status-page";
 import { cn } from "@workspace/ui/lib/utils";
 import { column, enterRow, page } from "@workspace/ui/lib/layout";
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 const LINK =
-  "rounded-control underline decoration-muted-foreground/40 underline-offset-4 outline-offset-2 transition-colors hover:decoration-foreground focus-visible:outline-2";
+  "terminal-link underline decoration-muted-foreground/40 underline-offset-4";
 
 // Written for people and agents alike: say what happened, then where to look.
 // Spotlight layout, like a component page.
@@ -22,12 +23,17 @@ export default function NotFound() {
       className={cn(
         column,
         page,
-        "flex flex-1 flex-col items-center justify-center",
+        "flex flex-1 flex-col justify-center",
         enterRow(1)
       )}
     >
       <StatusPage
         title="Not found"
+        command={
+          <>
+            cd <RequestedPath />
+          </>
+        }
         action={
           <nav aria-label="Where to look" className="flex gap-5">
             <Link href="/" className={LINK}>

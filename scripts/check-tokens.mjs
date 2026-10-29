@@ -1,6 +1,6 @@
 // Everything visual must come from the base tokens (apps/ui/DESIGN.md). This
 // rejects the ways around them: sizes outside text-display / title / body /
-// caption, radii outside the concentric scale, removed color tokens, Tailwind
+// caption, any radius (everything is square), removed color tokens, Tailwind
 // palette colors, color literals, inline styles, raw font sizes, arbitrary
 // values and stray durations. Page code (outside packages/ui's components)
 // also may not draw layer-2 surfaces.
@@ -51,8 +51,6 @@ const exempt = {
   // The works window draws each screenshot as characters in the
   // screenshot's own colors.
   "apps/web/lib/ascii-preview.ts": ["color literal"],
-  // www.zyx.tw tries its own neutrals: no pure white or black.
-  "apps/web/app/globals.css": ["color literal"],
   // The Works backdrop is content: ASCII koi in their own colors, drawn on
   // a canvas.
   "apps/web/lib/pond/renderer.ts": ["color literal"],
@@ -81,11 +79,11 @@ const classRules = [
     name: "arbitrary value",
     regex: /(?<![\w-])-?[a-z][\w-]*-\[[^\]\s]+\](?![:/\]])/g,
   },
-  // rounded-control / -menu / -surface / -full / -none only.
+  // Everything is square, as in a terminal: rounded-none only, to clear a
+  // radius a library sets.
   {
-    name: "radius outside the scale",
-    regex:
-      /\brounded(?:-(?:t|r|b|l|s|e|tl|tr|br|bl|ss|se|es|ee))?(?:-(?:xs|sm|md|lg|xl|[2-4]xl))?(?![\w-])/g,
+    name: "radius (everything is square)",
+    regex: /\brounded(?!-none\b)(?:-[\w-]+)?(?![\w-])/g,
   },
   {
     name: "palette color",
@@ -109,10 +107,9 @@ const sourceRules = [
     regex: /#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|oklch|oklab)\(/g,
   },
   { name: "inline style", regex: /\bstyle=\{/g },
-  // CSS takes radii from the same scale: var(--radius) is rounded-control.
   {
-    name: "radius outside the scale",
-    regex: /var\(--radius-(?!control\b|menu\b|surface\b)[\w-]+\)/g,
+    name: "radius (everything is square)",
+    regex: /var\(--radius[\w-]*\)|\bborder-radius\s*:(?!\s*0\b)/g,
   },
   // CSS may only name the scale: font-size: var(--text-body).
   {

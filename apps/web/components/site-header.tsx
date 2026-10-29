@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 
 import {
   cornerLink,
+  CornerLabel,
   CornerTip,
   TopCorners,
 } from "@workspace/ui/components/corners"
@@ -31,25 +32,15 @@ export function SiteHeader() {
             {NAV.map(({ path, label, tip }) => {
               const current =
                 pathname === path || pathname.startsWith(`${path}/`)
-              // Brackets mark the current page, as in a terminal menu. The
-              // other items keep theirs invisible, so nothing shifts on
-              // navigation.
-              const bracket = current ? undefined : "invisible"
               return (
                 <li key={path} className="flex">
                   <CornerTip tip={tip}>
                     <Link
                       href={path}
                       aria-current={current ? "page" : undefined}
-                      className={`${cornerLink} uppercase`}
+                      className={cornerLink}
                     >
-                      <span aria-hidden="true" className={bracket}>
-                        [
-                      </span>
-                      {label}
-                      <span aria-hidden="true" className={bracket}>
-                        ]
-                      </span>
+                      <CornerLabel current={current}>{label}</CornerLabel>
                     </Link>
                   </CornerTip>
                 </li>

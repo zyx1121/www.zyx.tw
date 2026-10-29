@@ -7,7 +7,7 @@
       "name": "base",
       "type": "registry:base",
       "title": "zyx Base",
-      "description": "The zyx.tw design system base: grayscale tokens, four type sizes, a concentric radius scale and two motion durations.",
+      "description": "The zyx.tw design system base: a terminal look in one monospace face, grayscale tokens, four type sizes, square corners and two motion durations.",
       "extends": "none",
       "config": {
         "style": "base-nova",
@@ -27,13 +27,11 @@
       ],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
-        "https://ui.zyx.tw/r/font-inter.json",
-        "https://ui.zyx.tw/r/font-noto-sans-jp.json",
-        "https://ui.zyx.tw/r/font-noto-sans-tc.json",
-        "https://ui.zyx.tw/r/font-geist-mono.json"
+        "https://ui.zyx.tw/r/font-noto-sans-tc.json"
       ],
       "devDependencies": ["tw-animate-css", "shadcn"],
       "css": {
+        "@import url(\"https://ui.zyx.tw/fonts/sarasa-mono-tc.css\")": {},
         "@import \"tw-animate-css\"": {},
         "@import \"shadcn/tailwind.css\"": {},
         "@utility duration-state": {
@@ -51,6 +49,15 @@
         "@utility w-menu": {
           "width": "calc(var(--anchor-width) + 0.5rem)"
         },
+        "@utility terminal-link": {
+          "&:hover, &:focus-visible": {
+            "background-color": "var(--foreground)",
+            "color": "var(--background)",
+            "text-decoration-line": "none",
+            "outline": "none",
+            "box-shadow": "0 0 0 2px var(--foreground)"
+          }
+        },
         "@layer base": {
           "*": {
             "@apply border-border outline-ring/50": {}
@@ -63,6 +70,9 @@
           },
           ".dark": {
             "color-scheme": "dark"
+          },
+          "::selection": {
+            "@apply bg-foreground text-background": {}
           }
         },
         "@media (prefers-reduced-motion: reduce)": {
@@ -87,40 +97,34 @@
           "text-body--line-height": "1.5rem",
           "text-caption": "0.875rem",
           "text-caption--line-height": "1.25rem",
-          "font-sans": "var(--font-inter), var(--font-noto-sans-jp), var(--font-noto-sans-tc), ui-sans-serif, system-ui, sans-serif",
-          "font-heading": "var(--font-inter), var(--font-noto-sans-jp), var(--font-noto-sans-tc), ui-sans-serif, system-ui, sans-serif",
-          "font-mono": "var(--font-geist-mono), ui-monospace, monospace",
-          "default-font-feature-settings": "\"liga\" 1, \"calt\" 1, \"ss01\" 1, \"zero\" 1",
-          "radius-control": "var(--radius)",
-          "radius-menu": "calc(var(--radius) + 0.25rem)",
-          "radius-surface": "calc(var(--radius) + 1.5rem)"
+          "font-sans": "var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc), ui-monospace, monospace",
+          "font-heading": "var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc), ui-monospace, monospace",
+          "font-mono": "var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc), ui-monospace, monospace"
         },
         "light": {
-          "background": "oklch(1 0 0)",
-          "foreground": "oklch(0.145 0 0)",
-          "primary": "oklch(0.205 0 0)",
-          "primary-foreground": "oklch(0.985 0 0)",
-          "muted": "oklch(0.97 0 0)",
-          "muted-foreground": "oklch(0.54 0 0)",
+          "background": "oklch(0.97 0.005 85)",
+          "foreground": "oklch(0.25 0 0)",
+          "primary": "oklch(0.25 0 0)",
+          "primary-foreground": "oklch(0.97 0.005 85)",
+          "muted": "oklch(0.93 0.005 85)",
+          "muted-foreground": "oklch(0.52 0 0)",
           "destructive": "oklch(0.577 0.245 27.325)",
-          "border": "oklch(0.922 0 0)",
-          "overlay": "oklch(1 0 0 / 85%)",
-          "input": "oklch(0.922 0 0)",
-          "ring": "oklch(0.708 0 0)",
-          "radius": "1rem"
+          "border": "oklch(0.89 0.005 85)",
+          "input": "oklch(0.89 0.005 85)",
+          "ring": "oklch(0.25 0 0)",
+          "radius": "0"
         },
         "dark": {
-          "background": "oklch(0 0 0)",
-          "foreground": "oklch(0.985 0 0)",
-          "primary": "oklch(0.922 0 0)",
-          "primary-foreground": "oklch(0.205 0 0)",
-          "muted": "oklch(0.269 0 0)",
-          "muted-foreground": "oklch(0.65 0 0)",
+          "background": "oklch(0.17 0 0)",
+          "foreground": "oklch(0.88 0 0)",
+          "primary": "oklch(0.88 0 0)",
+          "primary-foreground": "oklch(0.17 0 0)",
+          "muted": "oklch(0.26 0 0)",
+          "muted-foreground": "oklch(0.62 0 0)",
           "destructive": "oklch(0.704 0.191 22.216)",
           "border": "oklch(1 0 0 / 10%)",
-          "overlay": "oklch(0.145 0 0 / 85%)",
           "input": "oklch(1 0 0 / 15%)",
-          "ring": "oklch(0.556 0 0)"
+          "ring": "oklch(0.88 0 0)"
         }
       }
     },
@@ -220,34 +224,6 @@
       ]
     },
     {
-      "name": "font-inter",
-      "type": "registry:font",
-      "title": "Inter",
-      "font": {
-        "family": "'Inter Variable', sans-serif",
-        "provider": "google",
-        "import": "Inter",
-        "variable": "--font-inter",
-        "subsets": ["latin"],
-        "dependency": "@fontsource-variable/inter"
-      },
-      "description": "Inter for Latin text, with open digits and a slashed zero."
-    },
-    {
-      "name": "font-noto-sans-jp",
-      "type": "registry:font",
-      "title": "Noto Sans JP",
-      "font": {
-        "family": "'Noto Sans JP Variable', sans-serif",
-        "provider": "google",
-        "import": "Noto_Sans_JP",
-        "variable": "--font-noto-sans-jp",
-        "subsets": ["latin"],
-        "dependency": "@fontsource-variable/noto-sans-jp"
-      },
-      "description": "Noto Sans JP for CJK after Inter, so Han characters take Japanese forms."
-    },
-    {
       "name": "font-noto-sans-tc",
       "type": "registry:font",
       "title": "Noto Sans TC",
@@ -259,21 +235,7 @@
         "subsets": ["latin"],
         "dependency": "@fontsource-variable/noto-sans-tc"
       },
-      "description": "Noto Sans TC for the CJK characters Noto Sans JP lacks."
-    },
-    {
-      "name": "font-geist-mono",
-      "type": "registry:font",
-      "title": "Geist Mono",
-      "font": {
-        "family": "'Geist Mono Variable', monospace",
-        "provider": "google",
-        "import": "Geist_Mono",
-        "variable": "--font-geist-mono",
-        "subsets": ["latin"],
-        "dependency": "@fontsource-variable/geist-mono"
-      },
-      "description": "Geist Mono for code only."
+      "description": "Noto Sans TC for the Han characters outside the Sarasa Mono TC subset."
     },
     {
       "name": "corners",
@@ -315,6 +277,72 @@
       ]
     },
     {
+      "name": "page-decode",
+      "type": "registry:component",
+      "title": "Page Decode",
+      "description": "The page motion: a page's text decodes in row by row as a terminal prints it, and scrambles out before a link within the app leaves it.",
+      "dependencies": ["next"],
+      "css": {
+        "@media (prefers-reduced-motion: no-preference)": {
+          "html:has([data-slot=\"page-decode\"]):not([data-decoder]) main [class*=\"enter-row-\"]": {
+            "animation": "scramble-text-hold 1.5s"
+          },
+          "html[data-decoder] main [class*=\"enter-row-\"]": {
+            "animation": "none"
+          }
+        },
+        "@keyframes scramble-text-hold": {
+          "0%, 100%": {
+            "opacity": "0"
+          }
+        }
+      },
+      "files": [
+        {
+          "path": "registry/zyx/components/page-decode.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "shell",
+      "type": "registry:component",
+      "title": "Shell",
+      "description": "Pieces of a shell session: a command after a muted prompt, a blinking block cursor and the requested path for a 404.",
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
+      "cssVars": {
+        "theme": {
+          "animate-cursor": "terminal-cursor 1s step-end infinite"
+        }
+      },
+      "css": {
+        "@keyframes terminal-cursor": {
+          "50%": {
+            "opacity": "0"
+          }
+        }
+      },
+      "files": [
+        {
+          "path": "registry/zyx/components/shell.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "section-title",
+      "type": "registry:component",
+      "title": "Section Title",
+      "description": "A section's heading in brackets and capitals, as the corner nav marks the current page.",
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
+      "files": [
+        {
+          "path": "registry/zyx/components/section-title.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "confirm-dialog",
       "type": "registry:block",
       "title": "Confirm Dialog",
@@ -351,7 +379,7 @@
       "type": "registry:block",
       "title": "Status Page",
       "description": "A title and the way out, for not found, errors and no access.",
-      "registryDependencies": [],
+      "registryDependencies": ["https://ui.zyx.tw/r/shell.json"],
       "files": [
         {
           "path": "registry/zyx/components/status-page.tsx",
@@ -394,7 +422,7 @@
       "name": "avatar",
       "type": "registry:ui",
       "title": "Avatar",
-      "description": "Round 40px avatar with an initials fallback.",
+      "description": "Square 40px avatar with an initials fallback.",
       "dependencies": ["@base-ui/react", "cn"],
       "files": [
         {
@@ -467,7 +495,7 @@
       "name": "chart",
       "type": "registry:ui",
       "title": "Chart",
-      "description": "Recharts container in the theme's colors, with a frosted tooltip.",
+      "description": "Recharts container in the theme's colors, with a window tooltip.",
       "dependencies": ["cn", "recharts"],
       "files": [
         {
@@ -481,7 +509,7 @@
       "name": "checkbox",
       "type": "registry:ui",
       "title": "Checkbox",
-      "description": "Round 20px checkbox.",
+      "description": "Square 20px checkbox.",
       "dependencies": ["@base-ui/react", "cn", "lucide-react"],
       "files": [
         {
@@ -541,7 +569,7 @@
       "name": "dialog",
       "type": "registry:ui",
       "title": "Dialog",
-      "description": "Frosted modal with title, description and footer; sizes default and wide.",
+      "description": "Modal window with title, description and footer; sizes default and wide.",
       "dependencies": [
         "@base-ui/react",
         "class-variance-authority",
@@ -563,7 +591,7 @@
       "name": "dropdown-menu",
       "type": "registry:ui",
       "title": "Dropdown Menu",
-      "description": "Frosted action menu with labels, separators and one level of submenu.",
+      "description": "Action menu window with labels, separators and one level of submenu.",
       "dependencies": ["@base-ui/react", "cn", "lucide-react"],
       "files": [
         {
@@ -589,7 +617,7 @@
       "name": "input-group",
       "type": "registry:ui",
       "title": "Input Group",
-      "description": "Input with an icon, text or a round button inside its border.",
+      "description": "Input with an icon, text or a button inside its border.",
       "dependencies": ["cn"],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
@@ -684,7 +712,7 @@
       "name": "popover",
       "type": "registry:ui",
       "title": "Popover",
-      "description": "Frosted menu surface anchored to a trigger.",
+      "description": "Window anchored to a trigger.",
       "dependencies": ["@base-ui/react", "cn"],
       "files": [
         {
@@ -769,7 +797,7 @@
       "name": "sheet",
       "type": "registry:ui",
       "title": "Sheet",
-      "description": "Frosted full-height panel on the left or right edge.",
+      "description": "Full-height window on the left or right edge.",
       "dependencies": ["@base-ui/react", "cn", "lucide-react"],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
@@ -814,7 +842,7 @@
       "name": "sonner",
       "type": "registry:ui",
       "title": "Sonner",
-      "description": "Toasts on a frosted surface.",
+      "description": "Toasts in a small window.",
       "dependencies": ["lucide-react", "sonner"],
       "files": [
         {
@@ -911,7 +939,7 @@
       "name": "toolbar",
       "type": "registry:ui",
       "title": "Toolbar",
-      "description": "Frosted floating bar of 40px controls over a canvas or map.",
+      "description": "Floating window of 40px controls over a canvas or map.",
       "dependencies": ["cn"],
       "files": [
         {
@@ -925,7 +953,7 @@
       "name": "tooltip",
       "type": "registry:ui",
       "title": "Tooltip",
-      "description": "Short inverted label on hover or focus.",
+      "description": "Short lowercase label in a small window on hover or focus.",
       "dependencies": ["@base-ui/react", "cn"],
       "files": [
         {

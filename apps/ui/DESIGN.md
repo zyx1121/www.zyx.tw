@@ -2,6 +2,8 @@
 
 > One base of tokens and a set of lightweight components, served as a shadcn registry. Every component is our own rewrite on Base UI: only the variants the zyx.tw apps use, only token values.
 
+The look is a terminal: one monospace face on a character grid, square corners, soft grayscale, outlined windows, inverted highlights, and text that decodes in as a terminal prints it.
+
 This file is the design contract for every zyx.tw app. `bun run theme:check` and `bun run tokens:check` enforce the parts a script can see; the rest is review.
 
 ## Architecture
@@ -16,7 +18,7 @@ This file is the design contract for every zyx.tw app. `bun run theme:check` and
 
 ### Color
 
-Grayscale. The only chroma on screen is `destructive` and content itself (photos, 3D scenes).
+Grayscale. The only chroma on screen is `destructive` and content itself (photos, 3D scenes, the koi pond).
 
 | Token                            | Use                                      |
 | -------------------------------- | ---------------------------------------- |
@@ -26,11 +28,13 @@ Grayscale. The only chroma on screen is `destructive` and content itself (photos
 | `destructive`                    | Errors and deleting                      |
 | `border` / `input` / `ring`      | Lines, control outlines, focus rings     |
 
-There is no `secondary`, `accent` or `card` (they duplicated `muted` or `background`), no `popover` (overlays use `overlay`), no `sidebar-*` (the chrome is the four corners) and no `chart-*` (charts use the colors above). `tokens:check` rejects them, Tailwind palette colors (`bg-gray-500`, `bg-black`) and color literals. The few literals that are content rather than chrome (Open Graph images, a scene's background color) are waived file by file in `scripts/check-tokens.mjs`, each with its reason.
+There is no `secondary`, `accent` or `card` (they duplicated `muted` or `background`), no `popover` or `overlay` (windows are `background`), no `sidebar-*` (the chrome is the four corners) and no `chart-*` (charts use the colors above). `tokens:check` rejects them, Tailwind palette colors (`bg-gray-500`, `bg-black`) and color literals. The few literals that are content rather than chrome (Open Graph images, a scene's background color) are waived file by file in `scripts/check-tokens.mjs`, each with its reason.
 
-- **Dark first, pure black**: every app server-renders `<html class="dark">` and starts dark (`ThemeProvider` from `@workspace/ui/components/theme-provider`); the `d` key toggles. Dark `background` is `oklch(0 0 0)`.
-- **Muted text at 4.5:1**: `muted-foreground` reaches at least 4.5:1 on `background` and `muted` in both themes: light `oklch(0.54 0 0)`, dark `oklch(0.65 0 0)`. Readable text never goes lighter (no `text-muted-foreground/50`); disabled controls are the only exception.
-- **Focus follows the component's color**: `ring` is gray, so inputs and outline or ghost buttons show a gray ring; the primary button shows a primary ring.
+- **Dark first, soft extremes**: every app server-renders `<html class="dark">` and starts dark (`ThemeProvider` from `@workspace/ui/components/theme-provider`); the `d` key toggles. There is no pure white or pure black: dark sits on near black (`oklch(0.17 0 0)`) with text at `oklch(0.88 0 0)`, light on warm paper (`oklch(0.97 0.005 85)`) with text at `oklch(0.25 0 0)`. Contrast is about 14:1 (WCAG AAA asks for 7:1).
+- **Primary is the text color**: `primary` equals `foreground` and `primary-foreground` equals `background`, so the main action is an inverted block, as a terminal highlights.
+- **Muted text at 4.5:1**: `muted-foreground` reaches at least 4.5:1 on `background` and `muted` in both themes: light `oklch(0.52 0 0)`, dark `oklch(0.62 0 0)`. Readable text never goes lighter (no `text-muted-foreground/50`); disabled controls are the only exception.
+- **Focus is the text color**: `ring` equals `foreground`, so focus is a box in the text color, not a soft gray ring.
+- **Highlights invert**: selected text (`::selection`) and a hovered or focused link in running text (`terminal-link`) swap `foreground` and `background`, with no fade.
 
 ### Type
 
@@ -45,22 +49,14 @@ Four sizes by role, the same on phones and desktops. Tailwind's own sizes are cl
 
 - **Hierarchy by weight and color**: 400 for text, 500 for titles, section headings, labels and buttons. Secondary text is `text-muted-foreground`.
 - **CSS** may only name the scale: `font-size: var(--text-body); line-height: var(--text-body--line-height)`.
-- **Fonts**: Inter for Latin (self-hosted 4.1 in this repo for `ss01` open digits and the `zero` slashed zero; the registry's `font-inter` is the Google build), then Noto Sans JP, then Noto Sans TC for CJK, and Geist Mono for code only. Noto Sans JP comes first so Han characters take Japanese forms; TC fills the characters JP lacks. Numbers use Inter with `tabular-nums` wherever digits line up or change.
-- **Real styles only**: bold and italic come from the variable fonts, never synthesis. CJK text is never set in italic.
+- **One face**: Sarasa Mono TC sets everything, text, headings and code alike (`font-sans`, `font-heading` and `font-mono` are the same stack). Every glyph keeps its cell, a Han character two, so text lines up on a character grid and digits never shift. The files are subset to Latin, symbols, box drawing and the Han characters the apps use (`packages/ui/src/fonts/README.md`); other Han characters fall back to Noto Sans TC. Projects outside this repo load the same files from `https://ui.zyx.tw/fonts/`.
+- **Real styles only**: 400 and 500 (Sarasa's SemiBold) only, never synthesis, and no italic.
+- **Labels in capitals**: corner links and section headings are uppercase (`SectionTitle`); tooltips are lowercase, like a shell. Body text keeps its own case.
 - **No content exceptions**: Markdown, code, charts and notices use the same four sizes; change wrapping and layout instead.
 
-### Radius
+### Square
 
-Radii are concentric: an outer corner equals the inner corner plus the padding between them.
-
-| Utility           | Value             | Use                                                                         |
-| ----------------- | ----------------- | --------------------------------------------------------------------------- |
-| `rounded-control` | `--radius` (16px) | Buttons, inputs, select triggers, menu items, links' focus outline          |
-| `rounded-menu`    | control + 4px     | Menus, toolbars and chips with `p-1` around control-radius items            |
-| `rounded-surface` | control + 24px    | Dialogs, toasts and panels with `p-6` around controls                       |
-| `rounded-full`    | pill / circle     | Badges, switches, checkboxes, avatars, a round button inside an input group |
-
-A new container picks its radius from this rule, not by eye. If its padding is not 4px or 24px, it changes its padding. CSS uses `var(--radius)` or `var(--radius-menu)` / `var(--radius-surface)`.
+Nothing is rounded, as in a terminal: buttons, inputs, windows, badges, switches, avatars and focus outlines all have square corners. `--radius` is 0 for libraries that read it. `tokens:check` rejects every `rounded-*` except `rounded-none` (to clear a radius a library sets), `var(--radius*)` and a nonzero `border-radius`.
 
 ### Motion
 
@@ -69,11 +65,14 @@ A new container picks its radius from this rule, not by eye. If its padding is n
 | `duration-state`    | 150ms ease-out | A control changing state: hover, focus, check, switch, the tab highlight               |
 | `duration-overlay`  | 200ms ease-out | Something appearing or leaving: dialogs, menus, popovers, tooltips, the mark mirroring |
 | `enter-row-<n>`     | n × 25ms delay | The page's staggered entrance (`enterRow`, below)                                      |
+| `animate-cursor`    | 1s, stepped    | The block cursor at an idle prompt (`Cursor`): on for half a second, off for half      |
 | `transition-column` | 300ms          | The column easing its width between breakpoints                                        |
 
-- **Page entrance**: rows fade in over 300ms (tw-animate-css), 25ms apart in document order, counting the top corners as row 0: the title is row 1, the subtitle row 2, each block after them one row further. The bottom corners come in at row 15 (375ms). Use `enterRow(n)` and `enterFooter` from `@workspace/ui/lib/layout`; the delay is tw-animate-css's own variable, never `delay-*`, which would also delay transitions.
+- **Page entrance: text decodes**: every app mounts `PageDecode` (`@workspace/ui/components/page-decode`) once in its root layout. A page's text starts scrambled and resolves left to right, 50ms per character (a long line within 600ms), row by row 25ms apart in document order, counting the top corners as row 0: the title is row 1, the subtitle row 2, each block after them one row further. The bottom corners come in at row 15 (375ms). Scrambled glyphs keep each character's cell (Han glyphs for Han characters), so nothing moves. Use `enterRow(n)` and `enterFooter` from `@workspace/ui/lib/layout`; the decoder reads the row from the class.
+- **Page exit: text scrambles**: following a link within the app first scrambles the page being left over 200ms, from the end of each line, then the next page decodes in. Something that draws its own characters (www.zyx.tw's ASCII mark) listens for `LEAVE_EVENT` and scrambles with the page.
 - **Both directions alike**: every animation runs the same way in and out: what zooms in zooms out, what fades in fades out, at the same duration. A select menu that sits over its trigger only fades, opening and closing.
-- **Entrances never move layout**: they change opacity, masks, transforms and color only, so CLS stays 0.
+- **Entrances never move layout**: they change glyphs, opacity, masks, transforms and color only, so CLS stays 0.
+- **Windows do not zoom**: menus, dialogs and tooltips fade in and out at `duration-overlay`; a terminal window does not scale or slide.
 - **Reduced motion covers everything**: our animations sit behind `motion-safe:`, and globals.css cuts every animation and transition to 1ms under `prefers-reduced-motion: reduce` (1ms keeps the end events Base UI waits for).
 - `tokens:check` rejects other durations (`duration-300`) and delays.
 
@@ -84,11 +83,11 @@ The interface is flat and has exactly two layers.
 | Layer      | What lives there                                                                                                         | Surface                                                                                                                                                     |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1. Page    | Everything on the page when it loads: titles, text, lists, tables, forms, demos                                          | None: no borders around groups, no shadows, no card backgrounds                                                                                             |
-| 2. Overlay | Anything called up over the page or a working surface: dialog, alert dialog, sheet, menus, popovers, toasts, the toolbar | Frosted glass on the `overlay` token (`bg-overlay backdrop-blur-md`: the background at 85%, 12px blur), a border, a shadow, `rounded-menu` or `rounded-surface`. Backdrops are the blur alone with no tint |
+| 2. Window  | Anything called up over the page or a working surface: dialog, alert dialog, sheet, menus, popovers, tooltips, toasts, the toolbar | A terminal window: opaque `bg-background`, a 1px `border-muted-foreground` outline, square, no shadow. Backdrops behind dialogs and sheets are a 12px blur alone with no tint |
 
 - Group page content with spacing and, where a line helps, a divider (`border-t` / `border-b`). Never wrap a group in a frame. `tokens:check` rejects `shadow-*` and a whole `border` in page code; only the components draw layer 2.
 - Controls keep their own outline: inputs, selects and outline buttons are controls, not containers.
-- Tooltips are the one inverted overlay (`bg-foreground text-background`): a few words over any content must stay legible.
+- Tooltips are small windows like the rest, in lowercase.
 - A form either is the page (layer 1, no frame) or is called up in a dialog. Short edits go in a dialog.
 - Every pick-a-value control (select, combobox) looks like an input when closed: they share `fieldTriggerClassName`.
 
@@ -100,7 +99,7 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
 - **20px module**: spacing between page parts is a multiple of 20px: gutters `px-5`, corner insets 20px, demos `gap-15`, groups `gap-20`, hero to content `pb-25`, the top of the page to the title `pt-30`. Inside a part the 4px grid rules (12px from a title to its subtitle).
 - **Spotlight pages**: a page about one thing (a component page on ui.zyx.tw, a result) centers its content on both axes in the column and falls back to scrolling from the top when it is taller than the viewport.
 - **One column**: `column` from `@workspace/ui/lib/layout`, 576, 768 and 1024px wide with 20px gutters. `page` adds the 120px top and 100px bottom space.
-- **Four corners**: the chrome of every app is four fixed corners, 20px in from the viewport's corners, 16px between items, all `text-body`. Top left is always the zyx mark (to www.zyx.tw; to `/` on www.zyx.tw itself), which mirrors itself on hover. Top right holds the page nav and the page's function buttons. Bottom left is Privacy and Terms and nothing else (`LegalLinks`). Bottom right is the copyright. They come from `@workspace/ui/components/corners`, published as `@zyx1121/corners`; an app leaves a corner empty rather than filling it with something else. An app's own working surface is content, not chrome: Plump's toolbar stays at the bottom center of its canvas.
+- **Four corners**: the chrome of every app is four fixed corners, 20px in from the viewport's corners, 16px between items, all `text-body`, links in capitals (`cornerLink`). A page nav marks the current page in brackets, `[WORKS]`, with `CornerLabel`; the other labels keep invisible brackets so nothing shifts, and the nav takes `gap-2`. Top left is always the zyx mark (to www.zyx.tw; to `/` on www.zyx.tw itself), which mirrors itself on hover. Top right holds the page nav and the page's function buttons. Bottom left is Privacy and Terms and nothing else (`LegalLinks`). Bottom right is the copyright. They come from `@workspace/ui/components/corners`, published as `@zyx1121/corners`; an app leaves a corner empty rather than filling it with something else. An app's own working surface is content, not chrome: Plump's toolbar stays at the bottom center of its canvas.
 - **Corner tips**: an item in a corner can carry a tip (`CornerTip`) that says what its label leaves out; it never restates a text label. Tips open at once, toward the page; touch never opens them.
 - **The corners stay put**: where content scrolls under them, a transparent 12px blur fades out over 64px from the top and bottom edges (`fade`). Pages that fill the viewport leave it off.
 - **No menu button**: the nav stays short enough to fit a 320px viewport beside the mark.
@@ -151,8 +150,8 @@ The chrome is grayscale, so a badge tells states apart by fill, not by hue. A ca
 - **Content**: badge, avatar, table, tabs, collapsible, separator, skeleton, chart, resizable
 - **Chat**: message, bubble, attachment
 - **zyx**: scramble-text, mask-reveal, theme-toggle
-- **Layout** (`registry:component`, in `packages/ui/src/components/`): corners, with corner-tip and zyx-mark
-- **Blocks** (`registry:block`, in `packages/ui/src/components/`): confirm-dialog, empty-state, status-page. A block serves one purpose and fixes its copy pattern; a component is a part with no purpose of its own. Blocks have no description slot.
+- **Layout** (`registry:component`, in `packages/ui/src/components/`): corners (with corner-tip and zyx-mark), page-decode, section-title, shell
+- **Blocks** (`registry:block`, in `packages/ui/src/components/`): confirm-dialog, empty-state, status-page (a shell session: the failed command, the title as output, the way out, an idle cursor; every 404 is `cd <RequestedPath />`). A block serves one purpose and fixes its copy pattern; a component is a part with no purpose of its own. Blocks have no description slot.
 
 Contract for every component:
 
@@ -167,8 +166,10 @@ Per item:
 
 - `scramble-text`: glyphs resolve left to right at `speed` ms per character (50) on `trigger` `mount` or `in-view`. The final text stays one untouched text node, painted transparent while an `aria-hidden` overlay draws one cell per character, pinned to that character's measured box before paint, so line breaks, size and the accessible text never change. The server text is held invisible for at most 1.5s until the client starts; reduced motion shows the text at once.
 - `mask-reveal`: a feathered mask three times the element's width sweeps from 100% to 0% over 600ms with `cubic-bezier(.16,1,.3,1)`. The delay comes from an `enter-row-<n>` class on the same element (`rowDelay(n)`), so it keeps time with the row fades. The mask exists only inside the keyframes, so focus rings and shadows are intact afterwards.
-- `chart`: series colors are `primary`, `muted` (muted-foreground) or `destructive`, set per key in the config and reaching Recharts as `--color-<key>`. Bars have 4px rounded ends at the top, lines are 2px, the grid is horizontal only, and two series always come with `ChartLegendContent`, so color is never the only label. More than two series to tell apart by color means small multiples or a table.
-- `toolbar`: a frosted bar of 40px controls over a working surface, `rounded-menu` around them.
+- `chart`: series colors are `primary`, `muted` (muted-foreground) or `destructive`, set per key in the config and reaching Recharts as `--color-<key>`. Bars are square, lines are 2px, the grid is horizontal only, and two series always come with `ChartLegendContent`, so color is never the only label. More than two series to tell apart by color means small multiples or a table.
+- `toolbar`: a window of 40px controls over a working surface, 4px around them.
+- `page-decode`: see Motion. Text inside a `scramble-text` is left to it; text nodes of symbols alone (an ASCII frame) are left to their owners.
+- `shell`: `Command` (a muted `$ ` prompt, then the command), `Cursor` (a blinking block) and `RequestedPath` (the path a 404 was asked for, filled in on the client).
 
 ## Content
 
@@ -228,4 +229,4 @@ Web apps with an agent in them (Handy, Stamp, the FDE demos) share the server ha
 - **No stock copies.** A component exists once, in `packages/ui`. Restyling happens in that file, not in a theme override aimed at someone else's markup.
 - **No marketing blocks (Hero, CTA, Pricing) in the registry.** Blocks exist for interface patterns that repeat across apps (confirming, empty lists, status pages); page content is composed at the call site.
 - **No CSS-in-JS.** Tailwind utilities on tokens; app stylesheets only for content.
-- **No color in chrome**, **no header or footer bars**, **no menu button for a short nav**, **no bold for hierarchy**, **no cards on the page.**
+- **No color in chrome**, **no header or footer bars**, **no menu button for a short nav**, **no bold for hierarchy**, **no cards on the page**, **no rounded corners**, **no shadows**, **no frosted glass**, **no second typeface.**

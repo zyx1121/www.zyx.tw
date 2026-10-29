@@ -8,11 +8,10 @@ import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 import { fontVariables } from "@workspace/ui/lib/fonts"
 
 import { SiteJsonLd } from "@/components/json-ld"
-import { PageDecode } from "@/components/page-decode"
+import { PageDecode } from "@workspace/ui/components/page-decode"
 import { PondBackground } from "@/components/pond-background"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
-import { sarasaMono } from "@/lib/fonts"
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
 
 import "./globals.css"
@@ -56,7 +55,6 @@ export default async function RootLayout({
         "dark",
         "antialiased [scrollbar-gutter:stable]",
         fontVariables,
-        sarasaMono.variable,
         "font-sans"
       )}
     >

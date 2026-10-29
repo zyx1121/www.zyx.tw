@@ -4,7 +4,11 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react"
 
 import { cn } from "@workspace/ui/lib/utils"
 
-import { decodeText, LEAVE_EVENT, OUT } from "@/components/page-decode"
+import {
+  decodeText,
+  LEAVE_EVENT,
+  OUT,
+} from "@workspace/ui/components/page-decode"
 import { useShowcase } from "@/components/showcase"
 import { scrambleFrame } from "@/lib/ascii-frame"
 import { ScanPreview } from "@/lib/scan-preview"

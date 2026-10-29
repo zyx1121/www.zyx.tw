@@ -93,7 +93,8 @@ jobs:
           grep -q '"@zyx1121": "https://ui.zyx.tw/r/{name}.json"' components.json
           grep -q -- '--text-\*: initial' app/globals.css
           grep -q -- '--text-caption: 0.875rem' app/globals.css
-          grep -q -- '--radius-surface: calc(var(--radius) + 1.5rem)' app/globals.css
+          grep -q 'fonts/sarasa-mono-tc.css' app/globals.css
+          grep -q '@utility terminal-link' app/globals.css
           grep -q '@utility duration-overlay' app/globals.css
           ! grep -q -- '--card:' app/globals.css
           items=$(python3 -c 'import json; print(" ".join(f"http://localhost:8099/r/{i["name"]}.json" for i in json.load(open("../../registry/r/registry.json"))["items"] if i["type"] in ("registry:ui", "registry:component", "registry:block") or i["name"].startswith("agent-")))')
@@ -173,7 +174,7 @@ jobs:
           - app: ui
             host: ui.zyx.tw
             dockerfile: apps/ui/Dockerfile
-            pages: / /button /button.md /index.md /llms.txt /r/base.json
+            pages: / /button /button.md /index.md /llms.txt /r/base.json /fonts/sarasa-mono-tc.css
           - app: good
             host: good.zyx.tw
             pages: /

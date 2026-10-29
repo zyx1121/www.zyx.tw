@@ -9,6 +9,7 @@ import {
   TopCorners,
 } from "@workspace/ui/components/corners"
 import { fontVariables } from "@workspace/ui/lib/fonts"
+import { PageDecode } from "@workspace/ui/components/page-decode"
 import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 
@@ -54,6 +55,7 @@ export default async function RootLayout({
     >
       <body>
         <ThemeProvider>
+          <PageDecode />
           <TooltipProvider>
             <TopCorners />
             {children}

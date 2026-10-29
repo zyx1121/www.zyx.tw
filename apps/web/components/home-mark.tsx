@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react"
 
 import type { SceneV1 } from "@workspace/3d"
 
-import { LEAVE_EVENT, OUT } from "@/components/page-decode"
+import { LEAVE_EVENT, OUT } from "@workspace/ui/components/page-decode"
 import { POND_CELL_SCALE } from "@/components/pond-background"
 import type { AsciiMark } from "@/lib/ascii-mark"
 import sceneFile from "@/lib/home-scene.json"

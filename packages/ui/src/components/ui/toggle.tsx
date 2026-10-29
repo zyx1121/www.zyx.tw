@@ -10,7 +10,7 @@ function Toggle({ className, ...props }: TogglePrimitive.Props) {
     <TogglePrimitive
       data-slot="toggle"
       className={cn(
-        "inline-flex h-10 min-w-10 shrink-0 items-center justify-center gap-2 rounded-control px-3 text-body font-medium whitespace-nowrap transition-colors duration-state outline-none select-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-pressed:bg-muted [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+        "inline-flex h-10 min-w-10 shrink-0 items-center justify-center gap-2 px-3 text-body font-medium whitespace-nowrap transition-colors duration-state outline-none select-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-pressed:bg-muted [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
         className
       )}
       {...props}

@@ -4,6 +4,7 @@ import { cn } from "@workspace/ui/lib/utils";
 
 import "@workspace/ui/globals.css";
 
+import { PageDecode } from "@workspace/ui/components/page-decode";
 import { ThemeProvider } from "@workspace/ui/components/theme-provider";
 import { Toaster } from "@workspace/ui/components/ui/sonner";
 import { TooltipProvider } from "@workspace/ui/components/ui/tooltip";
@@ -65,6 +66,7 @@ export default function RootLayout({
         <JsonLd />
         <ThemeProvider>
           <TooltipProvider>
+            <PageDecode />
             <SiteHeader />
             {children}
             <SiteFooter />

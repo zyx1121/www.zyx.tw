@@ -25,7 +25,7 @@ export function ActiveMark({
       layoutId={layoutId}
       transition={SPRING}
       aria-hidden
-      className={cn("block size-1 rounded-full bg-foreground", className)}
+      className={cn("block size-1 bg-foreground", className)}
     />
   )
 }
