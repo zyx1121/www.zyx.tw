@@ -1,7 +1,7 @@
 import { cn } from "@workspace/ui/lib/utils"
-import { Status } from "@workspace/ui/components/status"
 import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
+import { GitLog } from "@/components/git-log"
 import { Hero, HeroTitle, SectionTitle } from "@/components/hero"
 import { ABOUT, HOME } from "@/lib/copy"
 import { getGithubStatus } from "@/lib/github"
@@ -125,7 +125,7 @@ export default async function About() {
         </section>
       ))}
 
-      <Status data={status} className={cn("mt-20", enterRow(STATUS_ROW))} />
+      <GitLog data={status} className={cn("mt-20", enterRow(STATUS_ROW))} />
     </main>
   )
 }
