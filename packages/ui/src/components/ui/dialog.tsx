@@ -7,6 +7,7 @@ import { XIcon } from "lucide-react"
 
 import { cn } from "../../lib/utils"
 import { Button } from "./button"
+import { FrameEdges } from "./frame"
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
@@ -42,7 +43,7 @@ function DialogOverlay({
 
 // Two widths replace the per-page pixel width overrides apps used before.
 const dialogContentVariants = cva(
-  "fixed inset-x-4 top-1/2 z-50 mx-auto flex max-h-11/12 -translate-y-1/2 flex-col gap-6 overflow-y-auto border border-muted-foreground bg-background p-6 text-body text-foreground duration-overlay outline-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+  "fixed inset-x-4 top-1/2 z-50 mx-auto flex max-h-11/12 -translate-y-1/2 flex-col bg-background text-body text-foreground duration-overlay outline-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
   {
     variants: {
       size: {
@@ -74,7 +75,11 @@ function DialogContent({
         className={cn(dialogContentVariants({ size }), className)}
         {...props}
       >
-        {children}
+        {/* The box inside scrolls, so the frame stays on the popup's edge. */}
+        <div className="flex min-h-0 flex-col gap-6 overflow-y-auto p-6">
+          {children}
+        </div>
+        <FrameEdges />
         {showCloseButton && (
           <DialogPrimitive.Close
             data-slot="dialog-close"

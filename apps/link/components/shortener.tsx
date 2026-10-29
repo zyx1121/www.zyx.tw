@@ -73,6 +73,7 @@ export function Shortener() {
         className="flex w-full max-w-xl flex-col items-center gap-4"
       >
         <Input
+          bare
           ref={inputRef}
           name="url"
           type="url"

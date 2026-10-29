@@ -5,7 +5,8 @@ import { Select as SelectPrimitive } from "@base-ui/react/select"
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 
 import { cn } from "../../lib/utils"
-import { fieldTriggerClassName } from "./field-trigger"
+import { FrameEdges, WindowEdges } from "./frame"
+import { fieldFrameClassName, fieldTriggerClassName } from "./field-trigger"
 
 const Select = SelectPrimitive.Root
 
@@ -45,6 +46,7 @@ function SelectTrigger({
       <SelectPrimitive.Icon
         render={<ChevronDownIcon className="text-muted-foreground" />}
       />
+      <FrameEdges className={fieldFrameClassName} />
     </SelectPrimitive.Trigger>
   )
 }
@@ -71,13 +73,13 @@ function SelectContent({
         align={align}
         alignOffset={alignOffset}
         alignItemWithTrigger={alignItemWithTrigger}
-        className="isolate z-50"
+        className="group/window isolate z-50"
       >
         <SelectPrimitive.Popup
           data-slot="select-content"
           data-align-trigger={alignItemWithTrigger}
           className={cn(
-            "relative isolate z-50 max-h-(--available-height) w-menu min-w-40 origin-(--transform-origin) overflow-x-hidden overflow-y-auto border border-muted-foreground bg-background text-foreground duration-overlay data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+            "relative isolate z-50 max-h-(--available-height) w-menu min-w-40 origin-(--transform-origin) overflow-x-hidden overflow-y-auto bg-background text-foreground duration-overlay data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
             className
           )}
           {...props}
@@ -92,6 +94,7 @@ function SelectContent({
             <ChevronDownIcon />
           </SelectPrimitive.ScrollDownArrow>
         </SelectPrimitive.Popup>
+        <WindowEdges />
       </SelectPrimitive.Positioner>
     </SelectPrimitive.Portal>
   )
