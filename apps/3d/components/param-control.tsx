@@ -84,7 +84,7 @@ function ParamControl({ id, def, value, onChange }: ParamControlProps) {
             type="color"
             value={color}
             onChange={(event) => onChange(event.target.value)}
-            className="w-16 cursor-pointer p-1"
+            className="w-16"
           />
         </div>
       )

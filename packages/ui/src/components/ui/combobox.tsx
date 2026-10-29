@@ -4,7 +4,8 @@ import * as React from "react"
 import { ChevronDownIcon } from "lucide-react"
 
 import { cn } from "../../lib/utils"
-import { fieldTriggerClassName } from "./field-trigger"
+import { fieldFrameClassName, fieldTriggerClassName } from "./field-trigger"
+import { FrameEdges } from "./frame"
 import { PopoverContent, PopoverTrigger } from "./popover"
 
 // Pieces for a searchable picker: wrap them in Popover and put a Command in
@@ -33,6 +34,7 @@ function ComboboxTrigger({
         {empty ? placeholder : children}
       </span>
       <ChevronDownIcon className="text-muted-foreground" />
+      <FrameEdges className={fieldFrameClassName} />
     </PopoverTrigger>
   )
 }

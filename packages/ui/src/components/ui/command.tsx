@@ -5,6 +5,8 @@ import { Command as CommandPrimitive } from "cmdk"
 import { CheckIcon, SearchIcon } from "lucide-react"
 
 import { cn } from "../../lib/utils"
+import { fieldFrameClassName } from "./field-trigger"
+import { FrameEdges } from "./frame"
 
 // Searchable list for a popover (combobox). It has no surface of its own:
 // the popover provides the window, its border and p-1.
@@ -31,7 +33,7 @@ function CommandInput({
   return (
     <div
       data-slot="command-input-wrapper"
-      className="flex h-10 items-center gap-2 border border-input px-3 [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground"
+      className="group/field relative flex h-10 items-center gap-2 px-3 [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground"
     >
       <SearchIcon />
       <CommandPrimitive.Input
@@ -42,6 +44,7 @@ function CommandInput({
         )}
         {...props}
       />
+      <FrameEdges className={fieldFrameClassName} />
     </div>
   )
 }

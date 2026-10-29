@@ -4,21 +4,30 @@ import * as React from "react"
 
 import { cn } from "../../lib/utils"
 import { Button } from "./button"
+import { fieldFrameClassName } from "./field-trigger"
+import { FrameEdges } from "./frame"
 import { Input } from "./input"
 
 // An input with text or a button inside its border: the group draws the
 // field (same box as Input) and the input inside it draws nothing.
-function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
+function InputGroup({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="input-group"
       role="group"
       className={cn(
-        "relative flex h-10 w-full min-w-0 items-center border border-input transition-colors duration-state has-disabled:opacity-50 has-[[aria-invalid=true]]:border-destructive has-[[aria-invalid=true]]:ring-3 has-[[aria-invalid=true]]:ring-destructive/20 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-3 has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 dark:bg-input/30",
+        "group/field relative flex h-10 w-full min-w-0 items-center has-disabled:opacity-50",
         className
       )}
       {...props}
-    />
+    >
+      {children}
+      <FrameEdges className={fieldFrameClassName} />
+    </div>
   )
 }
 
@@ -69,6 +78,7 @@ function InputGroupInput({
 }: React.ComponentProps<"input">) {
   return (
     <Input
+      bare
       data-slot="input-group-control"
       className={cn(
         "h-full flex-1 rounded-none border-0 bg-transparent focus-visible:ring-0 aria-invalid:ring-0 dark:bg-transparent",

@@ -4,6 +4,7 @@ import * as React from "react"
 import * as RechartsPrimitive from "recharts"
 
 import { cn } from "../../lib/utils"
+import { FrameEdges } from "./frame"
 
 // Charts use the theme's own colors, not chart tokens (DESIGN.md, Color):
 // the main series is primary, a comparison muted-foreground and a series
@@ -112,7 +113,7 @@ function ChartTooltipContent({
   if (!active || !payload?.length) return null
 
   return (
-    <div className="flex min-w-32 flex-col gap-1 border border-muted-foreground bg-background px-3 py-2 text-body">
+    <div className="relative flex min-w-32 flex-col gap-1 bg-background px-3 py-2 text-body">
       {label !== undefined && <div className="font-medium">{label}</div>}
       {payload.map((entry) => {
         const key = String(entry.dataKey ?? entry.name)
@@ -128,6 +129,7 @@ function ChartTooltipContent({
           </div>
         )
       })}
+      <FrameEdges />
     </div>
   )
 }

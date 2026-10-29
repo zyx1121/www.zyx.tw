@@ -3,6 +3,7 @@
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip"
 
 import { cn } from "../../lib/utils"
+import { FrameEdges } from "./frame"
 
 function TooltipProvider({
   delay = 0,
@@ -33,6 +34,7 @@ function TooltipContent({
   sideOffset = 8,
   align = "center",
   alignOffset = 0,
+  children,
   ...props
 }: TooltipPrimitive.Popup.Props &
   Pick<
@@ -51,11 +53,14 @@ function TooltipContent({
         <TooltipPrimitive.Popup
           data-slot="tooltip-content"
           className={cn(
-            "z-50 inline-flex w-fit max-w-xs origin-(--transform-origin) items-center border border-muted-foreground bg-background px-3 py-2 text-body text-foreground lowercase duration-overlay data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+            "relative z-50 inline-flex w-fit max-w-xs origin-(--transform-origin) items-center bg-background px-3 py-2 text-body text-foreground lowercase duration-overlay data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
             className
           )}
           {...props}
-        />
+        >
+          {children}
+          <FrameEdges />
+        </TooltipPrimitive.Popup>
       </TooltipPrimitive.Positioner>
     </TooltipPrimitive.Portal>
   )

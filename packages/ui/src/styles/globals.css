@@ -23,9 +23,15 @@
   --text-body--line-height: 1.5rem;
   --text-caption: 0.875rem;
   --text-caption--line-height: 1.25rem;
-  --font-sans: var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc), ui-monospace, monospace;
-  --font-heading: var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc), ui-monospace, monospace;
-  --font-mono: var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc), ui-monospace, monospace;
+  --font-sans:
+    var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc),
+    ui-monospace, monospace;
+  --font-heading:
+    var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc),
+    ui-monospace, monospace;
+  --font-mono:
+    var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc),
+    ui-monospace, monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
@@ -38,7 +44,8 @@
   --color-ring: var(--ring);
   --animate-scramble-hold: scramble-text-hold 1.5s;
   --animate-cursor: terminal-cursor 1s step-end infinite;
-  --animate-mask-reveal: mask-reveal 600ms cubic-bezier(0.16, 1, 0.3, 1) var(--tw-animation-delay, 0s) backwards;
+  --animate-mask-reveal: mask-reveal 600ms cubic-bezier(0.16, 1, 0.3, 1)
+    var(--tw-animation-delay, 0s) backwards;
 }
 
 :root {
@@ -164,7 +171,9 @@
  * scripts fail); once it runs, their fades step aside.
  */
 @media (prefers-reduced-motion: no-preference) {
-  html:has([data-slot="page-decode"]):not([data-decoder]) main [class*="enter-row-"] {
+  html:has([data-slot="page-decode"]):not([data-decoder])
+    main
+    [class*="enter-row-"] {
     animation: scramble-text-hold 1.5s;
   }
   html[data-decoder] main [class*="enter-row-"] {
@@ -226,7 +235,11 @@
 [data-slot="corner-edge"] {
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
-  -webkit-mask-image: linear-gradient(var(--edge-direction), #000 35%, transparent);
+  -webkit-mask-image: linear-gradient(
+    var(--edge-direction),
+    #000 35%,
+    transparent
+  );
   mask-image: linear-gradient(var(--edge-direction), #000 35%, transparent);
 }
 [data-slot="corner-edge"][data-edge="top"] {
@@ -234,4 +247,104 @@
 }
 [data-slot="corner-edge"][data-edge="bottom"] {
   --edge-direction: to top;
+}
+
+/*
+ * Glyph frames (DESIGN.md, Frames; components/ui/frame.tsx): box-drawing
+ * characters draw the outline, as a terminal draws a window, so each line runs
+ * through the middle of a character cell and the corners are the font's own
+ * arcs. The edges overhang their parent by half a cell, which puts each line
+ * where a 1px border would be. Rows are 20px because Sarasa's vertical bar is
+ * 1.25em tall, so the bars meet with no gap. Fills are long runs the cell
+ * clips; the vertical run wraps one bar per line.
+ */
+[data-slot="frame-edges"] {
+  position: absolute;
+  inset: calc(var(--text-caption--line-height) / -2) -0.5ch;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1ch minmax(0, 1fr) 1ch;
+  grid-template-rows: var(--text-caption--line-height) minmax(0, 1fr) var(
+      --text-caption--line-height
+    );
+  font-family: var(--font-mono);
+  font-size: var(--text-body);
+  font-weight: 400;
+  line-height: var(--text-caption--line-height);
+  white-space: pre;
+  text-align: start;
+  pointer-events: none;
+  user-select: none;
+}
+[data-slot="frame-edges"] > * {
+  display: flex;
+  min-width: 0;
+}
+[data-slot="frame-edges"] [data-frame-text] {
+  flex: none;
+  padding-inline: 1ch;
+  color: var(--foreground);
+}
+/*
+ * A fill reaches 1px into its neighbors: clipping two glyphs at the same
+ * fractional pixel would leave a faint seam where they meet.
+ */
+[data-edge="fill"] {
+  flex: 1;
+  min-width: 0;
+  margin-inline: -1px;
+  overflow: hidden;
+}
+[data-edge="top-left"]::before {
+  content: "╭" / "";
+}
+[data-edge="top-right"]::before {
+  content: "╮" / "";
+}
+[data-edge="bottom-left"]::before {
+  content: "╰" / "";
+}
+[data-edge="bottom-right"]::before {
+  content: "╯" / "";
+}
+[data-edge="lead"]::before {
+  content: "─" / "";
+}
+[data-edge="fill"]::before {
+  content: "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────" /
+    "";
+}
+[data-edge="side"] {
+  display: block;
+  margin-block: -1px;
+  overflow: hidden;
+  word-break: break-all;
+  white-space: normal;
+}
+[data-edge="side"]::before {
+  content: "││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││" /
+    "";
+}
+/* One vertical edge alone, for a sheet against a viewport edge. */
+[data-slot="frame-side"] {
+  position: absolute;
+  inset-block: 0;
+  width: 1ch;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--text-body);
+  line-height: var(--text-caption--line-height);
+  word-break: break-all;
+  pointer-events: none;
+  user-select: none;
+}
+[data-slot="frame-side"][data-side="left"] {
+  left: -0.5ch;
+}
+[data-slot="frame-side"][data-side="right"] {
+  right: -0.5ch;
+}
+[data-slot="frame-side"]::before {
+  content: "││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││" /
+    "";
 }

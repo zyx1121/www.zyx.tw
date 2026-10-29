@@ -82,10 +82,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/ui/dropdown-menu";
+import { Frame } from "@workspace/ui/components/ui/frame";
 import { Input } from "@workspace/ui/components/ui/input";
 import {
   InputGroup,
@@ -440,9 +442,11 @@ const DEMOS: Record<string, React.ReactNode> = {
         <ChevronsUpDownIcon />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>Project</DropdownMenuLabel>
-        <DropdownMenuItem>Rename</DropdownMenuItem>
-        <DropdownMenuItem>Duplicate</DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>Project</DropdownMenuLabel>
+          <DropdownMenuItem>Rename</DropdownMenuItem>
+          <DropdownMenuItem>Duplicate</DropdownMenuItem>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Archive</DropdownMenuItem>
       </DropdownMenuContent>
@@ -553,6 +557,11 @@ const DEMOS: Record<string, React.ReactNode> = {
         <Bar dataKey="last" fill="var(--color-last)" />
       </BarChart>
     </ChartContainer>
+  ),
+  frame: (
+    <Frame label="ENDERCHEST" detail="14K/s" className="w-full max-w-md">
+      CPU 27 MEM 45 DSK 2 TMP 42
+    </Frame>
   ),
   resizable: (
     <ResizablePanelGroup orientation="horizontal" className="min-h-40 w-full">

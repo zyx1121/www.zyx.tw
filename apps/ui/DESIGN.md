@@ -2,7 +2,7 @@
 
 > One base of tokens and a set of lightweight components, served as a shadcn registry. Every component is our own rewrite on Base UI: only the variants the zyx.tw apps use, only token values.
 
-The look is a terminal: one monospace face on a character grid, square corners, soft grayscale, outlined windows, inverted highlights, and text that decodes in as a terminal prints it.
+The look is a terminal: one monospace face on a character grid, square fills, glyph-framed windows and fields, soft grayscale, inverted highlights, and text that decodes in as a terminal prints it.
 
 This file is the design contract for every zyx.tw app. `bun run theme:check` and `bun run tokens:check` enforce the parts a script can see; the rest is review.
 
@@ -54,9 +54,18 @@ Four sizes by role, the same on phones and desktops. Tailwind's own sizes are cl
 - **Labels in capitals**: corner links and section headings are uppercase (`SectionTitle`); tooltips are lowercase, like a shell. Body text keeps its own case.
 - **No content exceptions**: Markdown, code, charts and notices use the same four sizes; change wrapping and layout instead.
 
-### Square
+### Square fills, glyph frames
 
-Nothing is rounded, as in a terminal: buttons, inputs, windows, badges, switches, avatars and focus outlines all have square corners. `--radius` is 0 for libraries that read it. `tokens:check` rejects every `rounded-*` except `rounded-none` (to clear a radius a library sets), `var(--radius*)` and a nonzero `border-radius`.
+Fills are square cells, as in a terminal: buttons, highlights, badges, switches, avatars and focus boxes. `--radius` is 0 for libraries that read it, and `tokens:check` rejects every `rounded-*` except `rounded-none` (to clear a radius a library sets), `var(--radius*)` and a nonzero `border-radius`.
+
+Outlines are drawn with box-drawing characters (`╭ ─ ╮ │ ╰ ╯`), not CSS borders, so each line runs through the middle of a character cell and the corners are the font's own arcs (`frame`, globals.css "Glyph frames").
+
+- **Who draws one**: every layer-2 window (dialog, alert dialog, popover, menus, select menu, tooltip, toolbar, chart tooltip), every field (input, textarea, input group, select and combobox triggers, the command input) and the outline button. A sheet draws the one vertical edge that faces the page (`FrameSide`).
+- **Nothing moves**: `FrameEdges` overhangs its parent by half a cell (8px across, 10px down), which puts each line where a 1px border was. The parent is positioned and does not clip; a window whose content scrolls scrolls an inner box (dialog, sheet) or draws the frame in its positioner (`WindowEdges`, menus).
+- **20px rows**: Sarasa's vertical bar is 1.25em tall, so the frame's rows are the caption line height and the bars meet with no gap.
+- **Colors**: windows `muted-foreground`; fields and the outline button `muted-foreground` at 30% and 20% opacity, which match `input` and `border` but stay opaque inside, so the 1px overlaps where glyphs meet never brighten. Focus turns a field's frame to `ring` (the text color), invalid to `destructive`, and hover lights the outline button's frame to `foreground`.
+- **Labels on the edge**: `Frame` (and `FrameEdges`) take a `label` for the top edge and a `detail` for the bottom right, as a terminal dashboard titles a panel.
+- Toasts and outline badges still use a 1px border.
 
 ### Motion
 
@@ -80,10 +89,10 @@ Nothing is rounded, as in a terminal: buttons, inputs, windows, badges, switches
 
 The interface is flat and has exactly two layers.
 
-| Layer      | What lives there                                                                                                         | Surface                                                                                                                                                     |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1. Page    | Everything on the page when it loads: titles, text, lists, tables, forms, demos                                          | None: no borders around groups, no shadows, no card backgrounds                                                                                             |
-| 2. Window  | Anything called up over the page or a working surface: dialog, alert dialog, sheet, menus, popovers, tooltips, toasts, the toolbar | A terminal window: opaque `bg-background`, a 1px `border-muted-foreground` outline, square, no shadow. Backdrops behind dialogs and sheets are a 12px blur alone with no tint |
+| Layer     | What lives there                                                                                                                   | Surface                                                                                                                                                           |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Page   | Everything on the page when it loads: titles, text, lists, tables, forms, demos                                                    | None: no borders around groups, no shadows, no card backgrounds                                                                                                   |
+| 2. Window | Anything called up over the page or a working surface: dialog, alert dialog, sheet, menus, popovers, tooltips, toasts, the toolbar | A terminal window: opaque `bg-background`, a glyph frame in `muted-foreground`, no shadow. Backdrops behind dialogs and sheets are a 12px blur alone with no tint |
 
 - Group page content with spacing and, where a line helps, a divider (`border-t` / `border-b`). Never wrap a group in a frame. `tokens:check` rejects `shadow-*` and a whole `border` in page code; only the components draw layer 2.
 - Controls keep their own outline: inputs, selects and outline buttons are controls, not containers.
@@ -110,7 +119,7 @@ A page is one centered column on a 4px grid, framed by the four corners of the v
 ## Lines and optical alignment
 
 - **Lines only where they carry meaning**: a line bounds a layer-2 surface or separates groups. It is 1px of `--border` (white at 10% in dark).
-- **Transparent borders reserve focus space**: a control keeps a 1px border that its focus state colors, so focusing moves nothing.
+- **Frames carry focus**: a field shows focus by coloring its glyph frame, so focusing moves nothing.
 - **Offsets live at the call site**: nudges such as `-ml-1` or `-m-3` depend on the surrounding layout, so they go in the caller's `className`, never inside a component. An icon button in a text row takes its icon inset back on every side (`-m-3` on a 40px button with a 16px icon), so layout sees only the icon.
 - **Menus follow their trigger**: a menu opens 4px under its trigger. A select menu is as wide as the trigger plus its padding (`w-menu`); a combobox menu keeps the popover's width and grows to the trigger's when that is wider, so a short trigger never truncates the options.
 
@@ -147,7 +156,7 @@ The chrome is grayscale, so a badge tells states apart by fill, not by hue. A ca
 
 - **Controls**: button, toggle, input, input-group, textarea, label, checkbox, switch, slider, select, combobox, command, calendar
 - **Overlays**: dialog, alert-dialog, sheet, popover, dropdown-menu, tooltip, sonner, toolbar
-- **Content**: badge, avatar, table, tabs, collapsible, separator, skeleton, chart, resizable
+- **Content**: badge, avatar, table, tabs, collapsible, separator, skeleton, chart, resizable, frame
 - **Chat**: message, bubble, attachment
 - **zyx**: scramble-text, mask-reveal, theme-toggle
 - **Layout** (`registry:component`, in `packages/ui/src/components/`): corners (with corner-tip and zyx-mark), page-decode, section-title, shell
@@ -201,13 +210,13 @@ Every zyx.tw site is written for people and for agents. A static export has no s
 
 Web apps with an agent in them (Handy, Stamp, the FDE demos) share the server half too. The kit lives in `packages/agent/src/`, is published as `registry:lib` items named `agent-*`, and installs into a project's `lib/agent/`. Each file is the app's own afterwards, like a component.
 
-| Item                 | What it gives                                                                                                  |
-| -------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `agent-tools`        | `defineTool` and `createTools`: one registry, `run` for pages, `forChat` for `streamText`, `mcp` for `/mcp`     |
-| `agent-model`        | `modelConfigFromEnv(prefix)` and `buildModel`: any OpenAI-compatible endpoint, traced, waiting out 429s          |
-| `agent-seal`         | `seal`, `open` and `redact`: AES-256-GCM for stored credentials, and scrubbing their values from any output     |
-| `agent-public-fetch` | `publicFetch`: requests on an agent's behalf reach public addresses only, checked at connect time               |
-| `agent-telemetry`    | `registerTelemetry`, `inSpan` and the traced model fetch, to Sensorium over OTLP/HTTP                           |
+| Item                 | What it gives                                                                                               |
+| -------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `agent-tools`        | `defineTool` and `createTools`: one registry, `run` for pages, `forChat` for `streamText`, `mcp` for `/mcp` |
+| `agent-model`        | `modelConfigFromEnv(prefix)` and `buildModel`: any OpenAI-compatible endpoint, traced, waiting out 429s     |
+| `agent-seal`         | `seal`, `open` and `redact`: AES-256-GCM for stored credentials, and scrubbing their values from any output |
+| `agent-public-fetch` | `publicFetch`: requests on an agent's behalf reach public addresses only, checked at connect time           |
+| `agent-telemetry`    | `registerTelemetry`, `inSpan` and the traced model fetch, to Sensorium over OTLP/HTTP                       |
 
 - **Every action is a tool**: what a person can do on the page goes through the registry, so the chat agent and MCP clients get it with the same parsing, permissions and span. A tool stays off MCP only with `mcpExcludedBecause` saying why.
 - **Errors say only what is safe**: a `ToolError` message reaches the person, the model or the MCP client as written; any other error becomes "The tool failed." and its name goes on the span.
@@ -229,4 +238,4 @@ Web apps with an agent in them (Handy, Stamp, the FDE demos) share the server ha
 - **No stock copies.** A component exists once, in `packages/ui`. Restyling happens in that file, not in a theme override aimed at someone else's markup.
 - **No marketing blocks (Hero, CTA, Pricing) in the registry.** Blocks exist for interface patterns that repeat across apps (confirming, empty lists, status pages); page content is composed at the call site.
 - **No CSS-in-JS.** Tailwind utilities on tokens; app stylesheets only for content.
-- **No color in chrome**, **no header or footer bars**, **no menu button for a short nav**, **no bold for hierarchy**, **no cards on the page**, **no rounded corners**, **no shadows**, **no frosted glass**, **no second typeface.**
+- **No color in chrome**, **no header or footer bars**, **no menu button for a short nav**, **no bold for hierarchy**, **no cards on the page**, **no rounded fills**, **no shadows**, **no frosted glass**, **no second typeface.**

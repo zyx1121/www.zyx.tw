@@ -395,7 +395,8 @@
       "dependencies": ["@base-ui/react", "cn"],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
-        "https://ui.zyx.tw/r/button.json"
+        "https://ui.zyx.tw/r/button.json",
+        "https://ui.zyx.tw/r/frame.json"
       ],
       "files": [
         {
@@ -472,7 +473,10 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/frame.json"
+      ]
     },
     {
       "name": "calendar",
@@ -503,7 +507,10 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/frame.json"
+      ]
     },
     {
       "name": "checkbox",
@@ -542,7 +549,8 @@
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
         "https://ui.zyx.tw/r/field-trigger.json",
-        "https://ui.zyx.tw/r/popover.json"
+        "https://ui.zyx.tw/r/popover.json",
+        "https://ui.zyx.tw/r/frame.json"
       ],
       "files": [
         {
@@ -563,7 +571,11 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/frame.json",
+        "https://ui.zyx.tw/r/field-trigger.json"
+      ]
     },
     {
       "name": "dialog",
@@ -578,7 +590,8 @@
       ],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
-        "https://ui.zyx.tw/r/button.json"
+        "https://ui.zyx.tw/r/button.json",
+        "https://ui.zyx.tw/r/frame.json"
       ],
       "files": [
         {
@@ -599,7 +612,105 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/frame.json"
+      ]
+    },
+    {
+      "name": "frame",
+      "type": "registry:ui",
+      "title": "Frame",
+      "description": "Glyph frames: an outline drawn with box-drawing characters, so its lines run through the middle of a character cell and its corners are the font's arcs. Every window and field draws its edge with it.",
+      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
+      "files": [
+        {
+          "path": "registry/zyx/ui/frame.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "[data-slot=\"frame-edges\"]": {
+          "position": "absolute",
+          "inset": "calc(var(--text-caption--line-height) / -2) -0.5ch",
+          "z-index": "1",
+          "display": "grid",
+          "grid-template-columns": "1ch minmax(0, 1fr) 1ch",
+          "grid-template-rows": "var(--text-caption--line-height) minmax(0, 1fr) var(\n      --text-caption--line-height\n    )",
+          "font-family": "var(--font-mono)",
+          "font-size": "var(--text-body)",
+          "font-weight": "400",
+          "line-height": "var(--text-caption--line-height)",
+          "white-space": "pre",
+          "text-align": "start",
+          "pointer-events": "none",
+          "user-select": "none"
+        },
+        "[data-slot=\"frame-edges\"] > *": {
+          "display": "flex",
+          "min-width": "0"
+        },
+        "[data-slot=\"frame-edges\"] [data-frame-text]": {
+          "flex": "none",
+          "padding-inline": "1ch",
+          "color": "var(--foreground)"
+        },
+        "[data-edge=\"fill\"]": {
+          "flex": "1",
+          "min-width": "0",
+          "margin-inline": "-1px",
+          "overflow": "hidden"
+        },
+        "[data-edge=\"top-left\"]::before": {
+          "content": "\"╭\" / \"\""
+        },
+        "[data-edge=\"top-right\"]::before": {
+          "content": "\"╮\" / \"\""
+        },
+        "[data-edge=\"bottom-left\"]::before": {
+          "content": "\"╰\" / \"\""
+        },
+        "[data-edge=\"bottom-right\"]::before": {
+          "content": "\"╯\" / \"\""
+        },
+        "[data-edge=\"lead\"]::before": {
+          "content": "\"─\" / \"\""
+        },
+        "[data-edge=\"fill\"]::before": {
+          "content": "\"────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────\" /\n    \"\""
+        },
+        "[data-edge=\"side\"]": {
+          "display": "block",
+          "margin-block": "-1px",
+          "overflow": "hidden",
+          "word-break": "break-all",
+          "white-space": "normal"
+        },
+        "[data-edge=\"side\"]::before": {
+          "content": "\"││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││\" /\n    \"\""
+        },
+        "[data-slot=\"frame-side\"]": {
+          "position": "absolute",
+          "inset-block": "0",
+          "width": "1ch",
+          "overflow": "hidden",
+          "font-family": "var(--font-mono)",
+          "font-size": "var(--text-body)",
+          "line-height": "var(--text-caption--line-height)",
+          "word-break": "break-all",
+          "pointer-events": "none",
+          "user-select": "none"
+        },
+        "[data-slot=\"frame-side\"][data-side=\"left\"]": {
+          "left": "-0.5ch"
+        },
+        "[data-slot=\"frame-side\"][data-side=\"right\"]": {
+          "right": "-0.5ch"
+        },
+        "[data-slot=\"frame-side\"]::before": {
+          "content": "\"││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││\" /\n    \"\""
+        }
+      }
     },
     {
       "name": "field-trigger",
@@ -622,7 +733,9 @@
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
         "https://ui.zyx.tw/r/button.json",
-        "https://ui.zyx.tw/r/input.json"
+        "https://ui.zyx.tw/r/input.json",
+        "https://ui.zyx.tw/r/frame.json",
+        "https://ui.zyx.tw/r/field-trigger.json"
       ],
       "files": [
         {
@@ -643,7 +756,11 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/frame.json",
+        "https://ui.zyx.tw/r/field-trigger.json"
+      ]
     },
     {
       "name": "label",
@@ -720,7 +837,10 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/frame.json"
+      ]
     },
     {
       "name": "resizable",
@@ -770,7 +890,8 @@
       "dependencies": ["@base-ui/react", "cn", "lucide-react"],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
-        "https://ui.zyx.tw/r/field-trigger.json"
+        "https://ui.zyx.tw/r/field-trigger.json",
+        "https://ui.zyx.tw/r/frame.json"
       ],
       "files": [
         {
@@ -801,7 +922,8 @@
       "dependencies": ["@base-ui/react", "cn", "lucide-react"],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
-        "https://ui.zyx.tw/r/button.json"
+        "https://ui.zyx.tw/r/button.json",
+        "https://ui.zyx.tw/r/frame.json"
       ],
       "files": [
         {
@@ -905,7 +1027,11 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/frame.json",
+        "https://ui.zyx.tw/r/field-trigger.json"
+      ]
     },
     {
       "name": "theme-toggle",
@@ -947,7 +1073,10 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/frame.json"
+      ]
     },
     {
       "name": "tooltip",
@@ -961,7 +1090,10 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json",
+        "https://ui.zyx.tw/r/frame.json"
+      ]
     }
   ]
 }

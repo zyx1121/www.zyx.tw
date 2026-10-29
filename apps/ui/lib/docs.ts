@@ -56,6 +56,7 @@ const GROUPS = [
       "skeleton",
       "chart",
       "resizable",
+      "frame",
     ],
   },
   { title: "Chat", names: ["message", "bubble", "attachment"] },

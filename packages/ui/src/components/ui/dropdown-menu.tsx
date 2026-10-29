@@ -5,9 +5,10 @@ import { Menu as MenuPrimitive } from "@base-ui/react/menu"
 import { ChevronRightIcon } from "lucide-react"
 
 import { cn } from "../../lib/utils"
+import { WindowEdges } from "./frame"
 
 const menuSurface =
-  "z-50 max-h-(--available-height) min-w-48 origin-(--transform-origin) overflow-x-hidden overflow-y-auto  border border-muted-foreground bg-background p-1 text-body text-foreground duration-overlay outline-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:overflow-hidden data-closed:fade-out-0"
+  "z-50 max-h-(--available-height) min-w-48 origin-(--transform-origin) overflow-x-hidden overflow-y-auto bg-background p-1 text-body text-foreground duration-overlay outline-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:overflow-hidden data-closed:fade-out-0"
 
 const menuRow =
   "relative flex h-10 cursor-default items-center gap-2  px-3 outline-hidden select-none focus:bg-muted data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
@@ -35,7 +36,7 @@ function DropdownMenuContent({
   return (
     <MenuPrimitive.Portal>
       <MenuPrimitive.Positioner
-        className="isolate z-50 outline-none"
+        className="group/window isolate z-50 outline-none"
         align={align}
         alignOffset={alignOffset}
         side={side}
@@ -46,6 +47,7 @@ function DropdownMenuContent({
           className={cn(menuSurface, className)}
           {...props}
         />
+        <WindowEdges />
       </MenuPrimitive.Positioner>
     </MenuPrimitive.Portal>
   )
@@ -112,10 +114,10 @@ function DropdownMenuSubTrigger({
   )
 }
 
-// The offset (p-1 plus the border) lines the first sub item up with its trigger.
+// The offset (p-1) lines the first sub item up with its trigger.
 function DropdownMenuSubContent({
   align = "start",
-  alignOffset = -5,
+  alignOffset = -4,
   side = "right",
   sideOffset = 0,
   className,

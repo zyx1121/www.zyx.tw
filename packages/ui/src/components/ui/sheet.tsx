@@ -6,6 +6,7 @@ import { XIcon } from "lucide-react"
 
 import { cn } from "../../lib/utils"
 import { Button } from "./button"
+import { FrameSide } from "./frame"
 
 function Sheet({ ...props }: SheetPrimitive.Root.Props) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />
@@ -55,12 +56,16 @@ function SheetContent({
         data-slot="sheet-content"
         data-side={side}
         className={cn(
-          "fixed inset-y-0 z-50 flex w-3/4 max-w-sm flex-col gap-6 overflow-y-auto border-muted-foreground bg-background p-6 text-body text-foreground transition duration-overlay data-ending-style:opacity-0 data-starting-style:opacity-0 data-[side=left]:left-0 data-[side=left]:border-r data-[side=left]:data-ending-style:-translate-x-10 data-[side=left]:data-starting-style:-translate-x-10 data-[side=right]:right-0 data-[side=right]:border-l data-[side=right]:data-ending-style:translate-x-10 data-[side=right]:data-starting-style:translate-x-10",
+          "fixed inset-y-0 z-50 flex w-3/4 max-w-sm flex-col bg-background text-body text-foreground transition duration-overlay data-ending-style:opacity-0 data-starting-style:opacity-0 data-[side=left]:left-0 data-[side=left]:data-ending-style:-translate-x-10 data-[side=left]:data-starting-style:-translate-x-10 data-[side=right]:right-0 data-[side=right]:data-ending-style:translate-x-10 data-[side=right]:data-starting-style:translate-x-10",
           className
         )}
         {...props}
       >
-        {children}
+        {/* The box inside scrolls, so the edge stays put. */}
+        <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6">
+          {children}
+        </div>
+        <FrameSide side={side === "left" ? "right" : "left"} />
         {showCloseButton && (
           <SheetPrimitive.Close
             data-slot="sheet-close"
