@@ -53,7 +53,7 @@ const dateFmt = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
 })
 
-function HeatmapGrid({ heatmap }: { heatmap: Heatmap }) {
+export function HeatmapGrid({ heatmap }: { heatmap: Heatmap }) {
   const days = heatmap.weeks.flatMap((w) => w.contributionDays)
   return (
     // One column per week; the font size makes each character one column
