@@ -140,11 +140,24 @@ jobs:
           PAGE
           bun run build
 
+  compose:
+    name: compose.yaml is valid
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate with the example settings
+        run: |
+          cp .env.example .env
+          docker compose config --quiet
+          docker compose config --services
+
   images:
     name: ${{ matrix.host }} image
     # The host deploys whatever :main points at, so publish only after the
     # rest of CI has passed.
-    needs: [ci, registry]
+    needs: [ci, registry, compose]
     runs-on: ubuntu-latest
     permissions:
       contents: read
