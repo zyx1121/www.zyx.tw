@@ -10,9 +10,14 @@
 	root * /srv
 	encode zstd gzip
 
-	# Clean URLs: /button serves button.html, and /button.html redirects to it.
-	@html path_regexp html ^(/.+)\.html$
+	# Clean URLs: /button serves button.html; /button.html and /button/
+	# redirect to it. The captures are slug characters only, so a crafted path
+	# (/%5Cevil.com.html) can never become a redirect to another host.
+	redir /index.html / 308
+	@html path_regexp html ^(/[a-z0-9-]+(?:/[a-z0-9-]+)*)\.html$
 	redir @html {re.html.1} 308
+	@slash path_regexp slash ^(/[a-z0-9-]+(?:/[a-z0-9-]+)*)/$
+	redir @slash {re.slash.1} 308
 
 	# A component's Markdown twin, /button.md, lives at /md/button.
 	@twinfile {

@@ -216,18 +216,40 @@ jobs:
           curl -sI localhost:3000/button.md | grep -qi '^content-type: text/markdown'
           curl -sI localhost:3000/r/base.json | grep -qi '^access-control-allow-origin: \*'
           test "$(curl -s -o /dev/null -w "%{http_code}" localhost:3000/button.html)" = 308
+          test "$(curl -s -o /dev/null -w "%{http_code}" localhost:3000/button/)" = 308
+          # Crafted paths must never redirect off the host.
+          for path in /%5Cevil.com.html /%09/evil.com.html /%5Cevil.com/; do
+            location=$(curl -s -o /dev/null -w "%{redirect_url}" "localhost:3000$path")
+            echo "$path -> $location"
+            case "$location" in ""|http://localhost:3000/*) ;; *) exit 1 ;; esac
+          done
 
       - name: Container log on failure
         if: failure()
         run: docker logs app || true
 
-      - name: Push to GHCR
+      - name: Push the commit's image
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
           image=ghcr.io/zyx1121/${{ matrix.host }}
-          sha=sha-${GITHUB_SHA::7}
-          docker tag app:ci "$image:$sha"
-          docker tag app:ci "$image:main"
-          docker push "$image:$sha"
-          docker push "$image:main"
+          docker tag app:ci "$image:sha-${GITHUB_SHA::7}"
+          docker push "$image:sha-${GITHUB_SHA::7}"
+
+  publish:
+    name: Publish :main
+    # The hosts deploy :main within a minute, so move every app's :main only
+    # once every image of this commit has passed: never a partial release.
+    needs: [images]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - name: Point :main at this commit
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          for host in www.zyx.tw ui.zyx.tw good.zyx.tw time.zyx.tw link.zyx.tw 1909.zyx.tw 3d.zyx.tw; do
+            image=ghcr.io/zyx1121/$host
+            docker buildx imagetools create -t "$image:main" "$image:sha-${GITHUB_SHA::7}"
+          done
