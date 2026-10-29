@@ -26,5 +26,6 @@ Then open the changed page in a browser. Look at it in dark mode, at desktop and
 
 ## Deploy
 
-- Vercel deploys the apps from `main`, except `apps/3d` (Plump) and `apps/stamp`. Those two are not connected to Git, so deploy them with the Vercel CLI.
+- `apps/web` (www.zyx.tw) runs as a container: CI builds `apps/web/Dockerfile` and pushes `ghcr.io/zyx1121/www.zyx.tw:main` and `:sha-<commit>` from `main`, and the host runs the root `compose.yaml` and pulls `:main` within a minute.
+- Vercel deploys the other apps from `main`, except `apps/3d` (Plump) and `apps/stamp`. Those two are not connected to Git, so deploy them with the Vercel CLI.
 - When several merges land while Vercel limits builds, a live site can serve a mix of versions. After a merge, verify that the live deployment of each changed app is on the merge commit.

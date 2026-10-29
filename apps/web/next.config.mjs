@@ -15,6 +15,14 @@ const wantsMarkdown = {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // The container build (Dockerfile) asks for a standalone server, traced
+  // from the monorepo root so the workspace packages come along.
+  ...(process.env.NEXT_OUTPUT === "standalone"
+    ? {
+        output: "standalone",
+        outputFileTracingRoot: new URL("../..", import.meta.url).pathname,
+      }
+    : {}),
   transpilePackages: ["@workspace/3d", "@workspace/otel", "@workspace/ui"],
   serverExternalPackages: ["exifr"],
   // Contact was its own page until 2026-09-28; the email is on About now.
