@@ -1,7 +1,7 @@
 [
   {
     "slug": "good",
-    "name": "good.zyx.tw",
+    "name": "Good",
     "href": "https://good.zyx.tw",
     "purpose": "a digital 乖乖 for servers",
     "preview": {
@@ -23,7 +23,7 @@
   },
   {
     "slug": "ui",
-    "name": "ui.zyx.tw",
+    "name": "UI",
     "href": "https://ui.zyx.tw",
     "purpose": "component registry",
     "preview": {
@@ -34,7 +34,7 @@
   },
   {
     "slug": "kitbash",
-    "name": "kitbash.zyx.tw",
+    "name": "Kitbash",
     "href": "https://kitbash.zyx.tw",
     "purpose": "an OS for AI agents",
     "preview": {
@@ -45,7 +45,7 @@
   },
   {
     "slug": "sensorium",
-    "name": "sensorium.zyx.tw",
+    "name": "Sensorium",
     "href": "https://sensorium.zyx.tw",
     "purpose": "observability for agents",
     "preview": {
@@ -56,7 +56,7 @@
   },
   {
     "slug": "ai",
-    "name": "ai.winlab.tw",
+    "name": "NYCU AI",
     "href": "https://ai.winlab.tw",
     "purpose": "NYCU Office of AI Affairs",
     "preview": {
@@ -67,7 +67,7 @@
   },
   {
     "slug": "winlab",
-    "name": "www.winlab.tw",
+    "name": "WinLab",
     "href": "https://www.winlab.tw",
     "purpose": "Chien-Chao Tseng's lab",
     "preview": {
@@ -78,7 +78,7 @@
   },
   {
     "slug": "portal",
-    "name": "portal.winlab.tw",
+    "name": "WinLab Portal",
     "href": "https://portal.winlab.tw",
     "purpose": "WinLab's member portal",
     "preview": {
@@ -89,7 +89,7 @@
   },
   {
     "slug": "video",
-    "name": "video.winlab.tw",
+    "name": "WinLab Video",
     "href": "https://video.winlab.tw",
     "purpose": "WinLab's video library",
     "preview": {
@@ -100,7 +100,7 @@
   },
   {
     "slug": "link",
-    "name": "link.zyx.tw",
+    "name": "Link",
     "href": "https://link.zyx.tw",
     "purpose": "URL shortener",
     "preview": {
@@ -111,7 +111,7 @@
   },
   {
     "slug": "time",
-    "name": "time.zyx.tw",
+    "name": "Time",
     "href": "https://time.zyx.tw",
     "purpose": "what time is it?",
     "preview": {
