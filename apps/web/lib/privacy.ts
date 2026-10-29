@@ -51,22 +51,17 @@ export const PRIVACY: LegalDoc = {
       paragraphs: [
         [
           {
-            text: "www, ui, plump, 3d, link, time, good and 1909 are hosted on Vercel, which handles every request and keeps its own logs under the ",
-          },
-          {
-            text: "Vercel privacy policy",
-            href: "https://vercel.com/legal/privacy-policy",
-          },
-          { text: "." },
-        ],
-        [
-          {
-            text: "When www, link, time, good or 1909 renders a request on the server, it records the request with OpenTelemetry and sends the record to Loki's own monitoring service, sensorium.zyx.tw. A record can hold the method, the path and query string, the status and timing, your user agent and referrer, your IP address, and the city, region and country Vercel derives from it. Server errors are recorded with the same details. Records are deleted after 30 days.",
+            text: "www, ui, plump, 3d, link, time, good and 1909 run on Loki's own server behind a gateway, which logs each request (your IP address, the request and its headers without credentials, and the response status) and keeps the log for up to 30 days.",
           },
         ],
         [
           {
-            text: "The previews and the other hosts run on Loki's own server behind a gateway, which logs each request (your IP address, the request and its headers without credentials, and the response status) and keeps the log for up to 30 days. data.zyx.tw serves files from Cloudflare R2 under the ",
+            text: "When www, link, time, good or 1909 renders a request on the server, it records the request with OpenTelemetry and sends the record to Loki's own monitoring service, sensorium.zyx.tw. A record can hold the method, the path and query string, the status and timing, your user agent and referrer, and your IP address. Server errors are recorded with the same details. Records are deleted after 30 days.",
+          },
+        ],
+        [
+          {
+            text: "The previews and the other hosts go through the same gateway. data.zyx.tw serves files from Cloudflare R2 under the ",
           },
           {
             text: "Cloudflare privacy policy",

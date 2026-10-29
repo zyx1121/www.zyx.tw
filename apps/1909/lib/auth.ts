@@ -5,8 +5,8 @@ import { Pool } from "pg"
 
 import { db } from "@/lib/db"
 
-// node-postgres with attachDatabasePool, as Neon recommends on Vercel Fluid
-// compute: idle clients are released before the function suspends.
+// node-postgres with attachDatabasePool, as Neon recommends. It only acts on
+// Vercel Fluid compute; in the container the pool simply stays open.
 const pool = new Pool({ connectionString: process.env.DATABASE_URL })
 attachDatabasePool(pool)
 
