@@ -9,10 +9,11 @@ import { EMAIL } from "@workspace/ui/lib/profile"
 
 import site from "./site.json"
 
-// app/opengraph-image.tsx. Pages restate openGraph (see pageMetadata), which
-// drops the root file's image, so they point at it themselves.
+// app/opengraph-image.png, from scripts/og-image.py. Pages restate openGraph
+// (see pageMetadata), which drops the root file's image, so they point at it
+// themselves.
 const OG_IMAGE = {
-  url: "/opengraph-image",
+  url: "/opengraph-image.png",
   ...OG_SIZE,
   type: OG_CONTENT_TYPE,
   alt: OG_ALT,

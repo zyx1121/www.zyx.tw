@@ -12,7 +12,8 @@
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
-    "previews": "uv run scripts/previews.py"
+    "previews": "uv run scripts/previews.py",
+    "og": "uv run scripts/og-image.py"
   },
   "dependencies": {
     "@workspace/3d": "workspace:*",

@@ -55,3 +55,16 @@
     animation: none;
   }
 }
+
+/* An idle prompt's block cursor (components/shell.tsx): on for half a
+ * second, off for half, with no fade. It stays on under reduced motion. */
+@keyframes terminal-cursor {
+  50% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .terminal-cursor {
+    animation: terminal-cursor 1s step-end infinite;
+  }
+}
