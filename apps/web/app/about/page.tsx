@@ -2,7 +2,7 @@ import { cn } from "@workspace/ui/lib/utils"
 import { Status } from "@workspace/ui/components/status"
 import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
-import { Hero, HeroTitle } from "@/components/hero"
+import { Hero, HeroTitle, SectionTitle } from "@/components/hero"
 import { ABOUT, HOME } from "@/lib/copy"
 import { getGithubStatus } from "@/lib/github"
 import { FACTS, SECTIONS } from "@/lib/resume"
@@ -31,10 +31,7 @@ const SECTION_ROWS = SECTIONS.map(({ entries }) => {
 const STATUS_ROW = nextRow
 
 const LINK =
-  "rounded-control underline decoration-muted-foreground/40 underline-offset-4 outline-offset-2 transition-colors hover:decoration-foreground focus-visible:outline-2"
-
-/** The resume's section headings, at group-heading size. */
-const HEADING = "text-body font-medium"
+  "terminal-link underline decoration-muted-foreground/40 underline-offset-4"
 
 /**
  * Titles as displayed: "Wi-Fi" keeps its hyphen and "6 GHz" its space on one
@@ -90,12 +87,11 @@ export default async function About() {
 
       {SECTIONS.map(({ id, title, entries }, index) => (
         <section key={id} aria-labelledby={`${id}-heading`} className="mt-20">
-          <h2
+          <SectionTitle
             id={`${id}-heading`}
-            className={cn(HEADING, enterRow(SECTION_ROWS[index]!))}
-          >
-            {title}
-          </h2>
+            title={title}
+            className={enterRow(SECTION_ROWS[index]!)}
+          />
           <ol className="mt-5 flex flex-col gap-y-3">
             {entries.map(({ when, what, note, where, href }, row) => (
               <li
