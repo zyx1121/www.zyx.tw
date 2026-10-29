@@ -53,7 +53,7 @@ export function ProjectList({ className }: { className?: string }) {
               href={project.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-control decoration-muted-foreground underline-offset-4 outline-offset-4 transition-colors after:absolute after:inset-0 hover:underline focus-visible:outline-2 max-sm:text-muted-foreground max-sm:group-data-active:text-foreground max-sm:after:-inset-y-1.5"
+              className="terminal-link after:absolute after:inset-0 max-sm:text-muted-foreground max-sm:group-data-active:text-foreground max-sm:after:-inset-y-1.5"
               onFocus={(event) => {
                 if (event.currentTarget.matches(":focus-visible")) engage(index)
               }}

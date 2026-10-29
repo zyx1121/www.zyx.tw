@@ -10,8 +10,7 @@ import { PAGES } from "@/lib/site"
 // Two columns, as `ls -l` lines up its names: the path, then what it is.
 const ROW = "relative flex gap-x-5"
 const NAME = "w-36 shrink-0"
-const LINK =
-  "rounded-control decoration-muted-foreground underline-offset-4 outline-offset-4 after:absolute after:inset-0 hover:underline focus-visible:outline-2"
+const LINK = "terminal-link after:absolute after:inset-0"
 
 /**
  * The 404 page, for people and agents, as a shell session: the visitor's

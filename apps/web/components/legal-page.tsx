@@ -1,11 +1,10 @@
 import { cn } from "@workspace/ui/lib/utils"
 import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
-import { Hero, HeroTitle } from "@/components/hero"
+import { Hero, HeroTitle, SectionTitle } from "@/components/hero"
 import type { LegalDoc, Run } from "@/lib/legal"
 
-const LINK =
-  "rounded-control underline underline-offset-4 outline-offset-2 transition-colors hover:text-muted-foreground focus-visible:outline-2"
+const LINK = "terminal-link underline underline-offset-4"
 
 function Paragraph({ runs }: { runs: Run[] }) {
   return (
@@ -52,7 +51,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
           key={heading}
           className={cn(index > 0 && "mt-15", enterRow(3 + index))}
         >
-          <h2 className="text-title">{heading}</h2>
+          <SectionTitle title={heading} />
           {paragraphs.map((runs, paragraph) => (
             <Paragraph key={paragraph} runs={runs} />
           ))}
