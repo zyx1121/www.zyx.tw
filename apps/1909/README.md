@@ -31,7 +31,7 @@ bun dev
 Create a `.env.local` file:
 
 ```
-DATABASE_URL=            # pooled Neon URL; the Vercel Neon integration injects it
+DATABASE_URL=            # pooled Neon URL
 BETTER_AUTH_SECRET=      # openssl rand -base64 32
 BETTER_AUTH_URL=http://localhost:3000
 GOOGLE_CLIENT_ID=

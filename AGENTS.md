@@ -26,6 +26,7 @@ Then open the changed page in a browser. Look at it in dark mode, at desktop and
 
 ## Deploy
 
-- `apps/web` (www.zyx.tw) runs as a container: CI builds `apps/web/Dockerfile` and pushes `ghcr.io/zyx1121/www.zyx.tw:main` and `:sha-<commit>` from `main`, and the host runs the root `compose.yaml` and pulls `:main` within a minute.
-- Vercel deploys the other apps from `main`, except `apps/3d` (Plump) and `apps/stamp`. Those two are not connected to Git, so deploy them with the Vercel CLI.
-- When several merges land while Vercel limits builds, a live site can serve a mix of versions. After a merge, verify that the live deployment of each changed app is on the merge commit.
+- Every app except `apps/stamp` runs as a container on spawner. CI builds the root `Dockerfile` with `APP=<app>` (`apps/ui/Dockerfile` for the static ui.zyx.tw), smoke tests it, and from `main` pushes `ghcr.io/zyx1121/<host>:main` and `:sha-<commit>`, where `<host>` is the app's domain (`www.zyx.tw`, `ui.zyx.tw`, `3d.zyx.tw`).
+- The host runs the root `compose.yaml` and pulls `:main` within a minute. Ports and tags go in `.env` (`.env.example`); each app's own settings go in `env/<app>.env` (`apps/<app>/.env.example`).
+- Vercel deploys nothing (`git.deploymentEnabled` is off in every `vercel.json`). `apps/stamp` is retired and not deployed.
+- After a merge, verify that each changed app serves the merge commit: the image's `sha-<commit>` tag and the live page.

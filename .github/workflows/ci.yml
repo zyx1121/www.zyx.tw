@@ -140,8 +140,8 @@ jobs:
           PAGE
           bun run build
 
-  web-image:
-    name: www.zyx.tw image
+  images:
+    name: ${{ matrix.host }} image
     # The host deploys whatever :main points at, so publish only after the
     # rest of CI has passed.
     needs: [ci, registry]
@@ -149,32 +149,107 @@ jobs:
     permissions:
       contents: read
       packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - app: web
+            host: www.zyx.tw
+            health: /llms.txt
+            pages: / /works /about /privacy /terms /llms.txt /about.md /og/0.gif
+          - app: ui
+            host: ui.zyx.tw
+            dockerfile: apps/ui/Dockerfile
+            pages: / /button /button.md /index.md /llms.txt /r/base.json
+          - app: good
+            host: good.zyx.tw
+            pages: /
+          - app: time
+            host: time.zyx.tw
+            pages: /
+          - app: link
+            host: link.zyx.tw
+            pages: /
+            # An unknown path is a short code, looked up in the database.
+            no404: true
+          - app: "1909"
+            host: 1909.zyx.tw
+            health: /auth/login
+            pages: /auth/login
+            # Every other path needs a session or the database.
+            no404: true
+          - app: 3d
+            host: 3d.zyx.tw
+            pages: /
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Build
-        run: docker build -f apps/web/Dockerfile -t www-zyx-tw:ci .
+        run: |
+          docker build -f "${{ matrix.dockerfile || 'Dockerfile' }}" \
+            --build-arg APP="${{ matrix.app }}" \
+            --build-arg HEALTH="${{ matrix.health || '/' }}" \
+            -t app:ci .
 
       - name: Smoke test
         run: |
-          docker run -d --name web -p 127.0.0.1:3000:3000 www-zyx-tw:ci
-          for i in $(seq 1 30); do curl -sf -o /dev/null localhost:3000/llms.txt && break; sleep 1; done
-          for path in / /works /about /privacy /terms /llms.txt /about.md /og/0.gif; do
+          docker run -d --name app -p 127.0.0.1:3000:3000 app:ci
+          for i in $(seq 1 30); do curl -s -o /dev/null localhost:3000/ && break; sleep 1; done
+          for path in ${{ matrix.pages }}; do
             code=$(curl -s -o /dev/null -w "%{http_code}" "localhost:3000$path")
             echo "$path $code"
             test "$code" = 200
           done
-          test "$(curl -s -o /dev/null -w "%{http_code}" localhost:3000/nope)" = 404
-          curl -s -o /dev/null -w "%{redirect_url}\n" localhost:3000/og.gif | grep -q '^https://www.zyx.tw/og/'
 
-      - name: Push to GHCR
+      - name: Smoke test (not found)
+        if: ${{ !matrix.no404 }}
+        run: test "$(curl -s -o /dev/null -w "%{http_code}" localhost:3000/nope-not-a-page)" = 404
+
+      - name: Smoke test (www.zyx.tw)
+        if: matrix.app == 'web'
+        run: curl -s -o /dev/null -w "%{redirect_url}\n" localhost:3000/og.gif | grep -q '^https://www.zyx.tw/og/'
+
+      - name: Smoke test (ui.zyx.tw)
+        if: matrix.app == 'ui'
+        run: |
+          curl -sI localhost:3000/button.md | grep -qi '^content-type: text/markdown'
+          curl -sI localhost:3000/r/base.json | grep -qi '^access-control-allow-origin: \*'
+          test "$(curl -s -o /dev/null -w "%{http_code}" localhost:3000/button.html)" = 308
+          test "$(curl -s -o /dev/null -w "%{http_code}" localhost:3000/button/)" = 308
+          # Crafted paths must never redirect off the host.
+          for path in /%5Cevil.com.html /%09/evil.com.html /%5Cevil.com/; do
+            location=$(curl -s -o /dev/null -w "%{redirect_url}" "localhost:3000$path")
+            echo "$path -> $location"
+            case "$location" in ""|http://localhost:3000/*) ;; *) exit 1 ;; esac
+          done
+
+      - name: Container log on failure
+        if: failure()
+        run: docker logs app || true
+
+      - name: Push the commit's image
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-          image=ghcr.io/zyx1121/www.zyx.tw
-          sha=sha-${GITHUB_SHA::7}
-          docker tag www-zyx-tw:ci "$image:$sha"
-          docker tag www-zyx-tw:ci "$image:main"
-          docker push "$image:$sha"
-          docker push "$image:main"
+          image=ghcr.io/zyx1121/${{ matrix.host }}
+          docker tag app:ci "$image:sha-${GITHUB_SHA::7}"
+          docker push "$image:sha-${GITHUB_SHA::7}"
+
+  publish:
+    name: Publish :main
+    # The hosts deploy :main within a minute, so move every app's :main only
+    # once every image of this commit has passed: never a partial release.
+    needs: [images]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - name: Point :main at this commit
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          for host in www.zyx.tw ui.zyx.tw good.zyx.tw time.zyx.tw link.zyx.tw 1909.zyx.tw 3d.zyx.tw; do
+            image=ghcr.io/zyx1121/$host
+            docker buildx imagetools create -t "$image:main" "$image:sha-${GITHUB_SHA::7}"
+          done
