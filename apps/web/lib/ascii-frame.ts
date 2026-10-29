@@ -1,7 +1,7 @@
 import { ART, DECODE_LENGTH } from "@/lib/ascii-preview"
 
 /** Glyphs a frame flickers through, all as wide as the lines they replace. */
-const NOISE = Array.from("─│┌┐└┘├┤┬┴┼╴╵╶╷")
+const NOISE = Array.from("─│╭╮╰╯├┤┬┴┼╴╵╶╷")
 /** A text node of box-drawing characters alone, spaces aside. */
 const FRAME = /^[─-╿\s]+$/u
 const SPACE = /\s/u
