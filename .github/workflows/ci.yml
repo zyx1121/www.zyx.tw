@@ -142,6 +142,9 @@ jobs:
 
   web-image:
     name: www.zyx.tw image
+    # The host deploys whatever :main points at, so publish only after the
+    # rest of CI has passed.
+    needs: [ci, registry]
     runs-on: ubuntu-latest
     permissions:
       contents: read
