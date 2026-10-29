@@ -174,7 +174,7 @@ jobs:
           - app: ui
             host: ui.zyx.tw
             dockerfile: apps/ui/Dockerfile
-            pages: / /button /button.md /index.md /llms.txt /r/base.json
+            pages: / /button /button.md /index.md /llms.txt /r/base.json /fonts/sarasa-mono-tc.css
           - app: good
             host: good.zyx.tw
             pages: /
