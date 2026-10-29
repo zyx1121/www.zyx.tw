@@ -132,7 +132,7 @@ export function ProjectWindow({ className }: { className?: string }) {
       }}
     >
       <div ref={titleRef} className="flex whitespace-nowrap">
-        <span>{"┌─ "}</span>
+        <span>{"╭─ "}</span>
         <span key={`name-${active}`} className="text-foreground">
           {project?.name}
         </span>
@@ -140,7 +140,7 @@ export function ProjectWindow({ className }: { className?: string }) {
         <span key={`purpose-${active}`} className="ml-2 truncate max-sm:hidden">
           {project?.purpose}
         </span>
-        <span className="sm:ml-2">{"─┐"}</span>
+        <span className="sm:ml-2">{"─╮"}</span>
       </div>
       {/* The bars and the canvas are absolute in their boxes, so neither
           the long bars nor the canvas's own pixel size can grow the frame. */}
@@ -156,9 +156,9 @@ export function ProjectWindow({ className }: { className?: string }) {
         </span>
       </div>
       <div className="flex whitespace-nowrap">
-        <span>{"└"}</span>
+        <span>{"╰"}</span>
         <Rule />
-        <span>{"┘"}</span>
+        <span>{"╯"}</span>
       </div>
     </div>
   )
