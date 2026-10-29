@@ -9,14 +9,14 @@ import type { LegalDoc } from "@/lib/legal"
  */
 export const PRIVACY: LegalDoc = {
   title: "Privacy",
-  updated: "2026-10-03",
+  updated: "2026-10-29",
   sections: [
     {
       heading: "What this covers",
       paragraphs: [
         [
           {
-            text: "This policy covers every site under zyx.tw, all run by Loki (詹詠翔): www.zyx.tw and the apps ui, plump (formerly 3d), link, time and good; 1909, a private tool for three flatmates; the previews test, ui.test and 3d.test; and the hosts kitbash, sensorium, derp and data.",
+            text: "This policy covers every site under zyx.tw, all run by Loki (詹詠翔): www.zyx.tw and the apps ui, plump (formerly 3d), link, time and good; 1909, a private tool for three flatmates; the previews test, ui.test and 3d.test; and the hosts sensorium, derp and data.",
           },
         ],
       ],
@@ -116,7 +116,7 @@ export const PRIVACY: LegalDoc = {
         ],
         [
           {
-            text: "Apart from the logs above, no other site keeps anything about you. Hosts under kitbash.zyx.tw run Loki's own experiments and are not public services.",
+            text: "Apart from the logs above, no other site keeps anything about you.",
           },
         ],
       ],

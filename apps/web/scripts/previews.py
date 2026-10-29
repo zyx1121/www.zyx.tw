@@ -10,7 +10,7 @@
 Reads lib/projects.json, the same list /works renders, and writes two
 files per project to the paths in its "preview" field:
 
-  <slug>.webp         a 1440x900 screenshot of the live site in dark mode
+  <slug>.webp         a 1440x1080 screenshot of the live site in dark mode
   <slug>-dither.webp  the same image dithered with a 4x4 Bayer matrix in muted
                       gray on black, which the preview stage shows at rest
 
@@ -57,7 +57,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PROJECTS = ROOT / "lib" / "projects.json"
 PUBLIC = ROOT / "public"
 
-VIEWPORT = {"width": 1440, "height": 900}
+VIEWPORT = {"width": 1440, "height": 1080}
 # The dark theme's --muted-foreground, oklch(0.65 0 0), is #8f8f8f in sRGB.
 INK = (143, 143, 143)
 PAPER = (0, 0, 0)

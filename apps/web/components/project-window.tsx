@@ -144,7 +144,7 @@ export function ProjectWindow({ className }: { className?: string }) {
         <span className="relative w-2 shrink-0 overflow-hidden">
           <span className="absolute inset-x-0 top-0 break-all">{VERTICAL}</span>
         </span>
-        <span className="relative aspect-8/5 min-w-0 flex-1">
+        <span className="relative aspect-4/3 min-w-0 flex-1">
           <canvas ref={canvasRef} className="absolute inset-0 size-full" />
         </span>
         <span className="relative w-2 shrink-0 overflow-hidden">

@@ -33,17 +33,6 @@
     }
   },
   {
-    "slug": "kitbash",
-    "name": "Kitbash",
-    "href": "https://kitbash.zyx.tw",
-    "purpose": "an OS for AI agents",
-    "preview": {
-      "image": "/previews/kitbash.webp",
-      "dither": "/previews/kitbash-dither.webp",
-      "focus": "50% 50%"
-    }
-  },
-  {
     "slug": "sensorium",
     "name": "Sensorium",
     "href": "https://sensorium.zyx.tw",
