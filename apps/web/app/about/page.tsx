@@ -2,7 +2,9 @@ import { cn } from "@workspace/ui/lib/utils"
 import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
 import { GitLog } from "@/components/git-log"
-import { Hero, HeroTitle, SectionTitle } from "@/components/hero"
+import { SectionTitle } from "@workspace/ui/components/section-title"
+
+import { Hero, HeroTitle } from "@/components/hero"
 import { ABOUT, HOME } from "@/lib/copy"
 import { getGithubStatus } from "@/lib/github"
 import { FACTS, SECTIONS } from "@/lib/resume"

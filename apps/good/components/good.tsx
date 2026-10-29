@@ -11,8 +11,8 @@ function LoadingOverlay() {
   return (
     <div className="absolute inset-0 z-10 flex items-center justify-center bg-background">
       <div className="relative h-16 w-16">
-        <div className="absolute top-0 left-0 h-full w-full rounded-full border-4 border-muted" />
-        <div className="absolute top-0 left-0 h-full w-full animate-spin rounded-full border-4 border-foreground border-t-transparent" />
+        <div className="absolute top-0 left-0 h-full w-full border-4 border-muted" />
+        <div className="absolute top-0 left-0 h-full w-full animate-spin border-4 border-foreground border-t-transparent" />
       </div>
     </div>
   )

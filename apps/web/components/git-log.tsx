@@ -5,8 +5,8 @@ import { describeEvent, type StatusData } from "@workspace/ui/lib/github-events"
 import { STATUS_COPY } from "@workspace/ui/lib/profile"
 import { timeAgo } from "@workspace/ui/lib/time-ago"
 
-import { SectionTitle } from "@/components/hero"
-import { Command } from "@/components/shell"
+import { SectionTitle } from "@workspace/ui/components/section-title"
+import { Command } from "@workspace/ui/components/shell"
 
 const LINK =
   "terminal-link underline decoration-muted-foreground/40 underline-offset-4"

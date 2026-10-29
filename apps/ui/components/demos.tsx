@@ -33,6 +33,11 @@ import {
 import { Avatar, AvatarFallback } from "@workspace/ui/components/ui/avatar";
 import { ConfirmDialog } from "@workspace/ui/components/confirm-dialog";
 import { EmptyState, TableEmpty } from "@workspace/ui/components/empty-state";
+import { SectionTitle } from "@workspace/ui/components/section-title";
+import {
+  Command as ShellCommand,
+  Cursor,
+} from "@workspace/ui/components/shell";
 import { StatusPage } from "@workspace/ui/components/status-page";
 import { Badge } from "@workspace/ui/components/ui/badge";
 import { Bubble } from "@workspace/ui/components/ui/bubble";
@@ -423,7 +428,7 @@ const DEMOS: Record<string, React.ReactNode> = {
       <PopoverTrigger render={<Button variant="outline" />}>
         Share
       </PopoverTrigger>
-      <PopoverContent className="rounded-surface p-6">
+      <PopoverContent className="p-6">
         Anyone with the link can view it.
       </PopoverContent>
     </Popover>
@@ -544,8 +549,8 @@ const DEMOS: Record<string, React.ReactNode> = {
         <XAxis dataKey="month" tickLine={false} axisLine={false} />
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} />
-        <Bar dataKey="count" fill="var(--color-count)" radius={[4, 4, 0, 0]} />
-        <Bar dataKey="last" fill="var(--color-last)" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="count" fill="var(--color-count)" />
+        <Bar dataKey="last" fill="var(--color-last)" />
       </BarChart>
     </ChartContainer>
   ),
@@ -630,10 +635,24 @@ const DEMOS: Record<string, React.ReactNode> = {
     </div>
   ),
   "empty-state": <EmptyStateDemo />,
+  "section-title": <SectionTitle title="Components" />,
+  shell: (
+    <div>
+      <ShellCommand>ls /</ShellCommand>
+      <ShellCommand>
+        <Cursor />
+      </ShellCommand>
+    </div>
+  ),
   "status-page": (
     <StatusPage
       title="Something went wrong"
-      action={<Button onClick={() => window.location.reload()}>Retry</Button>}
+      command="git push"
+      action={
+        <Button className="self-start" onClick={() => window.location.reload()}>
+          Retry
+        </Button>
+      }
     />
   ),
   toolbar: (

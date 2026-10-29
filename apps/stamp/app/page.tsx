@@ -83,7 +83,7 @@ function Shot({ src, alt }: { src: string; alt: string }) {
       height={1280}
       loading="lazy"
       decoding="async"
-      className="w-full rounded-control bg-muted"
+      className="w-full bg-muted"
     />
   )
 }

@@ -333,12 +333,8 @@ function Section({
         {icon}
         <span className="hidden lg:inline">{label}</span>
       </PopoverTrigger>
-      {/* A panel of controls 24px in, so it takes rounded-surface. */}
-      <PopoverContent
-        side="top"
-        sideOffset={10}
-        className="w-80 gap-4 rounded-surface p-6"
-      >
+      {/* A panel of controls 24px in. */}
+      <PopoverContent side="top" sideOffset={10} className="w-80 gap-4 p-6">
         <p className="font-medium text-muted-foreground">{label}</p>
         {children}
       </PopoverContent>

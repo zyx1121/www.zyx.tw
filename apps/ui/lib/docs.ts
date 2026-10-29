@@ -5,7 +5,10 @@ import { COMPONENTS, type RegistryItem } from "@/lib/registry";
 // Import from server code only, like lib/registry.
 
 const GROUPS = [
-  { title: "Layout", names: ["corners"] },
+  {
+    title: "Layout",
+    names: ["corners", "page-decode", "section-title", "shell"],
+  },
   {
     title: "Blocks",
     names: ["confirm-dialog", "empty-state", "status-page"],
@@ -64,7 +67,7 @@ const HELPERS = new Set(["field-trigger"]);
 
 // Items that are the page's own chrome: their page shows the real thing
 // around it instead of a demo.
-const CHROME = new Set(["corners"]);
+const CHROME = new Set(["corners", "page-decode"]);
 
 export function hasDemo(name: string) {
   return !CHROME.has(name);

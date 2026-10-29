@@ -2,11 +2,11 @@
 
 import { useSyncExternalStore } from "react"
 
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "../lib/utils"
 
 const noop = () => () => {}
 
-/** A shell command as the 404 types it: a muted prompt, then the command. */
+/** A shell command: a muted prompt, then the command. */
 export function Command({
   children,
   className,
@@ -23,8 +23,8 @@ export function Command({
 }
 
 /**
- * The path the visitor asked for. The 404 is prerendered once for every
- * path, so the server renders nothing and the client fills it in.
+ * The path the visitor asked for, for a 404. The 404 is prerendered once for
+ * every path, so the server renders nothing and the client fills it in.
  */
 export function RequestedPath() {
   const path = useSyncExternalStore(
@@ -35,10 +35,13 @@ export function RequestedPath() {
   return <>{path}</>
 }
 
-/** A block cursor that blinks, as at an idle prompt. */
+/**
+ * A block cursor that blinks, as at an idle prompt: on for half a second, off
+ * for half, with no fade. It stays on under reduced motion.
+ */
 export function Cursor() {
   return (
-    <span aria-hidden="true" className="terminal-cursor">
+    <span aria-hidden="true" className="motion-safe:animate-cursor">
       {"█"}
     </span>
   )

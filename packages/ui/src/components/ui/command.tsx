@@ -7,7 +7,7 @@ import { CheckIcon, SearchIcon } from "lucide-react"
 import { cn } from "../../lib/utils"
 
 // Searchable list for a popover (combobox). It has no surface of its own:
-// the popover provides the glass, border and p-1.
+// the popover provides the window, its border and p-1.
 function Command({
   className,
   ...props
@@ -31,7 +31,7 @@ function CommandInput({
   return (
     <div
       data-slot="command-input-wrapper"
-      className="flex h-10 items-center gap-2 rounded-control border border-input px-3 [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground"
+      className="flex h-10 items-center gap-2 border border-input px-3 [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground"
     >
       <SearchIcon />
       <CommandPrimitive.Input
@@ -101,7 +101,7 @@ function CommandItem({
     <CommandPrimitive.Item
       data-slot="command-item"
       className={cn(
-        "group/command-item relative flex h-10 cursor-default items-center gap-2 rounded-control px-3 outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-selected:bg-muted [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+        "group/command-item relative flex h-10 cursor-default items-center gap-2 px-3 outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-selected:bg-muted [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
         className
       )}
       {...props}

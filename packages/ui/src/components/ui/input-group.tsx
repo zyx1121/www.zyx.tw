@@ -14,7 +14,7 @@ function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="input-group"
       role="group"
       className={cn(
-        "relative flex h-10 w-full min-w-0 items-center rounded-control border border-input transition-colors duration-state has-disabled:opacity-50 has-[[aria-invalid=true]]:border-destructive has-[[aria-invalid=true]]:ring-3 has-[[aria-invalid=true]]:ring-destructive/20 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-3 has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 dark:bg-input/30",
+        "relative flex h-10 w-full min-w-0 items-center border border-input transition-colors duration-state has-disabled:opacity-50 has-[[aria-invalid=true]]:border-destructive has-[[aria-invalid=true]]:ring-3 has-[[aria-invalid=true]]:ring-destructive/20 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-3 has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 dark:bg-input/30",
         className
       )}
       {...props}
@@ -45,8 +45,7 @@ function InputGroupAddon({
   )
 }
 
-// A 32px round icon button 4px inside the 40px group, so it never needs a
-// radius of its own on the concentric scale.
+// A 32px icon button 4px inside the 40px group.
 function InputGroupButton({
   className,
   type = "button",
@@ -58,7 +57,7 @@ function InputGroupButton({
       type={type}
       variant={variant}
       size="icon"
-      className={cn("size-8 rounded-full", className)}
+      className={cn("size-8", className)}
       {...props}
     />
   )

@@ -23,10 +23,9 @@
   --text-body--line-height: 1.5rem;
   --text-caption: 0.875rem;
   --text-caption--line-height: 1.25rem;
-  --font-sans: var(--font-inter), var(--font-noto-sans-jp), var(--font-noto-sans-tc), ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-inter), var(--font-noto-sans-jp), var(--font-noto-sans-tc), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --default-font-feature-settings: "liga" 1, "calt" 1, "ss01" 1, "zero" 1;
+  --font-sans: var(--font-sarasa-mono, "Sarasa Mono TC"), var(--font-noto-sans-tc), ui-monospace, monospace;
+  --font-heading: var(--font-sarasa-mono, "Sarasa Mono TC"), var(--font-noto-sans-tc), ui-monospace, monospace;
+  --font-mono: var(--font-sarasa-mono, "Sarasa Mono TC"), var(--font-noto-sans-tc), ui-monospace, monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
@@ -35,43 +34,38 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-destructive: var(--destructive);
   --color-border: var(--border);
-  --color-overlay: var(--overlay);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --radius-control: var(--radius);
-  --radius-menu: calc(var(--radius) + 0.25rem);
-  --radius-surface: calc(var(--radius) + 1.5rem);
   --animate-scramble-hold: scramble-text-hold 1.5s;
+  --animate-cursor: terminal-cursor 1s step-end infinite;
   --animate-mask-reveal: mask-reveal 600ms cubic-bezier(0.16, 1, 0.3, 1) var(--tw-animation-delay, 0s) backwards;
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.54 0 0);
+  --background: oklch(0.97 0.005 85);
+  --foreground: oklch(0.25 0 0);
+  --primary: oklch(0.25 0 0);
+  --primary-foreground: oklch(0.97 0.005 85);
+  --muted: oklch(0.93 0.005 85);
+  --muted-foreground: oklch(0.52 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --overlay: oklch(1 0 0 / 85%);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --radius: 1rem;
+  --border: oklch(0.89 0.005 85);
+  --input: oklch(0.89 0.005 85);
+  --ring: oklch(0.25 0 0);
+  --radius: 0;
 }
 
 .dark {
-  --background: oklch(0 0 0);
-  --foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.65 0 0);
+  --background: oklch(0.17 0 0);
+  --foreground: oklch(0.88 0 0);
+  --primary: oklch(0.88 0 0);
+  --primary-foreground: oklch(0.17 0 0);
+  --muted: oklch(0.26 0 0);
+  --muted-foreground: oklch(0.62 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
-  --overlay: oklch(0.145 0 0 / 85%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --ring: oklch(0.88 0 0);
 }
 
 /* Motion: state changes (hover, toggle, tab) take 150ms, overlays 200ms. */
@@ -108,6 +102,21 @@
   width: calc(var(--anchor-width) + 0.5rem);
 }
 
+/*
+ * A link in running text inverts on hover and focus, like a highlighted menu
+ * item, with no fade. It keeps its own resting underline.
+ */
+@utility terminal-link {
+  &:hover,
+  &:focus-visible {
+    background-color: var(--foreground);
+    color: var(--background);
+    text-decoration-line: none;
+    outline: none;
+    box-shadow: 0 0 0 2px var(--foreground);
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -120,6 +129,9 @@
   }
   .dark {
     color-scheme: dark;
+  }
+  ::selection {
+    @apply bg-foreground text-background;
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
@@ -142,6 +154,28 @@
     transition-duration: 1ms !important;
     transition-delay: 0s !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * The page decoder (components/page-decode.tsx) draws each row's entrance:
+ * its text starts scrambled and resolves. On a page that mounts it, rows are
+ * held invisible until it starts (at most 1.5s, so they still show if
+ * scripts fail); once it runs, their fades step aside.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html:has([data-slot="page-decode"]):not([data-decoder]) main [class*="enter-row-"] {
+    animation: scramble-text-hold 1.5s;
+  }
+  html[data-decoder] main [class*="enter-row-"] {
+    animation: none;
+  }
+}
+
+/* An idle prompt's block cursor (components/shell.tsx): on for half a second, off for half, no fade. */
+@keyframes terminal-cursor {
+  50% {
+    opacity: 0;
   }
 }
 

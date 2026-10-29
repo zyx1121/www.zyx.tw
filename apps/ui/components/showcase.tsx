@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { SectionTitle } from "@workspace/ui/components/section-title";
 import { cn } from "@workspace/ui/lib/utils";
 import { enterRow } from "@workspace/ui/lib/layout";
 
@@ -25,9 +26,7 @@ function Group({
   return (
     <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-5">
       <div className={enterRow(row)}>
-        <h2 id={`${id}-title`} className="font-medium">
-          {title}
-        </h2>
+        <SectionTitle id={`${id}-title`} title={title} />
         {description && (
           <p className="mt-3 text-muted-foreground">{description}</p>
         )}
@@ -56,7 +55,7 @@ export function Showcase({
       >
         <pre
           className={cn(
-            "overflow-x-auto rounded-control bg-muted p-4 font-mono text-caption",
+            "overflow-x-auto bg-muted p-4 font-mono text-caption",
             enterRow(FIRST_ROW + 1)
           )}
         >

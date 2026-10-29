@@ -86,7 +86,7 @@ function Swatch({ color }: { color?: keyof typeof SERIES_COLORS }) {
     <span
       aria-hidden
       className={cn(
-        "size-2 shrink-0 rounded-full",
+        "size-2 shrink-0",
         color === "muted"
           ? "bg-muted-foreground"
           : color === "destructive"
@@ -97,7 +97,7 @@ function Swatch({ color }: { color?: keyof typeof SERIES_COLORS }) {
   )
 }
 
-// The tooltip of a data point: a frosted layer-2 surface listing each series
+// The tooltip of a data point: a layer-2 window listing each series
 // with its color swatch.
 function ChartTooltipContent({
   active,
@@ -112,7 +112,7 @@ function ChartTooltipContent({
   if (!active || !payload?.length) return null
 
   return (
-    <div className="flex min-w-32 flex-col gap-1 rounded-control border border-border bg-overlay px-3 py-2 text-body shadow-lg backdrop-blur-md">
+    <div className="flex min-w-32 flex-col gap-1 border border-muted-foreground bg-background px-3 py-2 text-body">
       {label !== undefined && <div className="font-medium">{label}</div>}
       {payload.map((entry) => {
         const key = String(entry.dataKey ?? entry.name)

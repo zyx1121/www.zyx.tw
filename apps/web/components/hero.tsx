@@ -10,28 +10,6 @@ export function HeroTitle({ text }: { text: string }) {
 }
 
 /**
- * A section's heading in brackets and capitals, as the corner nav marks the
- * current page. The brackets are decoration; screen readers hear the title.
- */
-export function SectionTitle({
-  id,
-  title,
-  className,
-}: {
-  id?: string
-  title: string
-  className?: string
-}) {
-  return (
-    <h2 id={id} className={cn("text-body font-medium uppercase", className)}>
-      <span aria-hidden="true">[</span>
-      {title}
-      <span aria-hidden="true">]</span>
-    </h2>
-  )
-}
-
-/**
  * Title and an optional muted subtitle, 12 px apart, entering as rows 1 and
  * 2. The page decides what follows and how far away; its first block is
  * row 3.

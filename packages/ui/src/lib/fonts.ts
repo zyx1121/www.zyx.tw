@@ -1,62 +1,45 @@
 import { Geist_Mono, Noto_Sans_JP, Noto_Sans_TC } from "next/font/google"
 import localFont from "next/font/local"
 
-// The fonts behind the theme's --font-sans and --font-mono stacks
-// (apps/ui/DESIGN.md). Every root layout on @workspace/ui puts
-// `fontVariables` on <html>.
+// The fonts behind the theme's one stack (apps/ui/DESIGN.md, Type). Every
+// root layout on @workspace/ui puts `fontVariables` on <html>.
 
-// Inter 4.1 from rsms/inter, subset to Latin (../fonts/README.md has the
-// command). The Google Fonts build of Inter lacks the ss01 (open digits) and
-// zero (slashed zero) features that the theme turns on, so it is self-hosted.
-// Latin Extended letters render in whatever fallback the platform has (Arial,
-// Noto Sans JP or the system font); static site content has none.
-export const inter = localFont({
-  src: "../fonts/InterVariable.woff2",
-  weight: "100 900",
+// Sarasa Mono TC sets all text, for the terminal look: every glyph keeps its
+// cell, so text lines up on a character grid. It is subset to Latin,
+// punctuation, box drawing and CJK punctuation plus the Han characters the
+// apps' text uses (../fonts/README.md has the command). Sarasa has no Medium,
+// so SemiBold serves 500 and 600.
+export const sarasaMono = localFont({
+  src: [
+    { path: "../fonts/SarasaMonoTC-Regular.woff2", weight: "400" },
+    { path: "../fonts/SarasaMonoTC-SemiBold.woff2", weight: "500 600" },
+  ],
   style: "normal",
   display: "swap",
-  adjustFontFallback: "Arial",
-  variable: "--font-inter",
-})
-
-// The italic is a second call only so that it is not preloaded; the browser
-// fetches it the first time italic text renders. Its declaration moves it into
-// the family above, which Turbopack names after the `inter` const.
-export const interItalic = localFont({
-  src: "../fonts/InterVariable-Italic.woff2",
-  weight: "100 900",
-  style: "italic",
-  display: "swap",
-  preload: false,
   adjustFontFallback: false,
-  declarations: [{ prop: "font-family", value: "'inter'" }],
+  variable: "--font-sarasa-mono",
 })
 
-// CJK after Inter. Noto Sans JP comes first so Han characters take Japanese
-// forms and punctuation; Noto Sans TC fills the glyphs JP lacks (值, 夠). Both
-// ship as unicode-range slices without preload, so a page downloads only the
-// slices its text needs.
-export const notoSansJp = Noto_Sans_JP({
-  display: "swap",
-  preload: false,
-  variable: "--font-noto-sans-jp",
-})
-
+// Han characters outside Sarasa's subset, as unicode-range slices without
+// preload, so a page downloads only the slices its text needs.
 export const notoSansTc = Noto_Sans_TC({
   display: "swap",
   preload: false,
   variable: "--font-noto-sans-tc",
 })
 
-// Code only, so it is not preloaded.
+// Plump (apps/3d) sets its own scene text in these; no other app loads them.
+export const notoSansJp = Noto_Sans_JP({
+  display: "swap",
+  preload: false,
+  variable: "--font-noto-sans-jp",
+})
+
 export const geistMono = Geist_Mono({
   preload: false,
   variable: "--font-geist-mono",
 })
 
-export const fontVariables = [
-  inter.variable,
-  notoSansJp.variable,
-  notoSansTc.variable,
-  geistMono.variable,
-].join(" ")
+export const fontVariables = [sarasaMono.variable, notoSansTc.variable].join(
+  " "
+)

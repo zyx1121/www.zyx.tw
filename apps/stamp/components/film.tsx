@@ -36,7 +36,7 @@ export function Film({ id, className }: { id?: string; className?: string }) {
         aria-label={FILM.caption}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
-        className="aspect-video w-full rounded-control bg-muted"
+        className="aspect-video w-full bg-muted"
       />
       <figcaption className="mt-3 flex items-start justify-between gap-5">
         <p className="text-caption text-muted-foreground">{FILM.caption}</p>

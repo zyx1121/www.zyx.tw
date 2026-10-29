@@ -23,12 +23,40 @@ const AT: Record<At, string> = {
 }
 
 /**
- * Text links in a corner: muted, lit on hover and for the current page. The
- * hit area reaches 8 px past the text on either side and stays 24 px tall
- * for both header and footer text, centered on the text line.
+ * Text links in a corner: uppercase like a terminal menu, muted, lit on hover
+ * and for the current page. The hit area reaches 8 px past the text on either
+ * side and stays 24 px tall for both header and footer text, centered on the
+ * text line.
  */
 export const cornerLink =
-  "relative rounded-control text-muted-foreground outline-offset-4 transition-colors after:absolute after:-inset-x-2 after:top-1/2 after:h-6 after:-translate-y-1/2 hover:text-foreground focus-visible:outline-2 aria-[current=page]:text-foreground"
+  "relative uppercase text-muted-foreground outline-offset-4 transition-colors after:absolute after:-inset-x-2 after:top-1/2 after:h-6 after:-translate-y-1/2 hover:text-foreground focus-visible:outline-2 aria-[current=page]:text-foreground"
+
+/**
+ * A nav label in brackets, as in a terminal menu: the brackets show on the
+ * current page only. The other labels keep theirs invisible, so nothing
+ * shifts on navigation; a nav of these takes `gap-2`, since each label
+ * already carries a character of space on either side.
+ */
+export function CornerLabel({
+  current = false,
+  children,
+}: {
+  current?: boolean
+  children: React.ReactNode
+}) {
+  const bracket = current ? undefined : "invisible"
+  return (
+    <>
+      <span aria-hidden="true" className={bracket}>
+        [
+      </span>
+      {children}
+      <span aria-hidden="true" className={bracket}>
+        ]
+      </span>
+    </>
+  )
+}
 
 /** The tips on Privacy and Terms, which www.zyx.tw's own links share. */
 export const LEGAL_TIPS = {
@@ -139,7 +167,7 @@ export function TopCorners({
           <Link
             href={home}
             aria-label={label}
-            className="group rounded-control outline-offset-4 focus-visible:outline-2"
+            className="group outline-offset-4 focus-visible:outline-2"
           >
             {/* 20 px tall, the corners' line height. */}
             <ZyxMark className="h-5 w-auto group-hover:-scale-x-100 motion-safe:transition-transform motion-safe:duration-overlay" />

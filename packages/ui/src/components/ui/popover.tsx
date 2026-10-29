@@ -13,7 +13,7 @@ function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
   return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />
 }
 
-// A layer-2 menu surface: frosted glass, p-1 around control-radius content.
+// A layer-2 window: opaque and outlined, p-1 around its content.
 // For a combobox, use ComboboxContent: at least the trigger's width.
 function PopoverContent({
   className,
@@ -39,7 +39,7 @@ function PopoverContent({
         <PopoverPrimitive.Popup
           data-slot="popover-content"
           className={cn(
-            "z-50 flex w-72 origin-(--transform-origin) flex-col rounded-menu border border-border bg-overlay p-1 text-body text-foreground shadow-md outline-hidden backdrop-blur-md duration-overlay data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+            "z-50 flex w-72 origin-(--transform-origin) flex-col border border-muted-foreground bg-background p-1 text-body text-foreground outline-hidden duration-overlay data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
             className
           )}
           {...props}

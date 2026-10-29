@@ -3,14 +3,13 @@ import * as React from "react"
 import { cn } from "../../lib/utils"
 
 // A floating bar of 40px controls over a working surface (a canvas, a map):
-// the frosted layer-2 surface with 4px around its controls, so it takes
-// rounded-menu around their rounded-control.
+// a layer-2 window with 4px around its controls.
 function Toolbar({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="toolbar"
       className={cn(
-        "flex items-center gap-1 rounded-menu border border-border bg-overlay p-1 text-body shadow-lg backdrop-blur-md",
+        "flex items-center gap-1 border border-muted-foreground bg-background p-1 text-body",
         className
       )}
       {...props}

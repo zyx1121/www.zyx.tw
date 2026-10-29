@@ -4,8 +4,7 @@ import { cn } from "../../lib/utils"
 
 type AttachmentState = "idle" | "uploading" | "error" | "done"
 
-// A file chip: a 40px media square 4px inside the chip, so the chip takes
-// rounded-menu around the media's rounded-control. Idle (picked, not sent)
+// A file chip: a 40px media square 4px inside the chip. Idle (picked, not sent)
 // has a dashed border; uploading shimmers the name.
 function Attachment({
   className,
@@ -17,7 +16,7 @@ function Attachment({
       data-slot="attachment"
       data-state={state}
       className={cn(
-        "group/attachment flex w-fit max-w-full min-w-48 items-center gap-3 rounded-menu border border-border p-1 pr-4 text-body data-[state=error]:border-destructive data-[state=idle]:border-dashed",
+        "group/attachment flex w-fit max-w-full min-w-48 items-center gap-3 border border-border p-1 pr-4 text-body data-[state=error]:border-destructive data-[state=idle]:border-dashed",
         className
       )}
       {...props}
@@ -30,7 +29,7 @@ function AttachmentMedia({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="attachment-media"
       className={cn(
-        "flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-control bg-muted group-data-[state=error]/attachment:text-destructive [&_svg]:size-4 [&>img]:size-full [&>img]:object-cover",
+        "flex size-10 shrink-0 items-center justify-center overflow-hidden bg-muted group-data-[state=error]/attachment:text-destructive [&_svg]:size-4 [&>img]:size-full [&>img]:object-cover",
         className
       )}
       {...props}
