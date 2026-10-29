@@ -126,12 +126,6 @@ export const SECTIONS: Section[] = [
       },
       {
         when: "2026",
-        what: "An operating system for AI agents",
-        where: "kitbash",
-        href: "https://github.com/zyx1121/kitbash",
-      },
-      {
-        when: "2026",
         what: "Now playing inside Claude Code",
         where: "music-mod",
         href: "https://github.com/zyx1121/music-mod",

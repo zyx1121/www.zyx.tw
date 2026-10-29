@@ -8,8 +8,8 @@ export type Project = {
   /** What it is for, in about 32 characters: the row shows it on one line. */
   purpose: string
   /**
-   * Written by `bun run previews` (scripts/previews.py): a 1440x900 color
-   * screenshot and its dithered twin. The window uses a matching 16:10 image
+   * Written by `bun run previews` (scripts/previews.py): a 1440x1080 color
+   * screenshot and its dithered twin. The window uses a matching 4:3 image
    * area and contains other aspect ratios without cropping.
    * `focus` places any spare space as two percentages ("50% 0%" aligns top).
    */
