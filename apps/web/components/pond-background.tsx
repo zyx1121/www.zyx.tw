@@ -19,7 +19,7 @@ function randomKoi(): SharkSpec[] {
 }
 
 /** The pages the pond swims behind. */
-const POND_PATHS = ["/", "/works", "/about"]
+const POND_PATHS = ["/", "/works", "/about", "/privacy", "/terms"]
 
 /** The pond's cell size, which the home's mark draws on as well. */
 export const POND_CELL_SCALE = 0.6
