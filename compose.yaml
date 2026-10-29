@@ -1,9 +1,55 @@
-# www.zyx.tw. The image is built by CI from apps/web/Dockerfile; settings go
-# in .env next to this file (see apps/web/.env.example).
+# The zyx.tw apps. CI builds each image and pushes :main from main; the host
+# runs this file and pulls :main within a minute. Ports and image tags go in
+# .env next to this file, each app's own settings in env/<app>.env (see
+# .env.example and apps/<app>/.env.example).
+x-app: &app
+  restart: unless-stopped
+
 services:
   web:
+    <<: *app
     image: ghcr.io/zyx1121/www.zyx.tw:${WEB_VERSION:-main}
     env_file: .env
     ports:
       - "${WEB_BIND:-127.0.0.1:3000}:3000"
-    restart: unless-stopped
+
+  ui:
+    <<: *app
+    image: ghcr.io/zyx1121/ui.zyx.tw:${UI_VERSION:-main}
+    ports:
+      - "${UI_BIND:-127.0.0.1:3001}:3000"
+
+  good:
+    <<: *app
+    image: ghcr.io/zyx1121/good.zyx.tw:${GOOD_VERSION:-main}
+    env_file: { path: env/good.env, required: false }
+    ports:
+      - "${GOOD_BIND:-127.0.0.1:3002}:3000"
+
+  time:
+    <<: *app
+    image: ghcr.io/zyx1121/time.zyx.tw:${TIME_VERSION:-main}
+    env_file: { path: env/time.env, required: false }
+    ports:
+      - "${TIME_BIND:-127.0.0.1:3003}:3000"
+
+  link:
+    <<: *app
+    image: ghcr.io/zyx1121/link.zyx.tw:${LINK_VERSION:-main}
+    env_file: env/link.env
+    ports:
+      - "${LINK_BIND:-127.0.0.1:3004}:3000"
+
+  "1909":
+    <<: *app
+    image: ghcr.io/zyx1121/1909.zyx.tw:${APP_1909_VERSION:-main}
+    env_file: env/1909.env
+    ports:
+      - "${APP_1909_BIND:-127.0.0.1:3005}:3000"
+
+  3d:
+    <<: *app
+    image: ghcr.io/zyx1121/3d.zyx.tw:${PLUMP_VERSION:-main}
+    env_file: { path: env/3d.env, required: false }
+    ports:
+      - "${PLUMP_BIND:-127.0.0.1:3006}:3000"

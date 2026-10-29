@@ -61,7 +61,7 @@ The source lives in `packages/ui/src/components/ui/`; `registry/zyx/ui` is a sym
 2. Register it in `registry.json`
 3. Add its demo to `components/showcase.tsx`
 4. `bun run build` regenerates `public/r/<name>.json` and checks it builds
-5. Merge to `main`: Vercel builds and serves `main` only
+5. Merge to `main`: CI builds the container image and the host serves `main` within a minute
 
 ## License
 

@@ -97,9 +97,9 @@ Facts for coding agents and LLM tools. The rules for changing the code are in [A
 - **Install**: `bun install --frozen-lockfile`
 - **Run**: `bun dev --filter=web`
 - **Verify**: `bun run theme:check && bun run tokens:check && bun run typecheck`
-- **Config**: `.env.example` in `apps/web` and `apps/link`, and the variables in `apps/1909/README.md`
+- **Config**: the root `.env.example` (ports and image tags for `compose.yaml`) and `.env.example` in each app that needs settings
 - **Secrets**: Supabase keys and the optional `GITHUB_TOKEN` in each app's `.env.local`, never in the repo
-- **Limits**: `apps/3d` and `apps/stamp` deploy with the Vercel CLI, not from Git. `apps/1909` is private.
+- **Deploy**: each app is a container image built by CI and run with the root `compose.yaml` (AGENTS.md, Deploy). `apps/1909` is private.
 
 ## Development
 

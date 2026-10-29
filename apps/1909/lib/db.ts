@@ -1,6 +1,6 @@
 import { neon } from "@neondatabase/serverless"
 
-// Pooled Neon URL injected by the Vercel Neon integration. Read per call so a
+// The pooled Neon URL, from the container's env file. Read per call so a
 // build without it (CI) still succeeds; only requests need the database.
 export const db = () => {
   const url = process.env.DATABASE_URL
