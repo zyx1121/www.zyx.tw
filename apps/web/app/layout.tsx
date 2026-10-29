@@ -7,6 +7,8 @@ import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 import { TooltipProvider } from "@workspace/ui/components/ui/tooltip"
 import { fontVariables } from "@workspace/ui/lib/fonts"
 
+import { cubic11, monocraft } from "@/lib/fonts"
+
 import { SiteJsonLd } from "@/components/json-ld"
 import { PageDecode } from "@workspace/ui/components/page-decode"
 import { PondBackground } from "@/components/pond-background"
@@ -53,12 +55,14 @@ export default async function RootLayout({
       // 20 px from the window's edge on every page and every site.
       className={cn(
         "dark",
-        "antialiased [scrollbar-gutter:stable]",
+        "[scrollbar-gutter:stable]",
         fontVariables,
+        monocraft.variable,
+        cubic11.variable,
         "font-sans"
       )}
     >
-      {/* Body text is 16px at every width, phones included. Pages fill the
+      {/* Body text is 22px at every width, phones included. Pages fill the
           viewport so the footer sits low. */}
       <body className="flex min-h-dvh flex-col text-body">
         <SiteJsonLd />

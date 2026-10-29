@@ -1,1 +1,26 @@
 @import "@workspace/ui/globals.css";
+
+/* Trial of pixel type on this site only; the other sites keep the shared
+ * design system's type. Monocraft sets Latin and Cubic 11 sets Han
+ * characters (lib/fonts.ts); Han characters outside Cubic 11's subset fall
+ * back to Noto Sans TC. Both are bitmap designs on an 11 px grid, so every
+ * size and line height is a multiple of 11 px, and text is drawn without
+ * smoothing so the pixels stay square. */
+@theme inline {
+  --font-sans:
+    var(--font-monocraft), var(--font-cubic-11), var(--font-noto-sans-tc),
+    ui-monospace, monospace;
+  --text-display: 77px;
+  --text-display--line-height: 77px;
+  --text-title: 33px;
+  --text-title--line-height: 44px;
+  --text-body: 22px;
+  --text-body--line-height: 33px;
+  --text-caption: 11px;
+  --text-caption--line-height: 22px;
+}
+
+html {
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
