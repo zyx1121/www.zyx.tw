@@ -1,0 +1,15 @@
+/* Sarasa Mono TC for projects on the ui.zyx.tw base (packages/ui/src/fonts/README.md). */
+@font-face {
+  font-family: "Sarasa Mono TC";
+  src: url("./SarasaMonoTC-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Sarasa Mono TC";
+  src: url("./SarasaMonoTC-SemiBold.woff2") format("woff2");
+  font-weight: 500 600;
+  font-style: normal;
+  font-display: swap;
+}

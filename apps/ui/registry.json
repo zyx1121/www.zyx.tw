@@ -29,17 +29,14 @@
         "https://ui.zyx.tw/r/utils.json",
         "https://ui.zyx.tw/r/font-noto-sans-tc.json"
       ],
-      "devDependencies": ["tw-animate-css", "shadcn"],
+      "devDependencies": [
+        "tw-animate-css",
+        "shadcn"
+      ],
       "css": {
+        "@import url(\"https://ui.zyx.tw/fonts/sarasa-mono-tc.css\")": {},
         "@import \"tw-animate-css\"": {},
         "@import \"shadcn/tailwind.css\"": {},
-        "@font-face": {
-          "font-family": "\"Sarasa Mono TC\"",
-          "src": "url(\"https://ui.zyx.tw/fonts/SarasaMonoTC-Regular.woff2\") format(\"woff2\")",
-          "font-weight": "400",
-          "font-style": "normal",
-          "font-display": "swap"
-        },
         "@utility duration-state": {
           "--tw-duration": "150ms",
           "transition-duration": "150ms",
@@ -79,13 +76,6 @@
           },
           "::selection": {
             "@apply bg-foreground text-background": {}
-          },
-          "@font-face": {
-            "font-family": "\"Sarasa Mono TC\"",
-            "src": "url(\"https://ui.zyx.tw/fonts/SarasaMonoTC-SemiBold.woff2\") format(\"woff2\")",
-            "font-weight": "500 600",
-            "font-style": "normal",
-            "font-display": "swap"
           }
         },
         "@media (prefers-reduced-motion: reduce)": {
@@ -110,9 +100,9 @@
           "text-body--line-height": "1.5rem",
           "text-caption": "0.875rem",
           "text-caption--line-height": "1.25rem",
-          "font-sans": "var(--font-sarasa-mono, \"Sarasa Mono TC\"), var(--font-noto-sans-tc), ui-monospace, monospace",
-          "font-heading": "var(--font-sarasa-mono, \"Sarasa Mono TC\"), var(--font-noto-sans-tc), ui-monospace, monospace",
-          "font-mono": "var(--font-sarasa-mono, \"Sarasa Mono TC\"), var(--font-noto-sans-tc), ui-monospace, monospace"
+          "font-sans": "var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc), ui-monospace, monospace",
+          "font-heading": "var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc), ui-monospace, monospace",
+          "font-mono": "var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc), ui-monospace, monospace"
         },
         "light": {
           "background": "oklch(0.97 0.005 85)",
@@ -146,7 +136,9 @@
       "type": "registry:lib",
       "title": "Utils",
       "description": "cn at @/lib/utils, aware of the four type sizes.",
-      "dependencies": ["cn"],
+      "dependencies": [
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/lib/utils.ts",
@@ -179,8 +171,14 @@
       "type": "registry:lib",
       "title": "Agent Model",
       "description": "Any OpenAI-compatible model for the AI SDK, configured from <PREFIX>MODEL_* variables, traced, and waiting out 429 rate limits until the gateway resets.",
-      "dependencies": ["ai", "@ai-sdk/openai", "@opentelemetry/api"],
-      "registryDependencies": ["https://ui.zyx.tw/r/agent-telemetry.json"],
+      "dependencies": [
+        "ai",
+        "@ai-sdk/openai",
+        "@opentelemetry/api"
+      ],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/agent-telemetry.json"
+      ],
       "files": [
         {
           "path": "registry/zyx/agent/model.ts",
@@ -200,7 +198,9 @@
         "@modelcontextprotocol/server",
         "@opentelemetry/api"
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/agent-telemetry.json"],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/agent-telemetry.json"
+      ],
       "files": [
         {
           "path": "registry/zyx/agent/tools.ts",
@@ -227,7 +227,9 @@
       "type": "registry:lib",
       "title": "Agent Public Fetch",
       "description": "fetch for requests made on an agent's behalf that reaches public addresses only, checked inside the connection's own DNS lookup so DNS rebinding cannot slip through. Node.js only.",
-      "dependencies": ["undici"],
+      "dependencies": [
+        "undici"
+      ],
       "files": [
         {
           "path": "registry/zyx/agent/public-fetch.ts",
@@ -245,7 +247,9 @@
         "provider": "google",
         "import": "Noto_Sans_TC",
         "variable": "--font-noto-sans-tc",
-        "subsets": ["latin"],
+        "subsets": [
+          "latin"
+        ],
         "dependency": "@fontsource-variable/noto-sans-tc"
       },
       "description": "Noto Sans TC for the Han characters outside the Sarasa Mono TC subset."
@@ -255,7 +259,10 @@
       "type": "registry:component",
       "title": "Corners",
       "description": "The four fixed corners every zyx.tw site shares: the zyx mark and the page nav on top, Privacy and Terms and the copyright below, each item with a tip.",
-      "dependencies": ["@base-ui/react", "next"],
+      "dependencies": [
+        "@base-ui/react",
+        "next"
+      ],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
         "https://ui.zyx.tw/r/tooltip.json"
@@ -294,7 +301,9 @@
       "type": "registry:component",
       "title": "Page Decode",
       "description": "The page motion: a page's text decodes in row by row as a terminal prints it, and scrambles out before a link within the app leaves it.",
-      "dependencies": ["next"],
+      "dependencies": [
+        "next"
+      ],
       "css": {
         "@media (prefers-reduced-motion: no-preference)": {
           "html:has([data-slot=\"page-decode\"]):not([data-decoder]) main [class*=\"enter-row-\"]": {
@@ -322,7 +331,9 @@
       "type": "registry:component",
       "title": "Shell",
       "description": "Pieces of a shell session: a command after a muted prompt, a blinking block cursor and the requested path for a 404.",
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ],
       "cssVars": {
         "theme": {
           "animate-cursor": "terminal-cursor 1s step-end infinite"
@@ -347,7 +358,9 @@
       "type": "registry:component",
       "title": "Section Title",
       "description": "A section's heading in brackets and capitals, as the corner nav marks the current page.",
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ],
       "files": [
         {
           "path": "registry/zyx/components/section-title.tsx",
@@ -392,7 +405,9 @@
       "type": "registry:block",
       "title": "Status Page",
       "description": "A title and the way out, for not found, errors and no access.",
-      "registryDependencies": ["https://ui.zyx.tw/r/shell.json"],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/shell.json"
+      ],
       "files": [
         {
           "path": "registry/zyx/components/status-page.tsx",
@@ -405,7 +420,10 @@
       "type": "registry:ui",
       "title": "Alert Dialog",
       "description": "Confirmation dialog with Cancel and an action.",
-      "dependencies": ["@base-ui/react", "cn"],
+      "dependencies": [
+        "@base-ui/react",
+        "cn"
+      ],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
         "https://ui.zyx.tw/r/button.json"
@@ -422,77 +440,108 @@
       "type": "registry:ui",
       "title": "Attachment",
       "description": "File chip with a media square, name and upload state.",
-      "dependencies": ["cn"],
+      "dependencies": [
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/attachment.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "avatar",
       "type": "registry:ui",
       "title": "Avatar",
       "description": "Square 40px avatar with an initials fallback.",
-      "dependencies": ["@base-ui/react", "cn"],
+      "dependencies": [
+        "@base-ui/react",
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/avatar.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "badge",
       "type": "registry:ui",
       "title": "Badge",
       "description": "Status label: default, muted, outline, destructive.",
-      "dependencies": ["@base-ui/react", "class-variance-authority", "cn"],
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/badge.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "bubble",
       "type": "registry:ui",
       "title": "Bubble",
       "description": "Chat text: a muted bubble for the person, plain text for the reply.",
-      "dependencies": ["@base-ui/react", "class-variance-authority", "cn"],
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/bubble.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "button",
       "type": "registry:ui",
       "title": "Button",
       "description": "Button in one 40px height: variants default, outline, ghost, destructive; sizes default and icon.",
-      "dependencies": ["@base-ui/react", "class-variance-authority", "cn"],
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/button.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "calendar",
       "type": "registry:ui",
       "title": "Calendar",
       "description": "Month grid for picking one day, with 40px day buttons.",
-      "dependencies": ["cn", "lucide-react", "react-day-picker"],
+      "dependencies": [
+        "cn",
+        "lucide-react",
+        "react-day-picker"
+      ],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
         "https://ui.zyx.tw/r/button.json"
@@ -509,49 +558,68 @@
       "type": "registry:ui",
       "title": "Chart",
       "description": "Recharts container in the theme's colors, with a window tooltip.",
-      "dependencies": ["cn", "recharts"],
+      "dependencies": [
+        "cn",
+        "recharts"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/chart.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "checkbox",
       "type": "registry:ui",
       "title": "Checkbox",
       "description": "Square 20px checkbox.",
-      "dependencies": ["@base-ui/react", "cn", "lucide-react"],
+      "dependencies": [
+        "@base-ui/react",
+        "cn",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/checkbox.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "collapsible",
       "type": "registry:ui",
       "title": "Collapsible",
       "description": "Unstyled show / hide region.",
-      "dependencies": ["@base-ui/react", "cn"],
+      "dependencies": [
+        "@base-ui/react",
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/collapsible.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "combobox",
       "type": "registry:ui",
       "title": "Combobox",
       "description": "Trigger and content for a searchable picker built from Popover and Command.",
-      "dependencies": ["cn", "lucide-react"],
+      "dependencies": [
+        "cn",
+        "lucide-react"
+      ],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
         "https://ui.zyx.tw/r/field-trigger.json",
@@ -569,14 +637,20 @@
       "type": "registry:ui",
       "title": "Command",
       "description": "Searchable list for a combobox inside a popover.",
-      "dependencies": ["cmdk", "cn", "lucide-react"],
+      "dependencies": [
+        "cmdk",
+        "cn",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/command.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "dialog",
@@ -605,14 +679,20 @@
       "type": "registry:ui",
       "title": "Dropdown Menu",
       "description": "Action menu window with labels, separators and one level of submenu.",
-      "dependencies": ["@base-ui/react", "cn", "lucide-react"],
+      "dependencies": [
+        "@base-ui/react",
+        "cn",
+        "lucide-react"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/dropdown-menu.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "field-trigger",
@@ -631,7 +711,9 @@
       "type": "registry:ui",
       "title": "Input Group",
       "description": "Input with an icon, text or a button inside its border.",
-      "dependencies": ["cn"],
+      "dependencies": [
+        "cn"
+      ],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
         "https://ui.zyx.tw/r/button.json",
@@ -649,35 +731,46 @@
       "type": "registry:ui",
       "title": "Input",
       "description": "Text input, 40px tall to match Button.",
-      "dependencies": ["@base-ui/react", "cn"],
+      "dependencies": [
+        "@base-ui/react",
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/input.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "label",
       "type": "registry:ui",
       "title": "Label",
       "description": "Form label in text-body, medium weight.",
-      "dependencies": ["cn"],
+      "dependencies": [
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/label.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "mask-reveal",
       "type": "registry:ui",
       "title": "Mask Reveal",
       "description": "Reveals its content with a feathered mask sweeping left to right.",
-      "dependencies": ["cn"],
+      "dependencies": [
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/mask-reveal.tsx",
@@ -705,56 +798,74 @@
           }
         }
       },
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "message",
       "type": "registry:ui",
       "title": "Message",
       "description": "Chat transcript layout: groups, messages, content and footer.",
-      "dependencies": ["cn"],
+      "dependencies": [
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/message.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "popover",
       "type": "registry:ui",
       "title": "Popover",
       "description": "Window anchored to a trigger.",
-      "dependencies": ["@base-ui/react", "cn"],
+      "dependencies": [
+        "@base-ui/react",
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/popover.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "resizable",
       "type": "registry:ui",
       "title": "Resizable",
       "description": "Panels split by a hairline handle you can drag.",
-      "dependencies": ["cn", "react-resizable-panels"],
+      "dependencies": [
+        "cn",
+        "react-resizable-panels"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/resizable.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "scramble-text",
       "type": "registry:ui",
       "title": "Scramble Text",
       "description": "Text that resolves left to right from random glyphs, without moving layout.",
-      "dependencies": ["cn"],
+      "dependencies": [
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/scramble-text.tsx",
@@ -773,14 +884,20 @@
           }
         }
       },
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "select",
       "type": "registry:ui",
       "title": "Select",
       "description": "Single-choice dropdown, as tall as Input.",
-      "dependencies": ["@base-ui/react", "cn", "lucide-react"],
+      "dependencies": [
+        "@base-ui/react",
+        "cn",
+        "lucide-react"
+      ],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
         "https://ui.zyx.tw/r/field-trigger.json"
@@ -797,21 +914,30 @@
       "type": "registry:ui",
       "title": "Separator",
       "description": "Hairline divider, horizontal or vertical.",
-      "dependencies": ["@base-ui/react", "cn"],
+      "dependencies": [
+        "@base-ui/react",
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/separator.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "sheet",
       "type": "registry:ui",
       "title": "Sheet",
       "description": "Full-height window on the left or right edge.",
-      "dependencies": ["@base-ui/react", "cn", "lucide-react"],
+      "dependencies": [
+        "@base-ui/react",
+        "cn",
+        "lucide-react"
+      ],
       "registryDependencies": [
         "https://ui.zyx.tw/r/utils.json",
         "https://ui.zyx.tw/r/button.json"
@@ -828,35 +954,47 @@
       "type": "registry:ui",
       "title": "Skeleton",
       "description": "Pulsing placeholder for loading content.",
-      "dependencies": ["cn"],
+      "dependencies": [
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/skeleton.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "slider",
       "type": "registry:ui",
       "title": "Slider",
       "description": "Range slider with a 4px track and 20px thumbs.",
-      "dependencies": ["@base-ui/react", "cn"],
+      "dependencies": [
+        "@base-ui/react",
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/slider.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "sonner",
       "type": "registry:ui",
       "title": "Sonner",
       "description": "Toasts in a small window.",
-      "dependencies": ["lucide-react", "sonner"],
+      "dependencies": [
+        "lucide-react",
+        "sonner"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/sonner.tsx",
@@ -869,64 +1007,87 @@
       "type": "registry:ui",
       "title": "Switch",
       "description": "On / off toggle, one size.",
-      "dependencies": ["@base-ui/react", "cn"],
+      "dependencies": [
+        "@base-ui/react",
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/switch.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "table",
       "type": "registry:ui",
       "title": "Table",
       "description": "Data table with muted headers.",
-      "dependencies": ["cn"],
+      "dependencies": [
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/table.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "tabs",
       "type": "registry:ui",
       "title": "Tabs",
       "description": "Segmented tabs with 40px triggers.",
-      "dependencies": ["@base-ui/react", "cn"],
+      "dependencies": [
+        "@base-ui/react",
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/tabs.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "textarea",
       "type": "registry:ui",
       "title": "Textarea",
       "description": "Multi-line input that grows with its content.",
-      "dependencies": ["cn"],
+      "dependencies": [
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/textarea.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "theme-toggle",
       "type": "registry:ui",
       "title": "Theme Toggle",
       "description": "Icon button that switches light and dark (next-themes).",
-      "dependencies": ["lucide-react", "next-themes"],
-      "registryDependencies": ["https://ui.zyx.tw/r/button.json"],
+      "dependencies": [
+        "lucide-react",
+        "next-themes"
+      ],
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/button.json"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/theme-toggle.tsx",
@@ -939,42 +1100,56 @@
       "type": "registry:ui",
       "title": "Toggle",
       "description": "Pressable button that stays on, the box of a ghost Button.",
-      "dependencies": ["@base-ui/react", "cn"],
+      "dependencies": [
+        "@base-ui/react",
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/toggle.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "toolbar",
       "type": "registry:ui",
       "title": "Toolbar",
       "description": "Floating window of 40px controls over a canvas or map.",
-      "dependencies": ["cn"],
+      "dependencies": [
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/toolbar.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     },
     {
       "name": "tooltip",
       "type": "registry:ui",
       "title": "Tooltip",
       "description": "Short lowercase label in a small window on hover or focus.",
-      "dependencies": ["@base-ui/react", "cn"],
+      "dependencies": [
+        "@base-ui/react",
+        "cn"
+      ],
       "files": [
         {
           "path": "registry/zyx/ui/tooltip.tsx",
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["https://ui.zyx.tw/r/utils.json"]
+      "registryDependencies": [
+        "https://ui.zyx.tw/r/utils.json"
+      ]
     }
   ]
 }
