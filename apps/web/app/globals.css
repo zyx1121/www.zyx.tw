@@ -33,13 +33,14 @@
 
 /* Tips open as small terminal windows, square and outlined like the works
  * window, instead of the shared filled bubble. Unlayered, so they win over
- * the component's utilities without forking it. */
+ * the component's utilities without forking it. Lowercase, like a shell. */
 [data-slot="tooltip-content"] {
   border: 1px solid var(--muted-foreground);
   border-radius: 0;
   background: var(--background);
   color: var(--foreground);
   line-height: 1.5;
+  text-transform: lowercase;
 }
 
 /* The page decoder (components/page-decode.tsx) draws each row's entrance:
