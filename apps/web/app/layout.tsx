@@ -52,7 +52,7 @@ export default async function RootLayout({
       // gains or loses its scrollbar. One edge only, so the left corners stay
       // 20 px from the window's edge on every page and every site.
       className={cn(
-        "dark",
+        "dark tv",
         "antialiased [scrollbar-gutter:stable]",
         fontVariables,
         "font-sans"

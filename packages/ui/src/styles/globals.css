@@ -250,6 +250,54 @@
 }
 
 /*
+ * TV frame, opt in with `tv` on <html>: a black bezel around the viewport and
+ * a screen with squircle corners, a soft dark glow at its edge and faint
+ * scanlines. The frame is one fixed layer above everything that ignores the
+ * pointer; the corners and the edge blur move in by the bezel.
+ */
+:root {
+  --bezel: 0px;
+}
+html.tv {
+  --bezel: 24px;
+  scrollbar-width: none;
+}
+html.tv body {
+  padding-inline: var(--bezel);
+}
+html.tv::-webkit-scrollbar {
+  display: none;
+}
+html.tv::after {
+  content: "";
+  position: fixed;
+  inset: var(--bezel);
+  z-index: 2147483647;
+  pointer-events: none;
+  border-radius: 40px;
+  corner-shape: squircle;
+  box-shadow:
+    0 0 0 100vmax #000,
+    inset 0 0 80px rgb(0 0 0 / 0.55);
+  background: repeating-linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 0.18) 0 1px,
+    transparent 1px 3px
+  );
+}
+html.tv [data-slot="corner-edge"][data-edge="top"] {
+  top: var(--bezel);
+}
+html.tv [data-slot="corner-edge"][data-edge="bottom"] {
+  bottom: var(--bezel);
+}
+@media print {
+  html.tv::after {
+    display: none;
+  }
+}
+
+/*
  * Glyph frames (DESIGN.md, Frames; components/ui/frame.tsx): box-drawing
  * characters draw the outline, as a terminal draws a window, so each line runs
  * through the middle of a character cell and the corners are the font's own
@@ -347,4 +395,18 @@
 [data-slot="frame-side"]::before {
   content: "││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││││" /
     "";
+}
+
+/* Corners sit 20px in from the screen, past the TV bezel when there is one. */
+@utility corner-top {
+  top: calc(var(--bezel) + 1.25rem);
+}
+@utility corner-bottom {
+  bottom: calc(var(--bezel) + 1.25rem);
+}
+@utility corner-left {
+  left: calc(var(--bezel) + 1.25rem);
+}
+@utility corner-right {
+  right: calc(var(--bezel) + 1.25rem);
 }
