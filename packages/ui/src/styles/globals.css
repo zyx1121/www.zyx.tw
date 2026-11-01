@@ -264,7 +264,7 @@
   --bezel: 0px;
 }
 html.tv {
-  --bezel: 24px;
+  --bezel: 16px;
   height: 100%;
   overflow: hidden;
   background: #000;
