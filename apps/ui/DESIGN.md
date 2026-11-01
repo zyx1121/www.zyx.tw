@@ -34,7 +34,7 @@ There is no `secondary`, `accent` or `card` (they duplicated `muted` or `backgro
 - **Primary is the text color**: `primary` equals `foreground` and `primary-foreground` equals `background`, so the main action is an inverted block, as a terminal highlights.
 - **Muted text at 4.5:1**: `muted-foreground` reaches at least 4.5:1 on `background` and `muted` in both themes: light `oklch(0.52 0 0)`, dark `oklch(0.62 0 0)`. Readable text never goes lighter (no `text-muted-foreground/50`); disabled controls are the only exception.
 - **Focus is the text color**: `ring` equals `foreground`, so focus is a box in the text color, not a soft gray ring.
-- **Highlights invert**: selected text (`::selection`) and a hovered or focused link in running text (`terminal-link`) swap `foreground` and `background`, with no fade.
+- **Highlights invert**: selected text (`::selection`), a hovered or focused link in running text (`terminal-link`) and the active tab swap `foreground` and `background`. Text and links invert with no fade; the tab block slides.
 
 ### Type
 
