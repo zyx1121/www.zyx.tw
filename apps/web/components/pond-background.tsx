@@ -5,6 +5,8 @@ import { useEffect, useRef } from "react"
 
 import { cn } from "@workspace/ui/lib/utils"
 
+import { LEAVE_EVENT } from "@workspace/ui/components/page-decode"
+
 import { OceanEngine } from "@/lib/pond/engine"
 import { markObstacle } from "@/lib/pond/obstacle"
 import type { SharkSpec } from "@/lib/pond/world"
@@ -39,10 +41,12 @@ export function PondBackground() {
     (path) => pathname === path || pathname.startsWith(`${path}/`)
   )
 
+  const engine = useRef<OceanEngine | null>(null)
+
   useEffect(() => {
     const canvas = ref.current
     if (!canvas) return
-    const engine = new OceanEngine(canvas, randomKoi(), {
+    const pond = new OceanEngine(canvas, randomKoi(), {
       cellScale: POND_CELL_SCALE,
       intensity: 0.75,
       glyphOnly: true,
@@ -50,8 +54,25 @@ export function PondBackground() {
       speed: 0.6,
       obstacle: markObstacle,
     })
-    return () => engine.destroy()
+    engine.current = pond
+    // The pond reads its GPU work back every frame, which a phone cannot
+    // also spare while the page is swapped, so it holds still from the
+    // scramble out until the next page has painted.
+    const pause = () => pond.pause()
+    document.addEventListener(LEAVE_EVENT, pause)
+    return () => {
+      document.removeEventListener(LEAVE_EVENT, pause)
+      pond.destroy()
+      engine.current = null
+    }
   }, [])
+
+  useEffect(() => {
+    let raf = requestAnimationFrame(() => {
+      raf = requestAnimationFrame(() => engine.current?.resume())
+    })
+    return () => cancelAnimationFrame(raf)
+  }, [pathname])
 
   return (
     <canvas
