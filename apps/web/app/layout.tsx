@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 
 import { cn } from "@workspace/ui/lib/utils"
 import { attributeRootLayoutRequest } from "@workspace/otel/layout"
@@ -15,6 +15,9 @@ import { SiteHeader } from "@/components/site-header"
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
 
 import "./globals.css"
+
+// The TV frame's bezel, for browsers that tint their bars from theme-color.
+export const viewport: Viewport = { themeColor: "black" }
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
