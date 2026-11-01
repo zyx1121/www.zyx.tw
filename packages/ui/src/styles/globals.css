@@ -252,20 +252,33 @@
 /*
  * TV frame, opt in with `tv` on <html>: a black bezel around the viewport and
  * a screen with squircle corners, a soft dark glow at its edge and faint
- * scanlines. The frame is one fixed layer above everything that ignores the
- * pointer; the corners and the edge blur move in by the bezel.
+ * scanlines. The body is the screen: it scrolls inside the bezel, so nothing
+ * of the page passes under the browser's bars (Safari tints them from what is
+ * behind) and the page around it stays black. The frame is one fixed layer
+ * above everything that ignores the pointer; the corners and the edge blur
+ * move in by the bezel.
  */
 :root {
   --bezel: 0px;
 }
 html.tv {
   --bezel: 24px;
-  scrollbar-width: none;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  scrollbar-gutter: auto;
 }
 html.tv body {
-  padding-inline: var(--bezel);
+  position: fixed;
+  inset: var(--bezel);
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: 40px;
+  corner-shape: squircle;
+  scrollbar-width: none;
 }
-html.tv::-webkit-scrollbar {
+html.tv body::-webkit-scrollbar {
   display: none;
 }
 html.tv::after {
@@ -292,6 +305,14 @@ html.tv [data-slot="corner-edge"][data-edge="bottom"] {
   bottom: var(--bezel);
 }
 @media print {
+  html.tv {
+    height: auto;
+    overflow: visible;
+  }
+  html.tv body {
+    position: static;
+    overflow: visible;
+  }
   html.tv::after {
     display: none;
   }

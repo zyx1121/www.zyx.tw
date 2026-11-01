@@ -18,6 +18,7 @@ export class OceanEngine {
   private last = 0
   private acc = 0
   private visible = true
+  private paused = false
   private reducedMotion: MediaQueryList
   private resizeObserver: ResizeObserver
   private intersectionObserver: IntersectionObserver
@@ -107,6 +108,18 @@ export class OceanEngine {
     window.removeEventListener("blur", this.onPointerLeave)
   }
 
+  /** Holds the pond still, for the main thread to swap the page. */
+  pause() {
+    this.paused = true
+    cancelAnimationFrame(this.raf)
+  }
+
+  resume() {
+    if (!this.paused) return
+    this.paused = false
+    this.schedule()
+  }
+
   private resize() {
     const rect = this.canvas.getBoundingClientRect()
     if (rect.width < 1 || rect.height < 1) return
@@ -123,7 +136,13 @@ export class OceanEngine {
 
   private schedule() {
     cancelAnimationFrame(this.raf)
-    if (this.disposed || !this.visible || this.reducedMotion.matches) return
+    if (
+      this.disposed ||
+      this.paused ||
+      !this.visible ||
+      this.reducedMotion.matches
+    )
+      return
     this.last = performance.now()
     this.raf = requestAnimationFrame(this.frame)
   }
