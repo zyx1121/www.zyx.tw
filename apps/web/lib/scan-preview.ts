@@ -6,20 +6,23 @@
  * bottom up.
  */
 export const SCAN = {
-  /** Milliseconds between bands. */
-  tick: 25,
-  /** Band height in CSS pixels, from this... */
-  minBand: 12,
-  /** ...to this. */
-  maxBand: 20,
+  /**
+   * Milliseconds for a whole picture, whatever its size, so the works window
+   * and every project page scan at the same pace. Stalls add a little.
+   */
+  duration: 400,
+  /** Bands per picture, one every duration / bands ms. */
+  bands: 16,
+  /** Each band is the average height times 1 plus or minus this. */
+  jitter: 0.3,
   /** Chance that a band waits on the line first. */
   stallChance: 0.08,
   /**
    * A stall lasts from this many milliseconds to the next. A narrow range
-   * reads as a slow line; a wide one (up to 160 before) read as a hitch.
+   * reads as a slow line; a wide one read as a hitch.
    */
-  minStall: 30,
-  maxStall: 70,
+  minStall: 20,
+  maxStall: 40,
 } as const
 
 export type Source = {
@@ -40,6 +43,8 @@ export class ScanPreview {
   /** Rows shown, in CSS pixels; the whole height once a scan is done. */
   private rows = 0
   private raf = 0
+  /** A scan asked for before the canvas had a size: it starts on resize. */
+  private pending = false
 
   constructor(private canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext("2d")
@@ -50,7 +55,8 @@ export class ScanPreview {
   /** Fit the canvas to its box; what was shown stays shown. */
   resize() {
     const { width, height } = this.canvas.getBoundingClientRect()
-    const done = this.rows >= this.height
+    // A pending scan has not started, so it is not done either.
+    const done = !this.pending && this.rows >= this.height
     this.dpr = window.devicePixelRatio || 1
     this.width = width
     this.height = height
@@ -58,6 +64,11 @@ export class ScanPreview {
     this.canvas.height = Math.round(height * this.dpr)
     if (done) this.rows = height
     this.paint()
+    if (this.pending && height > 0) {
+      this.pending = false
+      this.rows = 0
+      this.play(this.schedule())
+    }
   }
 
   /** Put a picture on stage: scanned in from the top, or at once. */
@@ -72,18 +83,26 @@ export class ScanPreview {
     }
     this.rows = 0
     this.paint()
+    // A cached picture can decode before the first resize; scanning a
+    // zero-height canvas would finish at once and then show it whole.
+    if (this.height <= 0) {
+      this.pending = true
+      return
+    }
     this.play(this.schedule())
   }
 
   /** Take the picture back from the bottom up over `duration` ms. */
   leave(duration: number) {
     cancelAnimationFrame(this.raf)
+    this.pending = false
     const from = this.rows
+    const band = Math.max(1, this.height / SCAN.bands)
     const start = performance.now()
     const step = (now: number) => {
       const t = Math.min(1, (now - start) / duration)
       // Whole bands, so it steps as the scan did.
-      this.rows = Math.floor((from * (1 - t)) / SCAN.minBand) * SCAN.minBand
+      this.rows = Math.floor((from * (1 - t)) / band) * band
       this.paint()
       if (t < 1) this.raf = requestAnimationFrame(step)
     }
@@ -94,17 +113,24 @@ export class ScanPreview {
     cancelAnimationFrame(this.raf)
   }
 
-  // Bands of random height down the window, each a tick after the last,
-  // some after a stall.
+  // SCAN.bands bands of jittered height down the window, one a tick apart,
+  // some after a stall. Heights are scaled so the last band ends at the
+  // bottom, so every picture takes SCAN.duration plus its stalls.
   private schedule() {
+    const tick = SCAN.duration / SCAN.bands
+    const sizes = Array.from(
+      { length: SCAN.bands },
+      () => 1 + (Math.random() * 2 - 1) * SCAN.jitter
+    )
+    const total = sizes.reduce((sum, size) => sum + size, 0)
     const steps: Step[] = []
     let at = 0
     let rows = 0
-    while (rows < this.height) {
-      at += SCAN.tick
+    for (const size of sizes) {
+      at += tick
       if (Math.random() < SCAN.stallChance)
         at += SCAN.minStall + Math.random() * (SCAN.maxStall - SCAN.minStall)
-      rows += SCAN.minBand + Math.random() * (SCAN.maxBand - SCAN.minBand)
+      rows += (size / total) * this.height
       steps.push({ at, rows: Math.min(this.height, Math.round(rows)) })
     }
     return steps
