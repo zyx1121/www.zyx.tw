@@ -200,8 +200,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build
+        env:
+          # Classic token, no scopes: the heatmap counts private contributions.
+          GITHUB_TOKEN: ${{ matrix.app == 'web' && secrets.HEATMAP_GITHUB_TOKEN || '' }}
         run: |
-          docker build -f "${{ matrix.dockerfile || 'Dockerfile' }}" \
+          secret=()
+          if [ -n "$GITHUB_TOKEN" ]; then secret=(--secret id=github_token,env=GITHUB_TOKEN); fi
+          docker build -f "${{ matrix.dockerfile || 'Dockerfile' }}" "${secret[@]}" \
             --build-arg APP="${{ matrix.app }}" \
             --build-arg HEALTH="${{ matrix.health || '/' }}" \
             -t app:ci .
@@ -223,6 +228,19 @@ jobs:
       - name: Smoke test (www.zyx.tw)
         if: matrix.app == 'web'
         run: curl -s -o /dev/null -w "%{redirect_url}\n" localhost:3000/og.gif | grep -q '^https://www.zyx.tw/og/'
+
+      - name: Smoke test (heatmap in the prerendered About)
+        # Runs whenever the build had the token (not on forks or Dependabot).
+        if: matrix.app == 'web'
+        env:
+          HAS_TOKEN: ${{ secrets.HEATMAP_GITHUB_TOKEN != '' }}
+        run: |
+          if [ "$HAS_TOKEN" != true ]; then echo "no token, skipped"; exit 0; fi
+          if curl -s localhost:3000/about | grep -q contributionLevel; then exit 0; fi
+          # A GitHub outage at build time must not block a deploy from main;
+          # ISR fills the heatmap in later. On a PR it fails.
+          if [ "${{ github.event_name }}" = push ]; then echo "::warning::About built without the heatmap"; exit 0; fi
+          exit 1
 
       - name: Smoke test (ui.zyx.tw)
         if: matrix.app == 'ui'
