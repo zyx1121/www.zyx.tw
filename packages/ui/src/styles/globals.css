@@ -303,7 +303,7 @@ html.tv::after {
   corner-shape: squircle;
   box-shadow:
     0 0 0 100vmax #000,
-    inset 0 0 80px rgb(0 0 0 / 0.55);
+    inset 0 0 48px rgb(0 0 0 / 0.35);
   background: repeating-linear-gradient(
     to bottom,
     rgb(0 0 0 / 0.18) 0 1px,
