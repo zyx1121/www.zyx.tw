@@ -316,6 +316,103 @@ html.tv [data-slot="corner-edge"][data-edge="top"] {
 html.tv [data-slot="corner-edge"][data-edge="bottom"] {
   bottom: var(--bezel);
 }
+/*
+ * The TV frame turning on (components/tv.tsx, TvBoot): two black halves part
+ * from a bright line across the middle, and the line flares and fades. It
+ * plays while the root has data-boot, on the first page of a tab only.
+ */
+[data-slot="tv-boot"] {
+  display: none;
+}
+html[data-boot] [data-slot="tv-boot"] {
+  position: fixed;
+  inset: var(--bezel);
+  z-index: 2147483646;
+  display: block;
+  overflow: hidden;
+  border-radius: 40px;
+  corner-shape: squircle;
+  pointer-events: none;
+}
+[data-slot="tv-boot"] > [data-part="top"],
+[data-slot="tv-boot"] > [data-part="bottom"] {
+  position: absolute;
+  inset-inline: 0;
+  height: 50.5%;
+  background: #000;
+  animation: tv-part 520ms cubic-bezier(0.7, 0, 0.2, 1) 220ms both;
+}
+[data-slot="tv-boot"] > [data-part="top"] {
+  top: 0;
+  --tv-part-to: -100%;
+}
+[data-slot="tv-boot"] > [data-part="bottom"] {
+  bottom: 0;
+  --tv-part-to: 100%;
+}
+[data-slot="tv-boot"] > [data-part="line"] {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(50% - 1px);
+  height: 2px;
+  background: #fff;
+  box-shadow: 0 0 24px 4px rgb(255 255 255 / 0.5);
+  animation: tv-line 760ms ease-out both;
+}
+@keyframes tv-part {
+  to {
+    transform: translateY(var(--tv-part-to));
+  }
+}
+@keyframes tv-line {
+  0% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  28% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1) scaleY(60);
+    opacity: 0;
+  }
+}
+
+/*
+ * Static between pages (components/tv.tsx, TvStatic): coarse grey noise over
+ * the screen while the page scrambles out and the next one comes in.
+ */
+[data-slot="tv-static"] {
+  position: fixed;
+  inset: var(--bezel);
+  z-index: 2147483646;
+  width: calc(100% - 2 * var(--bezel));
+  height: calc(100% - 2 * var(--bezel));
+  border-radius: 40px;
+  corner-shape: squircle;
+  image-rendering: pixelated;
+  mix-blend-mode: screen;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease-out;
+}
+[data-slot="tv-static"][data-on] {
+  opacity: 0.22;
+  transition-duration: 80ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="tv-boot"],
+  [data-slot="tv-static"] {
+    display: none !important;
+  }
+}
+@media print {
+  [data-slot="tv-static"] {
+    display: none;
+  }
+}
+
 @media print {
   html.tv {
     height: auto;
