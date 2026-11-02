@@ -12,6 +12,7 @@ import { PageDecode } from "@workspace/ui/components/page-decode"
 import { PondBackground } from "@/components/pond-background"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
+import { TvBoot, TvStatic } from "@/components/tv"
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
 
 import "./globals.css"
@@ -64,11 +65,13 @@ export default async function RootLayout({
       {/* Body text is 16px at every width, phones included. Pages fill the
           viewport so the footer sits low. */}
       <body className="flex min-h-dvh flex-col text-body">
+        <TvBoot />
         <SiteJsonLd />
         <ThemeProvider>
           <TooltipProvider>
             <MotionProvider>
               <PageDecode />
+              <TvStatic />
               <PondBackground />
               <SiteHeader />
               {children}
