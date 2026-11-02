@@ -5,6 +5,7 @@ import { cn } from "@workspace/ui/lib/utils"
 import { column, enterRow, page } from "@workspace/ui/lib/layout"
 
 import { Hero, HeroTitle } from "@/components/hero"
+import { ProjectPicture } from "@/components/project-picture"
 import { findProject, projectPath, projects } from "@/lib/projects"
 import { pageMetadata } from "@/lib/site"
 
@@ -69,13 +70,10 @@ export default async function Project({
       />
 
       {/* The capture is 1440x1080, so the box keeps 4:3 before it loads. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <ProjectPicture
         src={project.preview.image}
-        alt=""
-        width={1440}
-        height={1080}
-        className={cn("aspect-4/3 w-full object-cover", enterRow(3))}
+        focus={project.preview.focus}
+        className={enterRow(3)}
       />
 
       <div className="mt-10 flex max-w-2xl flex-col gap-y-5">
