@@ -236,7 +236,11 @@ jobs:
           HAS_TOKEN: ${{ secrets.HEATMAP_GITHUB_TOKEN != '' }}
         run: |
           if [ "$HAS_TOKEN" != true ]; then echo "no token, skipped"; exit 0; fi
-          curl -s localhost:3000/about | grep -q contributionLevel
+          if curl -s localhost:3000/about | grep -q contributionLevel; then exit 0; fi
+          # A GitHub outage at build time must not block a deploy from main;
+          # ISR fills the heatmap in later. On a PR it fails.
+          if [ "${{ github.event_name }}" = push ]; then echo "::warning::About built without the heatmap"; exit 0; fi
+          exit 1
 
       - name: Smoke test (ui.zyx.tw)
         if: matrix.app == 'ui'
