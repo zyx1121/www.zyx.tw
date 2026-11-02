@@ -15,7 +15,10 @@ COPY . .
 RUN bun install --frozen-lockfile
 ENV NEXT_OUTPUT=standalone NEXT_TELEMETRY_DISABLED=1
 # Apps without a public/ folder still get one, for the COPY below.
-RUN cd "apps/$APP" && bun run build && mkdir -p public
+# The GitHub token (optional) lets the prerendered About carry the heatmap.
+# A secret mount keeps it out of every image layer.
+RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN \
+    cd "apps/$APP" && bun run build && mkdir -p public
 
 FROM node:24-slim
 ARG APP
