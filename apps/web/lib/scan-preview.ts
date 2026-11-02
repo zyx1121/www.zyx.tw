@@ -14,8 +14,12 @@ export const SCAN = {
   maxBand: 20,
   /** Chance that a band waits on the line first. */
   stallChance: 0.08,
-  /** Up to this many milliseconds of a stall. */
-  maxStall: 160,
+  /**
+   * A stall lasts from this many milliseconds to the next. A narrow range
+   * reads as a slow line; a wide one (up to 160 before) read as a hitch.
+   */
+  minStall: 30,
+  maxStall: 70,
 } as const
 
 export type Source = {
@@ -98,7 +102,8 @@ export class ScanPreview {
     let rows = 0
     while (rows < this.height) {
       at += SCAN.tick
-      if (Math.random() < SCAN.stallChance) at += Math.random() * SCAN.maxStall
+      if (Math.random() < SCAN.stallChance)
+        at += SCAN.minStall + Math.random() * (SCAN.maxStall - SCAN.minStall)
       rows += SCAN.minBand + Math.random() * (SCAN.maxBand - SCAN.minBand)
       steps.push({ at, rows: Math.min(this.height, Math.round(rows)) })
     }
