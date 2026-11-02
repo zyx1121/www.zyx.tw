@@ -1,1 +1,10 @@
 @import "@workspace/ui/globals.css";
+
+/*
+ * The home's shell (components/home-shell.tsx): in the bottom left, on the
+ * corners' inset, above the footer's links and no wider than the screen.
+ */
+@utility shell-dock {
+  bottom: calc(var(--bezel) + 4rem);
+  width: calc(100% - 2 * (var(--bezel) + 1.25rem));
+}

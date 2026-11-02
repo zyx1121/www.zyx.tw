@@ -23,6 +23,9 @@ function randomKoi(): SharkSpec[] {
 /** The pages the pond swims behind. */
 const POND_PATHS = ["/", "/works", "/about", "/privacy", "/terms"]
 
+/** Dispatched on the document to drop food in the middle of the pond. */
+export const FEED_EVENT = "pond:feed"
+
 /** The pond's cell size, which the home's mark draws on as well. */
 export const POND_CELL_SCALE = 0.6
 
@@ -60,9 +63,12 @@ export function PondBackground() {
     // also spare while the page is swapped, so it holds still from the
     // scramble out until the next page has painted.
     const pause = () => pond.pause()
+    const feed = () => pond.feed()
     document.addEventListener(LEAVE_EVENT, pause)
+    document.addEventListener(FEED_EVENT, feed)
     return () => {
       document.removeEventListener(LEAVE_EVENT, pause)
+      document.removeEventListener(FEED_EVENT, feed)
       pond.destroy()
       engine.current = null
     }

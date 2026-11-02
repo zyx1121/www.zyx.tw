@@ -244,7 +244,7 @@ function onControl(target: EventTarget | null) {
   return (
     target instanceof Element &&
     target.closest(
-      "a, button, input, textarea, select, label, summary, [role=button], [contenteditable]"
+      "a, button, input, textarea, select, label, summary, [role=button], [contenteditable], [data-no-feed]"
     ) !== null
   )
 }
