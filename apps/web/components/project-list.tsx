@@ -1,9 +1,12 @@
 "use client"
 
+import Link from "next/link"
+
 import { cn } from "@workspace/ui/lib/utils"
 import { enterRow } from "@workspace/ui/lib/layout"
 
 import { useShowcase } from "@/components/showcase"
+import { projectPath } from "@/lib/projects"
 
 /**
  * One row per project. A ">" marks the project in the window, as a cursor in
@@ -13,6 +16,7 @@ import { useShowcase } from "@/components/showcase"
  * column beside the window, whose title bar carries the purpose, so the rows
  * are names alone there too; the purpose stays for screen readers. Hovering a
  * row or focusing its link from the keyboard puts that project in the window.
+ * A row opens the project's own page (/works/<slug>), which links out.
  */
 export function ProjectList({ className }: { className?: string }) {
   const { projects, active, engage, release } = useShowcase()
@@ -49,10 +53,8 @@ export function ProjectList({ className }: { className?: string }) {
             >
               &gt;
             </span>
-            <a
-              href={project.href}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href={projectPath(project)}
               className="terminal-link after:absolute after:inset-0 max-sm:text-muted-foreground max-sm:group-data-active:text-foreground max-sm:after:-inset-y-1.5"
               onFocus={(event) => {
                 if (event.currentTarget.matches(":focus-visible")) engage(index)
@@ -60,7 +62,7 @@ export function ProjectList({ className }: { className?: string }) {
               onBlur={() => release(index)}
             >
               {project.name}
-            </a>
+            </Link>
             <span className="text-muted-foreground transition-colors group-data-active:text-foreground max-sm:sr-only lg:sr-only">
               {project.purpose}
             </span>

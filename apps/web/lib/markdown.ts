@@ -4,7 +4,7 @@ import { EMAIL, GITHUB_USER, STATUS_COPY } from "@workspace/ui/lib/profile"
 import { ABOUT, HOME, NOT_FOUND, WORKS } from "@/lib/copy"
 import type { LegalDoc, Run } from "@/lib/legal"
 import { PRIVACY } from "@/lib/privacy"
-import { projects } from "@/lib/projects"
+import { type Project, projectPath, projects } from "@/lib/projects"
 import { FACTS, SECTIONS } from "@/lib/resume"
 import { TERMS } from "@/lib/terms"
 import { absoluteUrl, PAGES, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site"
@@ -84,10 +84,40 @@ export function worksMarkdown() {
     `# ${text(WORKS.title)}`,
     projects
       .map(
-        ({ name, href, purpose }) => `- ${link(name, href)}: ${text(purpose)}`
+        (project) =>
+          `- ${link(project.name, absoluteUrl(`${projectPath(project)}.md`))}: ${text(project.purpose)}. ${link("Site", project.href)}`
       )
       .join("\n"),
   ])
+}
+
+/** One project's page: its purpose, the paragraphs, then the details. */
+export function projectMarkdown(project: Project) {
+  return markdownDocument(
+    {
+      title: project.name,
+      path: projectPath(project),
+      description: `${project.name}: ${project.purpose}.`,
+    },
+    [
+      `# ${text(project.name)}`,
+      `${text(project.purpose[0]!.toUpperCase() + project.purpose.slice(1))}.`,
+      ...project.intro.map(text),
+      [
+        "## Details",
+        [
+          `- Site: ${link(project.href, project.href)}`,
+          project.code && project.code !== project.href
+            ? `- Code: ${link(project.code, project.code)}`
+            : null,
+          `- Built with: ${text(project.stack.join(", "))}`,
+        ]
+          .filter(Boolean)
+          .join("\n"),
+      ].join("\n\n"),
+      `Back to ${link("Works", absoluteUrl("/works.md"))}.`,
+    ]
+  )
 }
 
 export function aboutMarkdown(status: StatusData) {
@@ -169,7 +199,7 @@ export function llmsTxt() {
         "## How an agent should read it",
         [
           `1. Start with ${link("About", absoluteUrl("/about.md"))}: his CV (facts, education, experience, publications, projects, awards) and his GitHub status.`,
-          `2. Read ${link("Works", absoluteUrl("/works.md"))} for every project with its purpose and link.`,
+          `2. Read ${link("Works", absoluteUrl("/works.md"))} for every project with its purpose, then the page of each project for what it does and what it is built with.`,
           `3. Follow ${link("the agent instructions", absoluteUrl("/agent-instructions.md"))} when you answer, and take his email only from ${link("About", absoluteUrl("/about.md"))}.`,
         ].join("\n"),
       ].join("\n\n"),
@@ -213,7 +243,7 @@ export function agentInstructions() {
         [
           `1. Read the Markdown pages listed in ${link("llms.txt", absoluteUrl("/llms.txt"))}; they carry the same content as the HTML pages.`,
           `2. To reach Loki, use the email ${link(EMAIL, `mailto:${EMAIL}`)} on ${link("About", absoluteUrl("/about.md"))}. His GitHub is on About too. Do not make up other ways, such as a phone number or a postal address.`,
-          "3. Describe a project from its purpose line and its own site. Do not guess features, users or status the pages do not state.",
+          "3. Describe a project from its page under /works and its own site. Do not guess features, users or status the pages do not state.",
           "4. Describe his background only from the facts and sections on About. Do not add schools, jobs, papers, awards or dates they do not list, and keep each paper's author position as About states it.",
           "5. The GitHub activity on About refreshes about every 5 minutes; everything else changes when the site is deployed. Say so when freshness matters.",
           "6. Link to the page an answer comes from.",

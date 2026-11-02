@@ -1,9 +1,66 @@
 [
   {
+    "slug": "aintern",
+    "name": "AIntern",
+    "href": "https://nycu.aintern.zyx.tw",
+    "purpose": "an AI intern for office work",
+    "intro": [
+      "Office work is full of forms, checks and sign-offs. In AIntern, staff describe a process to an agent in their own words, and the agent builds it as a workflow on a live canvas.",
+      "Nodes run Python, read and write files, drive a browser and call AI. A review node stops the run until the assigned person approves, so nothing that matters goes out unchecked.",
+      "A workflow can start on a schedule, from a webhook, from a web form or from a Chrome side panel. Every tool the agent uses is also an MCP tool for Claude Code or Codex."
+    ],
+    "stack": ["Next.js", "Postgres", "Docker runners", "MCP", "Passkeys"],
+    "preview": {
+      "image": "/previews/aintern.webp",
+      "dither": "/previews/aintern-dither.webp",
+      "focus": "50% 0%"
+    }
+  },
+  {
+    "slug": "carrel",
+    "name": "Carrel",
+    "href": "https://carrel.winlab.tw",
+    "code": "https://github.com/NYCU-WinLab/carrel",
+    "purpose": "lab machines, asked for in words",
+    "intro": [
+      "A carrel is the desk a library sets aside for one graduate student. Carrel gives every WinLab member their own corner of the lab's Proxmox VE cluster.",
+      "Members never touch Proxmox. They tell their agent what machine they need, and one MCP endpoint creates it and returns an SSH command and a URL.",
+      "Each member has a quota, a private network, public ports and domains under their own name. Sign-in is the lab's Keycloak account."
+    ],
+    "stack": ["Go", "Proxmox VE", "MCP", "OAuth 2.1", "EVPN"],
+    "preview": {
+      "image": "/previews/carrel.webp",
+      "dither": "/previews/carrel-dither.webp",
+      "focus": "50% 0%"
+    }
+  },
+  {
+    "slug": "golem",
+    "name": "Golem",
+    "href": "https://golem.zyx.tw",
+    "purpose": "keeps watch over my services",
+    "intro": [
+      "Golem watches every service I run. It reads their logs, traces and metrics from Sensorium, probes their URLs and checks disks and backups.",
+      "When something breaks, it opens an incident and sends a short explanation to Telegram and to signed webhooks. When the problem goes away, it closes the incident by itself.",
+      "For a known fix, it writes a plan, asks for approval in Telegram, runs the fix and checks that the alert has cleared. Agents add new rules over MCP."
+    ],
+    "stack": ["TypeScript", "Bun", "SQLite", "MCP", "Claude Agent SDK"],
+    "preview": {
+      "image": "/previews/golem.webp",
+      "dither": "/previews/golem-dither.webp",
+      "focus": "50% 50%"
+    }
+  },
+  {
     "slug": "good",
     "name": "Good",
     "href": "https://good.zyx.tw",
     "purpose": "a digital 乖乖 for servers",
+    "intro": [
+      "乖乖 is a corn snack that engineers in Taiwan tape onto servers for luck. The green bag means everything keeps running.",
+      "Good is the digital version: a 3D bag on a web page, for machines that have no shelf to put one on."
+    ],
+    "stack": ["Next.js", "three.js"],
     "preview": {
       "image": "/previews/good.webp",
       "dither": "/previews/good-dither.webp",
@@ -15,6 +72,11 @@
     "name": "Plump",
     "href": "https://plump.zyx.tw",
     "purpose": "SVG to 3D",
+    "intro": [
+      "Plump turns a flat SVG into a 3D object. You shape the depth and bevel, pick a material and light the scene.",
+      "The scene saves as a file you can open again and keep editing. The zyx mark on this site's earlier home page was made with it."
+    ],
+    "stack": ["Next.js", "three.js", "WebGL"],
     "preview": {
       "image": "/previews/3d.webp",
       "dither": "/previews/3d-dither.webp",
@@ -25,7 +87,13 @@
     "slug": "ui",
     "name": "UI",
     "href": "https://ui.zyx.tw",
+    "code": "https://github.com/zyx1121/www.zyx.tw",
     "purpose": "component registry",
+    "intro": [
+      "The design system behind every zyx.tw site: grayscale tokens and our own components on Base UI, served as a shadcn registry.",
+      "It sets a terminal look with one monospace face, 4 type sizes, square corners and 2 motion durations. A token check in CI blocks values outside the system."
+    ],
+    "stack": ["React", "Base UI", "shadcn registry", "Tailwind CSS"],
     "preview": {
       "image": "/previews/ui.webp",
       "dither": "/previews/ui-dither.webp",
@@ -36,7 +104,13 @@
     "slug": "sensorium",
     "name": "Sensorium",
     "href": "https://sensorium.zyx.tw",
+    "code": "https://github.com/zyx1121/sensorium",
     "purpose": "observability for agents",
+    "intro": [
+      "My services already speak OpenTelemetry, but the reader of their logs at 3 am is often an agent now. Sensorium keeps the logs, traces and metrics of many services in one Postgres store.",
+      "Agents read them through 8 MCP tools, so \"what broke?\" is one tool call. Each project has its own ingest token, and old data expires by itself."
+    ],
+    "stack": ["TypeScript", "Postgres", "OpenTelemetry", "MCP"],
     "preview": {
       "image": "/previews/sensorium.webp",
       "dither": "/previews/sensorium-dither.webp",
@@ -47,7 +121,13 @@
     "slug": "ai",
     "name": "NYCU AI",
     "href": "https://ai.winlab.tw",
+    "code": "https://github.com/Office-of-AI-Affairs/ai.winlab.tw",
     "purpose": "NYCU Office of AI Affairs",
+    "intro": [
+      "The official website of NYCU's Office of AI Affairs, with its news, events and programs.",
+      "Content lives in Postgres and is edited in the browser, and the site serves an MCP endpoint so agents can read it."
+    ],
+    "stack": ["Next.js", "Postgres", "Better Auth"],
     "preview": {
       "image": "/previews/ai.webp",
       "dither": "/previews/ai-dither.webp",
@@ -58,7 +138,13 @@
     "slug": "winlab",
     "name": "WinLab",
     "href": "https://www.winlab.tw",
+    "code": "https://github.com/NYCU-WinLab/www.winlab.tw",
     "purpose": "Chien-Chao Tseng's lab",
+    "intro": [
+      "The public website of the Wireless Internet Laboratory at NYCU, led by Prof. Chien-Chao Tseng.",
+      "One page covers the lab's research areas, from SDN and 5G/6G orchestration to cloud-native systems, with a link to the members' portal."
+    ],
+    "stack": ["Next.js", "Tailwind CSS"],
     "preview": {
       "image": "/previews/winlab.webp",
       "dither": "/previews/winlab-dither.webp",
@@ -69,7 +155,13 @@
     "slug": "portal",
     "name": "WinLab Portal",
     "href": "https://portal.winlab.tw",
+    "code": "https://github.com/NYCU-WinLab/portal",
     "purpose": "WinLab's member portal",
+    "intro": [
+      "WinLab members book rooms, file receipts, sign documents, order meals and open the lab door through one portal.",
+      "Every action is defined once, so a member can click it and an agent can call it as an MCP tool. Members sign in with the lab's Keycloak account."
+    ],
+    "stack": ["Next.js", "Postgres", "Keycloak", "MCP"],
     "preview": {
       "image": "/previews/portal.webp",
       "dither": "/previews/portal-dither.webp",
@@ -80,7 +172,13 @@
     "slug": "video",
     "name": "WinLab Video",
     "href": "https://video.winlab.tw",
+    "code": "https://github.com/NYCU-WinLab/video.winlab.tw",
     "purpose": "WinLab's video library",
+    "intro": [
+      "The lab's video library. Members sign in to watch, and the site remembers where each viewer stopped.",
+      "Videos stream from the lab's Nextcloud, and each upload gets a transcript beside the player that jumps to the spoken line."
+    ],
+    "stack": ["Next.js", "SQLite", "Nextcloud"],
     "preview": {
       "image": "/previews/video.webp",
       "dither": "/previews/video-dither.webp",
@@ -92,6 +190,8 @@
     "name": "Link",
     "href": "https://link.zyx.tw",
     "purpose": "URL shortener",
+    "intro": ["Paste a long URL, get a short one back. That is all it does."],
+    "stack": ["Next.js", "Postgres"],
     "preview": {
       "image": "/previews/link.webp",
       "dither": "/previews/link-dither.webp",
@@ -103,6 +203,8 @@
     "name": "Time",
     "href": "https://time.zyx.tw",
     "purpose": "what time is it?",
+    "intro": ["What time is it? A clock, that's all."],
+    "stack": ["Next.js"],
     "preview": {
       "image": "/previews/time.webp",
       "dither": "/previews/time-dither.webp",
@@ -113,7 +215,13 @@
     "slug": "peck",
     "name": "Peck",
     "href": "https://github.com/zyx1121/peck",
+    "code": "https://github.com/zyx1121/peck",
     "purpose": "visual feedback for coding agents",
+    "intro": [
+      "Peck is a Chromium desktop browser for you and your coding agent. You point at an element and write a comment.",
+      "Your existing Claude Code or Codex conversation then gets the screenshot, the selector, console errors and network records, fixes the source and replies in the thread."
+    ],
+    "stack": ["Electron", "MCP"],
     "preview": {
       "image": "/previews/peck.webp",
       "dither": "/previews/peck-dither.webp",

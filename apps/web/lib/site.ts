@@ -68,14 +68,16 @@ export function pageMetadata({
   path,
   description = SITE_DESCRIPTION,
   image,
+  markdown = markdownFor(path),
 }: {
   title?: string
   path: string
   description?: string
+  /** The Markdown twin, for a page that is not in lib/site.json. */
+  markdown?: string
   image?: { url: string; width: number; height: number; alt: string }
 }): Metadata {
   const fullTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME
-  const markdown = markdownFor(path)
   return {
     ...(title ? { title } : {}),
     description,
