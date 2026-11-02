@@ -75,11 +75,7 @@ export default async function Project({
         alt=""
         width={1440}
         height={1080}
-        className={cn(
-          "aspect-4/3 w-full border border-border object-cover",
-          enterRow(3)
-        )}
-        style={{ objectPosition: project.preview.focus }}
+        className={cn("aspect-4/3 w-full object-cover", enterRow(3))}
       />
 
       <div className="mt-10 flex max-w-2xl flex-col gap-y-5">
