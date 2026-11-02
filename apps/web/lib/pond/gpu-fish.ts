@@ -37,7 +37,7 @@ uniform float uDt;
 uniform float uTime;
 uniform vec2 uSize;
 uniform vec4 uWorld;    // perception, foreignSep, calmDecay, contagion
-uniform vec4 uPointer;  // x, y, active
+uniform vec4 uPointer;  // x, y, fear (0 still or away, 1 fast)
 uniform vec4 uSp0[${MAX_SPECIES}];  // cruise, maxSpeed, minSpeed, jitter
 uniform vec4 uSp1[${MAX_SPECIES}];  // align, cohesion, mill, verticalDrag
 uniform vec2 uSep[${MAX_SPECIES}];
@@ -188,12 +188,12 @@ void main() {
     fear = max(fear, sqrt(w));
   }
 
-  if (uPointer.z > 0.5) {
+  if (uPointer.z > 0.0) {
     const float pr = 130.0;
     vec2 e = pos - uPointer.xy;
     float d = length(e);
     if (d < pr && d > 1e-3) {
-      float w = (1.0 - d / pr) * (1.0 - d / pr);
+      float w = (1.0 - d / pr) * (1.0 - d / pr) * uPointer.z;
       acc += e / d * FLEE_K * w;
       fear = max(fear, sqrt(w) * 0.8);
     }
@@ -378,7 +378,8 @@ export class GpuFish {
       calmDecay: number
       contagion: number
     },
-    pointer: { x: number; y: number; active: boolean }
+    pointer: { x: number; y: number },
+    pointerFear: number
   ) {
     const { gl, a, b, u } = this
     const count = fish.length
@@ -428,7 +429,7 @@ export class GpuFish {
       world.calmDecay,
       world.contagion
     )
-    gl.uniform4f(u.uPointer, pointer.x, pointer.y, pointer.active ? 1 : 0, 0)
+    gl.uniform4f(u.uPointer, pointer.x, pointer.y, pointerFear, 0)
     gl.uniform4fv(u.uShark, shark)
     gl.uniform4fv(u.uSharkN, sharkN)
 

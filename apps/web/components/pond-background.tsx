@@ -53,6 +53,7 @@ export function PondBackground() {
       grid: false,
       speed: 0.6,
       obstacle: markObstacle,
+      feed: true,
     })
     engine.current = pond
     // The pond reads its GPU work back every frame, which a phone cannot

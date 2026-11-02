@@ -25,6 +25,9 @@ export class OceanEngine {
   private disposed = false
   /** Clicks splash the water and scatter the fish; off unless asked for. */
   private splashOnClick = false
+  /** Clicks on the water, away from links and buttons, drop food. */
+  private feedOnClick = false
+  private lastMove = { x: 0, y: 0, t: 0 }
   private speed = 1
 
   constructor(
@@ -34,6 +37,7 @@ export class OceanEngine {
       cellScale?: number
       gpu?: boolean
       splash?: boolean
+      feed?: boolean
       /** Simulation speed multiplier; below 1 everything swims slower. */
       speed?: number
       /** Brightness of everything over the water, 0..1. */
@@ -51,6 +55,7 @@ export class OceanEngine {
     if (options.gpu === false) this.renderer.useGpu = false
     this.world.useGpu = options.gpu !== false
     this.splashOnClick = options.splash === true
+    this.feedOnClick = options.feed === true
     this.speed = options.speed ?? 1
     if (options.intensity !== undefined)
       this.renderer.intensity = options.intensity
@@ -118,6 +123,21 @@ export class OceanEngine {
     if (!this.paused) return
     this.paused = false
     this.schedule()
+  }
+
+  /**
+   * Drops food at a point in viewport coordinates; the middle of the pond
+   * when none is given. Does nothing under reduced motion, where the pond
+   * holds still.
+   */
+  feed(clientX?: number, clientY?: number) {
+    if (this.reducedMotion.matches) return false
+    const rect = this.canvas.getBoundingClientRect()
+    if (rect.width < 1) return false
+    const x = clientX === undefined ? rect.width / 2 : clientX - rect.left
+    const y = clientY === undefined ? rect.height / 2 : clientY - rect.top
+    this.world.feed(x, y)
+    return true
   }
 
   private resize() {
@@ -190,6 +210,17 @@ export class OceanEngine {
   private onPointerMove = (e: PointerEvent) => {
     const { x, y, inside } = this.toLocal(e)
     const p = this.world.pointer
+    const last = this.lastMove
+    const now = e.timeStamp
+    const dt = (now - last.t) / 1000
+    if (dt > 0 && dt < 0.25) {
+      const v = Math.hypot(x - last.x, y - last.y) / dt
+      // Rises fast and falls through the world's decay, so a flick lingers.
+      p.speed = Math.max(p.speed, Math.min(v, 4000))
+    }
+    last.x = x
+    last.y = y
+    last.t = now
     p.x = x
     p.y = y
     p.active = inside && e.pointerType !== "touch"
@@ -197,11 +228,23 @@ export class OceanEngine {
 
   private onPointerDown = (e: PointerEvent) => {
     const { x, y, inside } = this.toLocal(e)
-    if (inside && this.splashOnClick && !this.reducedMotion.matches)
-      this.world.splash(x, y)
+    if (!inside || this.reducedMotion.matches) return
+    if (this.splashOnClick) this.world.splash(x, y)
+    if (this.feedOnClick && e.button === 0 && !onControl(e.target))
+      this.world.feed(x, y)
   }
 
   private onPointerLeave = () => {
     this.world.pointer.active = false
   }
+}
+
+/** Whether a click lands on something with its own job, not on the water. */
+function onControl(target: EventTarget | null) {
+  return (
+    target instanceof Element &&
+    target.closest(
+      "a, button, input, textarea, select, label, summary, [role=button], [contenteditable]"
+    ) !== null
+  )
 }

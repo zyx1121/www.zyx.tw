@@ -669,6 +669,7 @@ export class AsciiRenderer {
     ctx.textBaseline = "middle"
 
     this.drawHeat()
+    this.drawFood(world)
     this.drawFish()
     this.drawSharks(t)
     this.drawSparkles(world.sharks, t, dt)
@@ -742,6 +743,10 @@ export class AsciiRenderer {
       if (e.kind === "eat") {
         this.stamp(this.heat, e.x, e.y, 2, 1)
         this.stamp(this.energy, e.x, e.y, 3, 0.9)
+      } else if (e.kind === "drop") {
+        this.stamp(this.energy, e.x, e.y, 3, 1)
+      } else if (e.kind === "nibble") {
+        this.stamp(this.energy, e.x, e.y, 1, 0.7)
       } else {
         this.stamp(this.energy, e.x, e.y, 6, 1.4)
       }
@@ -1461,6 +1466,20 @@ export class AsciiRenderer {
           ((i / cols) | 0) * ch + ch / 2 + 1
         )
       }
+    }
+  }
+
+  /**
+   * Pellets in a warm tint, so they read as food against the grey fish:
+   * "o" while fresh, smaller as they soak, fading out at the end.
+   */
+  private drawFood(world: World) {
+    const { ctx } = this
+    for (const p of world.food) {
+      const left = p.life - p.age
+      const a = clamp(Math.min(p.age * 4, left / 3), 0, 1)
+      ctx.fillStyle = `rgba(236,196,128,${(a * 0.95).toFixed(3)})`
+      ctx.fillText(p.age < p.life * 0.5 ? "o" : left > 3 ? "°" : "·", p.x, p.y)
     }
   }
 
