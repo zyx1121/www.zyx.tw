@@ -97,8 +97,19 @@ export interface Shark {
   depth: number
 }
 
+/** A pellet dropped on the water; fish and koi swim over to eat it. */
+export interface Food {
+  x: number
+  y: number
+  vx: number
+  vy: number
+  age: number
+  /** Seconds until it dissolves, if nothing eats it first. */
+  life: number
+}
+
 export interface WorldEvent {
-  kind: "eat" | "splash"
+  kind: "eat" | "splash" | "drop" | "nibble"
   x: number
   y: number
 }
@@ -109,6 +120,13 @@ const FISH_COHESION_K = 1
 const FISH_FLEE_K = 1100
 const BLIND_COS = -0.6 // ~127° either side of the heading is visible
 const FISH_AVOID_K = 900
+const FOOD_SEEK_K = 520
+const FOOD_RANGE = 260
+const MAX_FOOD = 48
+/** A cursor moving slower than this (px/s) is a hand held still over the water. */
+const POINTER_CALM = 60
+/** And one moving this much faster is as frightening as it gets. */
+const POINTER_SCARY = 600
 
 export class World {
   width = 0
@@ -117,7 +135,12 @@ export class World {
   fish: Fish[] = []
   sharks: Shark[] = []
   events: WorldEvent[] = []
-  pointer = { x: 0, y: 0, active: false }
+  food: Food[] = []
+  /**
+   * The cursor over the water. Fish fear it by its speed: a hand that holds
+   * still is no threat, so they come to food dropped right under it.
+   */
+  pointer = { x: 0, y: 0, active: false, speed: 0 }
   /** Something solid the fish and koi swim around, such as the home's mark. */
   obstacle: Obstacle | null = null
   private probe = { d: 0, gx: 0, gy: 0 }
@@ -269,13 +292,129 @@ export class World {
     }
   }
 
+  /** Scatters a pinch of pellets at (x, y), outside any obstacle. */
+  feed(x: number, y: number) {
+    const probe = this.probe
+    const n = randInt(5, 8)
+    let dropped = 0
+    for (let k = 0; k < n; k++) {
+      const px = x + rand(-1, 1) * 16
+      const py = y + rand(-1, 1) * 10
+      if (this.obstacle?.active) {
+        this.obstacle.sample(px, py, probe)
+        if (probe.d < 4) continue
+      }
+      this.food.push({
+        x: px,
+        y: py,
+        vx: rand(-1, 1) * 8,
+        vy: rand(-1, 1) * 5,
+        age: 0,
+        life: rand(16, 24),
+      })
+      dropped++
+    }
+    if (this.food.length > MAX_FOOD)
+      this.food.splice(0, this.food.length - MAX_FOOD)
+    if (dropped > 0) this.events.push({ kind: "drop", x, y })
+  }
+
+  /** The pointer factor fish fear, 0 for a still cursor to 1 for a fast one. */
+  pointerFear() {
+    const p = this.pointer
+    if (!p.active) return 0
+    return clamp(
+      (p.speed - POINTER_CALM) / (POINTER_SCARY - POINTER_CALM),
+      0,
+      1
+    )
+  }
+
   step(dt: number) {
     this.time += dt
+    this.pointer.speed *= Math.exp(-dt * 6)
     this.rebuildHash()
     this.stepFish(dt)
     this.avoidObstacle(dt)
+    this.seekFood(dt)
+    this.stepFood(dt)
     this.stepSharks(dt)
     this.respawn()
+  }
+
+  /** Pellets drift on the current, slow down, and dissolve. */
+  private stepFood(dt: number) {
+    const cur = this.tmp
+    const drag = Math.exp(-dt * 1.5)
+    let w = 0
+    for (const p of this.food) {
+      p.age += dt
+      if (p.age >= p.life) continue
+      current(p.x, p.y, this.time, cur)
+      p.vx = p.vx * drag + cur.x * 0.04 * dt
+      p.vy = p.vy * drag + cur.y * 0.04 * dt
+      p.x += p.vx * dt
+      p.y += p.vy * dt
+      this.food[w++] = p
+    }
+    this.food.length = w
+  }
+
+  /**
+   * Fish within reach of a pellet calm down and swim to the nearest one;
+   * the first to touch it eats it. One pass after either boids path, like
+   * the obstacle, so the GPU and the CPU fish behave the same.
+   */
+  private seekFood(dt: number) {
+    const food = this.food
+    if (food.length === 0) return
+    const calm = Math.exp(-dt * 2.5)
+    for (const f of this.fish) {
+      if (!f.alive) continue
+      let best = -1
+      let bestD = FOOD_RANGE
+      for (let k = 0; k < food.length; k++) {
+        const p = food[k]!
+        const d = Math.hypot(p.x - f.x, p.y - f.y)
+        if (d < bestD) {
+          bestD = d
+          best = k
+        }
+      }
+      if (best < 0) continue
+      const p = food[best]!
+      if (bestD < 5) {
+        food.splice(best, 1)
+        this.events.push({ kind: "nibble", x: p.x, y: p.y })
+        if (food.length === 0) return
+        continue
+      }
+      const w = 1 - bestD / FOOD_RANGE
+      const k = FOOD_SEEK_K * (0.35 + 0.65 * w)
+      f.vx += ((p.x - f.x) / bestD) * k * dt
+      f.vy += ((p.y - f.y) / bestD) * k * dt
+      // Slow down close in, so they mill at the pellet instead of overshooting.
+      if (bestD < 40) {
+        const brake = Math.exp(-dt * 3 * (1 - bestD / 40))
+        f.vx *= brake
+        f.vy *= brake
+      }
+      f.alarm *= calm
+    }
+  }
+
+  /** The pellet nearest the koi's snout within range, or null. */
+  private nearestFood(x: number, y: number, range: number) {
+    let best: Food | null = null
+    let bestD = range
+    for (const p of this.food) {
+      const d = Math.hypot(p.x - x, p.y - y)
+      if (d < bestD) {
+        bestD = d
+        best = p
+      }
+    }
+    return best
   }
 
   private rebuildHash() {
@@ -312,7 +451,7 @@ export class World {
 
   private stepFish(dt: number) {
     if (this.useGpu && this.stepFishGpu(dt)) return
-    const { fish, sharks, pointer, width: W, height: H, time } = this
+    const { fish, sharks, width: W, height: H, time } = this
     const R = this.perception
     const R2 = R * R
     const foreignSep = this.foreignSep
@@ -324,6 +463,7 @@ export class World {
     const cur = this.tmp
     const calmDecay = Math.exp(-dt * 0.7)
     const contagion = Math.min(1, dt * 6)
+    const pointerFear = this.pointerFear()
 
     for (let i = 0; i < fish.length; i++) {
       const f = fish[i]!
@@ -449,13 +589,13 @@ export class World {
         fear = Math.max(fear, Math.sqrt(w))
       }
 
-      if (pointer.active) {
+      if (pointerFear > 0) {
         const pr = 130
-        const dx = f.x - pointer.x
-        const dy = f.y - pointer.y
+        const dx = f.x - this.pointer.x
+        const dy = f.y - this.pointer.y
         const d = Math.hypot(dx, dy)
         if (d < pr && d > 1e-3) {
-          const w = (1 - d / pr) ** 2
+          const w = (1 - d / pr) ** 2 * pointerFear
           ax += (dx / d) * FISH_FLEE_K * w
           ay += (dy / d) * FISH_FLEE_K * w
           fear = Math.max(fear, Math.sqrt(w) * 0.8)
@@ -565,7 +705,8 @@ export class World {
           calmDecay: Math.exp(-dt * 0.7),
           contagion: Math.min(1, dt * 6),
         },
-        this.pointer
+        this.pointer,
+        this.pointerFear()
       )
       return true
     } catch (err) {
@@ -606,7 +747,17 @@ export class World {
       const t = sh.target
       let hunting = false
       let closing = 0
-      if (t && t.alive && sh.hunger > 0.3) {
+      const meal = this.nearestFood(hx, hy, L * 1.6 + 260)
+      if (meal) {
+        // Pellets beat fish: koi drift over to the food at an easy pace.
+        const tx = meal.x - hx
+        const ty = meal.y - hy
+        const d = Math.hypot(tx, ty) || 1
+        dx += (tx / d) * 3
+        dy += (ty / d) * 3
+        hunting = true
+        closing = clamp(1 - d / (L * 0.9), 0, 1) * 0.3
+      } else if (t && t.alive && sh.hunger > 0.3) {
         // Pursuit: aim at where the fish is about to be.
         const tx = t.x + t.vx * 0.35 - hx
         const ty = t.y + t.vy * 0.35 - hy
@@ -727,10 +878,18 @@ export class World {
       }
 
       // Feed.
-      if (sh.hunger > 0.15) {
-        const mouthR = L * 0.05 + 8
-        const mx = nodes[0]!
-        const my = nodes[1]!
+      const mouthR = L * 0.05 + 8
+      const mx = nodes[0]!
+      const my = nodes[1]!
+      for (let k = this.food.length - 1; k >= 0; k--) {
+        const p = this.food[k]!
+        if ((p.x - mx) ** 2 + (p.y - my) ** 2 < mouthR * mouthR * 1.6) {
+          this.food.splice(k, 1)
+          sh.hunger = Math.max(0, sh.hunger - 0.05)
+          this.events.push({ kind: "nibble", x: p.x, y: p.y })
+        }
+      }
+      if (sh.hunger > 0.15 && !meal) {
         for (const f of this.fish) {
           if (!f.alive) continue
           if ((f.x - mx) ** 2 + (f.y - my) ** 2 < mouthR * mouthR) {
