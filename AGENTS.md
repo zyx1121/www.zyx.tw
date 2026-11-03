@@ -26,7 +26,7 @@ Then open the changed page in a browser. Look at it in dark mode, at desktop and
 
 ## Deploy
 
-- Every app except `apps/stamp` runs as a container on spawner. CI builds the root `Dockerfile` with `APP=<app>` (`apps/ui/Dockerfile` for the static ui.zyx.tw), smoke tests it, and from `main` pushes `ghcr.io/zyx1121/<host>:main` and `:sha-<commit>`, where `<host>` is the app's domain (`www.zyx.tw`, `ui.zyx.tw`, `3d.zyx.tw`).
-- The host runs the root `compose.yaml` and pulls `:main` within a minute. Ports and tags go in `.env` (`.env.example`); each app's own settings go in `env/<app>.env` (`apps/<app>/.env.example`).
+- Every app except `apps/stamp` runs as a container on VM 117. The pull request builds the root `Dockerfile` with `APP=<app>` (`apps/ui/Dockerfile` for the static ui.zyx.tw) through the shared `image.yml`, and `deploy/smoke.sh <app>` tests it. The image is `ghcr.io/zyx1121/<host>`, where `<host>` is the app's domain (`www.zyx.tw`, `ui.zyx.tw`, `3d.zyx.tw`).
+- A merge to `main` ships every app at once through land: carrel-deployd on VM 117 runs `deploy/carrel-start.sh`, which sets each `*_VERSION` in `/opt/www-zyx-tw/.env` to `sha-<commit>` and restarts the stack. Wait for it with `golem-watch zyx1121/www.zyx.tw <sha>`. Ports go in `.env` (`.env.example`); each app's own settings go in `env/<app>.env` (`apps/<app>/.env.example`).
 - Vercel deploys nothing (`git.deploymentEnabled` is off in every `vercel.json`). `apps/stamp` is retired and not deployed.
 - After a merge, verify that each changed app serves the merge commit: the image's `sha-<commit>` tag and the live page.

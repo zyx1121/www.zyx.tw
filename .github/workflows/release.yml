@@ -1,0 +1,22 @@
+name: release
+
+# A push to main deploys every app's image ci passed to VM 117 through land:
+# ship retags tree-<tree> as sha-<commit> and main, then carrel-deployd on
+# the VM runs deploy/carrel-start.sh, which moves the whole stack at once.
+on:
+  push:
+    branches: [main]
+
+jobs:
+  ship:
+    uses: zyx1121/.github/.github/workflows/ship.yml@main
+    permissions:
+      contents: read
+      packages: write
+      actions: read
+      id-token: write
+    with:
+      images: '["ghcr.io/zyx1121/www.zyx.tw", "ghcr.io/zyx1121/ui.zyx.tw", "ghcr.io/zyx1121/good.zyx.tw", "ghcr.io/zyx1121/time.zyx.tw", "ghcr.io/zyx1121/link.zyx.tw", "ghcr.io/zyx1121/1909.zyx.tw", "ghcr.io/zyx1121/3d.zyx.tw"]'
+      target: land
+      tenant: compose
+      app: www-zyx-tw
