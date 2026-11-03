@@ -1,11 +1,14 @@
-# The zyx.tw apps. CI builds each image and pushes :main from main; the host
-# runs this file and pulls :main within a minute. Ports and image tags go in
+# The zyx.tw apps. The pull request builds each image; a merge ships them to
+# the host through land, which runs deploy/carrel-start.sh to set every
+# *_VERSION to the release and restart the stack. Ports and image tags go in
 # .env next to this file, each app's own settings in env/<app>.env (see
 # .env.example and apps/<app>/.env.example). Every env/<app>.env is optional,
 # so a missing one never blocks the other apps; an app that needs it (link,
 # 1909) fails its own requests until it exists.
 x-app: &app
   restart: unless-stopped
+  init: true
+  stop_grace_period: 3s
 
 services:
   web:

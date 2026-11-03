@@ -154,134 +154,39 @@ jobs:
           docker compose config --quiet
           docker compose config --services
 
-  images:
-    name: ${{ matrix.host }} image
-    # The host deploys whatever :main points at, so publish only after the
-    # rest of CI has passed.
-    needs: [ci, registry, compose]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+  image:
+    name: image (${{ matrix.app }})
     strategy:
       fail-fast: false
       matrix:
         include:
-          - app: web
-            host: www.zyx.tw
-            health: /llms.txt
-            pages: / /works /about /privacy /terms /llms.txt /about.md /og/0.gif
-          - app: ui
-            host: ui.zyx.tw
-            dockerfile: apps/ui/Dockerfile
-            pages: / /button /button.md /index.md /llms.txt /r/base.json /fonts/sarasa-mono-tc.css
-          - app: good
-            host: good.zyx.tw
-            pages: /
-          - app: time
-            host: time.zyx.tw
-            pages: /
-          - app: link
-            host: link.zyx.tw
-            pages: /
-            # An unknown path is a short code, looked up in the database.
-            no404: true
-          - app: "1909"
-            host: 1909.zyx.tw
-            health: /auth/login
-            pages: /auth/login
-            # Every other path needs a session or the database.
-            no404: true
-          - app: 3d
-            host: 3d.zyx.tw
-            pages: /
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Build
-        env:
-          # Classic token, no scopes: the heatmap counts private contributions.
-          GITHUB_TOKEN: ${{ matrix.app == 'web' && secrets.HEATMAP_GITHUB_TOKEN || '' }}
-        run: |
-          secret=()
-          if [ -n "$GITHUB_TOKEN" ]; then secret=(--secret id=github_token,env=GITHUB_TOKEN); fi
-          docker build -f "${{ matrix.dockerfile || 'Dockerfile' }}" "${secret[@]}" \
-            --build-arg APP="${{ matrix.app }}" \
-            --build-arg HEALTH="${{ matrix.health || '/' }}" \
-            -t app:ci .
-
-      - name: Smoke test
-        run: |
-          docker run -d --name app -p 127.0.0.1:3000:3000 app:ci
-          for i in $(seq 1 30); do curl -s -o /dev/null localhost:3000/ && break; sleep 1; done
-          for path in ${{ matrix.pages }}; do
-            code=$(curl -s -o /dev/null -w "%{http_code}" "localhost:3000$path")
-            echo "$path $code"
-            test "$code" = 200
-          done
-
-      - name: Smoke test (not found)
-        if: ${{ !matrix.no404 }}
-        run: test "$(curl -s -o /dev/null -w "%{http_code}" localhost:3000/nope-not-a-page)" = 404
-
-      - name: Smoke test (www.zyx.tw)
-        if: matrix.app == 'web'
-        run: curl -s -o /dev/null -w "%{redirect_url}\n" localhost:3000/og.gif | grep -q '^https://www.zyx.tw/og/'
-
-      - name: Smoke test (heatmap in the prerendered About)
-        # Runs whenever the build had the token (not on forks or Dependabot).
-        if: matrix.app == 'web'
-        env:
-          HAS_TOKEN: ${{ secrets.HEATMAP_GITHUB_TOKEN != '' }}
-        run: |
-          if [ "$HAS_TOKEN" != true ]; then echo "no token, skipped"; exit 0; fi
-          if curl -s localhost:3000/about | grep -q contributionLevel; then exit 0; fi
-          # A GitHub outage at build time must not block a deploy from main;
-          # ISR fills the heatmap in later. On a PR it fails.
-          if [ "${{ github.event_name }}" = push ]; then echo "::warning::About built without the heatmap"; exit 0; fi
-          exit 1
-
-      - name: Smoke test (ui.zyx.tw)
-        if: matrix.app == 'ui'
-        run: |
-          curl -sI localhost:3000/button.md | grep -qi '^content-type: text/markdown'
-          curl -sI localhost:3000/r/base.json | grep -qi '^access-control-allow-origin: \*'
-          test "$(curl -s -o /dev/null -w "%{http_code}" localhost:3000/button.html)" = 308
-          test "$(curl -s -o /dev/null -w "%{http_code}" localhost:3000/button/)" = 308
-          # Crafted paths must never redirect off the host.
-          for path in /%5Cevil.com.html /%09/evil.com.html /%5Cevil.com/; do
-            location=$(curl -s -o /dev/null -w "%{redirect_url}" "localhost:3000$path")
-            echo "$path -> $location"
-            case "$location" in ""|http://localhost:3000/*) ;; *) exit 1 ;; esac
-          done
-
-      - name: Container log on failure
-        if: failure()
-        run: docker logs app || true
-
-      - name: Push the commit's image
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-          image=ghcr.io/zyx1121/${{ matrix.host }}
-          docker tag app:ci "$image:sha-${GITHUB_SHA::7}"
-          docker push "$image:sha-${GITHUB_SHA::7}"
-
-  publish:
-    name: Publish :main
-    # The hosts deploy :main within a minute, so move every app's :main only
-    # once every image of this commit has passed: never a partial release.
-    needs: [images]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+          - { app: web, host: www.zyx.tw, health: /llms.txt, file: Dockerfile }
+          - { app: ui, host: ui.zyx.tw, health: /, file: apps/ui/Dockerfile }
+          - { app: good, host: good.zyx.tw, health: /, file: Dockerfile }
+          - { app: time, host: time.zyx.tw, health: /, file: Dockerfile }
+          - { app: link, host: link.zyx.tw, health: /, file: Dockerfile }
+          - { app: "1909", host: 1909.zyx.tw, health: /auth/login, file: Dockerfile }
+          - { app: 3d, host: 3d.zyx.tw, health: /, file: Dockerfile }
+    uses: zyx1121/.github/.github/workflows/image.yml@main
     permissions:
+      contents: read
       packages: write
-    steps:
-      - name: Point :main at this commit
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-          for host in www.zyx.tw ui.zyx.tw good.zyx.tw time.zyx.tw link.zyx.tw 1909.zyx.tw 3d.zyx.tw; do
-            image=ghcr.io/zyx1121/$host
-            docker buildx imagetools create -t "$image:main" "$image:sha-${GITHUB_SHA::7}"
-          done
+    with:
+      images: '[{"name": "ghcr.io/zyx1121/${{ matrix.host }}", "file": "${{ matrix.file }}"}]'
+      build-args: |
+        APP=${{ matrix.app }}
+        HEALTH=${{ matrix.health }}
+      smoke: bash deploy/smoke.sh ${{ matrix.app }} ghcr.io/zyx1121/${{ matrix.host }}:ci
+    secrets:
+      # Classic token, no scopes: the web heatmap counts private contributions.
+      build-env: '{"github_token": ${{ toJSON(secrets.HEATMAP_GITHUB_TOKEN) }}}'
+
+  promote:
+    # The host runs all apps from one release, so every image must pass.
+    needs: [ci, registry, compose, image]
+    uses: zyx1121/.github/.github/workflows/promote.yml@main
+    permissions:
+      contents: read
+      packages: write
+    with:
+      images: '["ghcr.io/zyx1121/www.zyx.tw", "ghcr.io/zyx1121/ui.zyx.tw", "ghcr.io/zyx1121/good.zyx.tw", "ghcr.io/zyx1121/time.zyx.tw", "ghcr.io/zyx1121/link.zyx.tw", "ghcr.io/zyx1121/1909.zyx.tw", "ghcr.io/zyx1121/3d.zyx.tw"]'
