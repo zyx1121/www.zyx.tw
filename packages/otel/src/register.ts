@@ -1,6 +1,39 @@
 import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http"
 import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs"
+import { SpanStatusCode } from "@opentelemetry/api"
 import { OTLPHttpJsonTraceExporter, registerOTel } from "@vercel/otel"
+
+type SpanBatch = Parameters<OTLPHttpJsonTraceExporter["export"]>[0]
+
+/**
+ * A path outside a route's generateStaticParams (with dynamicParams false)
+ * makes Next throw its internal NoFallbackError, mark the request span as
+ * an error, and then answer 404 in a second span. The visitor gets a
+ * correct 404, so the first span is not a failure: its error status is
+ * cleared before export, and real errors pass through untouched.
+ */
+class ClearNoFallback extends OTLPHttpJsonTraceExporter {
+  export(
+    spans: SpanBatch,
+    done: Parameters<OTLPHttpJsonTraceExporter["export"]>[1]
+  ) {
+    super.export(spans.map(clearNoFallback), done)
+  }
+}
+
+export function clearNoFallback(span: SpanBatch[number]): SpanBatch[number] {
+  if (
+    span.status.code !== SpanStatusCode.ERROR ||
+    span.status.message !== "Internal: NoFallbackError"
+  )
+    return span
+  const attributes = { ...span.attributes }
+  delete attributes["error.type"]
+  return Object.assign(Object.create(span) as SpanBatch[number], {
+    status: { code: SpanStatusCode.UNSET },
+    attributes,
+  })
+}
 
 export interface RegisterSensoriumOptions {
   /**
@@ -69,7 +102,7 @@ export function registerSensorium({
   registerOTel({
     serviceName: process.env.OTEL_SERVICE_NAME ?? defaultServiceName,
     spanProcessors: [],
-    traceExporter: new OTLPHttpJsonTraceExporter({
+    traceExporter: new ClearNoFallback({
       url: `${trimmedEndpoint}/v1/traces`,
       headers,
     }),
