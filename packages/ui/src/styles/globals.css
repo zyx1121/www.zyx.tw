@@ -251,7 +251,7 @@
 
 /*
  * TV frame, opt in with `tv` on <html>: a black bezel around the viewport and
- * a screen with squircle corners, a soft dark glow at its edge and faint
+ * a screen with round corners, a soft dark glow at its edge and faint
  * scanlines. The body is the screen: it scrolls inside the bezel, so nothing
  * of the page passes under the browser's bars and the page around it stays
  * black. Safari 26 tints its bars from a fixed element at the top or else the
@@ -276,7 +276,6 @@ html.tv::before {
   inset: var(--bezel);
   z-index: -20;
   border-radius: 40px;
-  corner-shape: squircle;
   background: var(--background);
 }
 html.tv body {
@@ -287,7 +286,6 @@ html.tv body {
   overflow-y: auto;
   overscroll-behavior: contain;
   border-radius: 40px;
-  corner-shape: squircle;
   scrollbar-width: none;
 }
 html.tv body::-webkit-scrollbar {
@@ -300,7 +298,6 @@ html.tv::after {
   z-index: 2147483647;
   pointer-events: none;
   border-radius: 40px;
-  corner-shape: squircle;
   box-shadow:
     0 0 0 100vmax #000,
     inset 0 0 48px rgb(0 0 0 / 0.35);
@@ -331,7 +328,6 @@ html[data-boot] [data-slot="tv-boot"] {
   display: block;
   overflow: hidden;
   border-radius: 40px;
-  corner-shape: squircle;
   pointer-events: none;
 }
 [data-slot="tv-boot"] > [data-part="top"],
@@ -390,7 +386,6 @@ html[data-boot] [data-slot="tv-boot"] {
   width: calc(100% - 2 * var(--bezel));
   height: calc(100% - 2 * var(--bezel));
   border-radius: 40px;
-  corner-shape: squircle;
   image-rendering: pixelated;
   mix-blend-mode: screen;
   opacity: 0;
