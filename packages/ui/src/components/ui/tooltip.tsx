@@ -36,7 +36,8 @@ const TALL = /[bdfhijklt0-9]/
 const DESCENDER = /[gjpqy]/
 function inkEdges(words: string) {
   const text = words.toLowerCase()
-  if (/[^\u0000-\u024f]/.test(text)) return undefined
+  // Latin only: other scripts have their own proportions and keep the line box.
+  if (/[^ -\u024f]/.test(text)) return undefined
   const tall = TALL.test(text)
   const low = DESCENDER.test(text)
   if (tall && low) return "[text-box:trim-both_cap_text]"
