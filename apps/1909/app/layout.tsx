@@ -39,7 +39,7 @@ export default async function RootLayout({
           {children}
           <BottomCorners
             fade
-            copyrightTip="Loki"
+            copyrightTip="zyx"
             links={
               <LegalLinks
                 labels={{ privacy: "隱私權", terms: "條款" }}
