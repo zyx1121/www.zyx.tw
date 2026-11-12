@@ -73,7 +73,9 @@ function pagesList() {
 
 /** A value with its link, if it has one. */
 function linked(value: string, href?: string) {
-  return href ? link(value, href) : text(value)
+  if (!href) return text(value)
+  // A page of this site is linked by its full address, as agents read it.
+  return link(value, href.startsWith("/") ? absoluteUrl(href) : href)
 }
 
 export function homeMarkdown() {

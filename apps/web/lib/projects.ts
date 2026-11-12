@@ -43,6 +43,8 @@ export type Project = {
   /** File-safe id; the preview files are named after it. */
   slug: string
   name: string
+  /** The year it started, for About's list of projects. */
+  year: number
   href: string
   /** Its source code, when the repository is public. */
   code?: string

@@ -1,12 +1,13 @@
 import { EMAIL } from "@workspace/ui/lib/profile"
 
+import { projectPath, projects } from "@/lib/projects"
 import { SOCIAL } from "@/lib/site"
 
 /**
  * The about page's CV, as data so /about and /about.md say the same thing.
  * Entries come from a record or from Loki himself: the degrees, the award
  * and the coaching from school documents, each paper from its DOI or its
- * PDF, each project from its repository or report, and the MediaTek
+ * PDF, each project from Works or from its repository or report, and the MediaTek
  * course, the TANET paper and the internship's end from Loki. Other
  * client work stays off.
  */
@@ -35,6 +36,17 @@ export type Section = {
   title: string
   entries: Entry[]
 }
+
+/**
+ * Everything on Works, in its order, each linked to its page here. The list
+ * comes from lib/projects.json, so a project added to Works is on the CV.
+ */
+const WORKS: Entry[] = projects.map((project) => ({
+  when: String(project.year),
+  what: project.purpose[0]!.toUpperCase() + project.purpose.slice(1),
+  where: project.name,
+  href: projectPath(project),
+}))
 
 /**
  * The resume's lists in page order, by kind as a CV sorts them, newest
@@ -118,6 +130,7 @@ export const SECTIONS: Section[] = [
     id: "projects",
     title: "Projects",
     entries: [
+      ...WORKS,
       {
         when: "2026",
         what: "A local model host for agents on Windows",
@@ -177,12 +190,6 @@ export const SECTIONS: Section[] = [
         what: "A pixel-art Ditto statusline for Claude Code",
         where: "ditto",
         href: "https://github.com/zyx1121/ditto",
-      },
-      {
-        when: "2026",
-        what: "Website for NYCU's Office of AI Affairs",
-        where: "ai.winlab.tw",
-        href: "https://github.com/Office-of-AI-Affairs/ai.winlab.tw",
       },
       {
         when: "2025",
