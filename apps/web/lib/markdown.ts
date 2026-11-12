@@ -106,6 +106,13 @@ function sectionMarkdown({ title, body, figure, points }: Section) {
     // The drawing as drawn; its description follows for readers of text.
     figure?.kind === "diagram" && ["```text", ...figure.wide, "```"].join("\n"),
     figure?.kind === "diagram" && `Figure: ${text(figure.alt)}`,
+    figure?.kind === "diagram" &&
+      figure.steps
+        ?.map(
+          ({ label, text: line }, index) =>
+            `${index + 1}. ${text(label)}: ${text(line)}`
+        )
+        .join("\n"),
     points
       ?.map(({ term, text: line }) => `- ${text(term)}: ${text(line)}`)
       .join("\n"),

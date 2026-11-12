@@ -21,6 +21,13 @@ export type Diagram = {
   wide: string[]
   narrow: string[]
   alt: string
+  /**
+   * The drawing read one part at a time. Each step lights the words in
+   * `lit` wherever they stand in the drawing (wide and narrow alike) and
+   * shows `text` under it. The figure plays through its steps by itself and
+   * holds on the one a reader picks.
+   */
+  steps?: { label: string; lit: string[]; text: string }[]
 }
 
 /** One part of a project's page, from the overview toward the detail. */

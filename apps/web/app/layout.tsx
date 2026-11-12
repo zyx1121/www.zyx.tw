@@ -13,7 +13,13 @@ import { PondBackground } from "@/components/pond-background"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { TvBoot, TvStatic } from "@/components/tv"
+import { projects } from "@/lib/projects"
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
+
+// Only the names cross to the client header, not every project's page.
+const PROJECT_NAMES = Object.fromEntries(
+  projects.map(({ slug, name }) => [slug, name])
+)
 
 import "./globals.css"
 
@@ -73,7 +79,7 @@ export default async function RootLayout({
               <PageDecode />
               <TvStatic />
               <PondBackground />
-              <SiteHeader />
+              <SiteHeader projectNames={PROJECT_NAMES} />
               {children}
               <SiteFooter />
             </MotionProvider>
