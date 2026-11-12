@@ -2,6 +2,7 @@
   {
     "slug": "aintern",
     "name": "AIntern",
+    "year": 2026,
     "href": "https://aintern.zyx.tw",
     "purpose": "an AI intern for any team",
     "intro": [
@@ -374,6 +375,7 @@
   {
     "slug": "carrel",
     "name": "Carrel",
+    "year": 2026,
     "href": "https://carrel.winlab.tw",
     "code": "https://github.com/NYCU-WinLab/carrel",
     "purpose": "lab machines, asked for in words",
@@ -795,6 +797,7 @@
   {
     "slug": "golem",
     "name": "Golem",
+    "year": 2026,
     "href": "https://golem.zyx.tw",
     "purpose": "keeps watch over my services",
     "intro": [
@@ -818,6 +821,7 @@
   {
     "slug": "good",
     "name": "Good",
+    "year": 2026,
     "href": "https://good.zyx.tw",
     "purpose": "a digital 乖乖 for servers",
     "intro": [
@@ -837,6 +841,7 @@
   {
     "slug": "3d",
     "name": "Plump",
+    "year": 2026,
     "href": "https://plump.zyx.tw",
     "purpose": "SVG to 3D",
     "intro": [
@@ -857,6 +862,7 @@
   {
     "slug": "ui",
     "name": "UI",
+    "year": 2026,
     "href": "https://ui.zyx.tw",
     "code": "https://github.com/zyx1121/www.zyx.tw",
     "purpose": "component registry",
@@ -880,6 +886,7 @@
   {
     "slug": "sensorium",
     "name": "Sensorium",
+    "year": 2026,
     "href": "https://sensorium.zyx.tw",
     "code": "https://github.com/zyx1121/sensorium",
     "purpose": "observability for agents",
@@ -903,6 +910,7 @@
   {
     "slug": "ai",
     "name": "NYCU AI",
+    "year": 2026,
     "href": "https://ai.winlab.tw",
     "code": "https://github.com/Office-of-AI-Affairs/ai.winlab.tw",
     "purpose": "NYCU Office of AI Affairs",
@@ -924,6 +932,7 @@
   {
     "slug": "winlab",
     "name": "WinLab",
+    "year": 2026,
     "href": "https://www.winlab.tw",
     "code": "https://github.com/NYCU-WinLab/www.winlab.tw",
     "purpose": "Chien-Chao Tseng's lab",
@@ -944,6 +953,7 @@
   {
     "slug": "portal",
     "name": "WinLab Portal",
+    "year": 2026,
     "href": "https://portal.winlab.tw",
     "code": "https://github.com/NYCU-WinLab/portal",
     "purpose": "WinLab's member portal",
@@ -967,6 +977,7 @@
   {
     "slug": "video",
     "name": "WinLab Video",
+    "year": 2026,
     "href": "https://video.winlab.tw",
     "code": "https://github.com/NYCU-WinLab/video.winlab.tw",
     "purpose": "WinLab's video library",
@@ -989,6 +1000,7 @@
   {
     "slug": "link",
     "name": "Link",
+    "year": 2026,
     "href": "https://link.zyx.tw",
     "purpose": "URL shortener",
     "intro": [
@@ -1008,6 +1020,7 @@
   {
     "slug": "time",
     "name": "Time",
+    "year": 2026,
     "href": "https://time.zyx.tw",
     "purpose": "what time is it?",
     "intro": [
