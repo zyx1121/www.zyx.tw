@@ -41,7 +41,55 @@
             "│  RUN   │ trigger or button",
             "╰────────╯"
           ],
-          "alt": "Five steps in a row: a person says the work in words, the agent builds it on the canvas, the agent tests each step, a person signs off, and a trigger or a button runs it."
+          "alt": "Five steps in a row: a person says the work in words, the agent builds it on the canvas, the agent tests each step, a person signs off, and a trigger or a button runs it.",
+          "steps": [
+            {
+              "label": "Say",
+              "lit": [
+                "SAY",
+                "in words",
+                "you, in plain words"
+              ],
+              "text": "You describe the work in the chat, as you would to a new colleague."
+            },
+            {
+              "label": "Build",
+              "lit": [
+                "BUILD",
+                "on canvas",
+                "agent, on a canvas"
+              ],
+              "text": "The agent adds nodes to the canvas and connects them."
+            },
+            {
+              "label": "Test",
+              "lit": [
+                "TEST",
+                "each step",
+                "agent, every step"
+              ],
+              "text": "It runs each step with real input and fixes what fails."
+            },
+            {
+              "label": "Review",
+              "lit": [
+                "REVIEW",
+                "signs off",
+                "a person signs off"
+              ],
+              "text": "The run stops here until the named person approves."
+            },
+            {
+              "label": "Run",
+              "lit": [
+                "RUN",
+                "a trigger",
+                "or button",
+                "trigger or button"
+              ],
+              "text": "From then on a schedule, a form or a button starts it."
+            }
+          ]
         }
       },
       {
@@ -131,7 +179,7 @@
             " STARTS                                      ENDS",
             " a person presses Run ─╮                  ╭─ a result page",
             " a schedule ───────────┤  ╭──────────╮    ├─ an email",
-            " a webhook ────────────┼─>│ WORKFLOW │───>┼─ a webhook call",
+            " an incoming webhook ──┼─>│ WORKFLOW │───>┼─ a webhook call",
             " a web page or form ───┤  ╰──────────╯    ├─ a filled form",
             " the Chrome side panel ╯                  ╰─ a published site"
           ],
@@ -139,7 +187,7 @@
             " STARTS",
             " ├─ a person presses Run",
             " ├─ a schedule",
-            " ├─ a webhook",
+            " ├─ an incoming webhook",
             " ├─ a web page or form",
             " ├─ the Chrome side panel",
             " │",
@@ -154,7 +202,40 @@
             " ╰─ a published site",
             " ENDS"
           ],
-          "alt": "Five starts lead into a workflow: a person presses Run, a schedule, a webhook, a web page or form, the Chrome side panel. Five ends lead out: a result page, an email, a webhook call, a filled form, a published site."
+          "alt": "Five starts lead into a workflow: a person presses Run, a schedule, a webhook, a web page or form, the Chrome side panel. Five ends lead out: a result page, an email, a webhook call, a filled form, a published site.",
+          "steps": [
+            {
+              "label": "Starts",
+              "lit": [
+                "STARTS",
+                "a person presses Run",
+                "a schedule",
+                "an incoming webhook",
+                "a web page or form",
+                "the Chrome side panel"
+              ],
+              "text": "5 things start a run: a person, a clock, another system, a web page or the browser's side panel."
+            },
+            {
+              "label": "Workflow",
+              "lit": [
+                "WORKFLOW"
+              ],
+              "text": "The same workflow runs, whatever started it."
+            },
+            {
+              "label": "Ends",
+              "lit": [
+                "ENDS",
+                "a result page",
+                "an email",
+                "a webhook call",
+                "a filled form",
+                "a published site"
+              ],
+              "text": "The result goes where it is needed: a page, a mailbox, another system, a form or a published site."
+            }
+          ]
         }
       },
       {
@@ -198,9 +279,9 @@
             "          jobs │      │ models",
             "   ╭───────────┴──╮ ╭─┴─────────────╮",
             "   │   RUNNERS    │ │ MODEL GATEWAY │",
-            "   │   Python     │ │ OpenAI-       │",
-            "   │   browser    │ │ compatible    │",
-            "   │   documents  │ │ endpoint      │",
+            "   │  Python      │ │ OpenAI-       │",
+            "   │  Playwright  │ │ compatible    │",
+            "   │  LibreOffice │ │ endpoint      │",
             "   ╰──────────────╯ ╰───────────────╯"
           ],
           "narrow": [
@@ -216,12 +297,61 @@
             "  │       OpenAI-compatible",
             "╭─┴────────────╮",
             "│   RUNNERS    │",
-            "│   Python     │",
-            "│   browser    │",
-            "│   documents  │",
+            "│  Python      │",
+            "│  Playwright  │",
+            "│  LibreOffice │",
             "╰──────────────╯"
           ],
-          "alt": "A browser, the Chrome side panel and MCP clients reach the web app. The web app stores state in Postgres, hands jobs to three runners (Python, browser, documents) and calls a model gateway."
+          "alt": "A browser, the Chrome side panel and MCP clients reach the web app. The web app stores state in Postgres, hands jobs to three runners (Python, browser, documents) and calls a model gateway.",
+          "steps": [
+            {
+              "label": "Clients",
+              "lit": [
+                "browser",
+                "Chrome panel",
+                "Claude Code, Codex"
+              ],
+              "text": "People use the browser or the Chrome side panel. Agents come in over MCP."
+            },
+            {
+              "label": "Web app",
+              "lit": [
+                "WEB APP",
+                "Next.js"
+              ],
+              "text": "One web app holds the canvas, the chat, the tools and the scheduler."
+            },
+            {
+              "label": "Postgres",
+              "lit": [
+                "POSTGRES"
+              ],
+              "text": "State lives in Postgres. Only the web app talks to it."
+            },
+            {
+              "label": "Runners",
+              "lit": [
+                "RUNNERS",
+                "Python",
+                "Playwright",
+                "LibreOffice",
+                "jobs"
+              ],
+              "text": "Runners pull jobs and run each one in a fresh sandbox."
+            },
+            {
+              "label": "Models",
+              "lit": [
+                "MODEL GATEWAY",
+                "OpenAI-compatible",
+                "OpenAI-",
+                "compatible",
+                "endpoint",
+                "models"
+              ],
+              "text": "AI steps call one model endpoint, chosen in configuration."
+            }
+          ]
         }
       }
     ],
@@ -289,7 +419,45 @@
             "│   ssh sdn-hw.alice         │",
             "╰────────────────────────────╯"
           ],
-          "alt": "A Claude Code session. The member asks for a VM for SDN homework. Carrel's machine_create tool answers that the machine is ready with 2 vCPU, 2 GiB RAM and a 20 GiB disk, and gives the line ssh sdn-hw.alice."
+          "alt": "A Claude Code session. The member asks for a VM for SDN homework. Carrel's machine_create tool answers that the machine is ready with 2 vCPU, 2 GiB RAM and a 20 GiB disk, and gives the line ssh sdn-hw.alice.",
+          "steps": [
+            {
+              "label": "Ask",
+              "lit": [
+                "> Open a VM on winlab for my SDN homework",
+                "> Open a VM on winlab for",
+                "my SDN homework"
+              ],
+              "text": "The member says what the machine is for."
+            },
+            {
+              "label": "Call",
+              "lit": [
+                "* carrel  machine_create",
+                "name sdn-hw, image ubuntu-24.04",
+                "name sdn-hw",
+                "image ubuntu-24.04"
+              ],
+              "text": "The agent picks an image and a size, and calls one tool."
+            },
+            {
+              "label": "Ready",
+              "lit": [
+                "Ready: 2 vCPU, 2 GiB RAM, 20 GiB disk.",
+                "SSH and initialization verified.",
+                "Ready: 2 vCPU, 2 GiB,",
+                "20 GiB disk."
+              ],
+              "text": "Carrel answers once the machine has booted and answered over SSH."
+            },
+            {
+              "label": "Connect",
+              "lit": [
+                "ssh sdn-hw.alice"
+              ],
+              "text": "The alias is already in the member's SSH config."
+            }
+          ]
         }
       },
       {
@@ -323,7 +491,53 @@
             "╭───────────────╮",
             "╰───────────────╯"
           ],
-          "alt": "Four machine sizes drawn as boxes that double in width: tiny with 1 vCPU, 1 GiB of memory and 10 GiB of disk, small with 2, 2 and 20, medium with 4, 8 and 40, large with 8, 16 and 80."
+          "alt": "Four machine sizes drawn as boxes that double in width: tiny with 1 vCPU, 1 GiB of memory and 10 GiB of disk, small with 2, 2 and 20, medium with 4, 8 and 40, large with 8, 16 and 80.",
+          "steps": [
+            {
+              "label": "Tiny",
+              "lit": [
+                "TINY: 1 vCPU, 1 GiB, 10 GiB",
+                "TINY",
+                "1 vCPU",
+                "1 GiB",
+                "10 GiB"
+              ],
+              "text": "The default: enough for a bot or a small service."
+            },
+            {
+              "label": "Small",
+              "lit": [
+                "SMALL: 2 vCPU, 2 GiB, 20 GiB",
+                "SMALL",
+                "2 vCPU",
+                "2 GiB",
+                "20 GiB"
+              ],
+              "text": "A prepared development machine starts here."
+            },
+            {
+              "label": "Medium",
+              "lit": [
+                "MEDIUM: 4 vCPU, 8 GiB, 40 GiB",
+                "MEDIUM",
+                "4 vCPU",
+                "8 GiB",
+                "40 GiB"
+              ],
+              "text": "For builds, Docker stacks and databases."
+            },
+            {
+              "label": "Large",
+              "lit": [
+                "LARGE: 8 vCPU, 16 GiB, 80 GiB",
+                "LARGE",
+                "8 vCPU",
+                "16 GiB of memory",
+                "80 GiB of disk"
+              ],
+              "text": "A member's whole CPU and memory budget in one machine."
+            }
+          ]
         },
         "points": [
           {
@@ -377,7 +591,48 @@
             "│ CHECK  │ healthy, or go back",
             "╰────────╯"
           ],
-          "alt": "Four steps in a row: git push to your repository, GitHub Actions builds, the machine switches to the new release, then 60 seconds of health checks decide whether to keep it or roll back."
+          "alt": "Four steps in a row: git push to your repository, GitHub Actions builds, the machine switches to the new release, then 60 seconds of health checks decide whether to keep it or roll back.",
+          "steps": [
+            {
+              "label": "Push",
+              "lit": [
+                "PUSH",
+                "your repo on GitHub",
+                "your repo",
+                "on GitHub"
+              ],
+              "text": "A push to the linked branch starts it."
+            },
+            {
+              "label": "Build",
+              "lit": [
+                "BUILD",
+                "GitHub Actions",
+                "Actions"
+              ],
+              "text": "GitHub Actions builds the release."
+            },
+            {
+              "label": "Switch",
+              "lit": [
+                "SWITCH",
+                "the machine,",
+                "new release",
+                "to the new release"
+              ],
+              "text": "A small daemon on the machine swaps to it."
+            },
+            {
+              "label": "Check",
+              "lit": [
+                "CHECK",
+                "60 s of health",
+                "or roll back",
+                "healthy, or go back"
+              ],
+              "text": "It watches health for 60 seconds, and goes back if the release fails."
+            }
+          ]
         }
       },
       {
@@ -448,7 +703,56 @@
             "  ╰─ GATEWAY",
             "     Caddy, HTTPS, ports"
           ],
-          "alt": "An agent reaches the Carrel control plane over MCP. The control plane, written in Go, drives three things: Proxmox VE with 4 nodes, the network (EVPN, VXLAN, WireGuard) and the gateway (Caddy for HTTPS, plus TCP and UDP ports)."
+          "alt": "An agent reaches the Carrel control plane over MCP. The control plane, written in Go, drives three things: Proxmox VE with 4 nodes, the network (EVPN, VXLAN, WireGuard) and the gateway (Caddy for HTTPS, plus TCP and UDP ports).",
+          "steps": [
+            {
+              "label": "Agent",
+              "lit": [
+                "Claude Code, Codex",
+                "MCP over HTTPS, signed in with Keycloak"
+              ],
+              "text": "The member's agent calls one MCP endpoint, signed in with the lab account."
+            },
+            {
+              "label": "Control plane",
+              "lit": [
+                "CARREL CONTROL PLANE",
+                "Go, SQLite",
+                "MCP server    jobs    admission    quotas"
+              ],
+              "text": "It checks the quota, then runs the request as a durable job."
+            },
+            {
+              "label": "Proxmox",
+              "lit": [
+                "PROXMOX VE",
+                "4 nodes, VMs and CTs",
+                "4 nodes",
+                "VMs and CTs"
+              ],
+              "text": "Machines are VMs and containers on 4 Proxmox VE nodes."
+            },
+            {
+              "label": "Network",
+              "lit": [
+                "NETWORK",
+                "EVPN, VXLAN, WireGuard",
+                "EVPN, VXLAN",
+                "WireGuard"
+              ],
+              "text": "Each member's networks are their own, across every node."
+            },
+            {
+              "label": "Gateway",
+              "lit": [
+                "GATEWAY",
+                "Caddy, HTTPS, ports",
+                "Caddy, HTTPS",
+                "TCP and UDP"
+              ],
+              "text": "The gateway gives services a name, a certificate and public ports."
+            }
+          ]
         }
       },
       {
