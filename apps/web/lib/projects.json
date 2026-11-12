@@ -2,18 +2,243 @@
   {
     "slug": "aintern",
     "name": "AIntern",
-    "href": "https://nycu.aintern.zyx.tw",
-    "purpose": "an AI intern for office work",
+    "href": "https://aintern.zyx.tw",
+    "purpose": "an AI intern for any team",
     "intro": [
-      "Office work is full of forms, checks and sign-offs. In AIntern, staff describe a process to an agent in their own words, and the agent builds it as a workflow on a live canvas.",
-      "Nodes run Python, read and write files, drive a browser and call AI. A review node stops the run until the assigned person approves, so nothing that matters goes out unchecked.",
-      "A workflow can start on a schedule, from a webhook, from a web form or from a Chrome side panel. Every tool the agent uses is also an MCP tool for Claude Code or Codex."
+      "Office work is full of forms, checks and sign-offs. In AIntern, a person describes the work in plain words, and an agent builds it as a workflow on a live canvas.",
+      "The agent tests each step as it adds it. Where the result matters, a review stops the run until a person reads it and approves.",
+      "Each organisation runs its own instance, with its own accounts, rules and budget."
     ],
-    "stack": ["Next.js", "Postgres", "Docker runners", "MCP", "Passkeys"],
+    "sections": [
+      {
+        "title": "How it works",
+        "body": [
+          "A workflow goes through 5 steps. People do the first and the fourth, the agent does the 2 between them, and the last one repeats for as long as the work does."
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            "╭────────╮   ╭────────╮   ╭────────╮   ╭────────╮   ╭────────╮",
+            "│  SAY   │──>│ BUILD  │──>│  TEST  │──>│ REVIEW │──>│  RUN   │",
+            "╰────────╯   ╰────────╯   ╰────────╯   ╰────────╯   ╰────────╯",
+            " a person     the agent    the agent    a person     a trigger",
+            " in words     on canvas    each step    signs off    or button"
+          ],
+          "narrow": [
+            "╭────────╮",
+            "│  SAY   │ you, in plain words",
+            "╰───┬────╯",
+            "╭───┴────╮",
+            "│ BUILD  │ agent, on a canvas",
+            "╰───┬────╯",
+            "╭───┴────╮",
+            "│  TEST  │ agent, every step",
+            "╰───┬────╯",
+            "╭───┴────╮",
+            "│ REVIEW │ a person signs off",
+            "╰───┬────╯",
+            "╭───┴────╮",
+            "│  RUN   │ trigger or button",
+            "╰────────╯"
+          ],
+          "alt": "Five steps in a row: a person says the work in words, the agent builds it on the canvas, the agent tests each step, a person signs off, and a trigger or a button runs it."
+        }
+      },
+      {
+        "title": "Build",
+        "body": [
+          "You say what the work is, in the chat beside the canvas or from your own agent over MCP. Nodes appear on the canvas as the agent adds them.",
+          "Technical choices are the agent's. Business rules are yours: who approves, what counts as an exception, who is told. When a rule is open, the agent asks in a card and waits for the answer.",
+          "Every change is a version, so an earlier state is one step back."
+        ],
+        "figure": {
+          "kind": "picture",
+          "src": "/works/aintern/build.webp",
+          "ratio": "standard",
+          "alt": "The chat adds three steps to a workflow on the canvas, then reports its test."
+        }
+      },
+      {
+        "title": "Nodes",
+        "body": [
+          "A workflow is a graph of 10 kinds of node. Rules that must give the same answer every time go in Python. Models only read and write text."
+        ],
+        "points": [
+          {
+            "term": "Start",
+            "text": "Says how the workflow starts and what it takes in."
+          },
+          {
+            "term": "Python",
+            "text": "Runs a function in a sandbox, with files, a browser or office documents."
+          },
+          {
+            "term": "AI",
+            "text": "A model reads and writes, at one of 3 tiers, with tools and web search if it needs them."
+          },
+          {
+            "term": "Review",
+            "text": "Stops the run until the named people approve."
+          },
+          {
+            "term": "Branch",
+            "text": "Sends the run one way or another by a rule."
+          },
+          {
+            "term": "For each",
+            "text": "Runs the steps after it once per item in a list."
+          },
+          {
+            "term": "Wait",
+            "text": "Pauses for a duration or until a time."
+          },
+          {
+            "term": "Table",
+            "text": "Keeps rows from one run to the next."
+          },
+          {
+            "term": "Google",
+            "text": "Reads and writes Docs, Sheets and Slides."
+          },
+          {
+            "term": "End",
+            "text": "Returns the result, sends it, fills a form or publishes a page."
+          }
+        ]
+      },
+      {
+        "title": "Review",
+        "body": [
+          "A review goes before any step that changes something for people: a form submitted for someone, mail to the outside, money.",
+          "The reviewers are people or groups, and the rule is any of them, all of them or a count. A reviewer can correct the data, or send the run back to an earlier step with a comment.",
+          "Only a person in a browser can approve. The agent cannot, and neither can a token or an MCP client."
+        ],
+        "figure": {
+          "kind": "picture",
+          "src": "/works/aintern/review.webp",
+          "ratio": "standard",
+          "alt": "A review card shows a leave request with Send back and Approve, above the workflow that waits on it."
+        }
+      },
+      {
+        "title": "Starts and ends",
+        "body": [
+          "A workflow starts 5 ways and ends 5 ways. The same workflow can sit behind a form for the whole office, or run every Monday at 9."
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            " STARTS                                      ENDS",
+            " a person presses Run ─╮                  ╭─ a result page",
+            " a schedule ───────────┤  ╭──────────╮    ├─ an email",
+            " a webhook ────────────┼─>│ WORKFLOW │───>┼─ a webhook call",
+            " a web page or form ───┤  ╰──────────╯    ├─ a filled form",
+            " the Chrome side panel ╯                  ╰─ a published site"
+          ],
+          "narrow": [
+            " STARTS",
+            " ├─ a person presses Run",
+            " ├─ a schedule",
+            " ├─ a webhook",
+            " ├─ a web page or form",
+            " ├─ the Chrome side panel",
+            " │",
+            "╭┴─────────╮",
+            "│ WORKFLOW │",
+            "╰┬─────────╯",
+            " │",
+            " ├─ a result page",
+            " ├─ an email",
+            " ├─ a webhook call",
+            " ├─ a filled form",
+            " ╰─ a published site",
+            " ENDS"
+          ],
+          "alt": "Five starts lead into a workflow: a person presses Run, a schedule, a webhook, a web page or form, the Chrome side panel. Five ends lead out: a result page, an email, a webhook call, a filled form, a published site."
+        }
+      },
+      {
+        "title": "Team",
+        "body": [
+          "The agent's instructions come in layers: a neutral core, then the organisation's own rules, then the rules of each group the person belongs to. So it uses the team's words and knows the team's systems.",
+          "Groups form a tree. A workflow is shared with people or groups as viewer, runner, editor or owner, and a copy can pull changes from its parent or offer its own back.",
+          "Accounts are passkeys only, by invitation. Spending has a monthly cap for the site and for each person, and the audit log cannot be edited."
+        ],
+        "figure": {
+          "kind": "picture",
+          "src": "/works/aintern/team.webp",
+          "ratio": "standard",
+          "alt": "A sheet of an HR office's rules above the agent's reply that follows them."
+        }
+      },
+      {
+        "title": "For agents",
+        "body": [
+          "What a person can do on the page is a tool in one registry of 91. The chat agent and MCP clients such as Claude Code and Codex call the same tools, with the same permissions.",
+          "22 of them work on the page only: accounts, permissions and the agent's own instructions stay with a person."
+        ]
+      },
+      {
+        "title": "How it is built",
+        "body": [
+          "The web app holds the canvas, the chat, the tools and the scheduler. Work runs in 3 kinds of runner: Python, a browser (Playwright) and office documents (LibreOffice and OCR).",
+          "Runners pull jobs from the web app and never reach the database. Each job runs in a new sandbox with a private temporary folder and no privileges.",
+          "Credentials are sealed at rest and masked in every log. The model is any OpenAI-compatible endpoint, chosen in configuration."
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            " browser      Chrome panel      Claude Code, Codex",
+            "    │              │                    │ MCP",
+            "    ╰──────────────┼────────────────────╯",
+            "           ╭───────┴──────╮      ╭──────────────╮",
+            "           │   WEB APP    │──────│   POSTGRES   │",
+            "           │   Next.js    │      ╰──────────────╯",
+            "           ╰───┬──────┬───╯",
+            "          jobs │      │ models",
+            "   ╭───────────┴──╮ ╭─┴─────────────╮",
+            "   │   RUNNERS    │ │ MODEL GATEWAY │",
+            "   │   Python     │ │ OpenAI-       │",
+            "   │   browser    │ │ compatible    │",
+            "   │   documents  │ │ endpoint      │",
+            "   ╰──────────────╯ ╰───────────────╯"
+          ],
+          "narrow": [
+            " browser, Chrome panel,",
+            " Claude Code, Codex",
+            "       │",
+            "╭──────┴───────╮",
+            "│   WEB APP    │",
+            "│   Next.js    │",
+            "╰─┬────┬─────┬─╯",
+            "  │    │     ╰─ POSTGRES",
+            "  │    ╰─ MODEL GATEWAY",
+            "  │       OpenAI-compatible",
+            "╭─┴────────────╮",
+            "│   RUNNERS    │",
+            "│   Python     │",
+            "│   browser    │",
+            "│   documents  │",
+            "╰──────────────╯"
+          ],
+          "alt": "A browser, the Chrome side panel and MCP clients reach the web app. The web app stores state in Postgres, hands jobs to three runners (Python, browser, documents) and calls a model gateway."
+        }
+      }
+    ],
+    "stack": [
+      "Next.js",
+      "Postgres",
+      "Docker runners",
+      "bubblewrap",
+      "MCP",
+      "Passkeys"
+    ],
     "preview": {
       "image": "/previews/aintern.webp",
       "dither": "/previews/aintern-dither.webp",
-      "focus": "50% 0%"
+      "focus": "50% 50%",
+      "zoom": 1.5,
+      "selector": "[role=img][aria-label]"
     }
   },
   {
@@ -24,14 +249,243 @@
     "purpose": "lab machines, asked for in words",
     "intro": [
       "A carrel is the desk a library sets aside for one graduate student. Carrel gives every WinLab member their own corner of the lab's Proxmox VE cluster.",
-      "Members never touch Proxmox. They tell their agent what machine they need, and one MCP endpoint creates it and returns an SSH command and a URL.",
-      "Each member has a quota, a private network, public ports and domains under their own name. Sign-in is the lab's Keycloak account."
+      "Members never touch Proxmox. They tell their agent what machine they need, and one MCP endpoint creates it and returns an SSH line.",
+      "From there the same endpoint gives the machine a domain, opens its ports and deploys its code on every push."
     ],
-    "stack": ["Go", "Proxmox VE", "MCP", "OAuth 2.1", "EVPN"],
+    "sections": [
+      {
+        "title": "Ask for a machine",
+        "body": [
+          "The member says what the machine is for. The agent picks an image and a size, calls one tool and waits for the answer.",
+          "The answer comes when the machine is ready to use: it has booted, initialized and answered over SSH. In our own test that took 29 seconds. The agent writes the SSH alias into the member's config, so the next line just works."
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            "╭─ claude ───────────────────────────────────────────────────╮",
+            "│ > Open a VM on winlab for my SDN homework                  │",
+            "│                                                            │",
+            "│ * carrel  machine_create                                   │",
+            "│   name sdn-hw, image ubuntu-24.04                          │",
+            "│                                                            │",
+            "│   Ready: 2 vCPU, 2 GiB RAM, 20 GiB disk.                   │",
+            "│   SSH and initialization verified.                         │",
+            "│                                                            │",
+            "│   ssh sdn-hw.alice                                         │",
+            "╰────────────────────────────────────────────────────────────╯"
+          ],
+          "narrow": [
+            "╭─ claude ───────────────────╮",
+            "│ > Open a VM on winlab for  │",
+            "│   my SDN homework          │",
+            "│                            │",
+            "│ * carrel  machine_create   │",
+            "│   name sdn-hw              │",
+            "│   image ubuntu-24.04       │",
+            "│                            │",
+            "│   Ready: 2 vCPU, 2 GiB,    │",
+            "│   20 GiB disk.             │",
+            "│                            │",
+            "│   ssh sdn-hw.alice         │",
+            "╰────────────────────────────╯"
+          ],
+          "alt": "A Claude Code session. The member asks for a VM for SDN homework. Carrel's machine_create tool answers that the machine is ready with 2 vCPU, 2 GiB RAM and a 20 GiB disk, and gives the line ssh sdn-hw.alice."
+        }
+      },
+      {
+        "title": "A desk of your own",
+        "body": [
+          "Every member gets the same budget, and spends it as they like: 8 small machines, or one large one. A project group gets a second budget of its own.",
+          "A machine is a full VM (Debian or Ubuntu, with Docker and cloud-init) or a lighter container. Each member also has private networks, so machines talk to each other and to nobody else."
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            "╭──╮     ╭────╮     ╭────────╮     ╭────────────────╮",
+            "│  │     │    │     │        │     │                │",
+            "╰──╯     ╰────╯     ╰────────╯     ╰────────────────╯",
+            " TINY     SMALL      MEDIUM         LARGE",
+            " 1 vCPU   2 vCPU     4 vCPU         8 vCPU",
+            " 1 GiB    2 GiB      8 GiB          16 GiB of memory",
+            " 10 GiB   20 GiB     40 GiB         80 GiB of disk"
+          ],
+          "narrow": [
+            " TINY: 1 vCPU, 1 GiB, 10 GiB",
+            "╭─╮",
+            "╰─╯",
+            " SMALL: 2 vCPU, 2 GiB, 20 GiB",
+            "╭───╮",
+            "╰───╯",
+            " MEDIUM: 4 vCPU, 8 GiB, 40 GiB",
+            "╭───────╮",
+            "╰───────╯",
+            " LARGE: 8 vCPU, 16 GiB, 80 GiB",
+            "╭───────────────╮",
+            "╰───────────────╯"
+          ],
+          "alt": "Four machine sizes drawn as boxes that double in width: tiny with 1 vCPU, 1 GiB of memory and 10 GiB of disk, small with 2, 2 and 20, medium with 4, 8 and 40, large with 8, 16 and 80."
+        },
+        "points": [
+          {
+            "term": "Machines",
+            "text": "8, with 8 vCPU, 16 GiB of memory and 100 GiB of disk between them."
+          },
+          {
+            "term": "Names",
+            "text": "10 domains under the member's own name, with HTTPS."
+          },
+          {
+            "term": "Ports",
+            "text": "10 public TCP or UDP ports."
+          },
+          {
+            "term": "Networks",
+            "text": "4 private networks."
+          },
+          {
+            "term": "Snapshots",
+            "text": "4 per machine."
+          }
+        ]
+      },
+      {
+        "title": "Publish and deploy",
+        "body": [
+          "One call puts a service on the internet: a domain with a certificate, or a public port. Names outside the member's own and fixed ports go to an admin as a request.",
+          "A repository on GitHub links to a machine once. After that every push builds, switches the machine to the new release and watches its health for 60 seconds. A failing release rolls back by itself."
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            "╭──────────╮    ╭──────────╮    ╭──────────╮    ╭──────────╮",
+            "│   PUSH   │───>│  BUILD   │───>│  SWITCH  │───>│  CHECK   │",
+            "╰──────────╯    ╰──────────╯    ╰──────────╯    ╰──────────╯",
+            " your repo       GitHub          the machine,    60 s of health",
+            " on GitHub       Actions         new release     or roll back"
+          ],
+          "narrow": [
+            "╭────────╮",
+            "│  PUSH  │ your repo on GitHub",
+            "╰───┬────╯",
+            "╭───┴────╮",
+            "│ BUILD  │ GitHub Actions",
+            "╰───┬────╯",
+            "╭───┴────╮",
+            "│ SWITCH │ to the new release",
+            "╰───┬────╯",
+            "╭───┴────╮",
+            "│ CHECK  │ healthy, or go back",
+            "╰────────╯"
+          ],
+          "alt": "Four steps in a row: git push to your repository, GitHub Actions builds, the machine switches to the new release, then 60 seconds of health checks decide whether to keep it or roll back."
+        }
+      },
+      {
+        "title": "Keep, pause, put away",
+        "body": [
+          "A machine does not have to run to be kept. What a member is not using stops counting against the cluster, and comes back as it was."
+        ],
+        "points": [
+          {
+            "term": "Snapshot",
+            "text": "Saves the disk, and rolls back to it."
+          },
+          {
+            "term": "Pause",
+            "text": "Holds a VM in memory and resumes it where it stopped."
+          },
+          {
+            "term": "Freeze",
+            "text": "Moves a stopped machine to backup storage. Thaw restores it with the same name and address."
+          },
+          {
+            "term": "Resize",
+            "text": "Changes CPU, memory and disk."
+          },
+          {
+            "term": "VPN",
+            "text": "A WireGuard profile into the member's private networks."
+          },
+          {
+            "term": "Console",
+            "text": "A link to the machine's screen in the browser, when SSH is not enough."
+          }
+        ]
+      },
+      {
+        "title": "How it is built",
+        "body": [
+          "The control plane is one Go service. It serves MCP, signs members in with the lab's Keycloak account, checks every request against the quota and runs it as a durable job, so a dropped connection never loses a machine.",
+          "Under it are the cluster's own parts: Proxmox VE for machines, EVPN and VXLAN for each member's networks, and Caddy for HTTPS. A reconciler compares the cluster with the records every 5 minutes."
+        ],
+        "figure": {
+          "kind": "diagram",
+          "wide": [
+            " Claude Code, Codex",
+            "        │ MCP over HTTPS, signed in with Keycloak",
+            " ╭──────┴───────────────────────────────────────────╮",
+            " │ CARREL CONTROL PLANE                  Go, SQLite │",
+            " │ MCP server    jobs    admission    quotas        │",
+            " ╰──────┬─────────────────┬─────────────────┬───────╯",
+            "        │                 │                 │",
+            " ╭──────┴───────╮ ╭───────┴──────╮ ╭────────┴─────╮",
+            " │ PROXMOX VE   │ │ NETWORK      │ │ GATEWAY      │",
+            " │ 4 nodes      │ │ EVPN, VXLAN  │ │ Caddy, HTTPS │",
+            " │ VMs and CTs  │ │ WireGuard    │ │ TCP and UDP  │",
+            " ╰──────────────╯ ╰──────────────╯ ╰──────────────╯"
+          ],
+          "narrow": [
+            " Claude Code, Codex",
+            "       │ MCP",
+            "╭──────┴───────────────╮",
+            "│ CARREL CONTROL PLANE │",
+            "│ Go, SQLite           │",
+            "╰─┬────────────────────╯",
+            "  ├─ PROXMOX VE",
+            "  │  4 nodes, VMs and CTs",
+            "  ├─ NETWORK",
+            "  │  EVPN, VXLAN, WireGuard",
+            "  ╰─ GATEWAY",
+            "     Caddy, HTTPS, ports"
+          ],
+          "alt": "An agent reaches the Carrel control plane over MCP. The control plane, written in Go, drives three things: Proxmox VE with 4 nodes, the network (EVPN, VXLAN, WireGuard) and the gateway (Caddy for HTTPS, plus TCP and UDP ports)."
+        }
+      },
+      {
+        "title": "In numbers",
+        "body": [
+          "Carrel has run the lab's machines since October 2026. These are from its public status page on 2026-11-12."
+        ],
+        "points": [
+          {
+            "term": "Cluster",
+            "text": "4 nodes with 160 CPU threads, 503 GiB of memory and 2,125 GiB of disk."
+          },
+          {
+            "term": "In use",
+            "text": "30 machines for 11 accounts."
+          },
+          {
+            "term": "Tools",
+            "text": "84 MCP tools: 66 for members and 18 for admins."
+          }
+        ]
+      }
+    ],
+    "stack": [
+      "Go",
+      "Proxmox VE",
+      "MCP",
+      "Keycloak",
+      "EVPN",
+      "Caddy"
+    ],
     "preview": {
       "image": "/previews/carrel.webp",
       "dither": "/previews/carrel-dither.webp",
-      "focus": "50% 0%"
+      "focus": "50% 50%",
+      "zoom": 2,
+      "selector": "svg[viewBox='0 0 640 400']"
     }
   },
   {
@@ -44,7 +498,13 @@
       "When something breaks, it opens an incident and sends a short explanation to Telegram and to signed webhooks. When the problem goes away, it closes the incident by itself.",
       "For a known fix, it writes a plan, asks for approval in Telegram, runs the fix and checks that the alert has cleared. Agents add new rules over MCP."
     ],
-    "stack": ["TypeScript", "Bun", "SQLite", "MCP", "Claude Agent SDK"],
+    "stack": [
+      "TypeScript",
+      "Bun",
+      "SQLite",
+      "MCP",
+      "Claude Agent SDK"
+    ],
     "preview": {
       "image": "/previews/golem.webp",
       "dither": "/previews/golem-dither.webp",
@@ -60,7 +520,10 @@
       "乖乖 is a corn snack that engineers in Taiwan tape onto servers for luck. The green bag means everything keeps running.",
       "Good is the digital version: a 3D bag on a web page, for machines that have no shelf to put one on."
     ],
-    "stack": ["Next.js", "three.js"],
+    "stack": [
+      "Next.js",
+      "three.js"
+    ],
     "preview": {
       "image": "/previews/good.webp",
       "dither": "/previews/good-dither.webp",
@@ -76,7 +539,11 @@
       "Plump turns a flat SVG into a 3D object. You shape the depth and bevel, pick a material and light the scene.",
       "The scene saves as a file you can open again and keep editing. The zyx mark on this site's earlier home page was made with it."
     ],
-    "stack": ["Next.js", "three.js", "WebGL"],
+    "stack": [
+      "Next.js",
+      "three.js",
+      "WebGL"
+    ],
     "preview": {
       "image": "/previews/3d.webp",
       "dither": "/previews/3d-dither.webp",
@@ -93,11 +560,17 @@
       "The design system behind every zyx.tw site: grayscale tokens and our own components on Base UI, served as a shadcn registry.",
       "It sets a terminal look with one monospace face, 4 type sizes, square corners and 2 motion durations. A token check in CI blocks values outside the system."
     ],
-    "stack": ["React", "Base UI", "shadcn registry", "Tailwind CSS"],
+    "stack": [
+      "React",
+      "Base UI",
+      "shadcn registry",
+      "Tailwind CSS"
+    ],
     "preview": {
       "image": "/previews/ui.webp",
       "dither": "/previews/ui-dither.webp",
-      "focus": "50% 0%"
+      "focus": "50% 0%",
+      "zoom": 2
     }
   },
   {
@@ -110,11 +583,17 @@
       "My services already speak OpenTelemetry, but the reader of their logs at 3 am is often an agent now. Sensorium keeps the logs, traces and metrics of many services in one Postgres store.",
       "Agents read them through 8 MCP tools, so \"what broke?\" is one tool call. Each project has its own ingest token, and old data expires by itself."
     ],
-    "stack": ["TypeScript", "Postgres", "OpenTelemetry", "MCP"],
+    "stack": [
+      "TypeScript",
+      "Postgres",
+      "OpenTelemetry",
+      "MCP"
+    ],
     "preview": {
       "image": "/previews/sensorium.webp",
       "dither": "/previews/sensorium-dither.webp",
-      "focus": "50% 50%"
+      "focus": "50% 50%",
+      "zoom": 2
     }
   },
   {
@@ -127,7 +606,11 @@
       "The official website of NYCU's Office of AI Affairs, with its news, events and programs.",
       "Content lives in Postgres and is edited in the browser, and the site serves an MCP endpoint so agents can read it."
     ],
-    "stack": ["Next.js", "Postgres", "Better Auth"],
+    "stack": [
+      "Next.js",
+      "Postgres",
+      "Better Auth"
+    ],
     "preview": {
       "image": "/previews/ai.webp",
       "dither": "/previews/ai-dither.webp",
@@ -144,7 +627,10 @@
       "The public website of the Wireless Internet Laboratory at NYCU, led by Prof. Chien-Chao Tseng.",
       "One page covers the lab's research areas, from SDN and 5G/6G orchestration to cloud-native systems, with a link to the members' portal."
     ],
-    "stack": ["Next.js", "Tailwind CSS"],
+    "stack": [
+      "Next.js",
+      "Tailwind CSS"
+    ],
     "preview": {
       "image": "/previews/winlab.webp",
       "dither": "/previews/winlab-dither.webp",
@@ -161,11 +647,17 @@
       "WinLab members book rooms, file receipts, sign documents, order meals and open the lab door through one portal.",
       "Every action is defined once, so a member can click it and an agent can call it as an MCP tool. Members sign in with the lab's Keycloak account."
     ],
-    "stack": ["Next.js", "Postgres", "Keycloak", "MCP"],
+    "stack": [
+      "Next.js",
+      "Postgres",
+      "Keycloak",
+      "MCP"
+    ],
     "preview": {
       "image": "/previews/portal.webp",
       "dither": "/previews/portal-dither.webp",
-      "focus": "50% 50%"
+      "focus": "50% 50%",
+      "zoom": 2
     }
   },
   {
@@ -178,11 +670,16 @@
       "The lab's video library. Members sign in to watch, and the site remembers where each viewer stopped.",
       "Videos stream from the lab's Nextcloud, and each upload gets a transcript beside the player that jumps to the spoken line."
     ],
-    "stack": ["Next.js", "SQLite", "Nextcloud"],
+    "stack": [
+      "Next.js",
+      "SQLite",
+      "Nextcloud"
+    ],
     "preview": {
       "image": "/previews/video.webp",
       "dither": "/previews/video-dither.webp",
-      "focus": "50% 50%"
+      "focus": "50% 50%",
+      "zoom": 2
     }
   },
   {
@@ -190,12 +687,18 @@
     "name": "Link",
     "href": "https://link.zyx.tw",
     "purpose": "URL shortener",
-    "intro": ["Paste a long URL, get a short one back. That is all it does."],
-    "stack": ["Next.js", "Postgres"],
+    "intro": [
+      "Paste a long URL, get a short one back. That is all it does."
+    ],
+    "stack": [
+      "Next.js",
+      "Postgres"
+    ],
     "preview": {
       "image": "/previews/link.webp",
       "dither": "/previews/link-dither.webp",
-      "focus": "50% 50%"
+      "focus": "50% 50%",
+      "zoom": 2
     }
   },
   {
@@ -203,28 +706,15 @@
     "name": "Time",
     "href": "https://time.zyx.tw",
     "purpose": "what time is it?",
-    "intro": ["What time is it? A clock, that's all."],
-    "stack": ["Next.js"],
+    "intro": [
+      "What time is it? A clock, that's all."
+    ],
+    "stack": [
+      "Next.js"
+    ],
     "preview": {
       "image": "/previews/time.webp",
       "dither": "/previews/time-dither.webp",
-      "focus": "50% 50%"
-    }
-  },
-  {
-    "slug": "peck",
-    "name": "Peck",
-    "href": "https://github.com/zyx1121/peck",
-    "code": "https://github.com/zyx1121/peck",
-    "purpose": "visual feedback for coding agents",
-    "intro": [
-      "Peck is a Chromium desktop browser for you and your coding agent. You point at an element and write a comment.",
-      "Your existing Claude Code or Codex conversation then gets the screenshot, the selector, console errors and network records, fixes the source and replies in the thread."
-    ],
-    "stack": ["Electron", "MCP"],
-    "preview": {
-      "image": "/previews/peck.webp",
-      "dither": "/previews/peck-dither.webp",
       "focus": "50% 50%"
     }
   }

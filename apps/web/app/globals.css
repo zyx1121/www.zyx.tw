@@ -8,3 +8,15 @@
   bottom: calc(var(--bezel) + 4rem);
   width: calc(100% - 2 * (var(--bezel) + 1.25rem));
 }
+
+/*
+ * A project page's drawing in box-drawing characters
+ * (components/project-diagram.tsx). Rows are 20px, as in a glyph frame,
+ * because Sarasa's vertical bar is 1.25em tall: the bars meet with no gap.
+ */
+@utility diagram {
+  width: max-content;
+  font-size: var(--text-body);
+  line-height: var(--text-caption--line-height);
+  white-space: pre;
+}
