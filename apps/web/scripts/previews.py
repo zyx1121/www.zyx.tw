@@ -17,6 +17,16 @@ files per project to the paths in its "preview" field:
 Projects whose href is a GitHub repository have no live site. They use the
 repository's OpenGraph card instead, downloaded so it can be dithered too.
 
+A project's "preview" field can also say how to capture it:
+
+  zoom      capture a viewport that many times smaller at that pixel density.
+            The file is still 1440x1080, and the site's text is that many
+            times larger in it. Use it when a page's text is too small to
+            read in the window.
+  source    the page to capture when it is not the project's href.
+  selector  capture this one element of the page, scaled to fit and centered
+            on the page's background color.
+
 Requirements
   uv            https://docs.astral.sh/uv/ . `bun run previews` runs this
                 file with `uv run`, which installs Pillow and Playwright for
@@ -174,7 +184,7 @@ class Browser:
         self._playwright = None
         self._browser = None
 
-    def capture(self, url: str) -> Image.Image:
+    def capture(self, url: str, zoom: float = 1, selector: str | None = None) -> Image.Image:
         from playwright.sync_api import TimeoutError as PlaywrightTimeout
 
         if self._browser is None:
@@ -188,8 +198,11 @@ class Browser:
                 args=["--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"],
             )
         context = self._browser.new_context(
-            viewport=VIEWPORT,
-            device_scale_factor=1,
+            viewport={
+                "width": round(VIEWPORT["width"] / zoom),
+                "height": round(VIEWPORT["height"] / zoom),
+            },
+            device_scale_factor=zoom,
             color_scheme="dark",
             # Entrance animations end at once, so the shot shows the settled page.
             reduced_motion="reduce",
@@ -205,7 +218,17 @@ class Browser:
                 pass
             page.evaluate("document.fonts.ready.then(() => true)")
             page.wait_for_timeout(self.wait_ms)
-            return Image.open(io.BytesIO(page.screenshot(type="png"))).convert("RGB")
+            if selector:
+                paper = page.evaluate(PAPER_OF_PAGE)
+                # Fixed chrome (corner links) would sit on top of the element.
+                page.evaluate(HIDE_FIXED)
+                element = page.locator(selector).first
+                shot = Image.open(io.BytesIO(element.screenshot(type="png")))
+                return centered(shot.convert("RGB"), tuple(paper))
+            shot = Image.open(io.BytesIO(page.screenshot(type="png"))).convert("RGB")
+            size = (VIEWPORT["width"], VIEWPORT["height"])
+            # A fractional zoom can round the shot a pixel off the file's size.
+            return shot if shot.size == size else shot.resize(size, Image.Resampling.LANCZOS)
         finally:
             context.close()
 
@@ -213,6 +236,43 @@ class Browser:
         if self._browser is not None:
             self._browser.close()
             self._playwright.stop()
+
+
+# The page's background as [r, g, b], read through a canvas so any CSS color
+# syntax (oklch, lab) comes back as sRGB bytes.
+PAPER_OF_PAGE = """() => {
+  const canvas = document.createElement("canvas")
+  canvas.width = canvas.height = 1
+  const ctx = canvas.getContext("2d")
+  for (const node of [document.body, document.documentElement]) {
+    ctx.clearRect(0, 0, 1, 1)
+    ctx.fillStyle = getComputedStyle(node).backgroundColor
+    ctx.fillRect(0, 0, 1, 1)
+    const [r, g, b, a] = ctx.getImageData(0, 0, 1, 1).data
+    if (a > 0) return [r, g, b]
+  }
+  return [0, 0, 0]
+}"""
+
+
+HIDE_FIXED = """() => {
+  for (const node of document.querySelectorAll("body *")) {
+    if (getComputedStyle(node).position === "fixed") node.style.visibility = "hidden"
+  }
+}"""
+
+
+def centered(shot: Image.Image, paper: tuple[int, int, int]) -> Image.Image:
+    """An element's screenshot, scaled to fit the file and centered on paper."""
+    width, height = VIEWPORT["width"], VIEWPORT["height"]
+    scale = min(width / shot.width, height / shot.height)
+    fitted = shot.resize(
+        (round(shot.width * scale), round(shot.height * scale)),
+        Image.Resampling.LANCZOS,
+    )
+    sheet = Image.new("RGB", (width, height), paper)
+    sheet.paste(fitted, ((width - fitted.width) // 2, (height - fitted.height) // 2))
+    return sheet
 
 
 def public_path(site_path: str) -> Path:
@@ -260,19 +320,22 @@ def main() -> int:
             color_path = public_path(project["preview"]["image"])
             dither_path = public_path(project["preview"]["dither"])
             color_path.parent.mkdir(parents=True, exist_ok=True)
+            zoom = project["preview"].get("zoom", 1)
+            selector = project["preview"].get("selector")
+            page_url = project["preview"].get("source", project["href"])
 
             if args.dither_only:
                 color = Image.open(color_path).convert("RGB")
                 source = "existing"
             elif slug in overrides:
-                color = browser.capture(overrides[slug])
                 source = overrides[slug]
-            elif is_github(project["href"]):
-                color = github_og(project["href"])
+                color = browser.capture(source, zoom, selector)
+            elif is_github(page_url):
+                color = github_og(page_url)
                 source = "GitHub OpenGraph card"
             else:
-                color = browser.capture(project["href"])
-                source = project["href"]
+                source = page_url
+                color = browser.capture(source, zoom, selector)
 
             if not args.dither_only:
                 color.save(color_path, "WEBP", quality=COLOR_QUALITY, method=6)

@@ -4,7 +4,12 @@ import { EMAIL, GITHUB_USER, STATUS_COPY } from "@workspace/ui/lib/profile"
 import { ABOUT, HOME, NOT_FOUND, WORKS } from "@/lib/copy"
 import type { LegalDoc, Run } from "@/lib/legal"
 import { PRIVACY } from "@/lib/privacy"
-import { type Project, projectPath, projects } from "@/lib/projects"
+import {
+  type Project,
+  projectPath,
+  projects,
+  type Section,
+} from "@/lib/projects"
 import { FACTS, SECTIONS } from "@/lib/resume"
 import { TERMS } from "@/lib/terms"
 import { absoluteUrl, PAGES, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site"
@@ -91,7 +96,28 @@ export function worksMarkdown() {
   ])
 }
 
-/** One project's page: its purpose, the paragraphs, then the details. */
+/** A section: its paragraphs, its figure, then its terms. */
+function sectionMarkdown({ title, body, figure, points }: Section) {
+  return [
+    `## ${text(title)}`,
+    ...body.map(text),
+    figure?.kind === "picture" &&
+      `![${text(figure.alt)}](${absoluteUrl(figure.src)})`,
+    // The drawing as drawn; its description follows for readers of text.
+    figure?.kind === "diagram" && ["```text", ...figure.wide, "```"].join("\n"),
+    figure?.kind === "diagram" && `Figure: ${text(figure.alt)}`,
+    points
+      ?.map(({ term, text: line }) => `- ${text(term)}: ${text(line)}`)
+      .join("\n"),
+  ]
+    .filter(Boolean)
+    .join("\n\n")
+}
+
+/**
+ * One project's page: its purpose, the paragraphs, its sections, then the
+ * details.
+ */
 export function projectMarkdown(project: Project) {
   return markdownDocument(
     {
@@ -103,6 +129,7 @@ export function projectMarkdown(project: Project) {
       `# ${text(project.name)}`,
       `${text(project.purpose[0]!.toUpperCase() + project.purpose.slice(1))}.`,
       ...project.intro.map(text),
+      ...(project.sections ?? []).map(sectionMarkdown),
       [
         "## Details",
         [
