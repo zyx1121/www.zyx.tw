@@ -40,6 +40,4 @@ export const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
 })
 
-export const fontVariables = [mapleMono.variable, notoSansTc.variable].join(
-  " "
-)
+export const fontVariables = [mapleMono.variable, notoSansTc.variable].join(" ")
