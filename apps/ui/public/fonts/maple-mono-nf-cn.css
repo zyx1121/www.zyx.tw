@@ -1,0 +1,15 @@
+/* Maple Mono NF CN for projects on the ui.zyx.tw base (packages/ui/src/fonts/README.md). */
+@font-face {
+  font-family: "Maple Mono NF CN";
+  src: url("./MapleMonoNFCN-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Maple Mono NF CN";
+  src: url("./MapleMonoNFCN-SemiBold.woff2") format("woff2");
+  font-weight: 500 600;
+  font-style: normal;
+  font-display: swap;
+}

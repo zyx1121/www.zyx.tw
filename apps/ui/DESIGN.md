@@ -49,8 +49,8 @@ Four sizes by role, the same on phones and desktops. Tailwind's own sizes are cl
 
 - **Hierarchy by weight and color**: 400 for text, 500 for titles, section headings, labels and buttons. Secondary text is `text-muted-foreground`.
 - **CSS** may only name the scale: `font-size: var(--text-body); line-height: var(--text-body--line-height)`.
-- **One face**: Sarasa Mono TC sets everything, text, headings and code alike (`font-sans`, `font-heading` and `font-mono` are the same stack). Every glyph keeps its cell, a Han character two, so text lines up on a character grid and digits never shift. The files are subset to Latin, symbols, box drawing and the Han characters the apps use (`packages/ui/src/fonts/README.md`); other Han characters fall back to Noto Sans TC. Projects outside this repo load the same files from `https://ui.zyx.tw/fonts/`.
-- **Real styles only**: 400 and 500 (Sarasa's SemiBold) only, never synthesis, and no italic.
+- **One face**: Maple Mono NF CN sets everything, text, headings and code alike (`font-sans`, `font-heading` and `font-mono` are the same stack). Every glyph keeps its cell (0.6em), a Han character two, so text lines up on a character grid and digits never shift. The files are subset to Latin, symbols, box drawing and the Han characters the apps use (`packages/ui/src/fonts/README.md`); other Han characters fall back to Noto Sans TC. Projects outside this repo load the same files from `https://ui.zyx.tw/fonts/`.
+- **Real styles only**: 400 and 500 (Maple's SemiBold) only, never synthesis, and no italic.
 - **Labels in capitals**: corner links and section headings are uppercase (`SectionTitle`); tooltips are lowercase, like a shell. Body text keeps its own case.
 - **No content exceptions**: Markdown, code, charts and notices use the same four sizes; change wrapping and layout instead.
 
@@ -62,7 +62,7 @@ Outlines are drawn with box-drawing characters (`╭ ─ ╮ │ ╰ ╯`), not 
 
 - **Who draws one**: every layer-2 window (dialog, alert dialog, popover, menus, select menu, tooltip, toolbar, chart tooltip), every field (input, textarea, input group, select and combobox triggers, the command input) and the outline button. A sheet draws the one vertical edge that faces the page (`FrameSide`).
 - **Nothing moves**: `FrameEdges` overhangs its parent by half a cell (8px across, 10px down), which puts each line where a 1px border was. The parent is positioned and does not clip; a window whose content scrolls scrolls an inner box (dialog, sheet) or draws the frame in its positioner (`WindowEdges`, menus).
-- **20px rows**: Sarasa's vertical bar is 1.25em tall, so the frame's rows are the caption line height and the bars meet with no gap.
+- **20px rows**: Maple's vertical bar is 1.52em tall, so the frame's rows are the caption line height and the bars meet with no gap.
 - **Colors**: windows `muted-foreground`; fields and the outline button `muted-foreground` at 30% and 20% opacity, which match `input` and `border` but stay opaque inside, so the 1px overlaps where glyphs meet never brighten. Focus turns a field's frame to `ring` (the text color), invalid to `destructive`, and hover lights the outline button's frame to `foreground`.
 - **Labels on the edge**: `Frame` (and `FrameEdges`) take a `label` for the top edge and a `detail` for the bottom right, as a terminal dashboard titles a panel.
 - Toasts and outline badges still use a 1px border.

@@ -24,13 +24,13 @@
   --text-caption: 0.875rem;
   --text-caption--line-height: 1.25rem;
   --font-sans:
-    var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc),
+    var(--font-maple-mono, Maple Mono NF CN), var(--font-noto-sans-tc),
     ui-monospace, monospace;
   --font-heading:
-    var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc),
+    var(--font-maple-mono, Maple Mono NF CN), var(--font-noto-sans-tc),
     ui-monospace, monospace;
   --font-mono:
-    var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc),
+    var(--font-maple-mono, Maple Mono NF CN), var(--font-noto-sans-tc),
     ui-monospace, monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -427,8 +427,8 @@ html[data-boot] [data-slot="tv-boot"] {
  * characters draw the outline, as a terminal draws a window, so each line runs
  * through the middle of a character cell and the corners are the font's own
  * arcs. The edges overhang their parent by half a cell, which puts each line
- * where a 1px border would be. Rows are 20px because Sarasa's vertical bar is
- * 1.25em tall, so the bars meet with no gap. Fills are long runs the cell
+ * where a 1px border would be. Rows are 20px and Maple's vertical bar is
+ * 1.52em tall, so the bars meet with no gap. Fills are long runs the cell
  * clips; the vertical run wraps one bar per line.
  */
 [data-slot="frame-edges"] {

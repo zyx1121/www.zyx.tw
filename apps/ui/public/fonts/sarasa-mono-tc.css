@@ -1,4 +1,4 @@
-/* Sarasa Mono TC for projects on the ui.zyx.tw base (packages/ui/src/fonts/README.md). */
+/* The face before Maple Mono NF CN (LICENSE-sarasa.txt). Kept until every project outside this repo loads maple-mono-nf-cn.css. */
 @font-face {
   font-family: "Sarasa Mono TC";
   src: url("./SarasaMonoTC-Regular.woff2") format("woff2");
