@@ -31,7 +31,7 @@
       ],
       "devDependencies": ["tw-animate-css", "shadcn"],
       "css": {
-        "@import url(\"https://ui.zyx.tw/fonts/sarasa-mono-tc.css\")": {},
+        "@import url(\"https://ui.zyx.tw/fonts/maple-mono-nf-cn.css\")": {},
         "@import \"tw-animate-css\"": {},
         "@import \"shadcn/tailwind.css\"": {},
         "@utility duration-state": {
@@ -97,9 +97,9 @@
           "text-body--line-height": "1.5rem",
           "text-caption": "0.875rem",
           "text-caption--line-height": "1.25rem",
-          "font-sans": "var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc), ui-monospace, monospace",
-          "font-heading": "var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc), ui-monospace, monospace",
-          "font-mono": "var(--font-sarasa-mono, Sarasa Mono TC), var(--font-noto-sans-tc), ui-monospace, monospace"
+          "font-sans": "var(--font-maple-mono, Maple Mono NF CN), var(--font-noto-sans-tc), ui-monospace, monospace",
+          "font-heading": "var(--font-maple-mono, Maple Mono NF CN), var(--font-noto-sans-tc), ui-monospace, monospace",
+          "font-mono": "var(--font-maple-mono, Maple Mono NF CN), var(--font-noto-sans-tc), ui-monospace, monospace"
         },
         "light": {
           "background": "oklch(0.97 0.005 85)",
@@ -235,7 +235,7 @@
         "subsets": ["latin"],
         "dependency": "@fontsource-variable/noto-sans-tc"
       },
-      "description": "Noto Sans TC for the Han characters outside the Sarasa Mono TC subset."
+      "description": "Noto Sans TC for the Han characters outside the Maple Mono NF CN subset."
     },
     {
       "name": "corners",

@@ -14,7 +14,7 @@ for i in $(seq 1 30); do curl -s -o /dev/null localhost:3000/ && break; sleep 1;
 
 case $app in
   web) pages="/ /works /about /privacy /terms /llms.txt /about.md /og/0.gif" ;;
-  ui) pages="/ /button /button.md /index.md /llms.txt /r/base.json /fonts/sarasa-mono-tc.css" ;;
+  ui) pages="/ /button /button.md /index.md /llms.txt /r/base.json /fonts/maple-mono-nf-cn.css /fonts/sarasa-mono-tc.css" ;;
   1909) pages="/auth/login" ;;
   *) pages="/" ;;
 esac

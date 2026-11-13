@@ -94,7 +94,7 @@ jobs:
           grep -q '"@zyx1121": "https://ui.zyx.tw/r/{name}.json"' components.json
           grep -q -- '--text-\*: initial' app/globals.css
           grep -q -- '--text-caption: 0.875rem' app/globals.css
-          grep -q 'fonts/sarasa-mono-tc.css' app/globals.css
+          grep -q 'fonts/maple-mono-nf-cn.css' app/globals.css
           grep -q '@utility terminal-link' app/globals.css
           grep -q '@utility duration-overlay' app/globals.css
           ! grep -q -- '--card:' app/globals.css
