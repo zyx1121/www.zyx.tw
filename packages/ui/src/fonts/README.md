@@ -24,3 +24,18 @@ for w in Regular SemiBold; do
     --output-file="MapleMonoNFCN-$w.woff2"
 done
 ```
+
+## Every other Han character
+
+Text that comes from data (a file name, a merchant on a bank statement) uses Han characters outside `cjk.txt`. `apps/ui/public/fonts/maple-mono-nf-cn.css` covers them with the same face: after the two subset files it lists 95 slices per weight in `fonts/cjk/`, each with a `unicode-range`, so a page downloads only the slices its text needs. Apps in this repository do not load them: all their Han characters are in `cjk.txt`.
+
+To cut the slices again, in the directory that holds `src/` from the step above:
+
+```bash
+curl -fsSL -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36' \
+  -o noto.css 'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400'
+mkdir -p cjk
+uvx --from 'fonttools[woff]==4.60.1' python slice-cjk.py
+```
+
+Copy `cjk/*.woff2` into `apps/ui/public/fonts/cjk/` and replace the slice faces in `maple-mono-nf-cn.css` with `cjk/faces.css`.
