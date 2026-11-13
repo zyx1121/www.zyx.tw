@@ -1,0 +1,104 @@
+{
+  "lanes": [
+    ["basics", "goals"],
+    ["goals", "principles"],
+    ["goals", "fleet"],
+    ["goals", "machines"],
+    ["principles", "beyond"],
+    ["fleet", "beyond"],
+    ["machines", "craft"]
+  ],
+  "systems": [
+    {
+      "slug": "basics",
+      "name": "Basics",
+      "line": "What to know before anything else.",
+      "at": [0.04, 0.5, 0.3],
+      "bodies": [
+        { "slug": "what-claude-code-is", "name": "What Claude Code is", "line": "It acts on your machine. A chat window only answers." },
+        { "slug": "four-ways-to-extend", "name": "Four ways to extend", "line": "MCP, skills, plugins and mods, and when each one fits." },
+        { "slug": "claude-md", "name": "Writing CLAUDE.md", "line": "The one file every session reads first." },
+        { "slug": "course-basics", "name": "Course: basics", "kind": "station", "line": "A short hands-on course for a first week with Claude Code." }
+      ]
+    },
+    {
+      "slug": "goals",
+      "name": "Goals",
+      "line": "What I want Claude Code to do for me.",
+      "at": [0.27, 0.27, 0.7],
+      "bodies": [
+        { "slug": "knows-me", "name": "Knows me", "line": "It sees my calendar, mail and deadlines, so half a sentence is enough.", "needs": ["four-ways-to-extend"] },
+        { "slug": "remembers-me", "name": "Remembers me", "line": "I never give the same correction twice.", "needs": ["claude-md"] },
+        { "slug": "acts-for-me", "name": "Acts for me", "line": "It reaches every system I use, by the cheapest path.", "needs": ["four-ways-to-extend"] },
+        { "slug": "out-of-my-way", "name": "Stays out of my way", "line": "It works in the background while I keep my browser." },
+        { "slug": "while-i-am-away", "name": "Works while I am away", "line": "The abilities live on servers, not on my laptop." }
+      ]
+    },
+    {
+      "slug": "principles",
+      "name": "Principles",
+      "line": "The ideas behind every choice.",
+      "at": [0.5, 0.06, 0.4],
+      "bodies": [
+        { "slug": "agent-experience", "name": "Agent experience", "line": "An agent is a user too. Every button gets a tool.", "needs": ["acts-for-me"] },
+        { "slug": "rules-from-numbers", "name": "Rules from numbers", "line": "I change a rule after I measure, not after I feel." },
+        { "slug": "no-hooks", "name": "No hooks for behavior", "line": "Fix the rule or the check. Do not add a gate.", "needs": ["remembers-me"] },
+        { "slug": "skills-stay-general", "name": "Skills stay general", "line": "A skill gives direction. The agent explores the details.", "needs": ["four-ways-to-extend"] },
+        { "slug": "done-means-verified", "name": "Done means verified", "line": "Green CI is not done. One real run is." },
+        { "slug": "course-extend", "name": "Course: extend it", "kind": "station", "line": "Build one MCP server, one skill and one plugin.", "needs": ["four-ways-to-extend"] }
+      ]
+    },
+    {
+      "slug": "fleet",
+      "name": "Fleet",
+      "line": "More than one agent, and what it costs.",
+      "at": [0.5, 0.57, 0.95],
+      "bodies": [
+        { "slug": "subagent-bill", "name": "The bill for subagents", "line": "Subagents were half of my spend, so they only read and review." },
+        { "slug": "review-by-risk", "name": "Review by risk", "line": "Reviewing everything is the same as reviewing nothing.", "needs": ["subagent-bill"] },
+        { "slug": "many-at-once", "name": "Running many at once", "line": "Six agents at the same time hit the usage limit together.", "needs": ["subagent-bill"] },
+        { "slug": "two-agents", "name": "Claude Code with Codex", "line": "Two agents share one memory and one plugin catalog.", "needs": ["remembers-me"] }
+      ]
+    },
+    {
+      "slug": "machines",
+      "name": "Machines",
+      "line": "A server room built for agents.",
+      "at": [0.3, 0.94, 0.2],
+      "bodies": [
+        { "slug": "one-job-per-machine", "name": "One job per machine", "line": "The laptop edits. Other machines build, train and store." },
+        { "slug": "numbers-are-addresses", "name": "Numbers are addresses", "line": "A guest's number tells you its host and its IP.", "needs": ["one-job-per-machine"] },
+        { "slug": "fixed-place", "name": "A fixed place per repo", "line": "Every session works in the same directory on the build machine.", "needs": ["one-job-per-machine"] },
+        { "slug": "network-in-git", "name": "The network in git", "line": "Subnets and access rules change by pull request." },
+        { "slug": "one-plugin-catalog", "name": "One plugin catalog", "line": "Claude Code and Codex install the same pinned versions.", "needs": ["four-ways-to-extend"] },
+        { "slug": "course-machines", "name": "Course: own machines", "kind": "station", "line": "Set up a small server room an agent can run.", "needs": ["one-job-per-machine"] }
+      ]
+    },
+    {
+      "slug": "beyond",
+      "name": "Beyond",
+      "line": "Past the terminal.",
+      "at": [1, 0.3, 0.6],
+      "bodies": [
+        { "slug": "changing-the-interface", "name": "Changing the interface", "line": "When the terminal lacks a panel, I add one.", "needs": ["four-ways-to-extend"] },
+        { "slug": "outside-the-terminal", "name": "Agents in a chat app", "line": "The same agent answers outside the terminal." },
+        { "slug": "monitoring-for-agents", "name": "Monitoring for agents", "line": "No dashboards. Tools an agent can query.", "needs": ["agent-experience"] },
+        { "slug": "what-an-agent-has-seen", "name": "What an agent has seen", "line": "Secrets, images and tabs: three accidents and their fixes." },
+        { "slug": "names-to-guess", "name": "Names an agent can guess", "line": "Machines are named after game blocks, by role." }
+      ]
+    },
+    {
+      "slug": "craft",
+      "name": "Craft",
+      "line": "Habits that are not about agents.",
+      "at": [0.86, 0.86, 0.5],
+      "bodies": [
+        { "slug": "one-design-system", "name": "One design system", "line": "Every site and every email uses the same tokens." },
+        { "slug": "one-way-to-deploy", "name": "One way to deploy", "line": "Build at pull request time. Merging only moves a tag." },
+        { "slug": "where-files-live", "name": "Where files live", "line": "One folder layout for every repo and note." },
+        { "slug": "observability-first", "name": "Observability first", "line": "Logging ships with the feature, not after it." },
+        { "slug": "simple-first", "name": "Simple first", "line": "Cut features before copy." }
+      ]
+    }
+  ]
+}

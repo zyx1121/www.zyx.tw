@@ -13,12 +13,14 @@ import { PondBackground } from "@/components/pond-background"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 import { TvBoot, TvStatic } from "@/components/tv"
+import { systems } from "@/lib/map"
 import { projects } from "@/lib/projects"
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
 
-// Only the names cross to the client header, not every project's page.
+// Only the names cross to the client header, not every project's page: a
+// project's under /works, a system's under /map.
 const PROJECT_NAMES = Object.fromEntries(
-  projects.map(({ slug, name }) => [slug, name])
+  [...projects, ...systems].map(({ slug, name }) => [slug, name])
 )
 
 import "./globals.css"

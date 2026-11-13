@@ -1,8 +1,9 @@
 import { describeEvent, type StatusData } from "@workspace/ui/lib/github-events"
 import { EMAIL, GITHUB_USER, STATUS_COPY } from "@workspace/ui/lib/profile"
 
-import { ABOUT, HOME, NOT_FOUND, WORKS } from "@/lib/copy"
+import { ABOUT, HOME, MAP, NOT_FOUND, WORKS } from "@/lib/copy"
 import type { LegalDoc, Run } from "@/lib/legal"
+import { findBody, systemPath, systems } from "@/lib/map"
 import { PRIVACY } from "@/lib/privacy"
 import {
   type Project,
@@ -95,6 +96,33 @@ export function worksMarkdown() {
           `- ${link(project.name, absoluteUrl(`${projectPath(project)}.md`))}: ${text(project.purpose)}. ${link("Site", project.href)}`
       )
       .join("\n"),
+  ])
+}
+
+/** Every system with its notes and courses, and what each one follows. */
+export function mapMarkdown() {
+  return markdownDocument({ title: MAP.title, path: "/map" }, [
+    `# ${text(MAP.title)}`,
+    "A note without a link is planned and not written yet.",
+    ...systems.map((system) =>
+      [
+        `## ${link(system.name, absoluteUrl(systemPath(system)))}`,
+        text(system.line),
+        system.bodies
+          .map((body) => {
+            const after = (body.needs ?? [])
+              .map((slug) => findBody(slug)?.body.name)
+              .filter((name) => name !== undefined)
+            return [
+              `- ${linked(body.name, body.href)}`,
+              body.kind === "station" ? " (course)" : "",
+              `: ${text(body.line)}`,
+              after.length > 0 ? ` After: ${text(after.join(", "))}.` : "",
+            ].join("")
+          })
+          .join("\n"),
+      ].join("\n\n")
+    ),
   ])
 }
 

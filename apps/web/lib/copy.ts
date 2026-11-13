@@ -7,6 +7,8 @@ export const HOME = { title: "Loki, 詹詠翔." } as const
 
 export const WORKS = { title: "Works" } as const
 
+export const MAP = { title: "Map" } as const
+
 export const ABOUT = { title: "About" } as const
 
 export const NOT_FOUND = {
