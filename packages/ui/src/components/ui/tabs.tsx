@@ -15,13 +15,15 @@ function Tabs({ className, ...props }: TabsPrimitive.Root.Props) {
 }
 
 // Plain text tabs on the page, no box around them. The active tab inverts,
-// as a terminal highlights: one indicator block slides between tabs.
+// as a terminal highlights: one indicator block slides between tabs. A tab
+// is one line of text tall (24px), so the highlight is the height of the
+// text, not of a button.
 function TabsList({ className, children, ...props }: TabsPrimitive.List.Props) {
   return (
     <TabsPrimitive.List
       data-slot="tabs-list"
       className={cn(
-        "relative inline-flex h-10 w-fit items-center text-muted-foreground",
+        "relative inline-flex h-6 w-fit items-center text-muted-foreground",
         className
       )}
       {...props}
@@ -40,7 +42,7 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
     <TabsPrimitive.Tab
       data-slot="tabs-trigger"
       className={cn(
-        "relative z-10 inline-flex h-10 flex-1 items-center justify-center gap-2 px-2 text-body whitespace-nowrap transition-colors duration-state outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-active:text-background data-active:hover:text-background [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+        "relative z-10 inline-flex h-6 flex-1 items-center justify-center gap-2 px-2 text-body whitespace-nowrap transition-colors duration-state outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-active:text-background data-active:hover:text-background [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
         className
       )}
       {...props}
